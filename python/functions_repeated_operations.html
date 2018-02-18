@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Notes on Data Science &amp; Machine Learning">
+    <meta name="author" content="Dan Friedman">
+    <link rel="icon" href="../favicon.ico">
+
+    <title>Designing functions to easily perform repeated operations - Python</title>
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="../theme/js/jquery.min.js"><\/script>')
+    </script>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="../theme/css/bootstrap.css" />
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link rel="stylesheet" type="text/css" href="../theme/css/ie10-viewport-bug-workaround.css" />
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="../theme/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../theme/css/notebooks.css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+     <link href="http://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman - Data Science Tutorials Full RSS Feed" />         <link href="http://dfrieds.com/feeds/python.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman - Data Science Tutorials Categories RSS Feed" />    
+
+    <meta name="tags" content="functions" />
+    <meta name="tags" content="lists" />
+    <meta name="tags" content="loops" />
+    <meta name="tags" content="math" />
+
+    <!--worry about this later-->
+    <!--<meta name="google-site-verification" content="7RLmddm4HbzdQLpwH2LH94_vBNmcaMGZSEhmmF5n0NM" />-->
+</head>
+
+<body>
+
+    <!-- end of header section -->
+    <div class="container">
+
+<div class="navbar navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="javascript: history.go(-1)">< Go to Home</a>
+
+        </div>
+    </div>
+</div>
+<section id="content" class="body">
+    <header>
+    <h1>
+      Designing functions to easily perform repeated operations
+    </h1>
+<ol class="breadcrumb">
+    <li>
+        <time class="published" datetime="2018-02-18T10:00:00-08:00">
+            February 18, 2018
+        </time>
+    </li>
+    <li>Python</li>
+    <li>functions</li>
+    <li>lists</li>
+    <li>loops</li>
+    <li>math</li>
+</ol>
+</header>
+<div class='article_content'>
+<p><strong>Functions</strong> allow you to store reusable logic.</p>
+<h3>Function Terminology</h3>
+<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>int
+</pre></div>
+
+
+<p>The <strong>name</strong> of the function is the words that precede the parentheses.</p>
+<p>The expression in parentheses is the <strong>argument</strong> of the function. Functions don't <em>need</em> arguments; functions can contain <em>multiple</em> arguments. </p>
+<p>The result for this function is outputted below the function and called the <strong>return</strong> value. Every function returns a value.</p>
+<p>In the statement above, our <strong>function</strong> named <code>type</code> takes in an <strong>argument</strong> of <code>32</code> and returns <code>int</code> - an integer. <a href="https://docs.python.org/3/library/functions.html#type"><code>type</code></a> is a function built into the Python standard library. So, the function has already been defined for us.</p>
+<p>In the statement above, we <strong>call</strong> the function <code>type</code> to perform the function's computation and <strong>return</strong> the result.</p>
+<h3>Bike Trips Example</h3>
+<p>Below is a sample of data for bike trips as a list of lists. Each inner list holds the data for a trip formatted as <em>[duration in seconds, date]</em>.</p>
+<div class="highlight"><pre><span></span><span class="n">bike_trips</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">475</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">825</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1034</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">980</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1350</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1880</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1950</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1530</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1350</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">2345</span><span class="p">,</span> <span class="s1">&#39;2018-02-20&#39;</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">2353</span><span class="p">,</span> <span class="s1">&#39;2018-02-20&#39;</span><span class="p">]</span>
+             <span class="p">]</span>
+</pre></div>
+
+
+<p>We want to answer these questions:</p>
+<ul>
+<li>What is the average trip duration on any given day?</li>
+<li>How many trips were taken on any given day?</li>
+</ul>
+<p>In terms of Python, there's 3 componenents we want to create:</p>
+<ol>
+<li>Sum of trip durations on a day</li>
+<li>Count of trips on a day</li>
+<li>Averge trip duration on a day</li>
+</ol>
+<p>We can create our <em>own</em> functions with logic for each component.</p>
+<h4>Sum of trip durations on a day</h4>
+<p><code>def</code> is a Python keyword that indicates the start of a function definition.</p>
+<p>The name preceding <code>def</code> is the function name. Python recommends lowercase letters and underscores between words - similar to naming variables.</p>
+<p>An argument passed to <code>sum_seconds_biked_day</code> is assigned to a variable called a <strong>parameter</strong>. We use this <strong>parameter</strong> in the body of our function.</p>
+<div class="highlight"><pre><span></span><span class="c1"># global variables below can be used in any function</span>
+<span class="n">index_trip_duration_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">index_trip_date</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">sum_seconds_biked_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the sum of seconds biked on a given day</span>
+
+<span class="sd">    Keyword argument:</span>
+<span class="sd">    ride_date -- date (string in format year-month-day)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sum_trips_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="n">bike_trips</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">trip</span><span class="p">[</span><span class="n">index_trip_date</span><span class="p">]</span> <span class="o">==</span> <span class="n">ride_date</span><span class="p">:</span>
+            <span class="n">sum_trips_seconds</span> <span class="o">+=</span> <span class="n">trip</span><span class="p">[</span><span class="n">index_trip_duration_seconds</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">sum_trips_seconds</span>
+</pre></div>
+
+
+<h4>Count of trips on a day</h4>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">count_bike_trips_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Count bike trips on a given day</span>
+
+<span class="sd">    Keyword argument:</span>
+<span class="sd">    ride_date -- date (string in format year-month-day)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="n">bike_trips</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">trip</span><span class="p">[</span><span class="n">index_trip_date</span><span class="p">]</span> <span class="o">==</span> <span class="n">ride_date</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">count</span>
+</pre></div>
+
+
+<h4>Average trip duration on a day</h4>
+<p>An <em>average</em> computation is the sum of events divided by the count of events.</p>
+<p>We can <strong>call</strong> our two previously created functions inside a new function.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">average_trip_duration_seconds_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute average trip duration in seconds </span>
+
+<span class="sd">    Keyword argument:</span>
+<span class="sd">    ride_date -- date (string in format year-month-day)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sum_seconds_biked_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_bike_trips_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">)</span>
+</pre></div>
+
+
+<p>In <code>average_trip_duration_seconds_day</code>, the <em>flow of execution</em> is to call the function <code>sum_seconds_biked_day</code> and divide the <strong>return</strong> value by the <strong>return</strong> value of <code>count_bike_trips_day</code>.</p>
+<h4>Answer questions for February 18th, 2018</h4>
+<div class="highlight"><pre><span></span><span class="n">sum_seconds_biked_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>3314
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">count_bike_trips_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>4
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">average_trip_duration_seconds_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>828.5
+</pre></div>
+
+
+<h4>Present data in better readable format</h4>
+<p>It's weird to say the average trip duration for February 18th, 2018 is 825.5 seconds. You should pronounce it in days.</p>
+<p>Let's design a function to present the average trip durations in a more typical format such as 38 minutes and 40 seconds.</p>
+<p>I'll use Python operations for <a href="https://docs.python.org/3.1/tutorial/introduction.html#numbers">floor division</a> and <a href="https://docs.python.org/3/reference/expressions.html#binary-arithmetic-operations">modulo</a>.</p>
+<div class="highlight"><pre><span></span><span class="n">seconds_in_a_minute</span> <span class="o">=</span> <span class="mi">60</span>
+
+<span class="k">def</span> <span class="nf">convert_seconds_to_minutes_seconds_readable_format</span><span class="p">(</span><span class="n">total_seconds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a seconds value into a clean readable format of X minutes and Y seconds</span>
+
+<span class="sd">    Keyword argument:</span>
+<span class="sd">    total_seconds -- seconds value (integer)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">minutes</span> <span class="o">=</span> <span class="n">total_seconds</span> <span class="o">//</span> <span class="n">seconds_in_a_minute</span>
+    <span class="n">seconds</span> <span class="o">=</span> <span class="n">total_seconds</span> <span class="o">%</span> <span class="n">seconds_in_a_minute</span>
+    <span class="n">readable_statement</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; minutes and &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; seconds&quot;</span>
+    <span class="k">return</span> <span class="n">readable_statement</span>
+</pre></div>
+
+
+<p>We pass a function call as an argument to a function too.</p>
+<div class="highlight"><pre><span></span><span class="n">convert_seconds_to_minutes_seconds_readable_format</span><span class="p">(</span><span class="n">average_trip_duration_seconds_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&#39;13.0 minutes and 48.5 seconds&#39;
+</pre></div>
+
+
+<h3>Why are Functions Important</h3>
+<p>Creating a new function gives you an opportunity to coordinate similar statements together, which makes your code easier to read and debug. Our seconds conversion definition utilizes similar concepts with seconds, minutes and math logic around time conversions.</p>
+<p>Functions can make a program smaller by eliminating repetitive code. You'll often hear in programming the acronym DRY - do not repeat yourself. We wrapped <code>count_bike_trips_day</code> in a function and can utilize it to calculate <em>just</em> the count of trips in a day as well as the average trip duration of rides in a day. We <em>reuse</em> our counting logic.</p>
+<p>Using multiple functions in a program allows you to easily write logic in components - step by step - just as we did with our sum, count and average functions. I find it's quicker to get to the final solution by writing out small functions and utilize them together.</p>
+<p>Well-designed functions can be used in multiple programs. Our <code>convert_seconds_to_minutes_seconds_readable_format</code> can used to analyze the time it takes to repair bikes, the amount of time people spend in a bike store and more. </p>
+<h3>Learn More</h3>
+<ul>
+<li>Python standard library of <a href="https://docs.python.org/dev/library/statistics.html#module-statistics">mathematical statistics functions</a></li>
+</ul>
+</div>
+
+</section>
+
+    </div>
+    <!-- start of footer section -->
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">
+                <center>This project contains 8 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+                <br/>
+                Copyright &copy; Dan Friedman,
+                    <time datetime="2018">2018</time>.
+                </center>
+            </p>
+        </div>
+    </footer>
+
+    <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+    <script>
+        // $('.s2').parent('pre').css( "border", "1px solid #c0c6c3" );
+        // $('.s2').parent('pre').css( "background-color", "#d1d2d3" );
+        $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #c0c6c3" );
+        $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#d1d2d3" );
+    </script>
+
+    <!-- Load Google Analytics -->
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-97459416-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End of Google Analytics -->
+
+    <!-- Bootstrap core JavaScript
+      ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../theme/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../theme/js/ie10-viewport-bug-workaround.js"></script>
+
+</body>
+
+</html>

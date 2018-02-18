@@ -10,7 +10,7 @@
     <meta name="author" content="Dan Friedman">
     <link rel="icon" href="../favicon.ico">
 
-    <title>Types and values - Python</title>
+    <title>Iterations - for and while loops - Python</title>
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -36,8 +36,7 @@
      <link href="http://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman - Data Science Tutorials Full RSS Feed" />         <link href="http://dfrieds.com/feeds/python.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman - Data Science Tutorials Categories RSS Feed" />    
 
     <meta name="tags" content="lists" />
-    <meta name="tags" content="tuples" />
-    <meta name="tags" content="dictionaries" />
+    <meta name="tags" content="loops" />
 
     <!--worry about this later-->
     <!--<meta name="google-site-verification" content="7RLmddm4HbzdQLpwH2LH94_vBNmcaMGZSEhmmF5n0NM" />-->
@@ -59,150 +58,99 @@
 <section id="content" class="body">
     <header>
     <h1>
-      Types and values
+      Iterations - for and while loops
     </h1>
 <ol class="breadcrumb">
     <li>
-        <time class="published" datetime="2018-02-14T08:00:00-08:00">
-            February 14, 2018
+        <time class="published" datetime="2018-02-18T14:00:00-08:00">
+            February 18, 2018
         </time>
     </li>
     <li>Python</li>
     <li>lists</li>
-    <li>tuples</li>
-    <li>dictionaries</li>
+    <li>loops</li>
 </ol>
 </header>
 <div class='article_content'>
-<h3>Value</h3>
-<p>A <strong>value</strong> is an assignment your program works with such as a letter or number. Examples include:</p>
-<ul>
-<li><code>5</code></li>
-<li><code>groceries</code></li>
-<li><code>3.14</code></li>
-</ul>
-<h3>Type</h3>
-<p>Each value belongs to a specific <strong>type</strong>.</p>
-<p>In Python, we can check for the type of a value using a <a href="https://docs.python.org/3/library/functions.html">built-in function</a> - meaning it's already available to you in the Python programming language - called <a href="https://docs.python.org/3/library/functions.html#type"><code>type()</code></a>.</p>
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<p>Let's start with a simple list of grocery bills to illustrate these concepts.</p>
+<div class="highlight"><pre><span></span><span class="n">groceries</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;carrots&quot;</span><span class="p">,</span> <span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="s2">&quot;spinach&quot;</span><span class="p">]</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>int
+<p>We want to use loops in Python to repeat similar tasks.</p>
+<h3><code>for</code> statements to loop</h3>
+<p><strong>For</strong> loops allow you to iterate over a sequences (such as a list or string) in the order they appear in the sequence.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">grocery</span> <span class="ow">in</span> <span class="n">groceries</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">grocery</span><span class="p">)</span>
 </pre></div>
 
 
-<p>The type of the value <code>4</code> is <code>int</code> - referred to out loud as an <em>integer</em>. </p>
-<h4>Numeric types and examples</h4>
-<table>
-<thead>
-<tr>
-<th><strong>type name</strong></th>
-<th><strong>example</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>int</td>
-<td>5</td>
-</tr>
-<tr>
-<td>float</td>
-<td>3.14</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>carrots
+soup
+spinach
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>int
+<p>We're essentially saying for <em>each</em> element in the <code>groceries</code> list, print <em>each</em> element to a new line.</p>
+<p>A <strong>for</strong> loop has a header that ends with a colon and an indented body below.</p>
+<h3><code>range()</code> function</h3>
+<p>The <code>range()</code> function helps iterate over a sequence of numbers.</p>
+<p>We can print the numbers from 0 to 3.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="mf">3.14</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>0
+1
+2
+3
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>float
+<p><code>range(4)</code> generates 4 values; however, we start counting at 0 so we only print up to 3.</p>
+<p>We can also specify any <em>start</em> and <em>end</em> value as arguments to the <code>range()</code> function.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
 </pre></div>
 
 
-<h4>Sequence types and examples</h4>
-<table>
-<thead>
-<tr>
-<th><strong>type name</strong></th>
-<th><strong>example</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>str</td>
-<td>"groceries"</td>
-</tr>
-<tr>
-<td>list</td>
-<td>[0, 1, 2, 3]</td>
-</tr>
-<tr>
-<td>tuple</td>
-<td>("pi", 3.14)</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="s2">&quot;groceries&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>4
+5
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>str
+<p>A third optional argument could be a <em>step</em> - an increment with each iteration from start to end.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">even_number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">even_number</span><span class="p">)</span>
 </pre></div>
 
 
-<p><code>str</code> is referred to out loud as a <em>string</em>.</p>
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class="highlight"><pre><span></span>4
+6
+8
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>list
+<p>Our <em>step</em> value of 2 helps us print just even numbers since we start at 4 - an even number.</p>
+<h3>While loop</h3>
+<p>A <strong>while</strong> loop implements repeated code based on a given Boolean condition.</p>
+<p>The code in the <strong>while</strong> loop will execute as long as the <strong>while</strong> statement evaluates to True.</p>
+<div class="highlight"><pre><span></span><span class="n">number</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="k">while</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="n">number</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># increments the number value by 1</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">((</span><span class="s2">&quot;pi&quot;</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">))</span>
+<div class="highlight"><pre><span></span>5
+6
+7
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>tuple
-</pre></div>
-
-
-<h4>Mapping type and example</h4>
-<table>
-<thead>
-<tr>
-<th><strong>type name</strong></th>
-<th><strong>example</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>dict</td>
-<td>{"joe": [6.8, 7.2], "matt": [8.1, 7.9]</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">({</span><span class="s2">&quot;joe&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">6.8</span><span class="p">,</span> <span class="mf">7.2</span><span class="p">],</span> <span class="s2">&quot;matt&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">8.1</span><span class="p">,</span> <span class="mf">7.9</span><span class="p">]})</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>dict
-</pre></div>
-
-
-<p><code>dict</code> is referred to out loud as a <em>dictionary</em> or <em>hash map</em> - a consistent term used to refer to this structure in other programming languages.</p>
-<h3>Learn More</h3>
-<p>The above types are not completely comprehensive, but are the most common ones I utilize. You can learn more about Python's built-in types on Python's <a href="https://docs.python.org/3/library/stdtypes.html">official documentation page</a>. </p>
-<p>If you utilize inheritance, you may want to consider <a href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance()</code></a> rather than <a href="https://docs.python.org/3/library/functions.html#type"><code>type()</code></a>. The differences are explained in detail in this great <a href="https://stackoverflow.com/a/1549854/1710454">StackOverflow post</a>.</p>
+<p>The code executed in the body of the <strong>while</strong> loop three times since 5, 6 and 7 are each smaller than 8.</p>
+<p>Once our number was equal to 8, then the <strong>while</strong> condition evaluated to False, since 8 is not less than 8, and the execution of the <strong>while</strong> loop ended.</p>
 </div>
 
 </section>
