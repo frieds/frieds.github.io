@@ -10,7 +10,7 @@
     <meta name="author" content="Dan Friedman">
     <link rel="icon" href="../favicon.ico">
 
-    <title>Build functions to easily perform repeated operations - Python</title>
+    <title>Generalizing functions to be more reusable - Python</title>
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -36,9 +36,6 @@
      <link href="http://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman - Data Science Tutorials Full RSS Feed" />         <link href="http://dfrieds.com/feeds/python.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman - Data Science Tutorials Categories RSS Feed" />    
 
     <meta name="tags" content="functions" />
-    <meta name="tags" content="lists" />
-    <meta name="tags" content="loops" />
-    <meta name="tags" content="math" />
 
     <!--worry about this later-->
     <!--<meta name="google-site-verification" content="7RLmddm4HbzdQLpwH2LH94_vBNmcaMGZSEhmmF5n0NM" />-->
@@ -60,38 +57,25 @@
 <section id="content" class="body">
     <header>
     <h1>
-      Build functions to easily perform repeated operations
+      Generalizing functions to be more reusable
     </h1>
 <ol class="breadcrumb">
     <li>
-        <time class="published" datetime="2018-02-18T10:00:00-08:00">
+        <time class="published" datetime="2018-02-18T20:00:00-08:00">
             February 18, 2018
         </time>
     </li>
     <li>Python</li>
     <li>functions</li>
-    <li>lists</li>
-    <li>loops</li>
-    <li>math</li>
 </ol>
 </header>
 <div class='article_content'>
-<p><strong>Functions</strong> allow you to store reusable logic.</p>
-<h3>Function Terminology</h3>
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>int
-</pre></div>
-
-
-<p>The <strong>name</strong> of the function is the words that precede the parentheses.</p>
-<p>The expression in parentheses is the <strong>argument</strong> of the function. Functions don't <em>need</em> arguments; functions can contain <em>multiple</em> arguments. </p>
-<p>The result for this function is outputted below the function and called the <strong>return</strong> value. Every function returns a value.</p>
-<p>In the statement above, our <strong>function</strong> named <code>type</code> takes in an <strong>argument</strong> of <code>32</code> and returns <code>int</code> - an integer. <a href="https://docs.python.org/3/library/functions.html#type"><code>type</code></a> is a function built into the Python standard library. So, the function has already been defined for us.</p>
-<p>In the statement above, we <strong>call</strong> the function <code>type</code> to perform the function's computation and <strong>return</strong> the result.</p>
+<p>In a previous tutorial on functions, I utilized the example below with bike trips data and a function to calculate the duration of all trips in seconds.</p>
+<p>But, it wasn't <em>perfect</em>.</p>
+<p>Inside the function, I utilized an index of 0 so I could iterate over the first index of trip duration values in each inner list.</p>
+<p>However, we can make that function better by making it more <strong>generalizable</strong> so the function can serve multiple purposes. To make it more <strong>generalizable</strong>, let's allow the function to take an additional argument for an index value of our inner lists (each representing a ride).</p>
 <h3>Bike Trips Example</h3>
+<h4>Sample Data</h4>
 <p>Below is a sample of data for bike trips as a list of lists. Each inner list holds the data for a trip formatted as <em>[duration in seconds, date]</em>.</p>
 <div class="highlight"><pre><span></span><span class="n">bike_trips</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">475</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">],</span>
               <span class="p">[</span><span class="mi">825</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">],</span>
@@ -108,22 +92,8 @@
 </pre></div>
 
 
-<p>We want to answer these questions:</p>
-<ul>
-<li>What is the average trip duration on any given day?</li>
-<li>How many trips were taken on any given day?</li>
-</ul>
-<p>In terms of Python, there's 3 componenents we want to create:</p>
-<ol>
-<li>Sum of trip durations on a day</li>
-<li>Count of trips on a day</li>
-<li>Averge trip duration on a day</li>
-</ol>
-<p>We can create our <em>own</em> functions with logic for each component.</p>
-<h4>Sum of trip durations on a day</h4>
-<p><code>def</code> is a Python keyword that indicates the start of a function definition.</p>
-<p>The name preceding <code>def</code> is the function name. Python recommends lowercase letters and underscores between words - similar to naming variables.</p>
-<p>An argument passed to <code>sum_seconds_biked_day</code> is assigned to a variable called a <strong>parameter</strong>. We use this <strong>parameter</strong> in the body of our function.</p>
+<p>I created a function to find the sum of seconds biked on a given day.</p>
+<h4>Old function to calculate sum of trip durations on a day</h4>
 <div class="highlight"><pre><span></span><span class="c1"># global variables below can be used in any function</span>
 <span class="n">index_trip_duration_seconds</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">index_trip_date</span> <span class="o">=</span> <span class="mi">1</span>
@@ -145,39 +115,49 @@
 </pre></div>
 
 
-<h4>Count of trips on a day</h4>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">count_bike_trips_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">):</span>
+<h4>New more generalizable function to calculate the sum of our data structure</h4>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sum_of_index_value</span><span class="p">(</span><span class="n">ride_date</span><span class="p">,</span> <span class="n">index_value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Count bike trips on a given day</span>
+<span class="sd">    Find the sum through iteration over an index value in a list of lists</span>
 
 <span class="sd">    Keyword argument:</span>
 <span class="sd">    ride_date -- date (string in format year-month-day)</span>
+<span class="sd">    index_value -- index of inner list (int)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">sum_values</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="n">bike_trips</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">trip</span><span class="p">[</span><span class="n">index_trip_date</span><span class="p">]</span> <span class="o">==</span> <span class="n">ride_date</span><span class="p">:</span>
-            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">count</span>
+            <span class="n">sum_values</span> <span class="o">+=</span> <span class="n">trip</span><span class="p">[</span><span class="n">index_value</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">sum_values</span>
 </pre></div>
 
 
-<h4>Average trip duration on a day</h4>
-<p>An <em>average</em> computation is the sum of events divided by the count of events.</p>
-<p>We can <strong>call</strong> our two previously created functions inside a new function.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">average_trip_duration_seconds_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute average trip duration in seconds </span>
-
-<span class="sd">    Keyword argument:</span>
-<span class="sd">    ride_date -- date (string in format year-month-day)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">sum_seconds_biked_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_bike_trips_day</span><span class="p">(</span><span class="n">ride_date</span><span class="p">)</span>
+<h3>Application of New Function</h3>
+<p>Let's say our <code>bike_trips</code> data structure is improved upon to add miles ridden with each ride.</p>
+<p>Each inner list now holds the data for a trip formatted as <em>[duration in seconds, miles ridden, date]</em>.</p>
+<div class="highlight"><pre><span></span><span class="n">bike_trips</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">475</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">825</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1034</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">980</span><span class="p">,</span> <span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1350</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1880</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">,</span> <span class="mf">7.3</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1950</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">,</span> <span class="mf">6.3</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1530</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">,</span> <span class="mf">5.4</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">1350</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">2345</span><span class="p">,</span> <span class="s1">&#39;2018-02-20&#39;</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">2353</span><span class="p">,</span> <span class="s1">&#39;2018-02-20&#39;</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">]</span>
+             <span class="p">]</span>
 </pre></div>
 
 
-<p>In <code>average_trip_duration_seconds_day</code>, the <em>flow of execution</em> is to call the function <code>sum_seconds_biked_day</code> and divide the <strong>return</strong> value by the <strong>return</strong> value of <code>count_bike_trips_day</code>.</p>
-<h4>Answer questions for February 18th, 2018</h4>
-<div class="highlight"><pre><span></span><span class="n">sum_seconds_biked_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">)</span>
+<p>Create a new variable to assign miles ridden to an index value.</p>
+<div class="highlight"><pre><span></span><span class="n">index_miles_ridden</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+
+
+<h4>Apply <code>sum_of_index_value</code> to calculate sum of trip durations</h4>
+<div class="highlight"><pre><span></span><span class="n">sum_of_index_value</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="n">index_trip_duration_seconds</span><span class="p">)</span>
 </pre></div>
 
 
@@ -185,60 +165,16 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">count_bike_trips_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">)</span>
+<h4>Apply <code>sum_of_index_value</code> to calculate sum of miles ridden</h4>
+<div class="highlight"><pre><span></span><span class="n">sum_of_index_value</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="n">index_miles_ridden</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>4
+<div class="highlight"><pre><span></span>13.4
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">average_trip_duration_seconds_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>828.5
-</pre></div>
-
-
-<h4>Present data in better readable format</h4>
-<p>It's weird to say the average trip duration for February 18th, 2018 is 825.5 seconds. You should pronounce it in days.</p>
-<p>Let's design a function to present the average trip durations in a more typical format such as 38 minutes and 40 seconds.</p>
-<p>I'll use Python operations for <a href="https://docs.python.org/3.1/tutorial/introduction.html#numbers">floor division</a> and <a href="https://docs.python.org/3/reference/expressions.html#binary-arithmetic-operations">modulo</a>.</p>
-<div class="highlight"><pre><span></span><span class="n">seconds_in_a_minute</span> <span class="o">=</span> <span class="mi">60</span>
-
-<span class="k">def</span> <span class="nf">convert_seconds_to_minutes_seconds_readable_format</span><span class="p">(</span><span class="n">total_seconds</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert a seconds value into a clean readable format of X minutes and Y seconds</span>
-
-<span class="sd">    Keyword argument:</span>
-<span class="sd">    total_seconds -- seconds value (integer)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">minutes</span> <span class="o">=</span> <span class="n">total_seconds</span> <span class="o">//</span> <span class="n">seconds_in_a_minute</span>
-    <span class="n">seconds</span> <span class="o">=</span> <span class="n">total_seconds</span> <span class="o">%</span> <span class="n">seconds_in_a_minute</span>
-    <span class="n">readable_statement</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; minutes and &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; seconds&quot;</span>
-    <span class="k">return</span> <span class="n">readable_statement</span>
-</pre></div>
-
-
-<p>We pass a function call as an argument to a function too.</p>
-<div class="highlight"><pre><span></span><span class="n">convert_seconds_to_minutes_seconds_readable_format</span><span class="p">(</span><span class="n">average_trip_duration_seconds_day</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">))</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>&#39;13.0 minutes and 48.5 seconds&#39;
-</pre></div>
-
-
-<h3>Why are Functions Important</h3>
-<p>Creating a new function gives you an opportunity to coordinate similar statements together, which makes your code easier to read and debug. Our seconds conversion definition utilizes similar concepts with seconds, minutes and math logic around time conversions.</p>
-<p>Functions can make a program smaller by eliminating repetitive code. You'll often hear in programming the acronym DRY - do not repeat yourself. We wrapped <code>count_bike_trips_day</code> in a function and can utilize it to calculate <em>just</em> the count of trips in a day as well as the average trip duration of rides in a day. We <em>reuse</em> our counting logic. It is <em>much</em> more concise to call a function twice than to copy and paste the body!</p>
-<p>Using multiple functions in a program allows you to easily write logic in components - step by step - just as we did with our sum, count and average functions. I find it's quicker to get to the final solution by writing out small functions and utilize them together.</p>
-<p>Well-designed functions can be used in multiple programs. Our <code>convert_seconds_to_minutes_seconds_readable_format</code> can used to analyze the time it takes to repair bikes, the amount of time people spend in a bike store and more. </p>
-<h3>Learn More</h3>
-<ul>
-<li>Python standard library of <a href="https://docs.python.org/dev/library/statistics.html#module-statistics">mathematical statistics functions</a></li>
-</ul>
+<p><strong>Our new function now serves two (or more) purposes, instead of just one.</strong></p>
 </div>
 
 </section>
