@@ -10,7 +10,7 @@
     <meta name="author" content="Dan Friedman">
     <link rel="icon" href="../favicon.ico">
 
-    <title>Count of each unique element in a list - Python</title>
+    <title>Count occurences of each unique element in a list - Python</title>
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -37,6 +37,7 @@
 
     <meta name="tags" content="dictionaries" />
     <meta name="tags" content="collections" />
+    <meta name="tags" content="lists" />
 
     <!--worry about this later-->
     <!--<meta name="google-site-verification" content="7RLmddm4HbzdQLpwH2LH94_vBNmcaMGZSEhmmF5n0NM" />-->
@@ -58,7 +59,7 @@
 <section id="content" class="body">
     <header>
     <h1>
-      Count of each unique element in a list
+      Count occurences of each unique element in a list
     </h1>
 <ol class="breadcrumb">
     <li>
@@ -69,6 +70,7 @@
     <li>Python</li>
     <li>dictionaries</li>
     <li>collections</li>
+    <li>lists</li>
 </ol>
 </header>
 <div class='article_content'>
@@ -78,7 +80,7 @@
 </pre></div>
 
 
-<h3>Count of Each Unique Element in Two Pythonic Ways</h3>
+<h3>Count Occurences of Each Unique Element - 3 Different Ways</h3>
 <p>Let's say your friend gets a list of grades for the semester. We want a count for each letter grade.</p>
 <div class="highlight"><pre><span></span><span class="n">high_school_semester_grades</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;B+&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B+&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A+&quot;</span><span class="p">,</span> <span class="s2">&quot;A-&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
 </pre></div>
@@ -86,17 +88,17 @@
 
 <p>There are several Pythonic ways to easily do this.</p>
 <h4>Create a Dictionary</h4>
-<div class="highlight"><pre><span></span><span class="n">dict_count_of_letters</span> <span class="o">=</span> <span class="p">{}</span>
+<div class="highlight"><pre><span></span><span class="n">dict_count_occurences_of_letters</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">high_school_semester_grades</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">dict_count_of_letters</span><span class="p">:</span>
-        <span class="n">dict_count_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">dict_count_occurences_of_letters</span><span class="p">:</span>
+        <span class="n">dict_count_occurences_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">dict_count_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">dict_count_occurences_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">dict_count_of_letters</span>
+<div class="highlight"><pre><span></span><span class="n">dict_count_occurences_of_letters</span>
 </pre></div>
 
 
@@ -104,7 +106,7 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">dict_count_of_letters</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">dict_count_occurences_of_letters</span><span class="p">)</span>
 </pre></div>
 
 
@@ -113,16 +115,16 @@
 
 
 <h4>Create a <a href="https://docs.python.org/3/library/collections.html#defaultdict-objects">defaultdict</a></h4>
-<div class="highlight"><pre><span></span><span class="n">defaultdict_count_of_letters</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">defaultdict_count_occurences_of_letters</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 </pre></div>
 
 
 <div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">high_school_semester_grades</span><span class="p">:</span>
-    <span class="n">defaultdict_count_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">defaultdict_count_occurences_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">defaultdict_count_of_letters</span>
+<div class="highlight"><pre><span></span><span class="n">defaultdict_count_occurences_of_letters</span>
 </pre></div>
 
 
@@ -130,7 +132,7 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">defaultdict_count_of_letters</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">defaultdict_count_occurences_of_letters</span><span class="p">)</span>
 </pre></div>
 
 
@@ -161,7 +163,7 @@
 
 <h3>Additional: Sort Data Structures by Count of Letters</h3>
 <h4>Dictionary sort values</h4>
-<div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">dict_count_of_letters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">dict_count_occurences_of_letters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
 
@@ -171,7 +173,7 @@
 
 <h4>defaultdict sort values</h4>
 <p>Same method as the dictionary way above.</p>
-<div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">defaultdict_count_of_letters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">defaultdict_count_occurences_of_letters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
 
@@ -201,7 +203,7 @@
     <footer class="footer">
         <div class="container">
             <p class="text-muted">
-                <center>This project contains 9 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+                <center>This project contains 10 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
                 <br/>
                 Copyright &copy; Dan Friedman,
                     <time datetime="2018">2018</time>.

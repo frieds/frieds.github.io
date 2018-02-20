@@ -72,7 +72,7 @@
 <div class='article_content'>
 <p>In a previous tutorial on functions, I utilized the example below with bike trips data and a function to calculate the duration of all trips in seconds.</p>
 <p>But, it wasn't <em>perfect</em>.</p>
-<p>Inside the function, I utilized an index of 0 so I could iterate over the first index of trip duration values in each inner list.</p>
+<p>Inside the function, I utilized an index of <code>0</code> so I could iterate over the first index of trip duration values in each inner list.</p>
 <p>However, we can make that function better by making it more <strong>generalizable</strong> so the function can serve multiple purposes. To make it more <strong>generalizable</strong>, let's allow the function to take an additional argument for an index value of our inner lists (each representing a ride).</p>
 <h3>Bike Trips Example</h3>
 <h4>Sample Data</h4>
@@ -84,15 +84,12 @@
               <span class="p">[</span><span class="mi">1350</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
               <span class="p">[</span><span class="mi">1880</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
               <span class="p">[</span><span class="mi">1950</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
-              <span class="p">[</span><span class="mi">1530</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
-              <span class="p">[</span><span class="mi">1350</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">],</span>
-              <span class="p">[</span><span class="mi">2345</span><span class="p">,</span> <span class="s1">&#39;2018-02-20&#39;</span><span class="p">],</span>
-              <span class="p">[</span><span class="mi">2353</span><span class="p">,</span> <span class="s1">&#39;2018-02-20&#39;</span><span class="p">]</span>
+              <span class="p">[</span><span class="mi">1530</span><span class="p">,</span> <span class="s1">&#39;2018-02-19&#39;</span><span class="p">]</span>
              <span class="p">]</span>
 </pre></div>
 
 
-<p>I created a function to find the sum of seconds biked on a given day.</p>
+<p>I previously created a function to find the sum of seconds biked on a given day.</p>
 <h4>Old function to calculate sum of trip durations on a day</h4>
 <div class="highlight"><pre><span></span><span class="c1"># global variables below can be used in any function</span>
 <span class="n">index_trip_duration_seconds</span> <span class="o">=</span> <span class="mi">0</span>
@@ -115,7 +112,7 @@
 </pre></div>
 
 
-<h4>New more generalizable function to calculate the sum of our data structure</h4>
+<h4>New more generalizable function to calculate the sum over an index in our inner lists</h4>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sum_of_index_value</span><span class="p">(</span><span class="n">ride_date</span><span class="p">,</span> <span class="n">index_value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Find the sum through iteration over an index value in a list of lists</span>
@@ -157,7 +154,13 @@
 
 
 <h4>Apply <code>sum_of_index_value</code> to calculate sum of trip durations</h4>
-<div class="highlight"><pre><span></span><span class="n">sum_of_index_value</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="n">index_trip_duration_seconds</span><span class="p">)</span>
+<p>When a function has more than a few numeric arguments, it is easy to forget what they are, or what order they should be in. In that case it is often a good idea to include the names of the parameters in the argument list:
+polygon(bob, n=7, length=70)
+These are called keyword arguments because they include the parameter names as “key- words” (not to be confused with Python keywords like while and def).
+This syntax makes the program more readable. It is also a reminder about how arguments and parameters work: when you call a function, the arguments are assigned to the param- eters.</p>
+<p>Now that are function takes two arguments, I like to include the names of the parameters in the argument list. This helps with readability.</p>
+<p>These are called <strong>keyword arguments</strong> because they include the parameter names as <em>keywords</em>. </p>
+<div class="highlight"><pre><span></span><span class="n">sum_of_index_value</span><span class="p">(</span><span class="n">ride_date</span><span class="o">=</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="n">index_value</span><span class="o">=</span><span class="n">index_trip_duration_seconds</span><span class="p">)</span>
 </pre></div>
 
 
@@ -166,7 +169,7 @@
 
 
 <h4>Apply <code>sum_of_index_value</code> to calculate sum of miles ridden</h4>
-<div class="highlight"><pre><span></span><span class="n">sum_of_index_value</span><span class="p">(</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="n">index_miles_ridden</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">sum_of_index_value</span><span class="p">(</span><span class="n">ride_date</span><span class="o">=</span><span class="s1">&#39;2018-02-18&#39;</span><span class="p">,</span> <span class="n">index_value</span><span class="o">=</span><span class="n">index_miles_ridden</span><span class="p">)</span>
 </pre></div>
 
 
@@ -184,7 +187,7 @@
     <footer class="footer">
         <div class="container">
             <p class="text-muted">
-                <center>This project contains 9 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+                <center>This project contains 10 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
                 <br/>
                 Copyright &copy; Dan Friedman,
                     <time datetime="2018">2018</time>.
