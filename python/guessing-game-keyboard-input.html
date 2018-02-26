@@ -22,22 +22,22 @@
     <meta name="twitter:site" content="@_DanFriedman">
     <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
     
-    <meta name="keywords" content="docstrings in python">
+    <meta name="keywords" content="keyboard input python">
 
-    <meta name="description" content="Docstrings in Python functions help document the logic of functions and make code easier to read for others">
-    <meta property="og:description"  content="Docstrings in Python functions help document the logic of functions and make code easier to read for others">
-    <meta name="twitter:description" content="Docstrings in Python functions help document the logic of functions and make code easier to read for others">
+    <meta name="description" content="Build a simple number guessing game in Python that takes in a users' keyboard input">
+    <meta property="og:description"  content="Build a simple number guessing game in Python that takes in a users' keyboard input">
+    <meta name="twitter:description" content="Build a simple number guessing game in Python that takes in a users' keyboard input">
 
-    <meta property="og:title" content="Docstrings Best Practices in Functions">
-    <meta name="twitter:title" content="Docstrings Best Practices in Functions">
+    <meta property="og:title" content="Build a Number Guessing Game with Keyboard Input">
+    <meta name="twitter:title" content="Build a Number Guessing Game with Keyboard Input">
 
-    <link rel="canonical" href="../python/docstrings-functions-best-practices.html"/>
+    <link rel="canonical" href="../python/guessing-game-keyboard-input.html"/>
 
     <!--this code below should be the same as above-->
-<!--         <link rel="canonical" href="http://dfrieds.com/Python/docstrings-functions-best-practices.html">
+<!--         <link rel="canonical" href="http://dfrieds.com/Python/guessing-game-keyboard-input.html">
  -->
 
-    <title>Docstrings Best Practices in Functions - Python</title>
+    <title>Build a Number Guessing Game with Keyboard Input - Python</title>
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -125,101 +125,72 @@
 <section id="content" class="body">
     <header>
         <h1>
-        Docstrings Best Practices in Functions
+        Build a Number Guessing Game with Keyboard Input
         </h1>
         <dl class="row article-details">
             <dt class="col-sm-2">Created:</dt>
-            <dd class="col-sm-10">February 19, 2018</dd>
+            <dd class="col-sm-10">February 25, 2018</dd>
         
             <dt class="col-sm-2">Category:</dt>
             <dd class="col-sm-10">Python</dd>
     
             
             <dt class="col-sm-2">Key Terms:</dt>
-            <dd class="col-sm-10">            documentation,
-            functions,
-            dictionaries,
-            loops,
-            lists
+            <dd class="col-sm-10">            keyboard input,
+            while loop
             </dd>
         </dl>
 </header>
 <div class='article_content'>
-<h4>Import Libraries</h4>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<h3>What is <code>Input</code>?</h3>
+<p>In programs, you can build interactivity with others to accept input from them and respond to certain condtions. </p>
+<p>Python provides a built-in function called <code>input</code> that stops the program and waits for input. When the user pressed <em>Return</em> or <em>Enter</em>, the program is resumed and the input returns what the user typed as a string.</p>
+<p>I can ask a user for their name. The <code>\n</code> is a <strong>newline</strong> character that causes a line break. The user prompt will display below the input prompt.</p>
+<div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;What&#39;s your name?</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<h3>Docstrings</h3>
-<p>A <strong>docstring</strong> is a string at the beginning of the function body that explains how the function works.</p>
-<p>Every function you create ought to have a <strong>docstring</strong>. They're in triple-quoted strings and allow for multi-line text.</p>
-<h4>Why Docstrings Are So Important</h4>
-<p>Coding on the job you'll frequently look back at previous code, refactor/improve upon previous code, read other people's code and someone will likely have questions on your code.</p>
-<p>What is one of the best ways to reduce anxiety with all the to-dos above... document your code well!</p>
-<p>Well-written docstrings are just one example that'll make your code easier to read for you and others, and make your life so much easier.</p>
-<h4>What Doctsrings Should Include</h4>
-<p>Succinct info on the function's:</p>
-<ol>
-<li>Logic</li>
-<li>Arguments and their data types</li>
-<li>Return values and their data type</li>
-</ol>
-<h3>Example: Duplicates in a List</h3>
-<p>Let's say we have a list of numbers.</p>
-<div class="highlight"><pre><span></span><span class="n">groceries</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;eggs&quot;</span><span class="p">,</span> <span class="s2">&quot;carrots&quot;</span><span class="p">,</span> <span class="s2">&quot;eggs&quot;</span><span class="p">,</span> <span class="s2">&quot;spinach&quot;</span><span class="p">,</span> <span class="s2">&quot;carrots&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">name</span>
 </pre></div>
 
 
-<p>Notice how <code>eggs</code> and <code>carrots</code> are repeated twice.</p>
-<h4>Function to count the number of occurences for each item</h4>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">count_occurences_items</span><span class="p">(</span><span class="n">list_of_items</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Given a list of items, count the occurences of each item by looping over </span>
-<span class="sd">    list_of_items and creating a defaultdict data structure of item:count pairs.</span>
-
-<span class="sd">    Keyword arguments:</span>
-<span class="sd">    list_of_values -- any list of items</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">defaultdict_count_of_item_occurences</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_items</span><span class="p">:</span>
-        <span class="n">defaultdict_count_of_item_occurences</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">defaultdict_count_of_item_occurences</span>
+<div class="highlight"><pre><span></span>&#39;Dan&#39;
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">grocery_item_occurences</span> <span class="o">=</span> <span class="n">count_occurences_items</span><span class="p">(</span><span class="n">groceries</span><span class="p">)</span>
+<h3>Guessing Game Example</h3>
+<p>Let's build a game that allows a user up to 10 guesses in order to guess a number between 0 and 100. If the user guesses too low, we'll respond with "you guessed too low". If the user guesses too high, we'll respond with "you guessed too high". Lastly, if the user guesses correct, we'll respond "you guessed correct!" and end the game.</p>
+<p>We'll assign any value between 0 and 100 to a <code>correct_number</code> variable to be our answer.</p>
+<div class="highlight"><pre><span></span><span class="n">correct_number</span> <span class="o">=</span> <span class="mi">20</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">grocery_item_occurences</span>
+<p>We'll assign a <code>count_of_guesses</code> variable to be 0 since we're at 0 guesses in the game to start.</p>
+<div class="highlight"><pre><span></span><span class="n">count_of_guesses</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>defaultdict(int, {&#39;carrots&#39;: 2, &#39;eggs&#39;: 2, &#39;spinach&#39;: 1})
+<p>We utilize a <code>while</code> loop to evaluate the condition inside the loop as long as we've guessed less than 10 times. </p>
+<p>We assign the variable <code>user_guess</code> to the result of our input that prompts the user to guess. We convert the guess from a string value to an integer; once an integer, we can logically compare it to our <code>correct_number</code> variable of 20.</p>
+<p>We use conditional statements to evaluate how <code>user_guess</code> compares to <code>correct_number</code> based on the game specifications above.</p>
+<p>The un-indented <code>else</code> statement at the end only executes if a user exhausts all 10 guesses. If not, our program will evaluate that <code>else</code> condition to <code>False</code> and not execute the print statement in its body.</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">count_of_guesses</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="n">user_guess</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Guess: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">count_of_guesses</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">user_guess</span> <span class="o">&lt;</span> <span class="n">correct_number</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you guessed too low&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">user_guess</span> <span class="o">&gt;</span> <span class="n">correct_number</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you guessed too high&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you guessed correct!&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sorry you lossed the game&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<h4>Function to print duplicated values and count of occurences</h4>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_multiple_item_occurences</span><span class="p">(</span><span class="n">count_item_occurences</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Print in pretty format of items with multiple occurences by looping over</span>
-<span class="sd">    count_item_occurences and checking if values &gt;= 2.</span>
-
-<span class="sd">    Keyword arguments:</span>
-<span class="sd">    count_item_occurences -- dictionary structure of item:count pairs</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">count_item_occurences</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{0} - quantity of {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span><span class="n">print_multiple_item_occurences</span><span class="p">(</span><span class="n">grocery_item_occurences</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>eggs - quantity of 2
-carrots - quantity of 2
+<div class="highlight"><pre><span></span>you guessed correct!
 </pre></div>
 </div>
 
