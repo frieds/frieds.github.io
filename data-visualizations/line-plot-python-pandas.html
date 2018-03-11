@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="histogram plot python pandas">
+  <meta name="keywords" content="line plot python pandas">
 
-  <meta name="description" content="Create a histogram plot from the tips dataset in Python using the Pandas library">
-  <meta property="og:description"  content="Create a histogram plot from the tips dataset in Python using the Pandas library">
-  <meta name="twitter:description" content="Create a histogram plot from the tips dataset in Python using the Pandas library">
+  <meta name="description" content="Create simple line plots in Python using the Pandas library based on personanl Fitbit activity data">
+  <meta property="og:description"  content="Create simple line plots in Python using the Pandas library based on personanl Fitbit activity data">
+  <meta name="twitter:description" content="Create simple line plots in Python using the Pandas library based on personanl Fitbit activity data">
 
-  <meta property="og:title" content="Histogram Plot using Pandas">
-  <meta name="twitter:title" content="Histogram Plot using Pandas">
+  <meta property="og:title" content="Line Plot using Pandas">
+  <meta name="twitter:title" content="Line Plot using Pandas">
 
-  <link rel="canonical" href="../data-visualizations/histogram-plot-pandas.html"/>
+  <link rel="canonical" href="../data-visualizations/line-plot-python-pandas.html"/>
 
-  <title>Histogram Plot using Pandas - Data Visualizations</title>
+  <title>Line Plot using Pandas - Data Visualizations</title>
 
   
 
@@ -148,15 +148,15 @@
 <section id="content" class="body">
   <header>
     <h1>
-      Histogram Plot using Pandas
+      Line Plot using Pandas
     </h1>
 
     <ul class ="row article_info">
       <li>
-        Mar 4&nbsp;&nbsp;&bull; &nbsp;&nbsp;1 min read
+        Mar 10&nbsp;&nbsp;&bull; &nbsp;&nbsp;2 min read
       </li>
       <li>
-        Key Terms:         histogram plot
+        Key Terms:         line plot
       </li>
     </ul>
   </header>
@@ -169,14 +169,30 @@
 </pre></div>
 
 
-<h4>Read in Tips Dataset from URL</h4>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv&#39;</span><span class="p">)</span>
+<h4>Generate a Line Plot from My Fitbit Activity Data</h4>
+<p>More often, you'll be asked to generate a line plot to show a trend over time.</p>
+<p>Below is my Fitbit activity of steps for each day over a 15 day time period.</p>
+<div class="highlight"><pre><span></span><span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2018-02-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-02&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-03&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-04&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;2018-02-05&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-06&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-07&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-08&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;2018-02-09&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-10&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-11&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-12&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;2018-02-13&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-14&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-15&#39;</span><span class="p">]</span>
 </pre></div>
 
 
-<h4>Preview the Data</h4>
-<h5>Preview the top 5 rows</h5>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11178</span><span class="p">,</span> <span class="mi">9769</span><span class="p">,</span> <span class="mi">11033</span><span class="p">,</span> <span class="mi">9757</span><span class="p">,</span> <span class="mi">10045</span><span class="p">,</span> <span class="mi">9987</span><span class="p">,</span> <span class="mi">11067</span><span class="p">,</span> <span class="mi">11326</span><span class="p">,</span> <span class="mi">9976</span><span class="p">,</span>
+                   <span class="mi">11359</span><span class="p">,</span> <span class="mi">10428</span><span class="p">,</span> <span class="mi">10296</span><span class="p">,</span> <span class="mi">9377</span><span class="p">,</span> <span class="mi">10705</span><span class="p">,</span> <span class="mi">9426</span><span class="p">]</span>
+</pre></div>
+
+
+<h4>Convert Data into Pandas Dataframe</h4>
+<p>We create a Pandas DataFrame from our lists, naming the columns <em>date</em> and <em>steps</em>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="n">dates</span><span class="p">,</span> <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="n">steps</span><span class="p">})</span>
+</pre></div>
+
+
+<h5>Preview top 5 rows of dataframe</h5>
+<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 
@@ -185,104 +201,96 @@
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>total_bill</th>
-      <th>tip</th>
-      <th>sex</th>
-      <th>smoker</th>
-      <th>day</th>
-      <th>time</th>
-      <th>size</th>
+      <th>date</th>
+      <th>steps</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>16.99</td>
-      <td>1.01</td>
-      <td>Female</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>2</td>
+      <td>2018-02-01</td>
+      <td>11178</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>10.34</td>
-      <td>1.66</td>
-      <td>Male</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>3</td>
+      <td>2018-02-02</td>
+      <td>9769</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>21.01</td>
-      <td>3.50</td>
-      <td>Male</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>3</td>
+      <td>2018-02-03</td>
+      <td>11033</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>23.68</td>
-      <td>3.31</td>
-      <td>Male</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>2</td>
+      <td>2018-02-04</td>
+      <td>9757</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>24.59</td>
-      <td>3.61</td>
-      <td>Female</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>4</td>
+      <td>2018-02-05</td>
+      <td>10045</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-<h5>View the count of values per colummn and data types</h5>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<h5>See data types and count of values in fields</h5>
+<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </pre></div>
 
 
 <div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 244 entries, 0 to 243
-Data columns (total 7 columns):
-total_bill    244 non-null float64
-tip           244 non-null float64
-sex           244 non-null object
-smoker        244 non-null object
-day           244 non-null object
-time          244 non-null object
-size          244 non-null int64
-dtypes: float64(2), int64(1), object(4)
-memory usage: 13.4+ KB
+RangeIndex: 15 entries, 0 to 14
+Data columns (total 2 columns):
+date     15 non-null object
+steps    15 non-null int64
+dtypes: int64(1), object(1)
+memory usage: 320.0+ bytes
 </pre></div>
 
 
-<h4>Plot a Simple Histogram of Tip Amounts</h4>
-<p>We access the <em>tip</em> column, call the <code>plot</code> function and pass in <code>hist</code> to the <code>kind</code> argument that specifies the kind of plot.</p>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">);</span>
+<h4>Convert Strings to Datetime Objects</h4>
+<p>In our plot, we want dates on the x-axis and steps on the y-axis.</p>
+<p>However, Pandas plotting does not allow for strings - the data type in our <code>dates</code> list - to appear on the x-axis.</p>
+<p>We must convert the dates as strings into <strong>datetime</strong> objects.</p>
+<h5>Use <code>to_datetime</code> method</h5>
+<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_fitbit_activity</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
 </pre></div>
 
 
-<p><img alt="png" src="histogram_plot_pandas_files/histogram_plot_pandas_12_0.png"></p>
-<h4>Plot a Simple Histogram of Total Bill Amounts</h4>
-<p>We access the <em>total_bill</em> column, call the <code>plot</code> function and pass in <code>hist</code> to the <code>kind</code> argument that specifies the kind of plot.</p>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">);</span>
+<h5>Verify <em>date</em> field changed to datetime type</h5>
+<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="png" src="histogram_plot_pandas_files/histogram_plot_pandas_15_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 15 entries, 0 to 14
+Data columns (total 2 columns):
+date     15 non-null datetime64[ns]
+steps    15 non-null int64
+dtypes: datetime64[ns](1), int64(1)
+memory usage: 320.0 bytes
+</pre></div>
+
+
+<p>The <em>date</em> field changed to have all values contain the datetime type.</p>
+<h4>Plot Steps Over Time</h4>
+<p>In a Pandas line plot, the index of the dataframe is plotted on the x-axis. Currently, we have an index of values from 0 to 15 on each integer increment.</p>
+<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>RangeIndex(start=0, stop=15, step=1)
+</pre></div>
+
+
+<p>We need to set our <em>date</em> field to be the index of our dataframe so it's plotted accordingly on the x-axis.</p>
+<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="line_plot_pandas_files/line_plot_pandas_25_0.png"></p>
   </div>
 </section>
 
@@ -292,7 +300,7 @@ memory usage: 13.4+ KB
   <footer class="footer">
     <div class="container">
       <p class="text-muted">
-        <center>This project contains 20 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+        <center>This project contains 22 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
           <br/>
           Copyright &copy; Dan Friedman,
           <time datetime="2018">2018</time>.
@@ -304,7 +312,6 @@ memory usage: 13.4+ KB
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
   crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 
   <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
   <script>
