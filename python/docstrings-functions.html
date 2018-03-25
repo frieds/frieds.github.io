@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="scatter plot python">
+  <meta name="keywords" content="docstrings in python">
 
-  <meta name="description" content="Generate simple scatter plots in Python using the Matplotlib library">
-  <meta property="og:description"  content="Generate simple scatter plots in Python using the Matplotlib library">
-  <meta name="twitter:description" content="Generate simple scatter plots in Python using the Matplotlib library">
+  <meta name="description" content="Docstrings in Python functions help document the logic of functions and make code easier to read for others">
+  <meta property="og:description"  content="Docstrings in Python functions help document the logic of functions and make code easier to read for others">
+  <meta name="twitter:description" content="Docstrings in Python functions help document the logic of functions and make code easier to read for others">
 
-  <meta property="og:title" content="Scatter Plots using Matplotlib">
-  <meta name="twitter:title" content="Scatter Plots using Matplotlib">
+  <meta property="og:title" content="Docstrings Best Practices in Functions">
+  <meta name="twitter:title" content="Docstrings Best Practices in Functions">
 
-  <link rel="canonical" href="../data-visualizations/scatter-plots-python-matplotlib.html"/>
+  <link rel="canonical" href="../python/docstrings-functions.html"/>
 
-  <title>Scatter Plots using Matplotlib - Data Visualizations</title>
+  <title>Docstrings Best Practices in Functions - Python</title>
 
   
 
@@ -67,7 +67,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-   <link href="Important concepts in data science taught through relevant real-world examples and a focus on short code snippets with detailed explanations./feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />       <link href="Important concepts in data science taught through relevant real-world examples and a focus on short code snippets with detailed explanations./feeds/data-visualizations.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
+   <link href="Important concepts in data science taught through relevant real-world examples and a focus on short code snippets with detailed explanations./feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />       <link href="Important concepts in data science taught through relevant real-world examples and a focus on short code snippets with detailed explanations./feeds/python.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
 
   <!-- Start of Async Drift Code -->
   <script>
@@ -98,7 +98,7 @@
 </head>
 
 <body>
-  <div class="data-visualizations"></div>
+  <div class="python"></div>
 
   <nav class="navbar navbar-expand-sm fixed-top">
     <div class="container">
@@ -148,57 +148,100 @@
 <section id="content" class="body">
   <header>
     <h1>
-      Scatter Plots using Matplotlib
+      Docstrings Best Practices in Functions
     </h1>
 
     <ul class ="row article_info">
       <li>
-        Mar 4&nbsp;&nbsp;&bull; &nbsp;&nbsp;1 min read
+        Feb 19&nbsp;&nbsp;&bull; &nbsp;&nbsp;2 min read
       </li>
       <li>
-        Key Terms:         scatter plot
+        Key Terms:         documentation,
+        functions,
+        dictionaries,
+        loops,
+        lists
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <h4>Import Modules</h4>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
+    <h4>Import Libraries</h4>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 </pre></div>
 
 
-<h4>What is Matplotlib</h4>
-<p>In Python, we utilize the module <code>matplotlib</code> to generate plots. We can create scatter plots, line plots, bar charts, histograms and more.</p>
-<p><code>pyplot</code> is an interface to <code>matplotlib</code> to provide easier syntax for plotting.</p>
-<p><code>% matplotlib inline</code> allows us to immediately see these plots inline in our Jupyter Notebook.</p>
-<h4>Generate a Simple Scatter Plot</h4>
-<p>We call the <code>scatter</code> function and must pass in at least two arguments, the first our list of x-coordinates, and the second our list of y-coordinates.</p>
-<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]);</span>
+<h3>Docstrings</h3>
+<p>A <strong>docstring</strong> is a string at the beginning of the function body that explains how the function works.</p>
+<p>Every function you create ought to have a <strong>docstring</strong>. They're in triple-quoted strings and allow for multi-line text.</p>
+<h4>Why Docstrings Are So Important</h4>
+<p>Coding on the job you'll frequently look back at previous code, refactor/improve upon previous code, read other people's code and someone will likely have questions on your code.</p>
+<p>What is one of the best ways to reduce anxiety with all the to-dos above... document your code well!</p>
+<p>Well-written docstrings are just one example that'll make your code easier to read for you and others, and make your life so much easier.</p>
+<h4>What Doctsrings Should Include</h4>
+<p>Succinct info on the function's:</p>
+<ol>
+<li>Logic</li>
+<li>Arguments and their data types</li>
+<li>Return values and their data type</li>
+</ol>
+<h3>Example: Duplicates in a List</h3>
+<p>Let's say we have a list of numbers.</p>
+<div class="highlight"><pre><span></span><span class="n">groceries</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;eggs&quot;</span><span class="p">,</span> <span class="s2">&quot;carrots&quot;</span><span class="p">,</span> <span class="s2">&quot;eggs&quot;</span><span class="p">,</span> <span class="s2">&quot;spinach&quot;</span><span class="p">,</span> <span class="s2">&quot;carrots&quot;</span><span class="p">]</span>
 </pre></div>
 
 
-<p><img alt="png" src="scatter_plots_matplotlib_files/scatter_plots_matplotlib_7_0.png"></p>
-<p>We plotted 4 scatter points.</p>
-<h4>Generate a Scatter Plot with My Fitbit Activity Data</h4>
-<p>Below is my Fitbit data of daily steps taken and daily calories burned over a 15-day period.</p>
-<div class="highlight"><pre><span></span><span class="n">calories_burned</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3092</span><span class="p">,</span> <span class="mi">2754</span><span class="p">,</span> <span class="mi">2852</span><span class="p">,</span> <span class="mi">2527</span><span class="p">,</span> <span class="mi">3199</span><span class="p">,</span> <span class="mi">2640</span><span class="p">,</span> <span class="mi">2874</span><span class="p">,</span> <span class="mi">2649</span><span class="p">,</span>
-                   <span class="mi">2525</span><span class="p">,</span> <span class="mi">2858</span><span class="p">,</span> <span class="mi">2530</span><span class="p">,</span> <span class="mi">2535</span><span class="p">,</span> <span class="mi">2487</span><span class="p">,</span> <span class="mi">2534</span><span class="p">,</span> <span class="mi">2668</span><span class="p">]</span>
+<p>Notice how <code>eggs</code> and <code>carrots</code> are repeated twice.</p>
+<h4>Function to count the number of occurences for each item</h4>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">count_occurences_items</span><span class="p">(</span><span class="n">list_of_items</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a list of items, count the occurences of each item by looping over </span>
+<span class="sd">    list_of_items and creating a defaultdict data structure of item:count pairs.</span>
+
+<span class="sd">    Keyword arguments:</span>
+<span class="sd">    list_of_values -- any list of items</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">defaultdict_count_of_item_occurences</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_of_items</span><span class="p">:</span>
+        <span class="n">defaultdict_count_of_item_occurences</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">defaultdict_count_of_item_occurences</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15578</span><span class="p">,</span> <span class="mi">8769</span><span class="p">,</span> <span class="mi">14133</span><span class="p">,</span> <span class="mi">8757</span><span class="p">,</span> <span class="mi">18045</span><span class="p">,</span> <span class="mi">9087</span><span class="p">,</span> <span class="mi">14367</span><span class="p">,</span> <span class="mi">11326</span><span class="p">,</span> <span class="mi">6776</span><span class="p">,</span>
-                   <span class="mi">14359</span><span class="p">,</span> <span class="mi">10428</span><span class="p">,</span> <span class="mi">9296</span><span class="p">,</span> <span class="mi">8177</span><span class="p">,</span> <span class="mi">8705</span><span class="p">,</span> <span class="mi">9426</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">grocery_item_occurences</span> <span class="o">=</span> <span class="n">count_occurences_items</span><span class="p">(</span><span class="n">groceries</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">calories_burned</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="n">grocery_item_occurences</span>
 </pre></div>
 
 
-<p><img alt="png" src="scatter_plots_matplotlib_files/scatter_plots_matplotlib_13_0.png"></p>
-<p>In order to more easily see the variation, by default, Matplotlib labels the smallest y-axis tick at 2500 instead of simply 0.</p>
-<p>We can see a positive relationship between these two variables. The more steps I took in day, the more calories I burned.</p>
+<div class="highlight"><pre><span></span>defaultdict(int, {&#39;carrots&#39;: 2, &#39;eggs&#39;: 2, &#39;spinach&#39;: 1})
+</pre></div>
+
+
+<h4>Function to print duplicated values and count of occurences</h4>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_multiple_item_occurences</span><span class="p">(</span><span class="n">count_item_occurences</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Print in pretty format of items with multiple occurences by looping over</span>
+<span class="sd">    count_item_occurences and checking if values &gt;= 2.</span>
+
+<span class="sd">    Keyword arguments:</span>
+<span class="sd">    count_item_occurences -- dictionary structure of item:count pairs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">count_item_occurences</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{0} - quantity of {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">print_multiple_item_occurences</span><span class="p">(</span><span class="n">grocery_item_occurences</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>eggs - quantity of 2
+carrots - quantity of 2
+</pre></div>
   </div>
 </section>
 
