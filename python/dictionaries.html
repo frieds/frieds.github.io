@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="conditional logic python">
+  <meta name="keywords" content="dictionaries python">
 
-  <meta name="description" content="Execute different code depending on the state of a condition in Python using if, else if and else statements">
-  <meta property="og:description"  content="Execute different code depending on the state of a condition in Python using if, else if and else statements">
-  <meta name="twitter:description" content="Execute different code depending on the state of a condition in Python using if, else if and else statements">
+  <meta name="description" content="Dictionaries data structure in Python">
+  <meta property="og:description"  content="Dictionaries data structure in Python">
+  <meta name="twitter:description" content="Dictionaries data structure in Python">
 
-  <meta property="og:title" content="Conditional Logic with If Statements">
-  <meta name="twitter:title" content="Conditional Logic with If Statements">
+  <meta property="og:title" content="Dictionaries Basics">
+  <meta name="twitter:title" content="Dictionaries Basics">
 
-  <link rel="canonical" href="../python/conditional-logic-if-statements.html"/>
+  <link rel="canonical" href="../python/dictionaries.html"/>
 
-  <title>Conditional Logic with If Statements - Python</title>
+  <title>Dictionaries Basics - Python</title>
 
   
 
@@ -148,23 +148,58 @@
 <section id="content" class="body">
   <header>
     <h1>
-      Conditional Logic with If Statements
+      Dictionaries Basics
     </h1>
 
     <ul class ="row article_info">
       <li>
-        Feb 26&nbsp;&nbsp;&bull; &nbsp;&nbsp;3 min read
+        Mar 25&nbsp;&nbsp;&bull; &nbsp;&nbsp;2 min read
       </li>
       <li>
-        Key Terms:       </li>
+        Key Terms:         dictionaries
+      </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <h3>Boolean Expressions</h3>
-<p>A <strong>boolean expression</strong> always evaluates to be <code>True</code> or <code>False</code>.</p>
-<p>You can evaluate a boolean expression with a <code>==</code> operator.</p>
-<div class="highlight"><pre><span></span><span class="s2">&quot;dan&quot;</span> <span class="o">==</span> <span class="s2">&quot;dan&quot;</span>
+    <h3>Dictionary Definition</h3>
+<p>A <strong>dictionary</strong> is a data structure. It contains a collection of indices called <strong>keys</strong> and a collection of <strong>values</strong> associated with each key.</p>
+<p>The association of a key and a value is called a <strong>key-value pair</strong> or an <strong>item</strong>.</p>
+<p>A simple dictionary example is a <strong>mapping</strong> of English words as keys to Spanish words as values.</p>
+<p>In a dictionary, each key is unique.</p>
+<div class="highlight"><pre><span></span><span class="n">english_to_spanish</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span><span class="p">:</span> <span class="s1">&#39;uno&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>In English, <code>one</code> is equalivalent to <code>uno</code> in Spanish.</p>
+<p>We enclose a dictionary in curly braces.</p>
+<p><code>one</code> is a key and <code>uno</code> is its value.</p>
+<h4>Add a key-value pair to a dictionary</h4>
+<div class="highlight"><pre><span></span><span class="n">english_to_spanish</span><span class="p">[</span><span class="s1">&#39;two&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dos&#39;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">english_to_spanish</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>{&#39;one&#39;: &#39;uno&#39;, &#39;two&#39;: &#39;dos&#39;}
+</pre></div>
+
+
+<h4>Use a key to look up the corresponding value</h4>
+<p>Dictionaries allow for easy lookup of values.</p>
+<div class="highlight"><pre><span></span><span class="n">english_to_spanish</span><span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&#39;uno&#39;
+</pre></div>
+
+
+<h4>Check if a key appears in a dictionary</h4>
+<p>The <code>in</code> operator can be used to see if a key exists in a dictionary. If it does, we return <code>True</code>, otherwise <code>False</code>.</p>
+<div class="highlight"><pre><span></span><span class="s1">&#39;two&#39;</span> <span class="ow">in</span> <span class="n">english_to_spanish</span>
 </pre></div>
 
 
@@ -172,159 +207,31 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="mi">3</span> <span class="o">==</span> <span class="mi">3</span>
+<h4>Data types allowed for keys and values</h4>
+<p>In a Python dictionary, the keys must be immutable meaning they can't be changed in place. Therefore, keys can be a data type such as a:</p>
+<ul>
+<li>tuple (must contain only mutable objects)</li>
+<li>int</li>
+<li>float</li>
+<li>string</li>
+</ul>
+<p>A key <em>cannot</em> be a list since lists are mutable and can be modified in place with index assignments or using methods like <code>append</code> or <code>extend</code>.</p>
+<p>Values in a dictionary do not have to be unique. The values of a dictionary can be of <em>any</em> data type.</p>
+<p>Here's an example of an acceptable dictionary with various data types as keys and values.</p>
+<div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">:</span> <span class="mf">3.14</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="mf">3.1</span><span class="p">),</span> <span class="s1">&#39;hi&#39;</span><span class="p">:</span> <span class="s1">&#39;yo&#39;</span><span class="p">}</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>True
+<h4>A more complex example</h4>
+<p>A common use case of dictionaries in software applications is to store personally identifiable information of users.</p>
+<p>In a software application, there could be two users with the same first and last name. Therefore, each user is tyipcally assigned a unique id as an integer. </p>
+<p>If we lookup a user's id, we may find information about them as seen below.</p>
+<div class="highlight"><pre><span></span><span class="n">users</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Dan&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Friedman&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;dan@dfrieds.com&#39;</span><span class="p">},</span>
+        <span class="mi">11</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;May&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Parker&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;aunt-may@gmail.com&#39;</span><span class="p">}}</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="mi">3</span> <span class="o">==</span> <span class="mi">7</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>False
-</pre></div>
-
-
-<p><code>True</code> and <code>False</code> are of type <code>bool</code>.</p>
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>bool
-</pre></div>
-
-
-<h3>Relational operators</h3>
-<p><strong>Relational operators</strong> evaluate expressions to be <code>True</code> or <code>False</code>.</p>
-<p>All examples below evaluate to <code>True</code></p>
-<table>
-<thead>
-<tr>
-<th><strong>operator</strong></th>
-<th><strong>code example</strong></th>
-<th><strong>code description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>==</td>
-<td>8 == 8</td>
-<td>8 is equal to 8</td>
-</tr>
-<tr>
-<td>!=</td>
-<td>7 != 8</td>
-<td>7 is not equal to 8</td>
-</tr>
-<tr>
-<td>&gt;</td>
-<td>4 &gt; 2</td>
-<td>4 is greater than 2</td>
-</tr>
-<tr>
-<td>&lt;</td>
-<td>3 &lt; 5</td>
-<td>3 is less than 5</td>
-</tr>
-<tr>
-<td>&gt;=</td>
-<td>10 &gt;= 9</td>
-<td>10 is greater than or equal to 9</td>
-</tr>
-<tr>
-<td>&lt;=</td>
-<td>6 &lt;= 6</td>
-<td>6 is less less than or equal to 6</td>
-</tr>
-</tbody>
-</table>
-<p>Remember <code>=</code> is an assignment operator in Python while a <code>==</code> is a relational operator.</p>
-<h3>Logical Operators</h3>
-<p>All examples below evaluate to true.</p>
-<table>
-<thead>
-<tr>
-<th><strong>operator</strong></th>
-<th><strong>code example</strong></th>
-<th><strong>code description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>and</td>
-<td>3 &gt; 2 and 5 &gt; 4</td>
-<td>3 is greater than 2 and 5 is greater than 4</td>
-</tr>
-<tr>
-<td>or</td>
-<td>5 &gt; 4 or 3 &gt; 4</td>
-<td>5 is greater than 4 or 3 is greater than 4</td>
-</tr>
-<tr>
-<td>not</td>
-<td>not 4 &gt; 6</td>
-<td>not 4 is greater than 6 - two negatives make a positive</td>
-</tr>
-</tbody>
-</table>
-<h3>Conditional Execution</h3>
-<p>In programming, it's helpful to check conditions to change the behavior of programs and output relevant results. <strong>Conditional statements</strong> give us this ability.</p>
-<div class="highlight"><pre><span></span><span class="k">if</span> <span class="mi">8</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;8 is greater than 5&quot;</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>8 is greater than 5
-</pre></div>
-
-
-<p>The boolean of <code>8 &gt; 5</code> after the <code>if</code> is called the <strong>condition</strong>.</p>
-<h4>Chained conditionals</h4>
-<p>Sometimes, there are two or more conditionals to be evaluated.</p>
-<p>Let's say I ask you to guess a number between 0 and 10 and your goal is to guess correctly. You guess 6 first and the correct number is 9.</p>
-<div class="highlight"><pre><span></span><span class="n">guess</span> <span class="o">=</span> <span class="mi">6</span>
-
-<span class="k">if</span> <span class="n">guess</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you guessed too low&quot;</span><span class="p">)</span>
-<span class="k">elif</span> <span class="n">guess</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you guessed too high&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="p">(</span><span class="s2">&quot;you&#39;re correct!&quot;</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>you guessed too low
-</pre></div>
-
-
-<p><code>elif</code> is an abbreviation for <em>else if</em>. We could have additional <code>elif</code> statements if needed.</p>
-<p>Our program will evaluate in this order:</p>
-<p>1) Variable <code>guess</code> is assigned to the value of 6</p>
-<p>2) The <code>if</code> statement is evaluated to True and we print the statement in its body.</p>
-<p>However, let's say your next guess is 9.</p>
-<div class="highlight"><pre><span></span><span class="n">guess</span> <span class="o">=</span> <span class="mi">9</span>
-
-<span class="k">if</span> <span class="n">guess</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you guessed too low&quot;</span><span class="p">)</span>
-<span class="k">elif</span> <span class="n">guess</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you guessed too high&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;you&#39;re correct!&quot;</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>you&#39;re correct!
-</pre></div>
-
-
-<p>Our program will evaluate in this order:</p>
-<p>1) Variable <code>guess</code> is assigned to the value of 10</p>
-<p>2) The <code>if</code> statement is evaluated to <code>False</code> so we <strong>don't</strong> proceed to its indented body</p>
-<p>3) The <code>elif</code> statement is evaluated to <code>False</code> so we <strong>don't</strong> proceed to its indented body</p>
-<p>4) Once reached, the <code>else</code> statement always evaluates to <code>True</code> so we proceed to its indented body and print that string.</p>
+<p>This example shows how a value can also be another dictionary of key-value pairs.</p>
   </div>
 </section>
 
