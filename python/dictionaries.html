@@ -153,7 +153,7 @@
 
     <ul class ="row article_info">
       <li>
-        Mar 25&nbsp;&nbsp;&bull; &nbsp;&nbsp;2 min read
+        Mar 25&nbsp;&nbsp;&bull; &nbsp;&nbsp;4 min read
       </li>
       <li>
         Key Terms:         dictionaries
@@ -163,7 +163,8 @@
 
   <div class='article_content'>
     <h3>Dictionary Definition</h3>
-<p>A <strong>dictionary</strong> is a data structure. It contains a collection of indices called <strong>keys</strong> and a collection of <strong>values</strong> associated with each key.</p>
+<p>A <strong>dictionary</strong> is a Python data structure. It contains a collection of indices called <strong>keys</strong> and a collection of <strong>values</strong> associated with each key.</p>
+<p>In other programming languages, you may hear of a similar data structure to a Python dictionary called a <strong>hashtable</strong>. The hashtable algorithm is used in the Python source code to implement a dictionary object.</p>
 <p>The association of a key and a value is called a <strong>key-value pair</strong> or an <strong>item</strong>.</p>
 <p>A simple dictionary example is a <strong>mapping</strong> of English words as keys to Spanish words as values.</p>
 <p>In a dictionary, each key is unique.</p>
@@ -175,6 +176,22 @@
 <p>We enclose a dictionary in curly braces.</p>
 <p><code>one</code> is a key and <code>uno</code> is its value.</p>
 <h4>Add a key-value pair to a dictionary</h4>
+<p>The code below adds a key of <code>two</code> with a corresponding value of <code>dos</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">english_to_spanish</span><span class="p">[</span><span class="s1">&#39;two&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dose&#39;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">english_to_spanish</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>{&#39;one&#39;: &#39;uno&#39;, &#39;two&#39;: &#39;dose&#39;}
+</pre></div>
+
+
+<h4>Modify an existing value in a dictionary</h4>
+<p>Above, we spelled the Spanish equivalent of the number two incorrectly. We wrote <em>dose</em> when it is spelled <em>dos</em>. </p>
+<p>Dictionaries are mutable so we can change this key's value in our structure. </p>
 <div class="highlight"><pre><span></span><span class="n">english_to_spanish</span><span class="p">[</span><span class="s1">&#39;two&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dos&#39;</span>
 </pre></div>
 
@@ -187,7 +204,7 @@
 </pre></div>
 
 
-<h4>Use a key to look up the corresponding value</h4>
+<h4>Lookup a key's corresponding value</h4>
 <p>Dictionaries allow for easy lookup of values.</p>
 <div class="highlight"><pre><span></span><span class="n">english_to_spanish</span><span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">]</span>
 </pre></div>
@@ -207,6 +224,33 @@
 </pre></div>
 
 
+<h4>Counts for each unique item</h4>
+<p>A common use case of dictionary is to count the occurences of unique elements in a list or similar data structure. The advantage of using a dictionary here is that we don't have to know ahead of time which letters appear in our list. Also, with a dictionary, we <em>only</em> make keys for letters that do appear.</p>
+<p>Below is a list of grades. We want to know the count of each of the grades. </p>
+<p>Since each grade letter is unique, each can be a key in a dictionary with its value being the count of occurences.</p>
+<div class="highlight"><pre><span></span><span class="n">letter_grades</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;B+&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B+&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A+&quot;</span><span class="p">,</span> <span class="s2">&quot;A-&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">count_of_each_grade</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">letter_grades</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">count_of_each_grade</span><span class="p">:</span>
+        <span class="n">count_of_each_grade</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">count_of_each_grade</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">count_of_each_grade</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>{&#39;A&#39;: 3, &#39;A+&#39;: 1, &#39;A-&#39;: 1, &#39;B+&#39;: 2}
+</pre></div>
+
+
+<p>The dictionary <code>count_of_each_grade</code> tells us there were 3 <em>A</em> grades, 1 <em>A+</em> and so forth.</p>
 <h4>Data types allowed for keys and values</h4>
 <p>In a Python dictionary, the keys must be immutable meaning they can't be changed in place. Therefore, keys can be a data type such as a:</p>
 <ul>
@@ -241,7 +285,7 @@
   <footer class="footer">
     <div class="container">
       <p class="text-muted">
-        <center>This project contains 27 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+        <center>This project contains 28 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
           <br/>
           Copyright &copy; Dan Friedman,
           <time datetime="2018">2018</time>.
