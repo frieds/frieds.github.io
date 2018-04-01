@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="python count unique elements in list">
+  <meta name="keywords" content="zip function python">
 
-  <meta name="description" content="Efficient methods to count occurences of each unique item in a Python list or sequence using a dictionary, defaultdict and Counter">
-  <meta property="og:description"  content="Efficient methods to count occurences of each unique item in a Python list or sequence using a dictionary, defaultdict and Counter">
-  <meta name="twitter:description" content="Efficient methods to count occurences of each unique item in a Python list or sequence using a dictionary, defaultdict and Counter">
+  <meta name="description" content="Python's zip function takes two related sequences and joins them together on their indexes into one data structure.">
+  <meta property="og:description"  content="Python's zip function takes two related sequences and joins them together on their indexes into one data structure.">
+  <meta name="twitter:description" content="Python's zip function takes two related sequences and joins them together on their indexes into one data structure.">
 
-  <meta property="og:title" content="Count Occurences of Each Unique Element in a List">
-  <meta name="twitter:title" content="Count Occurences of Each Unique Element in a List">
+  <meta property="og:title" content="Zip Function">
+  <meta name="twitter:title" content="Zip Function">
 
-  <link rel="canonical" href="../python/count-occurences-each-unique-element-in-list.html"/>
+  <link rel="canonical" href="../python/zip-function.html"/>
 
-  <title>Count Occurences of Each Unique Element in a List - Python</title>
+  <title>Zip Function - Python</title>
 
   
 
@@ -148,145 +148,80 @@
 <section id="content" class="body">
   <header>
     <h1>
-      Count Occurences of Each Unique Element in a List
+      Zip Function
     </h1>
 
     <ul class ="row article_info">
       <li>
-        Feb 15&nbsp;&nbsp;&bull; &nbsp;&nbsp;2 min read
+        Apr 1&nbsp;&nbsp;&bull; &nbsp;&nbsp;2 min read
       </li>
       <li>
-        Key Terms:         dictionaries,
-        collections,
-        lists
+        Key Terms:         zip
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <h4>Import Libraries</h4>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+    <p>Sometimes, you may be passed two data separate data structures that have related information. </p>
+<p>A simple example could be a list of grades on an exam in alphabetical order of students' names and another list of the student's names. </p>
+<div class="highlight"><pre><span></span><span class="n">grades</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">92</span><span class="p">,</span> <span class="mi">95</span><span class="p">]</span>
 </pre></div>
 
 
-<h3>Count Occurences of Each Unique Element - 3 Different Ways</h3>
-<p>Let's say your friend gets a list of grades for the semester. We want a count for each letter grade.</p>
-<div class="highlight"><pre><span></span><span class="n">high_school_semester_grades</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;B+&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B+&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A+&quot;</span><span class="p">,</span> <span class="s2">&quot;A-&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Jill&quot;</span><span class="p">,</span> <span class="s2">&quot;Emily&quot;</span><span class="p">,</span> <span class="s2">&quot;Taylor&quot;</span><span class="p">]</span>
 </pre></div>
 
 
-<p>There are several Pythonic ways to easily do this.</p>
-<h4>Create a Dictionary</h4>
-<p>The dictionary object is built into Python's standard library.</p>
-<div class="highlight"><pre><span></span><span class="n">dict_count_occurences_of_letters</span> <span class="o">=</span> <span class="p">{}</span>
-
-<span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">high_school_semester_grades</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">dict_count_occurences_of_letters</span><span class="p">:</span>
-        <span class="n">dict_count_occurences_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">dict_count_occurences_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<p>Because these two are related, we ought to put them in a single data structure.</p>
+<p>One way to easily do this is use the built-in Python function called <code>zip</code>. This function takes two or more sequences and returns a list of tuples where each tuple contains one element from each sequence.</p>
+<div class="highlight"><pre><span></span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">grades</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">dict_count_occurences_of_letters</span>
+<div class="highlight"><pre><span></span>&lt;zip at 0x1105f2dc8&gt;
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>{&#39;A&#39;: 3, &#39;A+&#39;: 1, &#39;A-&#39;: 1, &#39;B+&#39;: 2}
+<p>This result is a <strong>zip object</strong>. We'll explain this concept later.</p>
+<p>If we want to see our result in a list, we can use Python's built-in <code>list</code> function and pass in this zip object.</p>
+<div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">grades</span><span class="p">))</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">dict_count_occurences_of_letters</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>[(&#39;Jill&#39;, 100), (&#39;Emily&#39;, 92), (&#39;Taylor&#39;, 95)]
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>dict
+<p>We're returned a list of tuples in which each tuple contains the name of the student and their grade on the exam.</p>
+<p>Alternatively, we can loop over the elements in our zip object.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name_grade</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">grades</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">name_grade</span><span class="p">)</span>
 </pre></div>
 
 
-<h4>Create a defaultdict</h4>
-<p>We import the <a href="https://docs.python.org/3/library/collections.html#defaultdict-objects">defaultdict</a> subclass from the Collections module in Python. </p>
-<div class="highlight"><pre><span></span><span class="n">defaultdict_count_occurences_of_letters</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>(&#39;Jill&#39;, 100)
+(&#39;Emily&#39;, 92)
+(&#39;Taylor&#39;, 95)
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">high_school_semester_grades</span><span class="p">:</span>
-    <span class="n">defaultdict_count_occurences_of_letters</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<p>Each tuple contains the name of the student and their grade on the exam.</p>
+<p>We can also use <em>tuple assignment</em> in a <code>for</code> loop to extract the elements in each tuple.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">grade</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">grades</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{0} received a {1} on the exam&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">grade</span><span class="p">))</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">defaultdict_count_occurences_of_letters</span>
+<div class="highlight"><pre><span></span>Jill received a 100 on the exam
+Emily received a 92 on the exam
+Taylor received a 95 on the exam
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>defaultdict(int, {&#39;A&#39;: 3, &#39;A+&#39;: 1, &#39;A-&#39;: 1, &#39;B+&#39;: 2})
-</pre></div>
-
-
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">defaultdict_count_occurences_of_letters</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>collections.defaultdict
-</pre></div>
-
-
-<h4>Create a Counter</h4>
-<p>We import the <a href="https://docs.python.org/3/library/collections.html#collections.Counter">Counter</a> subclass from the Collections module in Python.</p>
-<div class="highlight"><pre><span></span><span class="n">counter_count_of_letters</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">high_school_semester_grades</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span><span class="n">counter_count_of_letters</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>Counter({&#39;A&#39;: 3, &#39;A+&#39;: 1, &#39;A-&#39;: 1, &#39;B+&#39;: 2})
-</pre></div>
-
-
-<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">counter_count_of_letters</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>collections.Counter
-</pre></div>
-
-
-<h3>Additional: Sort Data Structures by Count of Letters</h3>
-<h4>Dictionary sort values</h4>
-<div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">dict_count_occurences_of_letters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>[(&#39;A&#39;, 3), (&#39;B+&#39;, 2), (&#39;A+&#39;, 1), (&#39;A-&#39;, 1)]
-</pre></div>
-
-
-<h4>defaultdict sort values</h4>
-<p>Same method as the dictionary way above.</p>
-<div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">defaultdict_count_occurences_of_letters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>[(&#39;A&#39;, 3), (&#39;B+&#39;, 2), (&#39;A+&#39;, 1), (&#39;A-&#39;, 1)]
-</pre></div>
-
-
-<h4>Counter sort values</h4>
-<p>Counter has a built-in method called <a href="https://docs.python.org/2/library/collections.html#collections.Counter.most_common"><code>most_common</code></a> to return a list of tuples sorted from most common to least common.</p>
-<div class="highlight"><pre><span></span><span class="n">counter_count_of_letters</span><span class="o">.</span><span class="n">most_common</span><span class="p">()</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>[(&#39;A&#39;, 3), (&#39;B+&#39;, 2), (&#39;A+&#39;, 1), (&#39;A-&#39;, 1)]
-</pre></div>
-
-
-<h3>Evaluation of Three Data Structures</h3>
-<p>For the above scenario, I prefer <strong>Counter</strong> because it involves the most concise and easy to read code. There's a lot of operations on the background, but that's abstracted away from us.</p>
-<p>Just be careful using unique structures such as Counter because other programmers may be unfamiliar with them. I'd recommend to link to the relevant <a href="https://docs.python.org/3/library/collections.html#collections.Counter">Python official documentation</a>.</p>
+<p>Notice how we assigned the variable <code>name</code> to the first item in each tuple and <code>grade</code> to the second item. </p>
+<p>Then, we printed a string that uses these two variables to explain their relevance.</p>
+<p>The zip object (that we returned above) is an <strong>iterator</strong>, which is any object that iterates through a sequence. </p>
+<p>Iterators are similar to lists in some ways; but unlike lists, you can't use an index to select an element from an iterator.</p>
   </div>
 </section>
 
