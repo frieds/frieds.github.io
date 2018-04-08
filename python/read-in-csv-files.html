@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="lists methods python">
+  <meta name="keywords" content="read csv files python">
 
-  <meta name="description" content="List methods in Python to add and remove items">
-  <meta property="og:description"  content="List methods in Python to add and remove items">
-  <meta name="twitter:description" content="List methods in Python to add and remove items">
+  <meta name="description" content="Import CSV files into your Python program to analyze the data">
+  <meta property="og:description"  content="Import CSV files into your Python program to analyze the data">
+  <meta name="twitter:description" content="Import CSV files into your Python program to analyze the data">
 
-  <meta property="og:title" content="List Methods">
-  <meta name="twitter:title" content="List Methods">
+  <meta property="og:title" content="Read in CSV Files for Data Analysis">
+  <meta name="twitter:title" content="Read in CSV Files for Data Analysis">
 
-  <link rel="canonical" href="../python/list-methods.html"/>
+  <link rel="canonical" href="../python/read-in-csv-files.html"/>
 
-  <title>List Methods - Python</title>
+  <title>Read in CSV Files for Data Analysis - Python</title>
 
   
 
@@ -148,112 +148,127 @@
 <section id="content" class="body">
   <header>
     <h1>
-      List Methods
+      Read in CSV Files for Data Analysis
     </h1>
 
     <ul class ="row article_info">
       <li>
-        Feb 8&nbsp;&nbsp;&bull; &nbsp;&nbsp;3 min read
+        Apr 8&nbsp;&nbsp;&bull; &nbsp;&nbsp;4 min read
       </li>
       <li>
-        Key Terms:         lists
+        Key Terms:         input,
+        csv
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <p>List methods in Python allow us to modify list objects.</p>
-<p>Most list methods modify the original list and return None. Lists are mutable so they can be modified in-place.</p>
-<h3>Add Items</h3>
-<h4>Add an item to the end of a list</h4>
-<p>The list below is assigned to the variable name <code>math_grades</code> and contains a collection of scores for math exams for a single student. </p>
-<p>There are 4 items in the list below.</p>
-<div class="highlight"><pre><span></span><span class="n">math_grades</span> <span class="o">=</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span> <span class="mi">91</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">84</span><span class="p">]</span>
+    <p>Python is a great programming language for data analysis. </p>
+<p>CSV files are comma-separated values to store data, similar to a table format.</p>
+<p>The CSV format is a common import and export format for spreadsheets and databases. You'll likely encounter it early on in the field of data science.</p>
+<p>We'll cover how to read in data from a CSV in which a CSV file is in your Python program's directory/folder on your computer.</p>
+<h4>Import CSV module</h4>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
 </pre></div>
 
 
-<p>We can add a new item by calling the <code>append</code> method on our list and include an argument for a value to add.</p>
-<p>We can add a 5th score of 100.</p>
-<div class="highlight"><pre><span></span><span class="n">math_grades</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<h4>Read in bike rides CSV</h4>
+<p>In my directory as this Python program, I created a CSV named <code>bike_rides.csv</code>.</p>
+<p><code>open</code> is a Python built-in function to open a file on your local computer with the argument being the file path. A default argument of <code>open</code> is <code>mode=r</code> to open the contents of a file with only permission to read the file, <em>not</em> write to it or perform a different operation. We'll provide an alias as <code>file</code> so we can easily use that name in another operation.</p>
+<p>From the <code>csv</code> module in Python, we'll call the <code>reader</code> method and pass in <code>file</code> to create a <em>csv reader</em> object. </p>
+<p>Once we have this <em>csv reader</em> object, we can iterate over the rows of our CSV file and print the output.</p>
+<div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;bike_rides.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">csv_reader_object</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv_reader_object</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;CSV row: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">math_grades</span>
+<div class="highlight"><pre><span></span>CSV row: [&#39;ride_number&#39;, &#39;date&#39;, &#39;miles_rode&#39;, &#39;ride_duration&#39;]
+CSV row: [&#39;1&#39;, &#39;4-02-2018&#39;, &#39;5.1&#39;, &#39;29.4&#39;]
+CSV row: [&#39;2&#39;, &#39;4-03-2018&#39;, &#39;3.3&#39;, &#39;20&#39;]
+CSV row: [&#39;3&#39;, &#39;4-04-2018&#39;, &#39;4.5&#39;, &#39;21.8&#39;]
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[88, 91, 82, 84, 100]
+<p>Each row in our CSV is a <em>list</em> of <em>strings</em> since there are single-quotes around each value.</p>
+<h3>Calculate Descriptive Statistics on Bike Rides</h3>
+<p>Commonly, when we read in data from a CSV, we may want to analyze the data or perform some analysis. We can perform these calculations as we loop over all data in our CSV.</p>
+<h4>Count the number of bike rides</h4>
+<p>Our <code>csv_reader_object</code> has a method called <code>line_num</code> that returns the number of lines in our CSV. If we perform this operation, we're returned <code>4</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">csv_reader_object</span><span class="o">.</span><span class="n">line_num</span>
 </pre></div>
 
 
-<h4>Add multiple items to end of list</h4>
-<p>Use the <code>extend</code> method in Python to add multiple items in one call. </p>
-<p>The argument passed to <code>extend</code> should be an iterable. In the example below, it's a list of letter grades.</p>
-<div class="highlight"><pre><span></span><span class="n">math_grades</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B+&#39;</span><span class="p">])</span>
+<div class="highlight"><pre><span></span>4
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">math_grades</span>
+<p>There are 4 rows in this CSV; however, there may be a header row (displaying field names) so we shouldn't count this row in our calculation for the count of bike rides.</p>
+<p>The <code>csv</code> class in Python has a <code>Sniffer</code> class to deduce the format of a CSV. With the <code>has_header</code> method of <code>Sniffer</code>, we can check if the first row contains column headers. </p>
+<p>If the first row is a header, let's skip that row in counting the number of bike ride records in our csv. To skip that header row, we can use the built-in <code>next</code> function and pass in our <code>csv_reader_object</code>; this will retrive the <em>next</em> item after our header to begin our data analysis.</p>
+<div class="highlight"><pre><span></span><span class="n">count_of_rides</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[88, 91, 82, 84, 100, &#39;A&#39;, &#39;B+&#39;]
+<div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;bike_rides.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">csv_reader_object</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">csv</span><span class="o">.</span><span class="n">Sniffer</span><span class="p">()</span><span class="o">.</span><span class="n">has_header</span><span class="p">:</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">csv_reader_object</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv_reader_object</span><span class="p">:</span>
+        <span class="n">count_of_rides</span> <span class="o">+=</span> <span class="mi">1</span>
 </pre></div>
 
 
-<h4>Add item anywhere in list</h4>
-<p>Let's say we forgot to include that student's first math exam score in <code>math_grades</code>. Since the order of elements in a list matters, we want to make sure we add their first score to be the first element in the list.</p>
-<p>We can use the <code>insert</code> method to insert an item at any position in a list.</p>
-<p>We want to insert a score of <code>99</code> at index <code>0</code>. Our first argument is the index of the item and second argument is item's value.</p>
-<div class="highlight"><pre><span></span><span class="n">math_grades</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">99</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">count_of_rides</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">math_grades</span>
+<div class="highlight"><pre><span></span>3
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[99, 88, 91, 82, 84, 100, &#39;A&#39;, &#39;B+&#39;]
+<p>Based on our manual observation above, we can confirm there are 3 records of bike rides.</p>
+<h4>Average miles rode per bike ride</h4>
+<p>All rows in our CSV contains <em>strings</em>. To perform a math operation, we need to convert the values to an arithmetic data type - either an <em>integer</em> or a <em>float</em>. </p>
+<p>We'll convert the values in the <em>miles_rode</em> field to floats.</p>
+<p>Also, note we still have to skip the header row in this calculation.</p>
+<div class="highlight"><pre><span></span><span class="n">total_miles_rode</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 
 
-<p>In adding <code>99</code> to the beginning of <code>math_grades</code>, all items increased their index value by 1.</p>
-<h3>Remove Items</h3>
-<h4>Remove an item given an index value</h4>
-<p>Let's say, as the teacher, we found an error in the 2nd math exam and therefore we want to remove the score from the student's <code>math_grades</code>.</p>
-<p>We can call the <code>pop</code> method and pass in the index of the list item to remove.</p>
-<p>We want to remove the score of <code>88</code> at index <code>1</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">math_grades</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<p>In each row, a record of a bike ride, at index <code>2</code>, there's a value for <code>miles_rode</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">row_index_miles_rode</span> <span class="o">=</span> <span class="mi">2</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>88
+<div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;bike_rides.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">csv_reader_object</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">csv</span><span class="o">.</span><span class="n">Sniffer</span><span class="p">()</span><span class="o">.</span><span class="n">has_header</span><span class="p">:</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">csv_reader_object</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv_reader_object</span><span class="p">:</span>
+        <span class="n">float_miles_rode</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">row_index_miles_rode</span><span class="p">])</span>
+        <span class="n">total_miles_rode</span> <span class="o">+=</span> <span class="n">float_miles_rode</span>
 </pre></div>
 
 
-<p>Note the <code>pop</code> method returns the item from the list.</p>
-<p>We can verify the <code>88</code> was removed.</p>
-<div class="highlight"><pre><span></span><span class="n">math_grades</span>
+<div class="highlight"><pre><span></span><span class="n">total_miles_rode</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[99, 91, 82, 84, 100, &#39;A&#39;, &#39;B+&#39;]
+<div class="highlight"><pre><span></span>12.899999999999999
 </pre></div>
 
 
-<h4>Remove an item given the item's value</h4>
-<p>You can also remove an item from a list given the item's value. You don't need to know its index.</p>
-<p>To remove an item, call the <code>remove</code> method and pass in an item's value.</p>
-<p>Let's remove the score of <code>100</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">math_grades</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">average_miles_per_ride</span> <span class="o">=</span> <span class="n">total_miles_rode</span> <span class="o">/</span> <span class="n">count_of_rides</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">math_grades</span>
+<div class="highlight"><pre><span></span><span class="n">average_miles_per_ride</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[99, 91, 82, 84, &#39;A&#39;, &#39;B+&#39;]
+<div class="highlight"><pre><span></span>4.3
 </pre></div>
   </div>
 </section>
