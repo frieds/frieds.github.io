@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="multithreading tutorial python">
+  <meta name="keywords" content="multithreading multiprocessing tutorial python">
 
-  <meta name="description" content="Multithreading to perform two or more Python operations at the same time">
-  <meta property="og:description"  content="Multithreading to perform two or more Python operations at the same time">
-  <meta name="twitter:description" content="Multithreading to perform two or more Python operations at the same time">
+  <meta name="description" content="Use multithreading and multiprocessing as options for parallel programming in Python to perform tasks at the same time">
+  <meta property="og:description"  content="Use multithreading and multiprocessing as options for parallel programming in Python to perform tasks at the same time">
+  <meta name="twitter:description" content="Use multithreading and multiprocessing as options for parallel programming in Python to perform tasks at the same time">
 
-  <meta property="og:title" content="Multithreading">
-  <meta name="twitter:title" content="Multithreading">
+  <meta property="og:title" content="Intro to Multithreading and Multiprocessing">
+  <meta name="twitter:title" content="Intro to Multithreading and Multiprocessing">
 
-  <link rel="canonical" href="../python/multithreading.html"/>
+  <link rel="canonical" href="../python/intro-multithreading-and-multiprocessing.html"/>
 
-  <title>Multithreading - Python</title>
+  <title>Intro to Multithreading and Multiprocessing - Python</title>
 
   
 
@@ -148,15 +148,15 @@
 <section id="content" class="body">
   <header>
     <h1>
-      Multithreading
+      Intro to Multithreading and Multiprocessing
     </h1>
 
     <ul class ="row article_info">
       <li>
-        Apr 23&nbsp;&nbsp;&bull; &nbsp;&nbsp;11 min read
+        Apr 25&nbsp;&nbsp;&bull; &nbsp;&nbsp;16 min read
       </li>
       <li>
-        Key Terms:         multithreading
+        Key Terms:         multithreading multiprocessing
       </li>
     </ul>
   </header>
@@ -165,23 +165,31 @@
     <h3>Why is Performant Code Important</h3>
 <p>In analyzing data, you may be dealing with thousands, millions or even billions of records. As you perform computations to gain insights, you'll likely do lots of data transformations.</p>
 <p>With each computation, to save even seconds or minutes can be greatly helpful for you to deliver insights to your team faster and ultimately get more work done over time.</p>
-<p>With parallelism in Python, you can do just that.</p>
+<p>With parallel programming in Python, you can do just that.</p>
 <h3>Brief Overview</h3>
-<p><strong>Parallelism</strong> is when two or more tasks run <em>at the same time</em>. There's important terminology to understand regarding parallelism too.</p>
+<h4>Intro to Parallelism</h4>
+<p><strong>Parallelism</strong> (aka parallel programming) is when two or more tasks run <em>at the same time</em>. There's important terminology to understand regarding parallelism too.</p>
 <p>A <strong>thread</strong> is an execution context for code.</p>
 <p>A <strong>process</strong> is a program and state of all threads executing in a program.</p>
 <p>One process can have several threads running <em>at the same time</em>. One program could also have several proccess running <em>at the same time</em>.</p>
 <p>In Python, by default programs run as a single process with a single thread of execution; this uses just a single CPU. </p>
-<p>My Apple MacBook Pro has 4 CPU cores.</p>
-<p>When I run a Python program on my computer, 3 CPU cores, equivalent to 75% of my computer's <em>power</em>, sits idle.</p>
-<p>For parallelism to work, a computer must use multiple threads each running on its own core <em>at the same time</em>.</p>
-<p>Examples of parallelism can help with:
+<p>Examples parallelism can help with:
 - executing database queries
 - pre-processing lots of images to use for machine learning
 - web crawling </p>
-<p>This tutorial uses a few simple practical examples to illustrate parallelism through <strong>multithreading</strong> - using multiple threads. We'll compare runtimes that generates the same output using multithreading versus a tranditional Python program with no threading.</p>
+<h4>CPU &amp; Core</h4>
+<p>The CPU (central processing unit) manages the computational work of the computer. CPUs have one or more cores which allow for code to be executed simultaneously. </p>
+<p>My Macbook Pro has 8 cores.</p>
+<p>A single core can provide a number of computations in a limited amount of time. However, if a Python program uses another process running on another core, we greatly decrease the program's runtime.</p>
+<h4>Python's Global Interpreter Lock</h4>
+<p>CPython (the standard python implementation) has something called the GIL (Global Interpreter Lock); the GIL prevents two threads from executing simultaneously in the same program. However, two threads can run concurrently and one can run code while another may be waiting.</p>
+<p>The GIL limits parallel programming in Python out of the box.</p>
+<h4>When to use threads versus processes</h4>
+<p><strong>Threads</strong> are typically best for IO tasks or tasks involving external systems since threads work well to combine results quickly. On the other hand, processes need to pickle their results and therefore take more time to combine results from multiple processes.</p>
+<p><strong>Threads</strong> provide no benefit for expensive CPU tasks since threads must run within the GIL.</p>
+<p><strong>Multiple processes</strong> can speed up Python operations that are CPU intensive because they can utilize multiple cores and avoid Python's GIL.</p>
 <h3><code>map</code> Function and Example</h3>
-<p>The use of <code>map</code> will be applied in our multithreading example later; so I'll provide a brief introduction now.</p>
+<p>The use of <code>map</code> will be applied in our parallel programming examples later; so I'll provide a brief introduction now.</p>
 <p>Below I wrote a function called <code>number_times_two</code> to take in a number, multiply it by two and return the result.</p>
 <p><code>map</code> is a built-in Python function that helps us easily apply a function over every item in an iterable such as a list. </p>
 <p>We'll use the <code>map</code> function to apply <code>number_times_two</code> to every element in the list of numbers <code>[1, 2, 3, 4]</code>.</p>
@@ -243,7 +251,7 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>&lt;map at 0x10da060b8&gt;
+<div class="highlight"><pre><span></span>&lt;map at 0x10f325198&gt;
 </pre></div>
 
 
@@ -260,9 +268,12 @@
 <h4>Import Modules</h4>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">get</span>
 <span class="kn">from</span> <span class="nn">multiprocessing.dummy</span> <span class="kn">import</span> <span class="n">Pool</span> <span class="k">as</span> <span class="n">ThreadPool</span> 
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ProcessPoolExecutor</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">sample</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
@@ -288,8 +299,29 @@
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">number_of_threads</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
         <span class="n">responses</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">iterable</span><span class="p">)</span>
-    <span class="n">list_responses</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">list_responses</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">do_multiprocessing</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">number_of_concurrent_processes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Maps a function across an iterable (such as a list of elements) with the optional use of multiprocessing.</span>
+
+<span class="sd">    :param function: name of a function</span>
+<span class="sd">    :type function: function</span>
+
+<span class="sd">    :param iterable: elements used as inputs to function parameter</span>
+<span class="sd">    :type iterable: list</span>
+
+<span class="sd">    :param number_of_concurrent_processes: number of concurrent processes in multiprocessing</span>
+<span class="sd">    :type number_of_concurrent_processes: int</span>
+
+<span class="sd">    :returns list_objects: return objects from our function parameter calls</span>
+<span class="sd">    :return type: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">number_of_concurrent_processes</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="n">responses</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">iterable</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span>
 </pre></div>
 
 
@@ -306,15 +338,9 @@
 <span class="sd">    :type all_task_timestamps: list</span>
 
 <span class="sd">    :return function_timestamps_starting_from_zero: same shape as all_task_timestamps but all values subtracted by process_start_time</span>
-<span class="sd">    :type function_timestamps_starting_from_zero: list</span>
+<span class="sd">    :type function_timestamps_starting_from_zero: numpy array</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">function_timestamps_starting_from_zero</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">task_times</span> <span class="ow">in</span> <span class="n">all_task_timestamps</span><span class="p">:</span>
-        <span class="n">start_and_stop_times</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">each_time</span> <span class="ow">in</span> <span class="n">task_times</span><span class="p">:</span>
-            <span class="n">new_time</span> <span class="o">=</span> <span class="n">each_time</span> <span class="o">-</span> <span class="n">process_start_time</span>
-            <span class="n">start_and_stop_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_time</span><span class="p">)</span>
-        <span class="n">function_timestamps_starting_from_zero</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">start_and_stop_times</span><span class="p">)</span>
+    <span class="n">function_timestamps_starting_from_zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_task_timestamps</span><span class="p">)</span> <span class="o">-</span> <span class="n">process_start_time</span>
     <span class="k">return</span> <span class="n">function_timestamps_starting_from_zero</span>
 </pre></div>
 
@@ -338,25 +364,25 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bar_colors_based_on_threads</span><span class="p">(</span><span class="n">number_of_threads</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_bar_colors</span><span class="p">(</span><span class="n">number_of_threads_or_subprocesses</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Make a list of colors the same length as the number_of_threads</span>
+<span class="sd">    Make a list of colors the same length as the number of threads or number of concurrent subprocesses</span>
 
-<span class="sd">    :param number_of_threads: number of threads used in multithreading operation</span>
-<span class="sd">    :type number_of_threads: int</span>
+<span class="sd">    :param number_of_threads_or_subprocesses: number of threads used in multithreading or number of processes used in multiprocessing</span>
+<span class="sd">    :type number_of_threads_or_subprocesses: int</span>
 
 <span class="sd">    :return colors: list of colors chosen from good_colors</span>
 <span class="sd">    :type colors: list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">good_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;firebrick&#39;</span><span class="p">,</span> <span class="s1">&#39;darkgreen&#39;</span><span class="p">,</span> <span class="s1">&#39;royalblue&#39;</span><span class="p">,</span> <span class="s1">&#39;rebeccapurple&#39;</span><span class="p">]</span>
-    <span class="n">colors</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">good_colors</span><span class="p">,</span> <span class="n">number_of_threads</span><span class="p">)</span>
+    <span class="n">good_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;firebrick&#39;</span><span class="p">,</span> <span class="s1">&#39;darkgreen&#39;</span><span class="p">,</span> <span class="s1">&#39;royalblue&#39;</span><span class="p">,</span> <span class="s1">&#39;rebeccapurple&#39;</span><span class="p">,</span> <span class="s1">&#39;dimgrey&#39;</span><span class="p">,</span> <span class="s1">&#39;teal&#39;</span><span class="p">,</span> <span class="s1">&#39;chocolate&#39;</span><span class="p">,</span> <span class="s1">&#39;darkgoldenrod&#39;</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">good_colors</span><span class="p">,</span> <span class="n">number_of_threads_or_subprocesses</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">colors</span>
 </pre></div>
 
 
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_task_times</span><span class="p">(</span><span class="n">start_times</span><span class="p">,</span> <span class="n">end_times</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Use Matplotlib module to create a horizontal bar chart of the time elapsed for each multithreading task.</span>
+<span class="sd">    Use Matplotlib module to create a horizontal bar chart of the time elapsed for each task.</span>
 
 <span class="sd">    :param start_times: start times of tasks</span>
 <span class="sd">    :type start_times: list</span>
@@ -383,6 +409,33 @@
 </pre></div>
 
 
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform multithreading given a function_name and number_of_threads and visualize tasks as bar chart</span>
+
+<span class="sd">    :param number_of_concurrent_processes: number of concurrent processes in multiprocessing</span>
+<span class="sd">    :type number_of_concurrent_processes: int</span>
+
+<span class="sd">    :param function_name: name of function applied in multithreading operation</span>
+<span class="sd">    :type function_name: function</span>
+
+<span class="sd">    :param iterable: elements used as inputs to function parameter</span>
+<span class="sd">    :type iterable: list</span>
+
+<span class="sd">    :param plot_title: title of plot</span>
+<span class="sd">    :type plot_title: string</span>
+
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">process_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="c1"># we track time here </span>
+    <span class="n">time_logs_multiprocessing_op</span> <span class="o">=</span> <span class="n">do_multiprocessing</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">number_of_concurrent_processes</span><span class="p">)</span>
+    <span class="n">multiprocessing_task_timestamps</span> <span class="o">=</span> <span class="n">transform_timestamps_to_be_seconds_from_process_start_time</span><span class="p">(</span><span class="n">process_start_time</span><span class="p">,</span> <span class="n">time_logs_multiprocessing_op</span><span class="p">)</span>
+    <span class="n">start_times</span><span class="p">,</span> <span class="n">end_times</span> <span class="o">=</span> <span class="n">separate_list_elements</span><span class="p">(</span><span class="n">multiprocessing_task_timestamps</span><span class="p">)</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">generate_bar_colors</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="p">)</span>
+    <span class="n">visualize_task_times</span><span class="p">(</span><span class="n">start_times</span><span class="p">,</span> <span class="n">end_times</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span>
+</pre></div>
+
+
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_multithreading_effect</span><span class="p">(</span><span class="n">number_of_threads</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform multithreading given a function_name and number_of_threads and visualize tasks as bar chart</span>
@@ -402,10 +455,10 @@
 <span class="sd">    :return: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">process_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="c1"># we track time here </span>
-    <span class="n">time_logs_multhreading_op</span> <span class="o">=</span> <span class="n">multithreading</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">number_of_threads</span><span class="p">)</span>
-    <span class="n">multithreading_task_timestamps</span> <span class="o">=</span> <span class="n">transform_timestamps_to_be_seconds_from_process_start_time</span><span class="p">(</span><span class="n">process_start_time</span><span class="p">,</span> <span class="n">time_logs_multhreading_op</span><span class="p">)</span>
+    <span class="n">time_logs_multithreading_op</span> <span class="o">=</span> <span class="n">multithreading</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">number_of_threads</span><span class="p">)</span>
+    <span class="n">multithreading_task_timestamps</span> <span class="o">=</span> <span class="n">transform_timestamps_to_be_seconds_from_process_start_time</span><span class="p">(</span><span class="n">process_start_time</span><span class="p">,</span> <span class="n">time_logs_multithreading_op</span><span class="p">)</span>
     <span class="n">start_times</span><span class="p">,</span> <span class="n">end_times</span> <span class="o">=</span> <span class="n">separate_list_elements</span><span class="p">(</span><span class="n">multithreading_task_timestamps</span><span class="p">)</span>
-    <span class="n">colors</span> <span class="o">=</span> <span class="n">bar_colors_based_on_threads</span><span class="p">(</span><span class="n">number_of_threads</span><span class="p">)</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">generate_bar_colors</span><span class="p">(</span><span class="n">number_of_threads</span><span class="p">)</span>
     <span class="n">visualize_task_times</span><span class="p">(</span><span class="n">start_times</span><span class="p">,</span> <span class="n">end_times</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span>
 </pre></div>
 
@@ -413,7 +466,7 @@
 <h3>Measure Server Response Times</h3>
 <p>This is a popular example on the web. For a long list of URLs, we'll use the <code>requests</code> module to <code>get</code> a <em>response object</em>. </p>
 <p>With this <em>response object</em>, we could later perform operations to see the status of the request, get the contents of the site and more!</p>
-<div class="highlight"><pre><span></span><span class="n">twelve_urls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;https://secure.capitalbikeshare.com/map/&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">12</span>
+<div class="highlight"><pre><span></span><span class="n">twelve_urls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;https://secure.capitalbikeshare.com/map/&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">16</span>
 </pre></div>
 
 
@@ -443,18 +496,22 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[[1524543670.5281558, 1524543671.434155],
- [1524543671.434238, 1524543672.322919],
- [1524543672.322981, 1524543673.379513],
- [1524543673.379573, 1524543674.401994],
- [1524543674.402056, 1524543675.429127],
- [1524543675.429194, 1524543676.4515998],
- [1524543676.451665, 1524543677.473718],
- [1524543677.473791, 1524543678.505676],
- [1524543678.505737, 1524543679.520997],
- [1524543679.521058, 1524543680.545258],
- [1524543680.545326, 1524543681.569432],
- [1524543681.569493, 1524543682.422249]]
+<div class="highlight"><pre><span></span>[[1524632208.212652, 1524632209.3562171],
+ [1524632209.356304, 1524632210.377363],
+ [1524632210.377422, 1524632211.401835],
+ [1524632211.401959, 1524632212.424235],
+ [1524632212.424294, 1524632213.458614],
+ [1524632213.458688, 1524632214.472278],
+ [1524632214.4723809, 1524632215.3774521],
+ [1524632215.377533, 1524632216.250168],
+ [1524632216.250221, 1524632217.121071],
+ [1524632217.1211221, 1524632218.161929],
+ [1524632218.1619892, 1524632219.187152],
+ [1524632219.187215, 1524632220.207478],
+ [1524632220.207537, 1524632221.231024],
+ [1524632221.231082, 1524632222.255033],
+ [1524632222.255092, 1524632223.084519],
+ [1524632223.084579, 1524632223.900953]]
 </pre></div>
 
 
@@ -468,8 +525,8 @@
 </pre></div>
 
 
-<p><img alt="png" src="multithreading_files/multithreading_33_0.png"></p>
-<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x1273359b0&gt;
+<p><img alt="png" src="parallel_programming_files/parallel_programming_42_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x10f883240&gt;
 </pre></div>
 
 
@@ -481,8 +538,8 @@
 </pre></div>
 
 
-<p><img alt="png" src="multithreading_files/multithreading_35_0.png"></p>
-<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x1274519b0&gt;
+<p><img alt="png" src="parallel_programming_files/parallel_programming_44_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x10f96acf8&gt;
 </pre></div>
 
 
@@ -495,30 +552,99 @@
 </pre></div>
 
 
-<p><img alt="png" src="multithreading_files/multithreading_38_0.png"></p>
-<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x10d4838d0&gt;
+<p><img alt="png" src="parallel_programming_files/parallel_programming_47_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x12d98ef98&gt;
 </pre></div>
 
 
-<h4>Single Thread</h4>
+<h4>Multithreading with 8 Threads</h4>
+<div class="highlight"><pre><span></span><span class="n">visualize_multithreading_effect</span><span class="p">(</span><span class="n">number_of_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">get_response_time_measurements</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">twelve_urls</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for URL Server Responses; 8 Threads&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_49_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x12d963048&gt;
+</pre></div>
+
+
+<h4>Multiprocessing with 1 Process</h4>
+<p>In the visualizations below, each color represents the use of one process in the operations. </p>
+<p>So for multiprocessing with two concurrent processes, you'll see two color bars, one for each process.</p>
+<div class="highlight"><pre><span></span><span class="n">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">get_response_time_measurements</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">twelve_urls</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for URL Server Responses; 1 Process&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_52_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x10f320f98&gt;
+</pre></div>
+
+
+<h4>Multiprocessing with 2 Processes</h4>
+<div class="highlight"><pre><span></span><span class="n">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">get_response_time_measurements</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">twelve_urls</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for URL Server Responses; 2 Processes&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_54_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x113d6f0f0&gt;
+</pre></div>
+
+
+<p>Let's visualize the effect of multiprocessing with 4 concurrent processes.</p>
+<h4>Multiprocessing with 4 Processes</h4>
+<div class="highlight"><pre><span></span><span class="n">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">get_response_time_measurements</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">twelve_urls</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for URL Server Responses; 4 Processes&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_57_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x10f2b6358&gt;
+</pre></div>
+
+
+<p>Let's visualize the effect of multiprocessing with 8 concurrent processes.</p>
+<div class="highlight"><pre><span></span><span class="n">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">get_response_time_measurements</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">twelve_urls</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for URL Server Responses; 8 Processes&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_59_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x12d976128&gt;
+</pre></div>
+
+
+<h4>Single Process and Thread</h4>
 <p>Now, let's perform the same operation <strong>without</strong> the overhead of setting up multithreading.</p>
 <div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
 
 <span class="c1"># traditional python program without multithreading</span>
-<span class="n">task_timestamps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">get_response_time_measurements</span><span class="p">,</span> <span class="n">different_urls</span><span class="p">));</span>
+<span class="n">task_timestamps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">get_response_time_measurements</span><span class="p">,</span> <span class="n">twelve_urls</span><span class="p">));</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>CPU times: user 301 ms, sys: 16.7 ms, total: 318 ms
-Wall time: 12.1 s
+<div class="highlight"><pre><span></span>CPU times: user 410 ms, sys: 28.4 ms, total: 438 ms
+Wall time: 16 s
 </pre></div>
 
 
-<p><strong>Conclusion:</strong> the process completed much quicker with multithreading compared to no threading; shortest runtime with 4 threads was ~3.25 seconds.</p>
-<p>The reason threading is much faster here is because the processor isn't working very hard to retreive the contents on the sites; however, the bottleneck is waiting for the site's server response to our HTTP request - an external resource. While one thread is performing a task of getting/waiting for a server response for one URL, another thread can be doing the same task for another URL.</p>
-<p>This is why threading can provide a large speed increase. The processor can switch between the threads whenever one of them is ready to do some work. </p>
+<p><strong>Conclusion:</strong> both multithreading and multiprocessing complete much quicker than a single thread &amp; program.</p>
+<p>The reason parallel programming is much faster here is because the processor isn't working very hard to retreive the contents on the sites; however, the bottleneck is waiting for the site's server response to our HTTP request - an external resource. While one task is performing an operation of getting/waiting for a server response for one URL, another task can start for a different URL. </p>
+<p>Threads are also fairly quick to combine their results too. So if we were web crawling and constantly wanted to combine results from multiple crawlers, it'd be ideal to use multiple threads to spawn multiple web crawlers rather than multiple processes which take longer to combine results.</p>
 <h3>Example: Squares of Numbers</h3>
 <p>Given this big list of numbers in <code>big_list</code>, we want to output a new list that has the square of all numbers in <code>big_list</code>.</p>
+<p>Think of this as a <em>lot</em> of <em>small</em> operations.</p>
 <div class="highlight"><pre><span></span><span class="n">big_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12000000</span><span class="p">)</span>
 </pre></div>
 
@@ -542,32 +668,157 @@ Wall time: 12.1 s
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>CPU times: user 5.72 s, sys: 876 ms, total: 6.6 s
-Wall time: 6.63 s
+<div class="highlight"><pre><span></span>CPU times: user 5.51 s, sys: 715 ms, total: 6.23 s
+Wall time: 6.2 s
 </pre></div>
 
 
-<h4>Single Thread</h4>
+<h4>Multiprocessing</h4>
+<p>Below I utilize code from the lower-level module of the Python standard library, <code>multiprocessing</code>, to perform multiprocessing for this operation. </p>
+<p>We'll use 2 concurrent processes.</p>
 <div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
 
-<span class="n">squares_multiline_results</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">big_list</span><span class="p">:</span>
-    <span class="n">squares_multiline_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">multiprocessing_operation</span><span class="p">:</span>
+    <span class="n">multiprocessing_operation</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">square_value</span><span class="p">,</span> <span class="n">big_list</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>CPU times: user 5.04 s, sys: 252 ms, total: 5.29 s
-Wall time: 5.31 s
+<div class="highlight"><pre><span></span>CPU times: user 2.04 s, sys: 947 ms, total: 2.99 s
+Wall time: 4.84 s
 </pre></div>
 
 
-<p><strong>Conclusion:</strong> process completes much faster <em>without</em> multithreading.</p>
-<p>This may come as a surprise that threading hurts our performance here.</p>
-<p>Using the threading module in Python or any other interpreted language with a global interpreter lock (GIL) can actually result in reduced performance if you're <em>just</em> doing a CPU bound task. This program must carry threading's additional overhead of creating new threads and synchronizing them. </p>
-<h3>Final thoughts</h3>
-<p>We can utilize threading with simple code and in instances of non-CPU bound tasks, get optimal results.</p>
-<p>There's a lot of nuances to threading in Python we didn't cover in this tutorial. If you need to solve a more complex problem, I'd encourage you to do more research.</p>
+<h4>Single Process &amp; Thread</h4>
+<div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+
+<span class="n">squares_results</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">square_value</span><span class="p">,</span> <span class="n">big_list</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>CPU times: user 13 µs, sys: 8 µs, total: 21 µs
+Wall time: 26 µs
+</pre></div>
+
+
+<p><strong>Conclusion:</strong> process completes much faster <em>without</em> parallel programming.</p>
+<p>This may come as a surprise that parallel programming hurts our performance here.</p>
+<p>Using parallel programming in Python or any other interpreted language with a global interpreter lock (GIL) can actually result in reduced performance if you're <em>just</em> doing a CPU bound task. This program must carry parallel programming's additional overhead of creating new threads or processes and synchronizing their results. </p>
+<h3>Example: CPU Heavy Computations</h3>
+<p>In this example, we'll only perform 8 tasks - with each task requiring a large amount of math operations.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sum_all_intgers_from_zero_to_end_range_number</span><span class="p">(</span><span class="n">end_range_number</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the sum of all integer numbers from 0 to end_range_number. </span>
+
+<span class="sd">    :param end_range_number: highest value to loop over</span>
+<span class="sd">    :type end_range_number: integer</span>
+
+<span class="sd">    :returns [start_time, stop_time]: list of start_time of task and end time of task</span>
+<span class="sd">    :return type: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">the_sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">end_range_number</span><span class="p">):</span>
+        <span class="n">the_sum</span> <span class="o">+=</span> <span class="n">number</span>
+    <span class="n">stop_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">start_time</span><span class="p">,</span> <span class="n">stop_time</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">large_number</span> <span class="o">=</span> <span class="mi">11</span><span class="o">**</span><span class="mi">7</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="mi">8</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">large_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">large_number</span><span class="p">]</span><span class="o">*</span><span class="n">iterations</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">large_numbers</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>[19487171,
+ 19487171,
+ 19487171,
+ 19487171,
+ 19487171,
+ 19487171,
+ 19487171,
+ 19487171]
+</pre></div>
+
+
+<h4>Multithreading</h4>
+<p>Let's visualize the effect of multithreading with 2 concurrent threads.</p>
+<div class="highlight"><pre><span></span><span class="n">visualize_multithreading_effect</span><span class="p">(</span><span class="n">number_of_threads</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">sum_all_intgers_from_zero_to_end_range_number</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">large_numbers</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for Heavy CPU Computations; 2 Threads&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_85_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x10f2d0278&gt;
+</pre></div>
+
+
+<h4>Multiprocessing</h4>
+<p>Let's visualize the effect of multiprocessing with 2 concurrent subprocesses.</p>
+<div class="highlight"><pre><span></span><span class="n">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">sum_all_intgers_from_zero_to_end_range_number</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">large_numbers</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for Heavy CPU Computations; 2 Processes&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_88_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x11b03c978&gt;
+</pre></div>
+
+
+<p>Let's visualize the effect of multiprocessing with 4 concurrent subprocesses.</p>
+<div class="highlight"><pre><span></span><span class="n">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">sum_all_intgers_from_zero_to_end_range_number</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">large_numbers</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for Heavy CPU Computations; 4 Processes&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_90_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x113e07978&gt;
+</pre></div>
+
+
+<p>Let's visualize the effect of multiprocessing with 5 concurrent subprocesses.</p>
+<div class="highlight"><pre><span></span><span class="n">visualize_multiprocessing_effect</span><span class="p">(</span><span class="n">number_of_concurrent_processes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                <span class="n">function_name</span><span class="o">=</span><span class="n">sum_all_intgers_from_zero_to_end_range_number</span><span class="p">,</span>
+                                <span class="n">iterable</span><span class="o">=</span><span class="n">large_numbers</span><span class="p">,</span>
+                                <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;Tasks for Heavy CPU Computations; 5 Processes&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="parallel_programming_files/parallel_programming_92_0.png"></p>
+<div class="highlight"><pre><span></span>&lt;matplotlib.figure.Figure at 0x11b2bbb70&gt;
+</pre></div>
+
+
+<h4>Single Program &amp; Thread</h4>
+<div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+    <span class="n">sum_all_intgers_from_zero_to_end_range_number</span><span class="p">(</span><span class="n">large_number</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>CPU times: user 10.9 s, sys: 34.8 ms, total: 11 s
+Wall time: 11 s
+</pre></div>
+
+
+<p><strong>Conclusion:</strong> program completes much faster <em>with</em> multiprocessing at approximately 4 subprocesses running concurrently.</p>
+<p>Multiprocessing here was helpful for this CPU intensive task because we could benefit from using multiple cores and avoid the global interpreter lock.</p>
+<p>Interestingly, spinning up additional subprocesses past 4 has no major effect on improving runtime of our program. Notice how the total program runtime with 4 subprocesses is equivalent to the program with 5 subprocesses.</p>
+<p>Threads provide no benefit in Python for CPU intensive tasks like these because of the global interpreter lock.</p>
   </div>
 </section>
 
