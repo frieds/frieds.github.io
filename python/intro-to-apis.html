@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="dictionary methods python">
+  <meta name="keywords" content="python apis">
 
-  <meta name="description" content="Dictionary methods to retrive keys, values and loop over key value pairs">
-  <meta property="og:description"  content="Dictionary methods to retrive keys, values and loop over key value pairs">
-  <meta name="twitter:description" content="Dictionary methods to retrive keys, values and loop over key value pairs">
+  <meta name="description" content="Perform simple math operations in Python using addition, subtraction and multiplication; store logic in functions and results as variables">
+  <meta property="og:description"  content="Perform simple math operations in Python using addition, subtraction and multiplication; store logic in functions and results as variables">
+  <meta name="twitter:description" content="Perform simple math operations in Python using addition, subtraction and multiplication; store logic in functions and results as variables">
 
-  <meta property="og:title" content="Dictionary Methods">
-  <meta name="twitter:title" content="Dictionary Methods">
+  <meta property="og:title" content="APIs">
+  <meta name="twitter:title" content="APIs">
 
-  <link rel="canonical" href="../python/dictionary-methods.html"/>
+  <link rel="canonical" href="../python/intro-to-apis.html"/>
 
-  <title>Dictionary Methods - Python</title>
+  <title>APIs - Python</title>
 
   
 
@@ -148,65 +148,85 @@
 <section id="content" class="body">
   <header>
     <h1>
-      Dictionary Methods
+      APIs
     </h1>
 
     <ul class ="row article_info">
       <li>
-        Mar 26&nbsp;&nbsp;&bull; &nbsp;&nbsp;1 min read
+        Feb 8&nbsp;&nbsp;&bull; &nbsp;&nbsp;4 min read
       </li>
       <li>
-        Key Terms:         dictionaries
+        Key Terms:         api
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <p>Dictionaries have methods that allow for modification of dictionary structures. I'll cover a few important ones in this tutorial.</p>
-<h4>Access dictionary keys</h4>
-<p>The <code>keys()</code> method outputs a <code>dict_keys</code> object that presents a list of a dictionary's keys.</p>
-<div class="highlight"><pre><span></span><span class="n">dan</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Dan Friedman&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;San Francisco&#39;</span><span class="p">,</span> <span class="s1">&#39;profession&#39;</span><span class="p">:</span> <span class="s1">&#39;Data Scientist&#39;</span><span class="p">}</span>
+    <h3>The Internet</h3>
+<p>In browsing websites, you've encountered HTTP before. It stands for <strong>HyperText Transfer Protocol</strong>. </p>
+<p>For visiting my website, you may have entered http://dfrieds.com into your browser. Your browser, also known as the <strong>client</strong>, made a request over HTTP to get the contents of my website. Once the reuqest is complete, the browser can render my site's code and you'll see the homepage of my website!</p>
+<p>The contents of my web page live on another computer on the Internet called a <strong>server</strong>. I use the hosting service through GitHub Pages and so they store my site's code on their servers.</p>
+<p>I view the Internet as a large network of connected servers. Every page on the Internet is stored on a server.</p>
+<h3>APIs</h3>
+<p>An <strong>API</strong> is an Application Programming Interface. An API is part of the server that receives requests and sends a response.</p>
+<p>APIs are practical for retrieving data from sites. Popular APIs include:</p>
+<ul>
+<li>Twilio to send and receive txt messages. In the past, Uber used Twilio's API so they could send you a txt message to alert you that your driver was nearby.</li>
+<li>Weather Underground to retrieve weather data. If you use a mobile app to view the weather today, that app is likely using an API from Weather Underground or a similar company to retrive Weather Underground's proprietary weather data they collect.</li>
+</ul>
+<p>Typically, when a company offers an API to customers, such as Twilio or Weather Underground, it just means they designated a number of URLs that <em>just</em> return data. So the responses often don't contain the styles in HTML and CSS you'd see on a typical webpage. </p>
+<h3>Getting Started with the Hacker News API</h3>
+<p>In this lesson, we'll use Python to request data on Hacker News posts. </p>
+<p><a href="https://news.ycombinator.com">Hacker News</a> is a social news website in which anyone can upload a link to a story, pose a question or comment on any of these items. It's similar to Reddit. However, Hacker News is often more geared towards technology and entrepreneurship.</p>
+<h4>Import module</h4>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">get</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">dan</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<h4>API documentation</h4>
+<p>The API documentation on <a href="https://github.com/HackerNews/API">GitHub</a> details how to retrieve and intrepret data from Hacker News.</p>
+<p>Hacker News regards each text blob posted on its site, whether it be a story, comment, job, or poll to be called an <em>item</em>. Each item is identified by a unique ID, which are integers.</p>
+<p>The URLs start with <code>https://hacker-news.firebaseio.com/v0/</code>.</p>
+<h4>Make a Simple Request</h4>
+<p>We'll use the <code>get</code> method from the <code>requests</code> library in order to get a <strong>response object</strong> from the Hacker News API.</p>
+<p>The response object allows us to retrieve the data returned from a Hacker News item.</p>
+<p>I'm curious about post number <code>8863</code> on Hacker News. We can simply append <code>/item/8863</code> to the API URL string.</p>
+<p>Below, we assign a variable named <code>hacker_news_response</code> to the returned response object.</p>
+<div class="highlight"><pre><span></span><span class="n">hacker_news_response</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://hacker-news.firebaseio.com/v0/item/8863.json&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>dict_keys([&#39;name&#39;, &#39;location&#39;, &#39;profession&#39;])
+<p>We can see the type of this object below to be a response object from the <code>requests</code> library.</p>
+<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">hacker_news_response</span><span class="p">)</span>
 </pre></div>
 
 
-<h4>Access dictionary values</h4>
-<p>The <code>values()</code> method outputs a <code>dict_values</code> object that presents a list of a dictionary's values.</p>
-<div class="highlight"><pre><span></span><span class="n">dan</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+<div class="highlight"><pre><span></span>requests.models.Response
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>dict_values([&#39;Dan Friedman&#39;, &#39;San Francisco&#39;, &#39;Data Scientist&#39;])
+<p>We can call the <code>text</code> attribute on <code>hacker_news_response</code> to get the content of the post. The content of this post is a giant string. We could convert that string to a Python dictionary if needed to easily parse the details.</p>
+<div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">hacker_news_response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 
 
-<h4>Loop over key-value pairs</h4>
-<p>The <code>items()</code> method outputs a <code>dict_items</code> object that's a sequence of tuples in which each tuple is a key-value pair.</p>
-<div class="highlight"><pre><span></span><span class="n">dan</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<div class="highlight"><pre><span></span>str
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>dict_items([(&#39;name&#39;, &#39;Dan Friedman&#39;), (&#39;location&#39;, &#39;San Francisco&#39;), (&#39;profession&#39;, &#39;Data Scientist&#39;)])
+<div class="highlight"><pre><span></span><span class="n">hacker_news_response</span><span class="o">.</span><span class="n">text</span>
 </pre></div>
 
 
-<p>We can iterate over this <code>dict_items</code> object in a <code>for</code> loop.</p>
-<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dan</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;A key of {0} corresponds to a value of {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+<div class="highlight"><pre><span></span>&#39;{&quot;by&quot;:&quot;dhouston&quot;,&quot;descendants&quot;:71,&quot;id&quot;:8863,&quot;kids&quot;:[9224,8952,8917,8884,8887,8943,8869,8940,8908,8958,9005,8873,9671,9067,9055,8865,8881,8872,8955,10403,8903,8928,9125,8998,8901,8902,8907,8894,8870,8878,8980,8934,8876],&quot;score&quot;:104,&quot;time&quot;:1175714200,&quot;title&quot;:&quot;My YC app: Dropbox - Throw away your USB drive&quot;,&quot;type&quot;:&quot;story&quot;,&quot;url&quot;:&quot;http://www.getdropbox.com/u/2/screencast.html&quot;}&#39;
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>A key of name corresponds to a value of Dan Friedman
-A key of location corresponds to a value of San Francisco
-A key of profession corresponds to a value of Data Scientist
-</pre></div>
+<p>This item was posted by username <code>dhouston</code> on unix epoch time of <code>1175714200</code> which is equivalent to Wednesday, April 4, 2007 at 7:16 PM. The title of the item was <code>My YC app: Dropbox - Throw away your USB drive</code>. </p>
+<p>We used Python to programmatically retreive the contents of a post on Hacker News. You could use this same URL, enter it in your browser search bar, and see the same results. Try it!</p>
+<h4>Application to data science</h4>
+<p>Retrieving data from sites is valuable in data science so you can later perform analysis on the data.</p>
+<p>For example, you could retrieve posts over time on Hacker News and see popular topics broken down by day or week. </p>
   </div>
 </section>
 
