@@ -153,7 +153,7 @@
 
     <ul class ="row article_info">
       <li>
-        Feb 8&nbsp;&nbsp;&bull; &nbsp;&nbsp;4 min read
+        Feb 8&nbsp;&nbsp;&bull; &nbsp;&nbsp;5 min read
       </li>
       <li>
         Key Terms:         api
@@ -169,12 +169,41 @@
 <p>I view the Internet as a large network of connected servers. Every page on the Internet is stored on a server.</p>
 <h3>APIs</h3>
 <p>An <strong>API</strong> is an Application Programming Interface. An API is part of the server that receives requests and sends a response.</p>
-<p>APIs are practical for retrieving data from sites. Popular APIs include:</p>
+<p>Think of an API like a coding contract; it specifies the ways your program can interact with the application.</p>
+<p>There are four HTTP methods to interact with an API. They are:</p>
+<table>
+<thead>
+<tr>
+<th>HTTP Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>retrive information from a source</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>send new information to a source</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>update existing information of a source</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>remove existing information from a source</td>
+</tr>
+</tbody>
+</table>
+<p>Popular APIs you may have interacted with are:</p>
 <ul>
 <li>Twilio to send and receive txt messages. In the past, Uber used Twilio's API so they could send you a txt message to alert you that your driver was nearby.</li>
 <li>Weather Underground to retrieve weather data. If you use a mobile app to view the weather today, that app is likely using an API from Weather Underground or a similar company to retrive Weather Underground's proprietary weather data they collect.</li>
 </ul>
 <p>Typically, when a company offers an API to customers, such as Twilio or Weather Underground, it just means they designated a number of URLs that <em>just</em> return data. So the responses often don't contain the styles in HTML and CSS you'd see on a typical webpage. </p>
+<p>In the following example, I'll just cover the use of GET requests since that's common for retrieving information to perform data science.</p>
 <h3>Getting Started with the Hacker News API</h3>
 <p>In this lesson, we'll use Python to request data on Hacker News posts. </p>
 <p><a href="https://news.ycombinator.com">Hacker News</a> is a social news website in which anyone can upload a link to a story, pose a question or comment on any of these items. It's similar to Reddit. However, Hacker News is often more geared towards technology and entrepreneurship.</p>
@@ -190,7 +219,8 @@
 <h4>Make a Simple Request</h4>
 <p>We'll use the <code>get</code> method from the <code>requests</code> library in order to get a <strong>response object</strong> from the Hacker News API.</p>
 <p>The response object allows us to retrieve the data returned from a Hacker News item.</p>
-<p>I'm curious about post number <code>8863</code> on Hacker News. We can simply append <code>/item/8863</code> to the API URL string.</p>
+<p>I'm curious about post/item number <code>8863</code> on Hacker News. We can simply append <code>/item/8863</code> to the API URL string. In doing so, we're hitting an API <strong>endpoint</strong> - an API-defined location where particular data is stored.</p>
+<p>Hacker News has additional endpoints for getting details on user profiles in which you'd append /user/{name_of_user} instead of getting an item.</p>
 <p>Below, we assign a variable named <code>hacker_news_response</code> to the returned response object.</p>
 <div class="highlight"><pre><span></span><span class="n">hacker_news_response</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://hacker-news.firebaseio.com/v0/item/8863.json&#39;</span><span class="p">)</span>
 </pre></div>
@@ -205,7 +235,7 @@
 </pre></div>
 
 
-<p>We can call the <code>text</code> attribute on <code>hacker_news_response</code> to get the content of the post. The content of this post is a giant string. We could convert that string to a Python dictionary if needed to easily parse the details.</p>
+<p>We can call the <code>text</code> attribute on <code>hacker_news_response</code> to get the body of the post. The body is a string.</p>
 <div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">hacker_news_response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 
@@ -214,6 +244,7 @@
 </pre></div>
 
 
+<p>Below we see the body of our response. We could convert this string to a Python dictionary to more easily parse the details.</p>
 <div class="highlight"><pre><span></span><span class="n">hacker_news_response</span><span class="o">.</span><span class="n">text</span>
 </pre></div>
 
