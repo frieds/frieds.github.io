@@ -1,5 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-04-25T12:00:00-07:00</updated><entry><title>Intro to Multithreading and Multiprocessing</title><link href="https://dfrieds.com/python/intro-multithreading-and-multiprocessing" rel="alternate"></link><published>2018-04-25T12:00:00-07:00</published><updated>2018-04-25T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-25:/python/intro-multithreading-and-multiprocessing</id><summary type="html">&lt;p&gt;Use multithreading and multiprocessing as options for parallel programming in Python to perform tasks at the same time&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Why is Performant Code Important&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-09T11:00:00-07:00</updated><entry><title>Intro to Clustering</title><link href="https://dfrieds.com/machine-learning/intro-clustering" rel="alternate"></link><published>2018-06-09T11:00:00-07:00</published><updated>2018-06-09T11:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-09:/machine-learning/intro-clustering</id><summary type="html">&lt;p&gt;An introduction to what clustering is, a comparison to traditional segmentation and why clustering works better for large data&lt;/p&gt;</summary><content type="html">&lt;p&gt;Clustering (aka cluster analysis) is an unsupervised machine learning method that segments similar data points into groups. These groups are called &lt;strong&gt;clusters&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;It's considered unsupervised because there's no ground truth value to predict. Instead, we're trying to create structure/meaning from the data.&lt;/p&gt;
+&lt;p&gt;I regard &lt;strong&gt;segmentation&lt;/strong&gt; as a data analysis technique for creating groups from a dataset while I regard &lt;strong&gt;clustering&lt;/strong&gt; as a data science technique for more &lt;em&gt;advanced&lt;/em&gt; creation of groups called clusters.&lt;/p&gt;
+&lt;p&gt;Let's first walk through a simple segmentation example with generating data, analyzing the data and segmenting groups with a visualization. No knowledge of coding needed to follow along. You can can read the text and visualizations to understand the value of clustering.&lt;/p&gt;
+&lt;h3&gt;Manual Segmentation&lt;/h3&gt;
+&lt;p&gt;Let's say you have customers use your app, and you'd like to perform more targeted marketing towards them. Historically, you've created videos to highlight a new feature and showed the same video to &lt;em&gt;all&lt;/em&gt; customers. However, the marketing message in those videos hasn't been relevant for &lt;em&gt;all&lt;/em&gt; customers.&lt;/p&gt;
+&lt;p&gt;With a new feature launch, you'd like to develop two short marketing videos - each of which can be geared towards a unique group of customers.&lt;/p&gt;
+&lt;p&gt;But how can you easily find two different group based on their activity within the app?&lt;/p&gt;
+&lt;p&gt;One way to answer this question is through segmentation; another method I'll illustrate later is clustering. &lt;/p&gt;
+&lt;p&gt;To gather more information on our customers, you poll them on their age and annual income in U.S. dollars.&lt;/p&gt;
+&lt;p&gt;Below is a sample of data in a format we'll use:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Customer Name&lt;/th&gt;
+&lt;th&gt;Age&lt;/th&gt;
+&lt;th&gt;Income Per Year ($)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Joe Smith&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;39000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Michelle Brown&lt;/td&gt;
+&lt;td&gt;24&lt;/td&gt;
+&lt;td&gt;75000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ben Stein&lt;/td&gt;
+&lt;td&gt;55&lt;/td&gt;
+&lt;td&gt;120000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;In the table above, every row is considered an &lt;strong&gt;observation&lt;/strong&gt;. Every column is considered a &lt;strong&gt;feature&lt;/strong&gt;. We'll use this terminology going forward.&lt;/p&gt;
+&lt;h4&gt;Import Modules&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;randint&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pyplot&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Generate Survey Data&lt;/h4&gt;
+&lt;p&gt;I'll use Python to generate the survey data.&lt;/p&gt;
+&lt;p&gt;We'll create a large group of relatively young customers and another smaller group of relatively older customers who often earn more than the younger ones.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;large_number&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+&lt;span class="n"&gt;small_number&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;25&lt;/span&gt;
+
+&lt;span class="n"&gt;ages_younger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;28&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;large_number&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="n"&gt;ages_older&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;66&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;small_number&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+
+&lt;span class="n"&gt;lower_incomes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;76000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;income&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;large_number&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="n"&gt;higher_incomes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;43000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;160000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;income&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;small_number&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+
+&lt;span class="n"&gt;ages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ages_younger&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;ages_older&lt;/span&gt;
+&lt;span class="n"&gt;incomes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lower_incomes&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;higher_incomes&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Visualize Survey Data&lt;/h4&gt;
+&lt;p&gt;In the visualization below, we can see some closely-knit groups of observations (our customers). We have lots of observations who are in the age range of 18 to 28 and earn on average roughly 50,000 U.S. dollars per year. Another more spread out group could be observations over the age of 30 who earn on average roughly 100,000 U.S. dollars per year. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ages&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;incomes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;income (U.S. dollars)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Survey Data of Customers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="intro-clustering_files/intro-clustering_11_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Create Segments in Code&lt;/h4&gt;
+&lt;p&gt;By manual observation, we could segment these observations into two somewhat distinct groups. Two groups allow us to show each group a unique marketing video.&lt;/p&gt;
+&lt;p&gt;In this example, we want to deliver a marketing message geared towards their income level; we can segment our observations into group by those who earn more than 65,000 U.S. dollars and those who earn less than or equal to that amount.&lt;/p&gt;
+&lt;p&gt;In Python code below, I'll separate our observations into two groups so we can color code them in a plot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;below_sixty_five_thousand_earners&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="n"&gt;above_sixty_five_thousand_earners&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="n"&gt;age_index&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;income_index&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;customer_survey_data&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ages&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;incomes&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;customer_survey_data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;income_index&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;65000&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;above_sixty_five_thousand_earners&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;customer_survey_data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;below_sixty_five_thousand_earners&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;customer_survey_data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The code below makes unique lists of x-values and y-values of each group to plot from each of those two lists so we can color coordinate the groups.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;below_sixty_five_thousand_earners_ages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;customer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;age_index&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;customer&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;below_sixty_five_thousand_earners&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;below_sixty_five_thousand_earners_incomes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;customer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;income_index&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;customer&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;below_sixty_five_thousand_earners&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;above_sixty_five_thousand_earners_ages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;customer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;age_index&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;customer&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;above_sixty_five_thousand_earners&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;above_sixty_five_thousand_earners_incomes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;customer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;income_index&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;customer&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;above_sixty_five_thousand_earners&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In the plot below, we can see the lower earners as &lt;em&gt;green&lt;/em&gt; in color and the higher earners as &lt;em&gt;orange&lt;/em&gt; in color.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;below_sixty_five_thousand_earners_ages&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;below_sixty_five_thousand_earners_incomes&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;green&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;above_sixty_five_thousand_earners_ages&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;above_sixty_five_thousand_earners_incomes&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;orange&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;income&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Groups of Customers Through Segmentation&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="intro-clustering_files/intro-clustering_20_0.png"&gt;&lt;/p&gt;
+&lt;p&gt;While this method of segmentation &lt;em&gt;works&lt;/em&gt;, it's imperfect. &lt;/p&gt;
+&lt;p&gt;Notice how there are several observations in the bottom-left group that are orange and right next to green observations; you'd think they should be in the same group yet with our threshold, they're in separate groups. &lt;/p&gt;
+&lt;p&gt;A threshold of 65000 U.S. dollars is rather arbitrary and did a poor job of grouping several nearby observations.&lt;/p&gt;
+&lt;h3&gt;What's the Value of Clustering Algorithms?&lt;/h3&gt;
+&lt;p&gt;In the example above, it was fairly easy to create two &lt;em&gt;fairly&lt;/em&gt; distinct groups based on their income level. &lt;/p&gt;
+&lt;p&gt;However, what if we collected &lt;em&gt;more data&lt;/em&gt; in our survey or used more data based on customers' behavior within the app? We could easily gather 4 or more features on customers.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;age&lt;/li&gt;
+&lt;li&gt;income per year (U.S. dollars)&lt;/li&gt;
+&lt;li&gt;days as a customer on our app&lt;/li&gt;
+&lt;li&gt;average minutes spent on our app per week&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can now picture a sample of our data looking like:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Customer Name&lt;/th&gt;
+&lt;th&gt;Age&lt;/th&gt;
+&lt;th&gt;Income Per Year (U.S. dollars)&lt;/th&gt;
+&lt;th&gt;days on app&lt;/th&gt;
+&lt;th&gt;avg minutes activity per week&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Joe Smith&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;39000&lt;/td&gt;
+&lt;td&gt;33&lt;/td&gt;
+&lt;td&gt;5.2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Michelle Brown&lt;/td&gt;
+&lt;td&gt;24&lt;/td&gt;
+&lt;td&gt;75000&lt;/td&gt;
+&lt;td&gt;210&lt;/td&gt;
+&lt;td&gt;3.0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mark Jones&lt;/td&gt;
+&lt;td&gt;55&lt;/td&gt;
+&lt;td&gt;120000&lt;/td&gt;
+&lt;td&gt;59&lt;/td&gt;
+&lt;td&gt;7.5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Also, what if our app had &lt;em&gt;tens of thousands&lt;/em&gt; of customers or even &lt;em&gt;millions&lt;/em&gt;? This would be considered a large number of observations.&lt;/p&gt;
+&lt;p&gt;With a larger number of features and observations, it'd be nearly impossible to segment the observations by arbitrary threshold to create distinct segments. Once we've collected additional features on each customer, we can no longer visualize the data on a 2-d plane as we did above too.&lt;/p&gt;
+&lt;p&gt;Here are some benefits of programmatic clustering in which you can quickly and easily:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;work with large numbers of observations and features&lt;/li&gt;
+&lt;li&gt;derive clusters with just a few lines of code&lt;/li&gt;
+&lt;li&gt;prototype results of 2, 3, 4 or any number of clusters of our observations&lt;/li&gt;
+&lt;li&gt;implement results in a web/mobile application with little manual oversight&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;When is Clustering Used in Industry?&lt;/h4&gt;
+&lt;p&gt;Examples:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;segment groups of customers based on their activity with an app to deliver unique marketing messages&lt;/li&gt;
+&lt;li&gt;find similar text documents (could also be tweets, posts, etc) by their words/phrases&lt;/li&gt;
+&lt;li&gt;data compression to reduce the size of data files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Cluster Algorithms&lt;/h4&gt;
+&lt;p&gt;In various programming languages, there are a number of open-source libraries to implement clustering algorithms. Popular ones include K-Means and DBSCAN. &lt;/p&gt;
+&lt;p&gt;Different algorithms will often yield different observations per cluster. Therefore, it's best to understand your data well and study up on the types of algorithms available so you can get your desired results.&lt;/p&gt;
+&lt;h4&gt;Code to Implement the K-Means Clustering Algorithm&lt;/h4&gt;
+&lt;p&gt;In this post, I won't dive deep into the K-Means algorithm and explanations of the code below. I'll save that for another post.&lt;/p&gt;
+&lt;p&gt;Let's focus on the last visualization and intrepret the results of this programmatic way to create two clusters.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.preprocessing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;StandardScaler&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.cluster&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;KMeans&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;all_observations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ages&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;incomes&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;scaler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StandardScaler&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;observations_standardized&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;scaler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit_transform&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;all_observations&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;kmeans_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;KMeans&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_clusters&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;kmeans_object&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;observations_standardized&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;KMeans(algorithm=&amp;#39;auto&amp;#39;, copy_x=True, init=&amp;#39;k-means++&amp;#39;, max_iter=300,
+    n_clusters=2, n_init=10, n_jobs=1, precompute_distances=&amp;#39;auto&amp;#39;,
+    random_state=None, tol=0.0001, verbose=0)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;kmeans_predictions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;kmeans_object&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;labels_&lt;/span&gt;
+&lt;span class="n"&gt;kmeans_cluster_centers&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;kmeans_object&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cluster_centers_&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In the visualization below, purple dots are one cluster and yellow dots represent another cluster.&lt;/p&gt;
+&lt;p&gt;The semi-transparent large circles are the centers/centroids of each cluster.&lt;/p&gt;
+&lt;p&gt;Clustering better identifies nearby observations in the same cluster; we don't see two observations that have practically the same features but are in different clusters like we did with our manual segmentation above.&lt;/p&gt;
+&lt;p&gt;Also, because of this centroid-based clustering, we can detail the features of the centroid to explain to our stakeholders the general features of our clusters.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;observations_standardized&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;observations_standardized&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;kmeans_predictions&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kmeans_cluster_centers&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;kmeans_cluster_centers&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;580&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;pyplot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Clusters of Customers Using K-Means&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="intro-clustering_files/intro-clustering_35_0.png"&gt;&lt;/p&gt;</content><category term="lists"></category><category term="plots"></category><category term="python"></category><category term="math"></category></entry><entry><title>Intro to Multithreading and Multiprocessing</title><link href="https://dfrieds.com/python/intro-multithreading-and-multiprocessing" rel="alternate"></link><published>2018-04-25T12:00:00-07:00</published><updated>2018-04-25T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-25:/python/intro-multithreading-and-multiprocessing</id><summary type="html">&lt;p&gt;Use multithreading and multiprocessing as options for parallel programming in Python to perform tasks at the same time&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Why is Performant Code Important&lt;/h3&gt;
 &lt;p&gt;In analyzing data, you may be dealing with thousands, millions or even billions of records. As you perform computations to gain insights, you'll likely do lots of data transformations.&lt;/p&gt;
 &lt;p&gt;With each computation, to save even seconds or minutes can be greatly helpful for you to deliver insights to your team faster and ultimately get more work done over time.&lt;/p&gt;
 &lt;p&gt;With parallel programming in Python, you can do just that.&lt;/p&gt;
@@ -658,7 +876,7 @@ Wall time: 11 s
 &lt;p&gt;&lt;strong&gt;Conclusion:&lt;/strong&gt; program completes much faster &lt;em&gt;with&lt;/em&gt; multiprocessing at approximately 4 subprocesses running concurrently.&lt;/p&gt;
 &lt;p&gt;Multiprocessing here was helpful for this CPU intensive task because we could benefit from using multiple cores and avoid the global interpreter lock.&lt;/p&gt;
 &lt;p&gt;Interestingly, spinning up additional subprocesses past 4 has no major effect on improving runtime of our program. Notice how the total program runtime with 4 subprocesses is equivalent to the program with 5 subprocesses.&lt;/p&gt;
-&lt;p&gt;Threads provide no benefit in Python for CPU intensive tasks like these because of the global interpreter lock.&lt;/p&gt;</content><category term="multithreading multiprocessing"></category></entry><entry><title>Read in CSV Files for Data Analysis</title><link href="https://dfrieds.com/python/read-in-csv-files" rel="alternate"></link><published>2018-04-08T12:00:00-07:00</published><updated>2018-04-08T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-08:/python/read-in-csv-files</id><summary type="html">&lt;p&gt;Import CSV files into your Python program to analyze the data&lt;/p&gt;</summary><content type="html">&lt;p&gt;Python is a great programming language for data analysis. &lt;/p&gt;
+&lt;p&gt;Threads provide no benefit in Python for CPU intensive tasks like these because of the global interpreter lock.&lt;/p&gt;</content><category term="multithreading"></category><category term="multiprocessing"></category></entry><entry><title>Read in CSV Files for Data Analysis</title><link href="https://dfrieds.com/python/read-in-csv-files" rel="alternate"></link><published>2018-04-08T12:00:00-07:00</published><updated>2018-04-08T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-08:/python/read-in-csv-files</id><summary type="html">&lt;p&gt;Import CSV files into your Python program to analyze the data&lt;/p&gt;</summary><content type="html">&lt;p&gt;Python is a great programming language for data analysis. &lt;/p&gt;
 &lt;p&gt;CSV files are comma-separated values to store data, similar to a table format.&lt;/p&gt;
 &lt;p&gt;The CSV format is a common import and export format for spreadsheets and databases. You'll likely encounter it early on in the field of data science.&lt;/p&gt;
 &lt;p&gt;We'll cover how to read in data from a CSV in which a CSV file is in your Python program's directory/folder on your computer.&lt;/p&gt;
@@ -1505,173 +1723,4 @@ A key of profession corresponds to a value of Data Scientist
 
 
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;quot; I&amp;#39;m not sure of the answer. Have you thought about 6?  or 7?&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;</content><category term="strings"></category></entry><entry><title>Strings Basics</title><link href="https://dfrieds.com/python/strings" rel="alternate"></link><published>2018-03-25T12:00:00-07:00</published><updated>2018-03-25T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-03-25:/python/strings</id><summary type="html">&lt;p&gt;Covers what's a string, how to access values in a string, get the length, traverse a string and more.&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Intro to Python Strings&lt;/h3&gt;
-&lt;p&gt;A &lt;strong&gt;string&lt;/strong&gt; is a sequence - an ordered collection of values.&lt;/p&gt;
-&lt;p&gt;Strings are always in single or double quotes and often viewed as text blobs. Some examples of strings in Python programs are:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;song lyrics&lt;/li&gt;
-&lt;li&gt;names of people&lt;/li&gt;
-&lt;li&gt;conversation text&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Here is an example of a string.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;computer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;apple&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Note a &lt;code&gt;string&lt;/code&gt; is a data type of a variable - just as an &lt;code&gt;int&lt;/code&gt; and &lt;code&gt;float&lt;/code&gt; are other example of data types.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;computer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;str
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;A string is a sequence&lt;/h4&gt;
-&lt;p&gt;Just like any Python sequence, you can access the characters.&lt;/p&gt;
-&lt;p&gt;You can access a single character. Here we access the first item in the sequence - the letter &lt;code&gt;a&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;computer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;apple&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;computer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;a&amp;#39;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The expression in brackets above is considered an &lt;strong&gt;index&lt;/strong&gt;. The index of any sequence in computer science starts at 0.&lt;/p&gt;
-&lt;h4&gt;Get the length of the sequence&lt;/h4&gt;
-&lt;p&gt;An important built-in Python function &lt;code&gt;len&lt;/code&gt; returns the number of characters in a sequence.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;computer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;apple&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This variable &lt;code&gt;computer&lt;/code&gt; is assigned to the string &lt;code&gt;apple&lt;/code&gt; and that string has 5 letters. So the length of this sequence should be 5.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;computer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;5
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Traverse with a for loop&lt;/h4&gt;
-&lt;p&gt;In Python, you may need to perform computations on each character in a string.&lt;/p&gt;
-&lt;p&gt;To do so, select each character, do some computation and continue until the end. This pattern is called a &lt;strong&gt;traversal&lt;/strong&gt;. &lt;/p&gt;
-&lt;p&gt;Commonly, you'll traverse a string with a &lt;code&gt;for&lt;/code&gt; loop. Let's do that to our variable &lt;code&gt;computer&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;We'll count the number of times the letter &lt;em&gt;p&lt;/em&gt; appears. We should get an answer of &lt;code&gt;2&lt;/code&gt; since there are two &lt;em&gt;p&lt;/em&gt;'s in the string &lt;code&gt;apple&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
-
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;letter&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;computer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;letter&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;p&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;count_of_p&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_p&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;2
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In the snippet above, the computation is called a &lt;strong&gt;counter&lt;/strong&gt; because &lt;code&gt;count_of_p&lt;/code&gt; is assigned to the &lt;code&gt;int&lt;/code&gt; value of 0 and stores the value for the &lt;em&gt;count&lt;/em&gt; of the letter &lt;em&gt;p&lt;/em&gt; in our string.&lt;/p&gt;
-&lt;h4&gt;Strings are immutable&lt;/h4&gt;
-&lt;p&gt;Strings are &lt;strong&gt;immutable&lt;/strong&gt; - you cannot change an existing string in place.&lt;/p&gt;
-&lt;p&gt;Let's say we have a variable &lt;code&gt;greeting&lt;/code&gt; below that's a string.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;greeting&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Hello Dan&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We cannot change this &lt;code&gt;greeting&lt;/code&gt; variable. &lt;/p&gt;
-&lt;p&gt;We can create a &lt;code&gt;new_greeting&lt;/code&gt; variable that is a variation of the original.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;new_greeting&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;greeting&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;!&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;new_greeting&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;Hello Dan!&amp;#39;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;The &lt;code&gt;in&lt;/code&gt; operator&lt;/h4&gt;
-&lt;p&gt;The word &lt;code&gt;in&lt;/code&gt; is a boolean operator that takes two strings and returns &lt;code&gt;True&lt;/code&gt; if the first string appears as a substring in the second.&lt;/p&gt;
-&lt;p&gt;The string &lt;code&gt;"a"&lt;/code&gt; is contained in &lt;code&gt;"banana"&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;banana&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;True
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The string &lt;code&gt;"bat"&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; contained in the string &lt;code&gt;"banana"&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bat&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;banana&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;False
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Compare strings&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;==&lt;/code&gt; operator works on strings to compare if they're equal. If the two are equal, it returns &lt;code&gt;True&lt;/code&gt;, otherwise, it returns &lt;code&gt;False&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;dan&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;dan&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;True
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Strings are case sensitive so an uppercase and lowercase letter are &lt;em&gt;different&lt;/em&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;dan&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Dan&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;False
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;dan&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;mary&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;False
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can also compare strings for alphabetical order. &lt;/p&gt;
-&lt;p&gt;We know the letter &lt;em&gt;a&lt;/em&gt; appears in the alphabet before the letter &lt;em&gt;d&lt;/em&gt;. So &lt;code&gt;a&lt;/code&gt; is less than &lt;code&gt;d&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;d&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;True
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can compare whole words too. Think of this as evaluating which word you'd find &lt;em&gt;first&lt;/em&gt; in a dictionary book.&lt;/p&gt;
-&lt;p&gt;Letter &lt;em&gt;c&lt;/em&gt; comes before letter &lt;em&gt;d&lt;/em&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;cat&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;dog&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;True
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The expression below is &lt;code&gt;False&lt;/code&gt; becuase we find words that start with &lt;em&gt;ca&lt;/em&gt; before words with &lt;em&gt;co&lt;/em&gt; in a dictionary book since &lt;em&gt;a&lt;/em&gt; is alphabetically before &lt;em&gt;o&lt;/em&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;cat&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cow&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;False
 &lt;/pre&gt;&lt;/div&gt;</content><category term="strings"></category></entry></feed>
