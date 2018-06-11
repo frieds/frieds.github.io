@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data Science Tutorials">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="when use grouped barplots">
+
+  <meta name="description" content="Examples of datasets to illustrate when to use grouped vertical barplots to compare amounts of two or more categories">
+  <meta property="og:description"  content="Examples of datasets to illustrate when to use grouped vertical barplots to compare amounts of two or more categories">
+  <meta name="twitter:description" content="Examples of datasets to illustrate when to use grouped vertical barplots to compare amounts of two or more categories">
+
+  <meta property="og:title" content="When to Use Vertical Grouped Barplots">
+  <meta name="twitter:title" content="When to Use Vertical Grouped Barplots">
+
+  <link rel="canonical" href="https://dfrieds.com/data-visualizations/when-use-vertical-grouped-barplots"/>
+
+  <title>When to Use Vertical Grouped Barplots - Data Visualizations</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full Atom Feed" />    <link href="https://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />      <link href="https://dfrieds.com/feeds/data-visualizations.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories Atom Feed" />    <link href="https://dfrieds.com/feeds/data-visualizations.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="data-visualizations"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles
+              </a>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials
+              </a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+              </div>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://twitter.com/_DanFriedman" target="blank">Twitter</a>
+                <a class="dropdown-item" href="https://github.com/frieds" target="blank">GitHub</a>
+                <a class="dropdown-item" href="https://linkedin.com/in/danfriedman33" target="blank">LinkedIn</a>
+              </div>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> Data Visualizations Best Practices Tutorial</div>
+    <h1 class="articleh1">
+      When to Use Vertical Grouped Barplots
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        Jun 11&nbsp;&nbsp;&bull;&nbsp;&nbsp;6 min read
+      </li>
+      <li class="tagarticle">
+        Key Terms:         grouped barplots
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <p>Vertical bar charts are useful to illustrate sizes of data using different bar heights. A <strong>vertical grouped barplot</strong> often illustrates the sizes of multiple categories using different bar heights.</p>
+<p>For example, let's say we had a service that rented out scooters in San Francisco, California. Customers can make a one-time rental or pay a monthly subscription fee and get unlimited rides for under 30 minutes. So, for each ride, we log if the customer was <em>individual</em> or <em>subscriber</em>. With these two categories for types of riders, we can see how they compare to one another with a multiple vertical bar chart.</p>
+<h3>Import Modules</h3>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<h3>Example: Scooter Rides Per Month Over Time by Account Type</h3>
+<p>Let's continue with the example mentioned above. I'm curious about the trend of individual versus subscriber scooter rides over the past year. To get a high-level perspective, I think it would be helpful to look at the count of rides per month for each of these account types.</p>
+<p>A sample of our <em>original</em> data would look like:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Miles Ridden</th>
+<th>Account Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6/9/2018</td>
+<td>2.1</td>
+<td>Individual</td>
+</tr>
+<tr>
+<td>6/10/2018</td>
+<td>1.5</td>
+<td>Subscriber</td>
+</tr>
+<tr>
+<td>6/10/2018</td>
+<td>3.9</td>
+<td>Subscriber</td>
+</tr>
+</tbody>
+</table>
+<p>We'd like get a count of rides on the monthly level broken out by account type. Therefore, given the data above, we'd perform a group by operation on a month-year field, then group by account type, and then count the number of rides. We'd end up with a sample of data looking like:</p>
+<table>
+<thead>
+<tr>
+<th>Month Year</th>
+<th>Count Individual Rides</th>
+<th>Count Subscriber Rides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>May 2017</td>
+<td>31100</td>
+<td>900</td>
+</tr>
+<tr>
+<td>June 2017</td>
+<td>33900</td>
+<td>1100</td>
+</tr>
+<tr>
+<td>July 2017</td>
+<td>36380</td>
+<td>1300</td>
+</tr>
+</tbody>
+</table>
+<h4>Generate Scooter Ride Data</h4>
+<div class="highlight"><pre><span></span><span class="n">month_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%b %Y&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;5-2017&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;5-2018&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;MS&#39;</span><span class="p">)]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">monthly_count_rides</span> <span class="o">=</span> <span class="p">[</span><span class="mi">32000</span><span class="p">,</span> <span class="mi">35000</span><span class="p">,</span> <span class="mi">37680</span><span class="p">,</span> <span class="mi">41500</span><span class="p">,</span> <span class="mi">43300</span><span class="p">,</span> <span class="mi">44000</span><span class="p">,</span> <span class="mi">44350</span><span class="p">,</span> <span class="mi">41000</span><span class="p">,</span> <span class="mi">39000</span><span class="p">,</span> <span class="mi">39500</span><span class="p">,</span> <span class="mi">48000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">52000</span><span class="p">]</span>
+<span class="n">monthly_count_rides_subscribers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">900</span><span class="p">,</span> <span class="mi">1100</span><span class="p">,</span> <span class="mi">1300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">2860</span><span class="p">,</span> <span class="mi">3300</span><span class="p">,</span> <span class="mi">3350</span><span class="p">,</span> <span class="mi">3480</span><span class="p">,</span> <span class="mi">4005</span><span class="p">,</span> <span class="mi">4790</span><span class="p">,</span> <span class="mi">4980</span><span class="p">,</span> <span class="mi">5150</span><span class="p">,</span> <span class="mi">5290</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">monthly_count_rides_individual</span> <span class="o">=</span> <span class="p">[</span><span class="n">month</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">month</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">monthly_count_rides</span><span class="p">,</span> <span class="n">monthly_count_rides_subscribers</span><span class="p">)]</span>
+</pre></div>
+
+
+<h4>Plot Scooter Rides</h4>
+<p>The reason a vertical grouped barplot works well in this scenario is because we're most interested to see the change in count of rides by <em>each</em> type - rather than a change in total rides of the account types combined. So, with separate bars for individual and subscription accounts, we can easily visualize the trend over time.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;month_year&#39;</span><span class="p">:</span> <span class="n">month_list</span><span class="p">,</span> <span class="s1">&#39;count_scooter_rides&#39;</span><span class="p">:</span> <span class="n">monthly_count_rides</span><span class="p">,</span> 
+                    <span class="s1">&#39;count_scooter_rides_subscription&#39;</span><span class="p">:</span> <span class="n">monthly_count_rides_subscribers</span><span class="p">,</span>
+                   <span class="s1">&#39;count_scooter_rides_individual&#39;</span><span class="p">:</span> <span class="n">monthly_count_rides_individual</span><span class="p">})</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;month_year&#39;</span><span class="p">)[[</span><span class="s1">&#39;count_scooter_rides_subscription&#39;</span><span class="p">,</span> <span class="s1">&#39;count_scooter_rides_individual&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Count of Scooter Rides Per Month By Account Type Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month Year&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Count of Rides&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="when_use_vertical_grouped_barplots_files/when_use_vertical_grouped_barplots_13_0.png"></p>
+<h4>Explanation of Scooter Rides Plot</h4>
+<p>There is a clear trend that the amount of rides by subscribers has increased every month since May 2017. Also, the increase has been pretty significant as the count of subscriber rides per month has doubled from May 2017 to May 2018.</p>
+<p>However, individual scooter rides increased during the warmer months of 2017 from May to November. During the winter season, count of individual scooter rides decreased per month over several months. By March 2018, when the weather was much warmer, the count of individual rides per month drastically increased.</p>
+<h3>Example: Favorite Sport to Play by Gender</h3>
+<p>Let's imagine we surveyed our friends - 8 male and 8 female, to ask them their favorite sport. We recorded each person's response. We only allowed responses for the following sports:</p>
+<ul>
+<li>basketball</li>
+<li>baseball</li>
+<li>lacrosse</li>
+<li>hockey</li>
+<li>soccer</li>
+</ul>
+<p>A sample of our data would look like:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Gender</th>
+<th>Favorite Sport</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jake</td>
+<td>Male</td>
+<td>Basketball</td>
+</tr>
+<tr>
+<td>Michele</td>
+<td>Female</td>
+<td>Lacrosse</td>
+</tr>
+<tr>
+<td>Elizabeth</td>
+<td>Female</td>
+<td>Soccer</td>
+</tr>
+</tbody>
+</table>
+<p>We want to visualize the data in two ways: 1) see favorite sports by gender and 2) see breakdown of a specific sport's interest by gender.</p>
+<h4>Generate Fictional Data</h4>
+<div class="highlight"><pre><span></span><span class="n">sports</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Basketball&#39;</span><span class="p">,</span> <span class="s1">&#39;Basketball&#39;</span><span class="p">,</span> <span class="s1">&#39;Basketball&#39;</span><span class="p">,</span> <span class="s1">&#39;Basketball&#39;</span><span class="p">,</span> <span class="s1">&#39;Baseball&#39;</span><span class="p">,</span> <span class="s1">&#39;Lacrosse&#39;</span><span class="p">,</span> <span class="s1">&#39;Lacrosse&#39;</span><span class="p">,</span> <span class="s1">&#39;Lacrosse&#39;</span><span class="p">,</span> <span class="s1">&#39;Lacrosse&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;Soccer&#39;</span><span class="p">,</span> <span class="s1">&#39;Soccer&#39;</span><span class="p">,</span> <span class="s1">&#39;Soccer&#39;</span><span class="p">,</span> <span class="s1">&#39;Soccer&#39;</span><span class="p">,</span> <span class="s1">&#39;Soccer&#39;</span><span class="p">]</span>
+<span class="n">genders</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<h4>Plot Categorized by Gender</h4>
+<div class="highlight"><pre><span></span><span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;favorite_sport&#39;</span><span class="p">:</span> <span class="n">sports</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="n">genders</span><span class="p">})</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;favorite_sport&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Breakdown of Genders&#39; Favorite Sports&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Gender&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Count&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">get_texts</span><span class="p">(),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;13&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">get_title</span><span class="p">(),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;15&#39;</span><span class="p">);</span> 
+</pre></div>
+
+
+<p><img alt="png" src="when_use_vertical_grouped_barplots_files/when_use_vertical_grouped_barplots_22_0.png"></p>
+<h4>Explanation of Plot Categorized by Gender</h4>
+<p>We surveyed males who regarded all 5 options as one of their favorite sports. On the other hand, females only liked as their favorite sport Basketball, Lacrosse and Soccer.</p>
+<p>Females' favorite sport is Lacrosse. Mens' favorite sport is a three-way tie between Basketball, Lacross and Hockey.</p>
+<h4>Plot Categorized by Sport</h4>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;favorite_sport&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Breakdown of Favorite Sports by Gender&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Sport&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Count&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">get_texts</span><span class="p">(),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;13&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">get_title</span><span class="p">(),</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;15&#39;</span><span class="p">);</span> 
+</pre></div>
+
+
+<p><img alt="png" src="when_use_vertical_grouped_barplots_files/when_use_vertical_grouped_barplots_26_0.png"></p>
+<h4>Explanation of Plot Categorized by Sport</h4>
+<p>Females prefer Soccer as their favorite sport far more than males.</p>
+<p>No females surveyed regarded their favorite sport as Baseball or Hockey.</p>
+<p>The same amount of males and females surveyed regarded Lacrosse and Basketball as their favorite sports.</p>
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+        <center>This project contains 41 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+          <br/>
+          Copyright &copy; Dan Friedman,
+          <time datetime="2018">2018</time>.
+        </center>
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #c0c6c3" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#f9f9f9" );
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+  <script type="text/javascript">
+    $(document).on('click', 'a[href^="#"]', function (event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 500);
+    });
+  </script>
+
+</body>
+
+</html>
