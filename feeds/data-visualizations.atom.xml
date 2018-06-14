@@ -1,5 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Data Visualizations</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/data-visualizations.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-13T23:00:00-07:00</updated><entry><title>When to Use Histogram Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-histogram" rel="alternate"></link><published>2018-06-13T23:00:00-07:00</published><updated>2018-06-13T23:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-13:/data-visualizations/when-use-histogram</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use histograms to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Histograms&lt;/strong&gt; visualize the shape of the distribution for a variable that contains numerical values. A histogram displays data using bars of different heights.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Data Visualizations</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/data-visualizations.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-14T12:00:00-07:00</updated><entry><title>When to Use Horizontal Bar Charts</title><link href="https://dfrieds.com/data-visualizations/when-use-horizontal-bar-charts" rel="alternate"></link><published>2018-06-14T12:00:00-07:00</published><updated>2018-06-14T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-14:/data-visualizations/when-use-horizontal-bar-charts</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use horizontal bar charts to display a metric relevant to categories&lt;/p&gt;</summary><content type="html">&lt;p&gt;Horizontal bar charts illustrate sizes of data using different bar heights.&lt;/p&gt;
+&lt;p&gt;When are horizontal bar charts preferred over vertical bar charts? I find horizontal bar charts useful to display a list of categories (usually 4 - 20) that have long names; the category names on the left-hand size make this horizontal bar chart easy to read and interpret.&lt;/p&gt;
+&lt;p&gt;I'll walk through a few examples of horizontal bar charts below.&lt;/p&gt;
+&lt;h4&gt;Import Modules&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;choice&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;sample&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;seed&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example: Age of Family Members&lt;/h3&gt;
+&lt;p&gt;In this example, I want to visualize the age of a large group of family members. A horizontal bar chart is useful here because names are often long and are easier to display horizontally than squeeze them in vertically on a vertical bar chart.&lt;/p&gt;
+&lt;h4&gt;Generate Family Data&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;first_names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Dan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Joe&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Abe&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Jess&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Lauren&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Jamie&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Matt&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Penelope&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Charlotte&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;potential_last_names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Williams&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Johnson&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;9001&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# seed so we get the same results every time&lt;/span&gt;
+&lt;span class="n"&gt;full_names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; &amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;choice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;potential_last_names&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;first_names&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;85&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;full_names&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;names&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;full_names&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;ages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;ages&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;inplace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ascending&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot Horizontal Bar Plot of Family Members' Ages&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;talk&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;barplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;names&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;orient&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;h&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;saturation&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.7&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Horizontal Bar Chart of Family Members&amp;#39; Age&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Age (Years)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_horizontal_bar_charts_files/when_use_horizontal_bar_charts_13_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Bar Plot of Family Members' Age&lt;/h4&gt;
+&lt;p&gt;The oldest family members is Abe Johnson while the youngest is Joe Johnson. &lt;/p&gt;
+&lt;p&gt;There's a wide spread of ages from nearly 21 years old to 81 years old.&lt;/p&gt;
+&lt;h3&gt;Example: Bay Area Bike Share Popular Start Stations&lt;/h3&gt;
+&lt;p&gt;In the San Francisco Bay Area, a company Motivate operates a network of bikes across several cities. You can walk up to a bike, pay and unlock it from a dock, ride it to your destination, and park it in another nearby dock.&lt;/p&gt;
+&lt;p&gt;For each ride, Motivate records data on the starting dock station. I want to visualize the most popular starting dock stations.&lt;/p&gt;
+&lt;h4&gt;Load Dataset on May 2018 Rides&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;201805-fordgobike-tripdata.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Preview Some Data&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df2&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;end_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;duration_sec&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;member_birth_year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;member_gender&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;start_time&lt;/th&gt;
+      &lt;th&gt;end_time&lt;/th&gt;
+      &lt;th&gt;duration_sec&lt;/th&gt;
+      &lt;th&gt;member_birth_year&lt;/th&gt;
+      &lt;th&gt;member_gender&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2018-05-31 21:41:51.4750&lt;/td&gt;
+      &lt;td&gt;2018-06-01 13:28:22.7220&lt;/td&gt;
+      &lt;td&gt;56791&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2018-05-31 18:39:53.7690&lt;/td&gt;
+      &lt;td&gt;2018-06-01 09:19:51.5410&lt;/td&gt;
+      &lt;td&gt;52797&lt;/td&gt;
+      &lt;td&gt;1983.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2018-05-31 21:09:48.0150&lt;/td&gt;
+      &lt;td&gt;2018-06-01 09:09:52.4850&lt;/td&gt;
+      &lt;td&gt;43204&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;2018-05-31 14:09:54.9720&lt;/td&gt;
+      &lt;td&gt;2018-06-01 08:48:17.8150&lt;/td&gt;
+      &lt;td&gt;67102&lt;/td&gt;
+      &lt;td&gt;1979.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;2018-05-31 16:07:23.8570&lt;/td&gt;
+      &lt;td&gt;2018-06-01 08:28:47.2020&lt;/td&gt;
+      &lt;td&gt;58883&lt;/td&gt;
+      &lt;td&gt;1986.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Plot Horizontal Bar Chart of Count of Rides by Starting Stations&lt;/h4&gt;
+&lt;p&gt;Below I limit my horizontal bar chart to just show the 15 most frequent starting docks.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ax2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;countplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_station_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;orient&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;h&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;order&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_station_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;iloc&lt;/span&gt;&lt;span class="p"&gt;[:&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Horizontal Bar Chart of Count of Rides by Starting Docks&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Count of Rides&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Start Station Name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_horizontal_bar_charts_files/when_use_horizontal_bar_charts_24_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Horizontal Bar Chart of Count of Rides by Starting Docks&lt;/h4&gt;
+&lt;p&gt;The most frequent starting dock is the San Francisco Ferry Building.&lt;/p&gt;
+&lt;p&gt;The most frequent starting docks are all in the SoMa neighborhood and typically near high-speed public transit options like BART and Caltrain.&lt;/p&gt;</content><category term="horizontal bar chart"></category></entry><entry><title>When to Use Histogram Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-histogram" rel="alternate"></link><published>2018-06-13T23:00:00-07:00</published><updated>2018-06-13T23:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-13:/data-visualizations/when-use-histogram</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use histograms to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Histograms&lt;/strong&gt; visualize the shape of the distribution for a variable that contains numerical values. A histogram displays data using bars of different heights.&lt;/p&gt;
 &lt;p&gt;Histograms are slightly similar to vertical bar charts; however, with histograms, numerical values are grouped into &lt;strong&gt;bins&lt;/strong&gt;. For example, you could create a histogram of the mass (in pounds) of everyone at your university. In doing so, you'd need to create bins so that the mass of people from 40 pounds to 60 pounds is one bin, and 60 pounds to 80 pounds is another bin, and so forth. &lt;/p&gt;
 &lt;p&gt;Similar to box plots, histograms visualize the distribution of a dataset. However, box plots are often more ideal for identifying outliers, if any exist.&lt;/p&gt;
 &lt;p&gt;Below, I'll walk through a few examples below of when histograms are useful.&lt;/p&gt;
@@ -880,6 +1012,7 @@ July 2017 | 66000 | 5350 | 13500 | 15000 | 3500&lt;/p&gt;
 &lt;p&gt;Hybrid sales always make up largest portion of bike sales by type.&lt;/p&gt;
 &lt;p&gt;BMX sales account for the smallest sales by type ever month, and there were only a few bmx bike sales in the winter months.&lt;/p&gt;</content><category term="vertical stacked bar charts"></category></entry><entry><title>When to Use a Vertical Bar Chart</title><link href="https://dfrieds.com/data-visualizations/when-use-vertical-bar-chart" rel="alternate"></link><published>2018-06-10T19:00:00-07:00</published><updated>2018-06-10T19:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-10:/data-visualizations/when-use-vertical-bar-chart</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use a vertical bar chart and how to explain results&lt;/p&gt;</summary><content type="html">&lt;p&gt;Vertical bar charts illustrate sizes of data using different bar heights.&lt;/p&gt;
 &lt;p&gt;For example, let's say we had a service that rented out scooters in San Francisco, California. Each day, we determine the count of total rides. We can plot the count of rides over the past 21 days, with the count each day being a bar of a certain height, to visualize the trend of rides recently.&lt;/p&gt;
+&lt;p&gt;I'll showcase a few examples of vertical bar charts below.&lt;/p&gt;
 &lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
@@ -1395,302 +1528,4 @@ memory usage: 320.0 bytes
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;&lt;img alt="png" src="line_plot_pandas_files/line_plot_pandas_25_0.png"&gt;&lt;/p&gt;</content><category term="line plot"></category></entry><entry><title>Bar Chart using Pandas</title><link href="https://dfrieds.com/data-visualizations/bar-chart-python-pandas" rel="alternate"></link><published>2018-03-07T22:00:00-08:00</published><updated>2018-03-07T22:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-03-07:/data-visualizations/bar-chart-python-pandas</id><summary type="html">&lt;p&gt;Create simple bar charts in Python using the Pandas library based on a tips dataset&lt;/p&gt;</summary><content type="html">&lt;h4&gt;Import Modules&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Read in Tips Dataset from URL&lt;/h4&gt;
-&lt;p&gt;This data contains logs of tips received by waiters and waittresses at a restaurant.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Preview the Data&lt;/h4&gt;
-&lt;h5&gt;Preview the top 5 rows&lt;/h5&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th&gt;total_bill&lt;/th&gt;
-      &lt;th&gt;tip&lt;/th&gt;
-      &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;smoker&lt;/th&gt;
-      &lt;th&gt;day&lt;/th&gt;
-      &lt;th&gt;time&lt;/th&gt;
-      &lt;th&gt;size&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;0&lt;/th&gt;
-      &lt;td&gt;16.99&lt;/td&gt;
-      &lt;td&gt;1.01&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;1&lt;/th&gt;
-      &lt;td&gt;10.34&lt;/td&gt;
-      &lt;td&gt;1.66&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;2&lt;/th&gt;
-      &lt;td&gt;21.01&lt;/td&gt;
-      &lt;td&gt;3.50&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;3&lt;/th&gt;
-      &lt;td&gt;23.68&lt;/td&gt;
-      &lt;td&gt;3.31&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;4&lt;/th&gt;
-      &lt;td&gt;24.59&lt;/td&gt;
-      &lt;td&gt;3.61&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;h5&gt;View the count of non-null values per colummn and data types&lt;/h5&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;class &amp;#39;pandas.core.frame.DataFrame&amp;#39;&amp;gt;
-RangeIndex: 244 entries, 0 to 243
-Data columns (total 7 columns):
-total_bill    244 non-null float64
-tip           244 non-null float64
-sex           244 non-null object
-smoker        244 non-null object
-day           244 non-null object
-time          244 non-null object
-size          244 non-null int64
-dtypes: float64(2), int64(1), object(4)
-memory usage: 13.4+ KB
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Examine Gender Values of Tip Records&lt;/h4&gt;
-&lt;p&gt;Bar charts are great at visualizing counts of categorical data. &lt;/p&gt;
-&lt;p&gt;With this tips dataset, we have several categorical fields including &lt;em&gt;sex&lt;/em&gt;, &lt;em&gt;smoker&lt;/em&gt;, &lt;em&gt;day&lt;/em&gt;, &lt;em&gt;time&lt;/em&gt; and &lt;em&gt;size&lt;/em&gt;.&lt;/p&gt;
-&lt;h5&gt;Examine Data to be Passed into Plots&lt;/h5&gt;
-&lt;p&gt;First, we can call the &lt;code&gt;value_counts&lt;/code&gt; method on the &lt;em&gt;sex&lt;/em&gt; (aka gender) field to see the count of unique values. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Male      157
-Female     87
-Name: sex, dtype: int64
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The output above is a Pandas Series in which the index items are &lt;code&gt;Male&lt;/code&gt; and &lt;code&gt;Female&lt;/code&gt; and the values are the count of each index item in our original tips &lt;em&gt;sex&lt;/em&gt; field.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Index([&amp;#39;Male&amp;#39;, &amp;#39;Female&amp;#39;], dtype=&amp;#39;object&amp;#39;)
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pandas.core.series.Series
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Visualize Count of People by Gender&lt;/h4&gt;
-&lt;p&gt;We access the &lt;em&gt;sex&lt;/em&gt; field, call the &lt;code&gt;value_counts&lt;/code&gt; method to get a count of unique values, then call the &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;bar&lt;/code&gt; (for bar chart) to the &lt;code&gt;kind&lt;/code&gt; argument.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_21_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;In our tips dataset, we have more records of tips for male waiters than female waitresses.&lt;/p&gt;
-&lt;h4&gt;Visualize Count of Days for Recorded Tips&lt;/h4&gt;
-&lt;p&gt;We access the &lt;em&gt;day&lt;/em&gt; field, call the &lt;code&gt;value_counts&lt;/code&gt; method to get a count of unique values, then call the &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;bar&lt;/code&gt; (for bar chart) to the &lt;code&gt;kind&lt;/code&gt; argument.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_25_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Most of our tip records were on Saturday followed by Sunday. Only 4 days have recorded tips.&lt;/p&gt;
-&lt;h4&gt;Examine Tip Values by Day&lt;/h4&gt;
-&lt;p&gt;The main question I have on this dataset is: "On what day and time do people get tipped the most?" If I was a waiter, I'd purposely want to work the shifts in which tip amounts would be highest.&lt;/p&gt;
-&lt;p&gt;To answer this question, we need to perform a group by operation. Our process will involve the following steps:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Split the data by &lt;em&gt;day&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;After the split by &lt;em&gt;day&lt;/em&gt;, split the data by &lt;em&gt;time&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;For the &lt;em&gt;tip&lt;/em&gt; field, compute the mean&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h5&gt;A Simple Walk Through of a Group By with Sample Data&lt;/h5&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sample&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_state&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We now have a record of just 3 tip values.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sample&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th&gt;total_bill&lt;/th&gt;
-      &lt;th&gt;tip&lt;/th&gt;
-      &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;smoker&lt;/th&gt;
-      &lt;th&gt;day&lt;/th&gt;
-      &lt;th&gt;time&lt;/th&gt;
-      &lt;th&gt;size&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;67&lt;/th&gt;
-      &lt;td&gt;3.07&lt;/td&gt;
-      &lt;td&gt;1.00&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;Yes&lt;/td&gt;
-      &lt;td&gt;Sat&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;243&lt;/th&gt;
-      &lt;td&gt;18.78&lt;/td&gt;
-      &lt;td&gt;3.00&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Thur&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;206&lt;/th&gt;
-      &lt;td&gt;26.59&lt;/td&gt;
-      &lt;td&gt;3.41&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;Yes&lt;/td&gt;
-      &lt;td&gt;Sat&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;p&gt;If we split the data by &lt;em&gt;day&lt;/em&gt; and by &lt;em&gt;time&lt;/em&gt;, we'd get 2 records of Dinner on Saturday and 1 record of Dinner on Thursday. &lt;/p&gt;
-&lt;p&gt;For our 2 records of Dinner on Saturday, we can compute the average tip amount by the operation ($1.00 + $3.41)/2 which equals approximately $2.20. &lt;/p&gt;
-&lt;p&gt;For our 1 record of Dinner on Thursday, our average tip amount is simply $3.00.&lt;/p&gt;
-&lt;h5&gt;Group By Operation on our Sample Data&lt;/h5&gt;
-&lt;p&gt;We call the &lt;code&gt;groupby&lt;/code&gt; method on our &lt;code&gt;df_sample&lt;/code&gt; dataframe, grouping by the &lt;em&gt;day&lt;/em&gt; and &lt;em&gt;time&lt;/em&gt; fields, and calculating the mean (aka average) tip amount in dollars.  &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sample&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;day   time  
-Sat   Dinner    2.205
-Thur  Dinner    3.000
-Name: tip, dtype: float64
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The output is a Pandas Series.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_sample&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pandas.core.series.Series
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Group By Operation on Entire Tips Dataset&lt;/p&gt;
-&lt;p&gt;We perform the same operations on our entire tips dataset.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;day   time  
-Fri   Dinner    2.940000
-      Lunch     2.382857
-Sat   Dinner    2.993103
-Sun   Dinner    3.255132
-Thur  Dinner    3.000000
-      Lunch     2.767705
-Name: tip, dtype: float64
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h5&gt;Visualize Average Tip Amounts Broken Down into Day and Time&lt;/h5&gt;
-&lt;p&gt;We take the output of our groupby operation, call the &lt;code&gt;sort_values&lt;/code&gt; method to output tip amount values from highest to lowest (descending order), then call the Pandas &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;bar&lt;/code&gt; (for bar chart) to the &lt;code&gt;kind&lt;/code&gt; argument.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ascending&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_44_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;The bar graph illustrates that dinner on Sunday has the highest average tip amounts.&lt;/p&gt;
-&lt;h4&gt;Examine Number of Tips Given by Day and Time&lt;/h4&gt;
-&lt;h5&gt;Group By Operation&lt;/h5&gt;
-&lt;p&gt;Different than the groupby operations above, below we call the&lt;code&gt;size&lt;/code&gt; method to count the number of records by &lt;em&gt;day&lt;/em&gt; and &lt;em&gt;time&lt;/em&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;day   time  
-Fri   Dinner    12
-      Lunch      7
-Sat   Dinner    87
-Sun   Dinner    76
-Thur  Dinner     1
-      Lunch     61
-dtype: int64
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h5&gt;Visualize Number of Tips Given by Day and Time&lt;/h5&gt;
-&lt;p&gt;To visualize the output above, we call the&lt;code&gt;sort_values&lt;/code&gt; method to output the count of tip records from highest to lowest (descending order), then call the Pandas &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;bar&lt;/code&gt; (for bar chart) to the &lt;code&gt;kind&lt;/code&gt; argument.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ascending&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_52_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;This bar graph illustrates the most records for tips are for dinner on Saturday followed by dinner on Sunday.&lt;/p&gt;</content><category term="bar chart"></category></entry></feed>
+&lt;p&gt;&lt;img alt="png" src="line_plot_pandas_files/line_plot_pandas_25_0.png"&gt;&lt;/p&gt;</content><category term="line plot"></category></entry></feed>
