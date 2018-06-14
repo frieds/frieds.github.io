@@ -1,11 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Data Visualizations</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/data-visualizations.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-11T22:00:00-07:00</updated><entry><title>When to Use Box Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-box-plots" rel="alternate"></link><published>2018-06-11T22:00:00-07:00</published><updated>2018-06-11T22:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-11:/data-visualizations/when-use-box-plots</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use box plots to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Box plots&lt;/strong&gt; help visualize the distribution of quantitative values in a field. They are also valuable for comparisons across different categorical variables too.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Data Visualizations</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/data-visualizations.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-13T23:00:00-07:00</updated><entry><title>When to Use Histogram Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-histogram" rel="alternate"></link><published>2018-06-13T23:00:00-07:00</published><updated>2018-06-13T23:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-13:/data-visualizations/when-use-histogram</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use histograms to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Histograms&lt;/strong&gt; visualize the shape of the distribution for a variable that contains numerical values. A histogram displays data using bars of different heights.&lt;/p&gt;
+&lt;p&gt;Histograms are slightly similar to vertical bar charts; however, with histograms, numerical values are grouped into &lt;strong&gt;bins&lt;/strong&gt;. For example, you could create a histogram of the mass (in pounds) of everyone at your university. In doing so, you'd need to create bins so that the mass of people from 40 pounds to 60 pounds is one bin, and 60 pounds to 80 pounds is another bin, and so forth. &lt;/p&gt;
+&lt;p&gt;Similar to box plots, histograms visualize the distribution of a dataset. However, box plots are often more ideal for identifying outliers, if any exist.&lt;/p&gt;
+&lt;p&gt;Below, I'll walk through a few examples below of when histograms are useful.&lt;/p&gt;
+&lt;h4&gt;Import Modules&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example: Bay Area Bike Share Ride Duration Data&lt;/h3&gt;
+&lt;p&gt;In the San Francisco Bay Area, a company Motivate operates a network of bikes across several cities. You can walk up to a bike, pay and unlock it from a dock, ride it to your destination, and park it in another nearby dock.&lt;/p&gt;
+&lt;p&gt;There's an option to become a member (aka subscriber) in which you pay a monthly subscription fee that includes unlimited rides that are up to 30 minutes long. When someone becomes a member, they can submit information on their birth year and gender.&lt;/p&gt;
+&lt;p&gt;For each ride, Motivate records data on the start time, end time, member birth year and member gender.&lt;/p&gt;
+&lt;p&gt;I'm curious to learn more about the duration of bike rides by customers.&lt;/p&gt;
+&lt;h4&gt;Load Dataset on May 2018 Rides&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;201805-fordgobike-tripdata.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Preview Some Data&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;end_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;duration_sec&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;member_birth_year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;member_gender&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;start_time&lt;/th&gt;
+      &lt;th&gt;end_time&lt;/th&gt;
+      &lt;th&gt;duration_sec&lt;/th&gt;
+      &lt;th&gt;member_birth_year&lt;/th&gt;
+      &lt;th&gt;member_gender&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2018-05-31 21:41:51.4750&lt;/td&gt;
+      &lt;td&gt;2018-06-01 13:28:22.7220&lt;/td&gt;
+      &lt;td&gt;56791&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2018-05-31 18:39:53.7690&lt;/td&gt;
+      &lt;td&gt;2018-06-01 09:19:51.5410&lt;/td&gt;
+      &lt;td&gt;52797&lt;/td&gt;
+      &lt;td&gt;1983.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2018-05-31 21:09:48.0150&lt;/td&gt;
+      &lt;td&gt;2018-06-01 09:09:52.4850&lt;/td&gt;
+      &lt;td&gt;43204&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;2018-05-31 14:09:54.9720&lt;/td&gt;
+      &lt;td&gt;2018-06-01 08:48:17.8150&lt;/td&gt;
+      &lt;td&gt;67102&lt;/td&gt;
+      &lt;td&gt;1979.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;2018-05-31 16:07:23.8570&lt;/td&gt;
+      &lt;td&gt;2018-06-01 08:28:47.2020&lt;/td&gt;
+      &lt;td&gt;58883&lt;/td&gt;
+      &lt;td&gt;1986.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Make New Column for Ride Time in Minutes&lt;/h4&gt;
+&lt;p&gt;They record duration of rides in seconds because it's a granular metric of duration. However, when we discuss bike rides with friends, we typically say 20 minutes, not 1200 seconds.&lt;/p&gt;
+&lt;p&gt;Below, I create a new column to convert the duration of rides in seconds into minutes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_sec&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;View Descriptive Statistics of Ride Time in Minutes&lt;/h4&gt;
+&lt;p&gt;Below, we can see the shortest ride was 1 minute and the maximum was 1436 minutes - that's almost a 24 hour ride! &lt;/p&gt;
+&lt;p&gt;The 99th percentile value is 91.5 minutes, which is over three times as large as the 95th percentile value of 30.63 minutes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;percentiles&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;75&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;999&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;count    179125.000000
+mean         14.248406
+std          39.942553
+min           1.016667
+25%           5.700000
+50%           9.133333
+75%          14.500000
+90%          22.600000
+95%          30.633333
+99%          91.500000
+99.9%       687.312667
+max        1436.800000
+Name: duration_minutes, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot Histogram of Ride Time in Minutes&lt;/h4&gt;
+&lt;p&gt;Below, I limit my histogram to show rides up to 91 minutes because that's still the 99th percentile. I don't want my visualization to be distorted by outliers. A focus on up to the 99th percentile will help us draw insights on the patterns of the majority of riders.&lt;/p&gt;
+&lt;p&gt;The Seaborn visualization library in Python automatically determines bin size using the Freedman-Diaconis rule. This is a very convenient feature to have!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;talk&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist_kws&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;range&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;91&lt;/span&gt;&lt;span class="p"&gt;]})&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Duration of Bike Rides (in Minutes)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Ride Duration (Minutes)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Frequency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_18_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Bike Ride Duration Histogram&lt;/h4&gt;
+&lt;p&gt;The highest occurence of bike rides are around 7 minutes.&lt;/p&gt;
+&lt;p&gt;Most bike rides are just from 3 - 15 minutes which I consider fairly short rides. Therefore, I could theorize that bay area bike share members infrequently use these bikes for long strenous exercises riding long distances. Rather, they likely use bike rides for short distances.&lt;/p&gt;
+&lt;p&gt;The histogram illustrates positive skew. This means there's a long tail on the right side of our peak. Because of this skew, the mean ride duration is larger than the median ride duration. Below, I printed out the mean and median so we can verify that while the mean ride duration is 14.24 minutes, the median is smaller at 9.13 minutes. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;14.248405768783414
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;median&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;9.133333333333333
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example: Age of Bike Riders&lt;/h3&gt;
+&lt;p&gt;I'm curious to learn about the age distribution of members of the bay area bike share program. &lt;/p&gt;
+&lt;h4&gt;Create New Column for Age (in Years)&lt;/h4&gt;
+&lt;p&gt;They record the birth year of members. However, it's easier to interpret the age in years rather than year of birth.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2018&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;member_birth_year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;View Descriptive Statistics on Riders' Age&lt;/h4&gt;
+&lt;p&gt;Below, we can see 18 is the youngest rider and the oldest is 129. However, the 99th percentile is 66 years old, nearly half the age of the maximum rider.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;percentiles&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.75&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.99&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.9999&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;count     167376.000000
+mean          35.813575
+std           10.320561
+min           18.000000
+25%           28.000000
+50%           33.000000
+75%           41.000000
+99%           66.000000
+99.99%       118.000000
+max          129.000000
+Name: age_years, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot Histogram of Age of Bike Riders&lt;/h4&gt;
+&lt;p&gt;I limit the range of the x-axis (age) to be just 18 to 80 so we can more easily visualize the bulk of riders, and disregard the outliers well over 80.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_age_members&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;notnull&lt;/span&gt;&lt;span class="p"&gt;()][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ax2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_age_members&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist_kws&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;range&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;]})&lt;/span&gt;
+&lt;span class="n"&gt;ax2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Age of Bike Members&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Age (Years)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Frequency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_34_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Histogram of Age of Bike Riders&lt;/h4&gt;
+&lt;p&gt;The most frequent age group of riders is people aged 24 - 35 with a peak around 29.&lt;/p&gt;
+&lt;p&gt;Past roughly 35 years of age, as people get older, they're less likely to be a member of the bay area bike share program. However, there's still several thousand members who are 55 years or older.&lt;/p&gt;
+&lt;p&gt;There's a wide range of age of bike riders - from 18 to 60+.&lt;/p&gt;
+&lt;p&gt;This histogram is positively skewed too. There's a long tail of bins with ever-decreasing frequency that extend to the right of our peak. &lt;/p&gt;
+&lt;h3&gt;Example: Distribution of Count of Rides by Day of Week For Two User Types&lt;/h3&gt;
+&lt;p&gt;As I mentioned earlier, there's two user types; one is called &lt;em&gt;Customer&lt;/em&gt; and simply means you pay for individual rides. Another type is called a &lt;em&gt;Subscriber&lt;/em&gt; (aka a member) in which you pay a monthly subscription fee that includes unlimited rides for rides less than 30 minutes. &lt;/p&gt;
+&lt;p&gt;I'm curious of the differences in riding patterns of &lt;em&gt;Customers&lt;/em&gt; and &lt;em&gt;Subscribers&lt;/em&gt;. At what times of the day do they ride most often?&lt;/p&gt;
+&lt;p&gt;I'll create a histogram for each user type to see their distribution of count of rides by hour of day.&lt;/p&gt;
+&lt;h4&gt;Create new field to convert start_time into &lt;code&gt;datetime&lt;/code&gt; type&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot Distribution of Count of Rides by Hour of Day for &lt;em&gt;Customer&lt;/em&gt; Type&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;whitegrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;axes.grid&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;ax3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;user_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Customer&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;orange&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Count of Rides by Hour of Day for One-time Customers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hours past midnight&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Count&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_42_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Plot Distribution of Count of Rides by Hour of Day for &lt;em&gt;Subscriber&lt;/em&gt; Type&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ax4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;user_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Subscriber&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkmagenta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Count of Rides by Hour of Day for Subscribers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hours past midnight&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Count&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_44_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Histograms on Rides by Hour of Day&lt;/h4&gt;
+&lt;p&gt;These two histograms are very different! The most noticeable thing is that Subscribers tend to ride mostly around 8am (8 hours past midnight) and 5pm (17 hours past midnight). I hypothesize they're mainly using the bikes for commuting since those are standard commuting hours of the day! The Subscriber distribution is rouhgly bimodal too since we see two large peaks.&lt;/p&gt;
+&lt;p&gt;The one-time Customers histogram reveals a different riding pattern. There is a single peak in which most customers ride around 5pm. Notwithstanding this peak, there's a somewhat uniform distribution of rides from 7am to 7pm. &lt;/p&gt;</content><category term="histogram"></category></entry><entry><title>When to Use Box Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-box-plots" rel="alternate"></link><published>2018-06-11T22:00:00-07:00</published><updated>2018-06-11T22:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-11:/data-visualizations/when-use-box-plots</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use box plots to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Box plots&lt;/strong&gt; help visualize the distribution of quantitative values in a field. They are also valuable for comparisons across different categorical variables or identifying outliers, if either of those exist in a dataset.&lt;/p&gt;
 &lt;p&gt;Box plots &lt;em&gt;typically&lt;/em&gt; detail the minimum value, 25th percentile (aka Q1), median (aka 50th percentile), 75th percentile (aka Q3) and the maximum value in a visual manner. &lt;/p&gt;
 &lt;p&gt;Note: different software and libraries such as Microsoft Excel, Seaborn and others may place the end whiskers and show outliers differently on box plots. Please understand your software's implementation well when you need to interpret results.&lt;/p&gt;
 &lt;p&gt;Often times, the aspects of a box plot are:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Box plot visualization" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwcN_FnbXzeCRzdORCAHXUBX-7RjoyUnkW86ok_rpPwtV1EwTC"&gt;&lt;/p&gt;
 &lt;p&gt;You can learn more in detail about box and whisker plots through this &lt;a href="https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/box-whisker-plots/a/box-plot-review"&gt;Khan Academy article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Percentiles are frequently used in comparisons in the real-world. For example, in my high school graduating class, my GPA ranked in the top 25th percentile. That means I had a higher GPA than 75% of students in my graduating class.&lt;/p&gt;
+&lt;p&gt;Below, I'll walk through several examples of when bar plots are useful.&lt;/p&gt;
 &lt;h4&gt;Import Modules&lt;/h4&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
@@ -320,6 +540,7 @@ Name: pulse, dtype: float64
 &lt;h4&gt;Explanation of Height Over Time Line Plot&lt;/h4&gt;
 &lt;p&gt;I grew very rapidly until about December 2002, then only grew a couple inches over the next two years, and by 2004, I stopped growing in height.&lt;/p&gt;</content><category term="line plots"></category></entry><entry><title>When to Use Vertical Grouped Barplots</title><link href="https://dfrieds.com/data-visualizations/when-use-vertical-grouped-barplots" rel="alternate"></link><published>2018-06-11T15:00:00-07:00</published><updated>2018-06-11T15:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-11:/data-visualizations/when-use-vertical-grouped-barplots</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use grouped vertical barplots to compare amounts of two or more categories&lt;/p&gt;</summary><content type="html">&lt;p&gt;Vertical bar charts are useful to illustrate sizes of data using different bar heights. A &lt;strong&gt;vertical grouped barplot&lt;/strong&gt; often illustrates the sizes of multiple categories using different bar heights.&lt;/p&gt;
 &lt;p&gt;For example, let's say we had a service that rented out scooters in San Francisco, California. Customers can make a one-time rental or pay a monthly subscription fee and get unlimited rides for under 30 minutes. So, for each ride, we log if the customer was &lt;em&gt;individual&lt;/em&gt; or &lt;em&gt;subscriber&lt;/em&gt;. With these two categories for types of riders, we can see how they compare to one another with a multiple vertical bar chart.&lt;/p&gt;
+&lt;p&gt;I'll illustrate a few examples below of when vertical grouped bar plots are useful.&lt;/p&gt;
 &lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
@@ -1472,124 +1693,4 @@ dtype: int64
 
 
 &lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_52_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;This bar graph illustrates the most records for tips are for dinner on Saturday followed by dinner on Sunday.&lt;/p&gt;</content><category term="bar chart"></category></entry><entry><title>Histogram Plot using Pandas</title><link href="https://dfrieds.com/data-visualizations/histogram-plot-python-pandas" rel="alternate"></link><published>2018-03-04T16:00:00-08:00</published><updated>2018-03-04T16:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-03-04:/data-visualizations/histogram-plot-python-pandas</id><summary type="html">&lt;p&gt;Create a histogram plot from the tips dataset in Python using the Pandas library&lt;/p&gt;</summary><content type="html">&lt;h4&gt;Import Modules&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Read in Tips Dataset from URL&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Preview the Data&lt;/h4&gt;
-&lt;h5&gt;Preview the top 5 rows&lt;/h5&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th&gt;total_bill&lt;/th&gt;
-      &lt;th&gt;tip&lt;/th&gt;
-      &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;smoker&lt;/th&gt;
-      &lt;th&gt;day&lt;/th&gt;
-      &lt;th&gt;time&lt;/th&gt;
-      &lt;th&gt;size&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;0&lt;/th&gt;
-      &lt;td&gt;16.99&lt;/td&gt;
-      &lt;td&gt;1.01&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;1&lt;/th&gt;
-      &lt;td&gt;10.34&lt;/td&gt;
-      &lt;td&gt;1.66&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;2&lt;/th&gt;
-      &lt;td&gt;21.01&lt;/td&gt;
-      &lt;td&gt;3.50&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;3&lt;/th&gt;
-      &lt;td&gt;23.68&lt;/td&gt;
-      &lt;td&gt;3.31&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;4&lt;/th&gt;
-      &lt;td&gt;24.59&lt;/td&gt;
-      &lt;td&gt;3.61&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;h5&gt;View the count of values per colummn and data types&lt;/h5&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;class &amp;#39;pandas.core.frame.DataFrame&amp;#39;&amp;gt;
-RangeIndex: 244 entries, 0 to 243
-Data columns (total 7 columns):
-total_bill    244 non-null float64
-tip           244 non-null float64
-sex           244 non-null object
-smoker        244 non-null object
-day           244 non-null object
-time          244 non-null object
-size          244 non-null int64
-dtypes: float64(2), int64(1), object(4)
-memory usage: 13.4+ KB
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Plot a Simple Histogram of Tip Amounts&lt;/h4&gt;
-&lt;p&gt;We access the &lt;em&gt;tip&lt;/em&gt; column, call the &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;hist&lt;/code&gt; to the &lt;code&gt;kind&lt;/code&gt; argument to output a histogram plot.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hist&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="histogram_plot_pandas_files/histogram_plot_pandas_12_0.png"&gt;&lt;/p&gt;
-&lt;h4&gt;Plot a Simple Histogram of Total Bill Amounts&lt;/h4&gt;
-&lt;p&gt;We access the &lt;em&gt;total_bill&lt;/em&gt; column, call the &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;hist&lt;/code&gt; to the &lt;code&gt;kind&lt;/code&gt; argument to output a histogram plot.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hist&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="histogram_plot_pandas_files/histogram_plot_pandas_15_0.png"&gt;&lt;/p&gt;</content><category term="histogram plot"></category></entry></feed>
+&lt;p&gt;This bar graph illustrates the most records for tips are for dinner on Saturday followed by dinner on Sunday.&lt;/p&gt;</content><category term="bar chart"></category></entry></feed>

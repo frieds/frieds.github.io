@@ -1,11 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-11T22:00:00-07:00</updated><entry><title>When to Use Box Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-box-plots" rel="alternate"></link><published>2018-06-11T22:00:00-07:00</published><updated>2018-06-11T22:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-11:/data-visualizations/when-use-box-plots</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use box plots to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Box plots&lt;/strong&gt; help visualize the distribution of quantitative values in a field. They are also valuable for comparisons across different categorical variables too.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-13T23:00:00-07:00</updated><entry><title>When to Use Histogram Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-histogram" rel="alternate"></link><published>2018-06-13T23:00:00-07:00</published><updated>2018-06-13T23:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-13:/data-visualizations/when-use-histogram</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use histograms to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Histograms&lt;/strong&gt; visualize the shape of the distribution for a variable that contains numerical values. A histogram displays data using bars of different heights.&lt;/p&gt;
+&lt;p&gt;Histograms are slightly similar to vertical bar charts; however, with histograms, numerical values are grouped into &lt;strong&gt;bins&lt;/strong&gt;. For example, you could create a histogram of the mass (in pounds) of everyone at your university. In doing so, you'd need to create bins so that the mass of people from 40 pounds to 60 pounds is one bin, and 60 pounds to 80 pounds is another bin, and so forth. &lt;/p&gt;
+&lt;p&gt;Similar to box plots, histograms visualize the distribution of a dataset. However, box plots are often more ideal for identifying outliers, if any exist.&lt;/p&gt;
+&lt;p&gt;Below, I'll walk through a few examples below of when histograms are useful.&lt;/p&gt;
+&lt;h4&gt;Import Modules&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example: Bay Area Bike Share Ride Duration Data&lt;/h3&gt;
+&lt;p&gt;In the San Francisco Bay Area, a company Motivate operates a network of bikes across several cities. You can walk up to a bike, pay and unlock it from a dock, ride it to your destination, and park it in another nearby dock.&lt;/p&gt;
+&lt;p&gt;There's an option to become a member (aka subscriber) in which you pay a monthly subscription fee that includes unlimited rides that are up to 30 minutes long. When someone becomes a member, they can submit information on their birth year and gender.&lt;/p&gt;
+&lt;p&gt;For each ride, Motivate records data on the start time, end time, member birth year and member gender.&lt;/p&gt;
+&lt;p&gt;I'm curious to learn more about the duration of bike rides by customers.&lt;/p&gt;
+&lt;h4&gt;Load Dataset on May 2018 Rides&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;201805-fordgobike-tripdata.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Preview Some Data&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;end_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;duration_sec&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;member_birth_year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;member_gender&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;start_time&lt;/th&gt;
+      &lt;th&gt;end_time&lt;/th&gt;
+      &lt;th&gt;duration_sec&lt;/th&gt;
+      &lt;th&gt;member_birth_year&lt;/th&gt;
+      &lt;th&gt;member_gender&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2018-05-31 21:41:51.4750&lt;/td&gt;
+      &lt;td&gt;2018-06-01 13:28:22.7220&lt;/td&gt;
+      &lt;td&gt;56791&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2018-05-31 18:39:53.7690&lt;/td&gt;
+      &lt;td&gt;2018-06-01 09:19:51.5410&lt;/td&gt;
+      &lt;td&gt;52797&lt;/td&gt;
+      &lt;td&gt;1983.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2018-05-31 21:09:48.0150&lt;/td&gt;
+      &lt;td&gt;2018-06-01 09:09:52.4850&lt;/td&gt;
+      &lt;td&gt;43204&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;2018-05-31 14:09:54.9720&lt;/td&gt;
+      &lt;td&gt;2018-06-01 08:48:17.8150&lt;/td&gt;
+      &lt;td&gt;67102&lt;/td&gt;
+      &lt;td&gt;1979.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;2018-05-31 16:07:23.8570&lt;/td&gt;
+      &lt;td&gt;2018-06-01 08:28:47.2020&lt;/td&gt;
+      &lt;td&gt;58883&lt;/td&gt;
+      &lt;td&gt;1986.0&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Make New Column for Ride Time in Minutes&lt;/h4&gt;
+&lt;p&gt;They record duration of rides in seconds because it's a granular metric of duration. However, when we discuss bike rides with friends, we typically say 20 minutes, not 1200 seconds.&lt;/p&gt;
+&lt;p&gt;Below, I create a new column to convert the duration of rides in seconds into minutes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_sec&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;View Descriptive Statistics of Ride Time in Minutes&lt;/h4&gt;
+&lt;p&gt;Below, we can see the shortest ride was 1 minute and the maximum was 1436 minutes - that's almost a 24 hour ride! &lt;/p&gt;
+&lt;p&gt;The 99th percentile value is 91.5 minutes, which is over three times as large as the 95th percentile value of 30.63 minutes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;percentiles&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;75&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;999&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;count    179125.000000
+mean         14.248406
+std          39.942553
+min           1.016667
+25%           5.700000
+50%           9.133333
+75%          14.500000
+90%          22.600000
+95%          30.633333
+99%          91.500000
+99.9%       687.312667
+max        1436.800000
+Name: duration_minutes, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot Histogram of Ride Time in Minutes&lt;/h4&gt;
+&lt;p&gt;Below, I limit my histogram to show rides up to 91 minutes because that's still the 99th percentile. I don't want my visualization to be distorted by outliers. A focus on up to the 99th percentile will help us draw insights on the patterns of the majority of riders.&lt;/p&gt;
+&lt;p&gt;The Seaborn visualization library in Python automatically determines bin size using the Freedman-Diaconis rule. This is a very convenient feature to have!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;talk&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist_kws&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;range&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;91&lt;/span&gt;&lt;span class="p"&gt;]})&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Duration of Bike Rides (in Minutes)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Ride Duration (Minutes)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Frequency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_18_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Bike Ride Duration Histogram&lt;/h4&gt;
+&lt;p&gt;The highest occurence of bike rides are around 7 minutes.&lt;/p&gt;
+&lt;p&gt;Most bike rides are just from 3 - 15 minutes which I consider fairly short rides. Therefore, I could theorize that bay area bike share members infrequently use these bikes for long strenous exercises riding long distances. Rather, they likely use bike rides for short distances.&lt;/p&gt;
+&lt;p&gt;The histogram illustrates positive skew. This means there's a long tail on the right side of our peak. Because of this skew, the mean ride duration is larger than the median ride duration. Below, I printed out the mean and median so we can verify that while the mean ride duration is 14.24 minutes, the median is smaller at 9.13 minutes. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;14.248405768783414
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;duration_minutes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;median&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;9.133333333333333
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example: Age of Bike Riders&lt;/h3&gt;
+&lt;p&gt;I'm curious to learn about the age distribution of members of the bay area bike share program. &lt;/p&gt;
+&lt;h4&gt;Create New Column for Age (in Years)&lt;/h4&gt;
+&lt;p&gt;They record the birth year of members. However, it's easier to interpret the age in years rather than year of birth.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2018&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;member_birth_year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;View Descriptive Statistics on Riders' Age&lt;/h4&gt;
+&lt;p&gt;Below, we can see 18 is the youngest rider and the oldest is 129. However, the 99th percentile is 66 years old, nearly half the age of the maximum rider.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;percentiles&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.75&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.99&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.9999&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;count     167376.000000
+mean          35.813575
+std           10.320561
+min           18.000000
+25%           28.000000
+50%           33.000000
+75%           41.000000
+99%           66.000000
+99.99%       118.000000
+max          129.000000
+Name: age_years, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot Histogram of Age of Bike Riders&lt;/h4&gt;
+&lt;p&gt;I limit the range of the x-axis (age) to be just 18 to 80 so we can more easily visualize the bulk of riders, and disregard the outliers well over 80.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_age_members&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;notnull&lt;/span&gt;&lt;span class="p"&gt;()][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_years&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ax2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_age_members&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;g&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist_kws&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;range&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;]})&lt;/span&gt;
+&lt;span class="n"&gt;ax2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Age of Bike Members&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Age (Years)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Frequency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_34_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Histogram of Age of Bike Riders&lt;/h4&gt;
+&lt;p&gt;The most frequent age group of riders is people aged 24 - 35 with a peak around 29.&lt;/p&gt;
+&lt;p&gt;Past roughly 35 years of age, as people get older, they're less likely to be a member of the bay area bike share program. However, there's still several thousand members who are 55 years or older.&lt;/p&gt;
+&lt;p&gt;There's a wide range of age of bike riders - from 18 to 60+.&lt;/p&gt;
+&lt;p&gt;This histogram is positively skewed too. There's a long tail of bins with ever-decreasing frequency that extend to the right of our peak. &lt;/p&gt;
+&lt;h3&gt;Example: Distribution of Count of Rides by Day of Week For Two User Types&lt;/h3&gt;
+&lt;p&gt;As I mentioned earlier, there's two user types; one is called &lt;em&gt;Customer&lt;/em&gt; and simply means you pay for individual rides. Another type is called a &lt;em&gt;Subscriber&lt;/em&gt; (aka a member) in which you pay a monthly subscription fee that includes unlimited rides for rides less than 30 minutes. &lt;/p&gt;
+&lt;p&gt;I'm curious of the differences in riding patterns of &lt;em&gt;Customers&lt;/em&gt; and &lt;em&gt;Subscribers&lt;/em&gt;. At what times of the day do they ride most often?&lt;/p&gt;
+&lt;p&gt;I'll create a histogram for each user type to see their distribution of count of rides by hour of day.&lt;/p&gt;
+&lt;h4&gt;Create new field to convert start_time into &lt;code&gt;datetime&lt;/code&gt; type&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot Distribution of Count of Rides by Hour of Day for &lt;em&gt;Customer&lt;/em&gt; Type&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;whitegrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;axes.grid&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;ax3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;user_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Customer&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;orange&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Count of Rides by Hour of Day for One-time Customers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hours past midnight&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Count&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_42_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Plot Distribution of Count of Rides by Hour of Day for &lt;em&gt;Subscriber&lt;/em&gt; Type&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ax4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;user_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Subscriber&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkmagenta&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Histogram of Count of Rides by Hour of Day for Subscribers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hours past midnight&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Count&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="when_use_histograms_files/when_use_histograms_44_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Interpretation of Histograms on Rides by Hour of Day&lt;/h4&gt;
+&lt;p&gt;These two histograms are very different! The most noticeable thing is that Subscribers tend to ride mostly around 8am (8 hours past midnight) and 5pm (17 hours past midnight). I hypothesize they're mainly using the bikes for commuting since those are standard commuting hours of the day! The Subscriber distribution is rouhgly bimodal too since we see two large peaks.&lt;/p&gt;
+&lt;p&gt;The one-time Customers histogram reveals a different riding pattern. There is a single peak in which most customers ride around 5pm. Notwithstanding this peak, there's a somewhat uniform distribution of rides from 7am to 7pm. &lt;/p&gt;</content><category term="histogram"></category></entry><entry><title>When to Use Box Plots</title><link href="https://dfrieds.com/data-visualizations/when-use-box-plots" rel="alternate"></link><published>2018-06-11T22:00:00-07:00</published><updated>2018-06-11T22:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-11:/data-visualizations/when-use-box-plots</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use box plots to visualize the distribution of a continous variable&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Box plots&lt;/strong&gt; help visualize the distribution of quantitative values in a field. They are also valuable for comparisons across different categorical variables or identifying outliers, if either of those exist in a dataset.&lt;/p&gt;
 &lt;p&gt;Box plots &lt;em&gt;typically&lt;/em&gt; detail the minimum value, 25th percentile (aka Q1), median (aka 50th percentile), 75th percentile (aka Q3) and the maximum value in a visual manner. &lt;/p&gt;
 &lt;p&gt;Note: different software and libraries such as Microsoft Excel, Seaborn and others may place the end whiskers and show outliers differently on box plots. Please understand your software's implementation well when you need to interpret results.&lt;/p&gt;
 &lt;p&gt;Often times, the aspects of a box plot are:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Box plot visualization" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwcN_FnbXzeCRzdORCAHXUBX-7RjoyUnkW86ok_rpPwtV1EwTC"&gt;&lt;/p&gt;
 &lt;p&gt;You can learn more in detail about box and whisker plots through this &lt;a href="https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/box-whisker-plots/a/box-plot-review"&gt;Khan Academy article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Percentiles are frequently used in comparisons in the real-world. For example, in my high school graduating class, my GPA ranked in the top 25th percentile. That means I had a higher GPA than 75% of students in my graduating class.&lt;/p&gt;
+&lt;p&gt;Below, I'll walk through several examples of when bar plots are useful.&lt;/p&gt;
 &lt;h4&gt;Import Modules&lt;/h4&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
@@ -320,6 +540,7 @@ Name: pulse, dtype: float64
 &lt;h4&gt;Explanation of Height Over Time Line Plot&lt;/h4&gt;
 &lt;p&gt;I grew very rapidly until about December 2002, then only grew a couple inches over the next two years, and by 2004, I stopped growing in height.&lt;/p&gt;</content><category term="line plots"></category></entry><entry><title>When to Use Vertical Grouped Barplots</title><link href="https://dfrieds.com/data-visualizations/when-use-vertical-grouped-barplots" rel="alternate"></link><published>2018-06-11T15:00:00-07:00</published><updated>2018-06-11T15:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-11:/data-visualizations/when-use-vertical-grouped-barplots</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use grouped vertical barplots to compare amounts of two or more categories&lt;/p&gt;</summary><content type="html">&lt;p&gt;Vertical bar charts are useful to illustrate sizes of data using different bar heights. A &lt;strong&gt;vertical grouped barplot&lt;/strong&gt; often illustrates the sizes of multiple categories using different bar heights.&lt;/p&gt;
 &lt;p&gt;For example, let's say we had a service that rented out scooters in San Francisco, California. Customers can make a one-time rental or pay a monthly subscription fee and get unlimited rides for under 30 minutes. So, for each ride, we log if the customer was &lt;em&gt;individual&lt;/em&gt; or &lt;em&gt;subscriber&lt;/em&gt;. With these two categories for types of riders, we can see how they compare to one another with a multiple vertical bar chart.&lt;/p&gt;
+&lt;p&gt;I'll illustrate a few examples below of when vertical grouped bar plots are useful.&lt;/p&gt;
 &lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
@@ -1923,110 +2144,4 @@ Wall time: 11 s
 &lt;p&gt;&lt;strong&gt;Conclusion:&lt;/strong&gt; program completes much faster &lt;em&gt;with&lt;/em&gt; multiprocessing at approximately 4 subprocesses running concurrently.&lt;/p&gt;
 &lt;p&gt;Multiprocessing here was helpful for this CPU intensive task because we could benefit from using multiple cores and avoid the global interpreter lock.&lt;/p&gt;
 &lt;p&gt;Interestingly, spinning up additional subprocesses past 4 has no major effect on improving runtime of our program. Notice how the total program runtime with 4 subprocesses is equivalent to the program with 5 subprocesses.&lt;/p&gt;
-&lt;p&gt;Threads provide no benefit in Python for CPU intensive tasks like these because of the global interpreter lock.&lt;/p&gt;</content><category term="multithreading"></category><category term="multiprocessing"></category></entry><entry><title>Read in CSV Files for Data Analysis</title><link href="https://dfrieds.com/python/read-in-csv-files" rel="alternate"></link><published>2018-04-08T12:00:00-07:00</published><updated>2018-04-08T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-08:/python/read-in-csv-files</id><summary type="html">&lt;p&gt;Import CSV files into your Python program to analyze the data&lt;/p&gt;</summary><content type="html">&lt;p&gt;Python is a great programming language for data analysis. &lt;/p&gt;
-&lt;p&gt;CSV files are comma-separated values to store data, similar to a table format.&lt;/p&gt;
-&lt;p&gt;The CSV format is a common import and export format for spreadsheets and databases. You'll likely encounter it early on in the field of data science.&lt;/p&gt;
-&lt;p&gt;We'll cover how to read in data from a CSV in which a CSV file is in your Python program's directory/folder on your computer.&lt;/p&gt;
-&lt;h4&gt;Import CSV module&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;csv&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Read in bike rides CSV&lt;/h4&gt;
-&lt;p&gt;In my directory as this Python program, I created a CSV named &lt;code&gt;bike_rides.csv&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;open&lt;/code&gt; is a Python built-in function to open a file on your local computer with the argument being the file path. A default argument of &lt;code&gt;open&lt;/code&gt; is &lt;code&gt;mode=r&lt;/code&gt; to open the contents of a file with only permission to read the file, &lt;em&gt;not&lt;/em&gt; write to it or perform a different operation. We'll provide an alias as &lt;code&gt;file&lt;/code&gt; so we can easily use that name in another operation.&lt;/p&gt;
-&lt;p&gt;From the &lt;code&gt;csv&lt;/code&gt; module in Python, we'll call the &lt;code&gt;reader&lt;/code&gt; method and pass in &lt;code&gt;file&lt;/code&gt; to create a &lt;em&gt;csv reader&lt;/em&gt; object. &lt;/p&gt;
-&lt;p&gt;Once we have this &lt;em&gt;csv reader&lt;/em&gt; object, we can iterate over the rows of our CSV file and print the output.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bike_rides.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;csv_reader_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;CSV row: {0}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CSV row: [&amp;#39;ride_number&amp;#39;, &amp;#39;date&amp;#39;, &amp;#39;miles_rode&amp;#39;, &amp;#39;ride_duration&amp;#39;]
-CSV row: [&amp;#39;1&amp;#39;, &amp;#39;4-02-2018&amp;#39;, &amp;#39;5.1&amp;#39;, &amp;#39;29.4&amp;#39;]
-CSV row: [&amp;#39;2&amp;#39;, &amp;#39;4-03-2018&amp;#39;, &amp;#39;3.3&amp;#39;, &amp;#39;20&amp;#39;]
-CSV row: [&amp;#39;3&amp;#39;, &amp;#39;4-04-2018&amp;#39;, &amp;#39;4.5&amp;#39;, &amp;#39;21.8&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Each row in our CSV is a &lt;em&gt;list&lt;/em&gt; of &lt;em&gt;strings&lt;/em&gt; since there are single-quotes around each value.&lt;/p&gt;
-&lt;h3&gt;Calculate Descriptive Statistics on Bike Rides&lt;/h3&gt;
-&lt;p&gt;Commonly, when we read in data from a CSV, we may want to analyze the data or perform some analysis. We can perform these calculations as we loop over all data in our CSV.&lt;/p&gt;
-&lt;h4&gt;Count the number of bike rides&lt;/h4&gt;
-&lt;p&gt;Our &lt;code&gt;csv_reader_object&lt;/code&gt; has a method called &lt;code&gt;line_num&lt;/code&gt; that returns the number of lines in our CSV. If we perform this operation, we're returned &lt;code&gt;4&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;line_num&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;4
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;There are 4 rows in this CSV; however, there may be a header row (displaying field names) so we shouldn't count this row in our calculation for the count of bike rides.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;csv&lt;/code&gt; class in Python has a &lt;code&gt;Sniffer&lt;/code&gt; class to deduce the format of a CSV. With the &lt;code&gt;has_header&lt;/code&gt; method of &lt;code&gt;Sniffer&lt;/code&gt;, we can check if the first row contains column headers. &lt;/p&gt;
-&lt;p&gt;If the first row is a header, let's skip that row in counting the number of bike ride records in our csv. To skip that header row, we can use the built-in &lt;code&gt;next&lt;/code&gt; function and pass in our &lt;code&gt;csv_reader_object&lt;/code&gt;; this will retrive the &lt;em&gt;next&lt;/em&gt; item after our header to begin our data analysis.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_rides&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bike_rides.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;csv_reader_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sniffer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_header&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;count_of_rides&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_rides&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;3
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Based on our manual observation above, we can confirm there are 3 records of bike rides.&lt;/p&gt;
-&lt;h4&gt;Average miles rode per bike ride&lt;/h4&gt;
-&lt;p&gt;All rows in our CSV contains &lt;em&gt;strings&lt;/em&gt;. To perform a math operation, we need to convert the values to an arithmetic data type - either an &lt;em&gt;integer&lt;/em&gt; or a &lt;em&gt;float&lt;/em&gt;. &lt;/p&gt;
-&lt;p&gt;We'll convert the values in the &lt;em&gt;miles_rode&lt;/em&gt; field to floats.&lt;/p&gt;
-&lt;p&gt;Also, note we still have to skip the header row in this calculation.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;total_miles_rode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In each row, a record of a bike ride, at index &lt;code&gt;2&lt;/code&gt;, there's a value for &lt;code&gt;miles_rode&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;row_index_miles_rode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bike_rides.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;csv_reader_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sniffer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_header&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;float_miles_rode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;row_index_miles_rode&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-        &lt;span class="n"&gt;total_miles_rode&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;float_miles_rode&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;total_miles_rode&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;12.899999999999999
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;average_miles_per_ride&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;total_miles_rode&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;count_of_rides&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;average_miles_per_ride&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;4.3
-&lt;/pre&gt;&lt;/div&gt;</content><category term="input"></category><category term="csv"></category></entry></feed>
+&lt;p&gt;Threads provide no benefit in Python for CPU intensive tasks like these because of the global interpreter lock.&lt;/p&gt;</content><category term="multithreading"></category><category term="multiprocessing"></category></entry></feed>
