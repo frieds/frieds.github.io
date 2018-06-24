@@ -1,5 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-15T17:00:00-07:00</updated><entry><title>2018 Summer MSIS 2629 Syllabus</title><link href="https://dfrieds.com/teaching/2018-summer-msis-2629-syllabus" rel="alternate"></link><published>2018-06-15T17:00:00-07:00</published><updated>2018-06-15T17:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-15:/teaching/2018-summer-msis-2629-syllabus</id><summary type="html">&lt;p&gt;2018 summer MSIS 2629 syllabus for the data visualization course at Santa Clara University&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Goals of the Class&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-24T15:20:00-07:00</updated><entry><title>Sample Project Start: Bay Area Bike Share Data</title><link href="https://dfrieds.com/teaching/sample-project-start-msis-2629" rel="alternate"></link><published>2018-06-24T15:20:00-07:00</published><updated>2018-06-24T15:20:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-24:/teaching/sample-project-start-msis-2629</id><summary type="html">&lt;p&gt;2018 summer MSIS 2629 syllabus for the data visualization course at Santa Clara University&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Bay Area Bike Share Data Project&lt;/h2&gt;
+&lt;h3&gt;Thought Process&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Construct hypotheses on questions I want answered about this dataset.&lt;/li&gt;
+&lt;li&gt;Understand the fields, values, and number of observations.&lt;/li&gt;
+&lt;li&gt;Clean only what's needed to answer one question.&lt;/li&gt;
+&lt;li&gt;Test your hypothesis by extracting metrics and visualizing results. Try prototyping simple visualizations in Pandas Plot.&lt;/li&gt;
+&lt;li&gt;Repeat steps 1-4 as many times as need to answer your questions&lt;/li&gt;
+&lt;li&gt;Incorporate a similar dataset for comparison to tell a more interesting story.&lt;/li&gt;
+&lt;li&gt;Improve upon your initial visualizations to include the additional dataset and/or tell a more interesting story. Ideally use a level of benchmarking and/or interaction in your visualizations.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Hypotheses&lt;/h3&gt;
+&lt;p&gt;Sorted from easiest to most difficult.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What dataset?&lt;/li&gt;
+&lt;li&gt;Regular vs subscription users&lt;/li&gt;
+&lt;li&gt;Popularity of rides by day of week&lt;/li&gt;
+&lt;li&gt;Busiest dock?&lt;/li&gt;
+&lt;li&gt;Popularity of bike rides by hour of day&lt;/li&gt;
+&lt;li&gt;Which routes are most popular?&lt;/li&gt;
+&lt;li&gt;Average miles covered on weekdays versus weekend rides&lt;/li&gt;
+&lt;li&gt;Any bicycles broken?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;New dataset&lt;/strong&gt;
+- Trends with BART dataset? Usage of one type of rides versus the other&lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Read in Data&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;201805-fordgobike-tripdata.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Check Fields of Data&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;class &amp;#39;pandas.core.frame.DataFrame&amp;#39;&amp;gt;
+RangeIndex: 179125 entries, 0 to 179124
+Data columns (total 16 columns):
+duration_sec               179125 non-null int64
+start_time                 179125 non-null object
+end_time                   179125 non-null object
+start_station_id           179125 non-null int64
+start_station_name         179125 non-null object
+start_station_latitude     179125 non-null float64
+start_station_longitude    179125 non-null float64
+end_station_id             179125 non-null int64
+end_station_name           179125 non-null object
+end_station_latitude       179125 non-null float64
+end_station_longitude      179125 non-null float64
+bike_id                    179125 non-null int64
+user_type                  179125 non-null object
+member_birth_year          167376 non-null float64
+member_gender              167413 non-null object
+bike_share_for_all_trip    179125 non-null object
+dtypes: float64(5), int64(4), object(7)
+memory usage: 21.9+ MB
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Regular versus subscription users&lt;/h3&gt;
+&lt;p&gt;How many people are riding one-time (maybe tourists) versus how many are subscription paying users?&lt;/p&gt;
+&lt;p&gt;Look at field &lt;code&gt;user_type&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;user_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Subscriber    149886
+Customer       29239
+Name: user_type, dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Insight&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Far majority of rides come from subscribers&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;Examine Rides by Day of Week&lt;/h3&gt;
+&lt;p&gt;Convert &lt;code&gt;start_time&lt;/code&gt; to datetime type and create new column called &lt;code&gt;start_time_datetime&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Documentation: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.to_datetime.html&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create a new column called &lt;code&gt;start_time_day_name&lt;/code&gt; to show day name like Thursday or Friday.&lt;/p&gt;
+&lt;p&gt;Documentation: http://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.Series.dt.weekday_name.html&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_day_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;weekday_name&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Check we only have 7 unique values.&lt;/p&gt;
+&lt;p&gt;Documentation: https://pandas.pydata.org/pandas-docs/version/0.23.1/generated/pandas.Series.unique.html&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_day_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;array([&amp;#39;Thursday&amp;#39;, &amp;#39;Wednesday&amp;#39;, &amp;#39;Tuesday&amp;#39;, &amp;#39;Monday&amp;#39;, &amp;#39;Sunday&amp;#39;, &amp;#39;Saturday&amp;#39;,
+       &amp;#39;Friday&amp;#39;], dtype=object)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Keep records of rides only before May 29th so we have the same number of occurrences for all days of the week. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;may_29_2018&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2018&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;29&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's filter by rides before May 29th and get the total count of rides on each day.&lt;/p&gt;
+&lt;p&gt;Documentation date filters: https://stackoverflow.com/a/41845355/1710454&lt;/p&gt;
+&lt;p&gt;Documentation groupby: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.groupby.html&lt;/p&gt;
+&lt;p&gt;Documentation size: https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.core.groupby.GroupBy.size.html&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;may_29_2018&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_day_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;start_time_day_name
+Friday       25512
+Monday       23510
+Saturday     15035
+Sunday       13644
+Thursday     27542
+Tuesday      26528
+Wednesday    26705
+dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Sort series values from least to greatest.&lt;/p&gt;
+&lt;p&gt;Documentation: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.sort_values.html&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;may_29_2018&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_day_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;start_time_day_name
+Sunday       13644
+Saturday     15035
+Monday       23510
+Friday       25512
+Tuesday      26528
+Wednesday    26705
+Thursday     27542
+dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create bar plot of count of rides by day of week.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;may_29_2018&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_day_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;barh&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;salmon&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;day of week&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;count of rides&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Count of Rides by Day of Week in First 28 Days of May&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="bay_area_bike_share_initial_project_files/bay_area_bike_share_initial_project_29_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Insights&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;There's a fairly uniform spread of total rides from Monday-Friday, each with about 25000 rides.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;There's a uniform spread of rides on Saturdays and Sundays too. Each day had roughly 14000 rides in May.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;Busiest Dock&lt;/h3&gt;
+&lt;p&gt;After each ride, bikes are docked at a station. I want to get a sense of the most popular stations bikes start at.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_station_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ascending&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;start_station_name
+San Francisco Ferry Building (Harry Bridges Plaza)           3851
+Montgomery St BART Station (Market St at 2nd St)             3523
+San Francisco Caltrain Station 2  (Townsend St at 4th St)    3510
+The Embarcadero at Sansome St                                3255
+Berry St at 4th St                                           3236
+San Francisco Caltrain (Townsend St at 4th St)               3220
+Market St at 10th St                                         3154
+Powell St BART Station (Market St at 4th St)                 3122
+Powell St BART Station (Market St at 5th St)                 2590
+Steuart St at Market St                                      2575
+dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_station_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ascending&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;barh&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;blueviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;                                                                          
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;count of rides&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;start station name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Count of Rides Starting from Docks&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="bay_area_bike_share_initial_project_files/bay_area_bike_share_initial_project_33_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Insights&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Most rides start from docks located in SoMa - often around BART, Caltrain or popular tourist destinations like the Ferry Building.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;Bike Ride Popularity by Hour of Day&lt;/h3&gt;
+&lt;p&gt;Extract the hour value of the datetime and cast it as new column called &lt;code&gt;start_time_hour&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Documentation: http://pandas.pydata.org/pandas-docs/version/0.23/generated/pandas.Series.dt.hour.html&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_hour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_datetime&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Verify there's 24 unique values in &lt;code&gt;start_time_hour&lt;/code&gt; - should be 0 to 23.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_hour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;array([21, 18, 14, 16, 23, 20, 22, 19, 17, 12, 11,  9,  8, 13, 15, 10,  7,
+        6,  5,  4,  3,  2,  1,  0])
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;start_time_hour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;teal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;count of rides&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xticks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rotation&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;start time hour of day (0=12am and 12=12pm)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Count of Rides by Hour of Day&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="bay_area_bike_share_initial_project_files/bay_area_bike_share_initial_project_40_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Insights&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Most rides take place during standard work commute hours of 8am and 6pm. It's a bimodal distribution.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;Next Steps&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Hone in the hypotheses to a more focused topic - perhaps around just subscribers versus one-time riders, activity of males versus females, rides by weekends versus weekdays, or something else.&lt;/li&gt;
+&lt;li&gt;Incorporate additional dataset on ride patterns with BART data or open source weather data.&lt;/li&gt;
+&lt;li&gt;Try utilizing more advanced/interesting visualizations to tell a story.&lt;/li&gt;
+&lt;/ul&gt;</content><category term="santa clara university"></category></entry><entry><title>2018 Summer MSIS 2629 Syllabus</title><link href="https://dfrieds.com/teaching/2018-summer-msis-2629-syllabus" rel="alternate"></link><published>2018-06-15T17:00:00-07:00</published><updated>2018-06-15T17:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-15:/teaching/2018-summer-msis-2629-syllabus</id><summary type="html">&lt;p&gt;2018 summer MSIS 2629 syllabus for the data visualization course at Santa Clara University&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Goals of the Class&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Learn careers in data visualization&lt;/li&gt;
 &lt;li&gt;Learn how data visualization is used to tell stories - often better than what can be told through words through topics:&lt;ul&gt;
@@ -48,12 +274,16 @@
 &lt;/table&gt;
 &lt;ol&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Group&lt;/strong&gt; (2-3 people): The final deliverable must be a .ipynb file uploaded on GitHub documenting all your work and visualizations &amp;amp; a 6-minute max presentation. Code must be using Python and a Python visualization library. In your notebook, link to relevant inspiration/learning materials used in your process to publish your work.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Group project&lt;/strong&gt; (2-3 people): The final deliverable must be a .ipynb file uploaded on GitHub documenting all your work and visualizations &amp;amp; a 6-minute max presentation. Code must be using Python and a Python visualization library. In your notebook, link to relevant inspiration/learning materials used in your process to publish your work.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Individual&lt;/strong&gt;: same details as the group project, but this time solo &amp;amp; just a 4-minute max presentation.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Individual project&lt;/strong&gt;: same details as the group project, but this time solo &amp;amp; just a 4-minute max presentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;4 pop quizzes&lt;/strong&gt; that can take place anytime in classes from week 4 to week 10. Each quiz will be taken in-class and you'll be allowed 20 - 35 minutes, depending on the amount of work in the quiz. If you miss a class, you'll have to make up the pop quiz in another class.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
+&lt;p&gt;More details on each of these assignments below.&lt;/p&gt;
 &lt;h3&gt;Ideas on Datasets&lt;/h3&gt;
 &lt;p&gt;Research datasets you may be interested in exploring. There’s gold in learning something new from data that nobody has uncovered yet. There’s also gold in finding patterns between multiple datasets that people/media are less opt to cover together. It’s also OK to simply explore a common dataset if it’s a topic you’re very interested in.&lt;/p&gt;
 &lt;p&gt;Forewarning, there’s often a lot of work to analyze the fields, values, quality of the data and if it’s something of interest to you! So, we’re researching early on to allow you time to pivot and work on a different dataset later if needed.&lt;/p&gt;
@@ -87,7 +317,8 @@
 &lt;li&gt;Incorporate a similar dataset for comparison to tell a more interesting story.&lt;/li&gt;
 &lt;li&gt;Improve upon your initial visualizations to include the additional dataset and/or tell a more interesting story. Ideally use a level of benchmarking and/or interaction in your visualizations. &lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3&gt;Grading Rubric&lt;/h3&gt;
+&lt;h3&gt;Grading Rubric on Projects&lt;/h3&gt;
+&lt;p&gt;Note: assessment criteria will be updated a bit to be more quantitative.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Technical:&lt;/strong&gt;&lt;/p&gt;
@@ -119,6 +350,33 @@
 &lt;li&gt;Fair: Doesn’t implement suggestions by peers and professors. Presents majority of work last-minute.&lt;/li&gt;
 &lt;li&gt;Good: Implements some feedback from peers and instructor. Majority of progress still made fairly last-minute.&lt;/li&gt;
 &lt;li&gt;Excellent: Implements suggestions by professor and students; improvements in each 1-on-1.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Pop Quizzes - Material to Know&lt;/h3&gt;
+&lt;p&gt;Topics you must know:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;All functionality in &lt;a href='https://github.com/pandas-dev/pandas/blob/master/doc/cheatsheet/Pandas_Cheat_Sheet.pdf' rel='nofollow'&gt;Pandas Cheat Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href='https://chrisalbon.com/python/data_wrangling/pandas_pivot_tables/' rel='nofollow'&gt;Pivot tables&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href='https://chrisalbon.com/python/data_wrangling/pandas_long_to_wide/' rel='nofollow'&gt;Long to wide format&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;How to plot in code (Pandas Plot and Seaborn) and interpret:&lt;ul&gt;
+&lt;li&gt;Line graphs&lt;/li&gt;
+&lt;li&gt;Vertical bar plots&lt;/li&gt;
+&lt;li&gt;Horizontal bar plots&lt;/li&gt;
+&lt;li&gt;Pie charts&lt;/li&gt;
+&lt;li&gt;Vertical stacked bar chart&lt;/li&gt;
+&lt;li&gt;Vertical grouped bar plots&lt;/li&gt;
+&lt;li&gt;Histograms&lt;/li&gt;
+&lt;li&gt;Box plots&lt;/li&gt;
+&lt;li&gt;Scatter plots&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;With plots:&lt;ul&gt;
+&lt;li&gt;Format x and y tick values&lt;/li&gt;
+&lt;li&gt;Limit range of values on x or y-axis&lt;/li&gt;
+&lt;li&gt;Add a plot title&lt;/li&gt;
+&lt;li&gt;Label axes with custom text&lt;/li&gt;
+&lt;li&gt;Make larger font for plots on x-axis, y-axis, ticks and title&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -1636,151 +1894,4 @@ July 2017 | 66000 | 5350 | 13500 | 15000 | 3500&lt;/p&gt;
 &lt;p&gt;&lt;img alt="png" src="when_use_vertical_bar_charts_files/when_use_vertical_bar_charts_20_0.png"&gt;&lt;/p&gt;
 &lt;h4&gt;Explanation of Average Scooter Rides Per Day Plot&lt;/h4&gt;
 &lt;p&gt;The visualization illustrates that Saturday, on average, has the highest number of scooter rides by customers.&lt;/p&gt;
-&lt;p&gt;More rides are taken in the early weekdays from Monday-Wednesday than are taken on average later in the week during Thursday-Friday.&lt;/p&gt;</content><category term="vertical bar chart"></category></entry><entry><title>When to Use a Pie Chart</title><link href="https://dfrieds.com/data-visualizations/when-use-pie-chart" rel="alternate"></link><published>2018-06-10T17:00:00-07:00</published><updated>2018-06-10T17:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-10:/data-visualizations/when-use-pie-chart</id><summary type="html">&lt;p&gt;Examples of datasets to illustrate when to use a pie chart and how to explain results&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pie charts illustrate relative sizes of data. &lt;/p&gt;
-&lt;p&gt;There should be a finite and small number of labels. &lt;/p&gt;
-&lt;p&gt;What is a label? A &lt;strong&gt;label&lt;/strong&gt; is a response value for a data point collected.&lt;/p&gt;
-&lt;p&gt;For example, let's say we surveyed 50 friends and asked them their favorite type of music. The responses we allow are Hip-Hop, Pop, Country, R&amp;amp;B, Rock, Jazz, Indie and Other. Each response is a type of music and is considered a label. &lt;/p&gt;
-&lt;p&gt;Below, I'll walk through several &lt;em&gt;practical examples&lt;/em&gt; to illustrate the proper use of pie charts.&lt;/p&gt;
-&lt;h3&gt;Import Modules&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Example: Favorite Music Responses&lt;/h3&gt;
-&lt;p&gt;To continue with the example above, below is sample of the responses I received:&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Person&lt;/th&gt;
-&lt;th&gt;Favorite Type of Music&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Mike&lt;/td&gt;
-&lt;td&gt;Hip-Hop&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Julie&lt;/td&gt;
-&lt;td&gt;Rock&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Frank&lt;/td&gt;
-&lt;td&gt;Indie&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Given all my responses, I calculated the total count for each music type and will use this data to create a pie chart.&lt;/p&gt;
-&lt;h4&gt;Record Music Responses in Python Lists&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;music_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hip-Hop&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Pop&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Country&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;R&amp;amp;B&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Rock&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Jazz&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Indie&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Other&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;count_responses_per_music_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;26&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In the pie charts legend, I want to include the count of responses for each music type. For each response, I'll create a string and append the word "responses" so I can clearly annotate my pie chart.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_responses_per_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; responses&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;count_responses_per_music_type&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_responses_per_type&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;26 responses&amp;#39;,
- &amp;#39;4 responses&amp;#39;,
- &amp;#39;2 responses&amp;#39;,
- &amp;#39;2 responses&amp;#39;,
- &amp;#39;6 responses&amp;#39;,
- &amp;#39;2 responses&amp;#39;,
- &amp;#39;2 responses&amp;#39;,
- &amp;#39;6 responses&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Pie Chart of Favorite Music Type&lt;/h4&gt;
-&lt;p&gt;In the pie chart below, the percentage value of total sessions for each device is calculated automatically by our Python library with the use of autopct argument.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gcf&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;fig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_size_inches&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pie&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;count_responses_per_music_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;music_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;autopct&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%i%%&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;radius&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Favorite Music Responses of My Friends&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.03&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;equal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# makes a circle pie chart (not oval)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;best&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;count_responses_per_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="when_use_pie_charts_files/when_use_pie_charts_13_0.png"&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;matplotlib.figure.Figure at 0x10e4d89e8&amp;gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Explanation of Music Responses Chart&lt;/h4&gt;
-&lt;p&gt;We can easily tell from the pie chart that the most popular music type of my friends is hip-hop. 51% of my friends said it's their favorite type. &lt;/p&gt;
-&lt;p&gt;The second most popular music type of my friends is Other and Rock as well as several other types in close running for second.&lt;/p&gt;
-&lt;h3&gt;Example: Website Sessions by Device&lt;/h3&gt;
-&lt;p&gt;On my website, https://dfrieds.com, I use Google Analytics to help me track basic statistics. In the past 31 days, there have been 200 sessions to my site. A session is just a record of someone visiting my site via any device. &lt;/p&gt;
-&lt;p&gt;Google Analytics tracks what device was used to visit my site; a device could be a desktop computer, mobile phone or tablet. &lt;/p&gt;
-&lt;p&gt;Below is the data over the last 31 days of visits to my site.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Device&lt;/th&gt;
-&lt;th&gt;Number of Sessions&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Desktop&lt;/td&gt;
-&lt;td&gt;170&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Mobile&lt;/td&gt;
-&lt;td&gt;20&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Tablet&lt;/td&gt;
-&lt;td&gt;10&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;I want to know what percentage of sessions by each device type are there out of &lt;em&gt;all&lt;/em&gt; device type sessions made. Therefore, I must calculate a new column to show the percentage of sessions by device type.&lt;/p&gt;
-&lt;p&gt;The total number of sessions is 85. For each device type, divide its number of sessions by &lt;em&gt;all&lt;/em&gt; device type sessions and multiply by 100. This will give us a new value for percentage of sessions by device type.&lt;/p&gt;
-&lt;p&gt;These percentage values are the main focus of pie charts.&lt;/p&gt;
-&lt;p&gt;Device | Number of Sessions | Percentage of Total Sessions
---- | --- 
-Desktop | 170 | 85
-Mobile | 20 | 10
-Tablet | 10 | 5&lt;/p&gt;
-&lt;h4&gt;Record Website Sessions Data in Python Lists&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;devices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Desktop&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Mobile&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tablet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;number_of_sessions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;170&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In the pie charts legend, I want to include the number of sessions for each device. For each value by device, I'll create a string and append the word "sessions" so it's clear.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;number_of_sessions_with_units&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;session_value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot; sessions&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;session_value&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;number_of_sessions&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;number_of_sessions_with_units&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;170 sessions&amp;#39;, &amp;#39;20 sessions&amp;#39;, &amp;#39;10 sessions&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Pie Chart of Breakdown of Website Sessons by Device&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gcf&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;fig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_size_inches&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pie&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;number_of_sessions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;devices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;autopct&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%i%%&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;radius&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;7.5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Breakdown of dfrieds.com Website Sessions over Past 31 Days&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.03&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;equal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  &lt;span class="c1"&gt;# makes a circle pie chart (not oval)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;best&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;number_of_sessions_with_units&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="when_use_pie_charts_files/when_use_pie_charts_24_0.png"&gt;&lt;/p&gt;
-&lt;h4&gt;Explanation of Website Sessions by Device Pie Chart&lt;/h4&gt;
-&lt;p&gt;The pie chart reveals that 85% of sessions over the past 31 days were viewed on desktop.&lt;/p&gt;</content><category term="pie chart"></category></entry></feed>
+&lt;p&gt;More rides are taken in the early weekdays from Monday-Wednesday than are taken on average later in the week during Thursday-Friday.&lt;/p&gt;</content><category term="vertical bar chart"></category></entry></feed>
