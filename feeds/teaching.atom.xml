@@ -1,5 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Teaching</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/teaching.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-06-24T17:00:00-07:00</updated><entry><title>Sample Project Start: Bay Area Bike Share Data</title><link href="https://dfrieds.com/teaching/sample-project-msis-2629" rel="alternate"></link><published>2018-06-24T17:00:00-07:00</published><updated>2018-06-24T17:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-24:/teaching/sample-project-msis-2629</id><summary type="html">&lt;p&gt;2018 summer MSIS 2629 sample bay area bike share data project&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Thought Process&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Teaching</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/teaching.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-07-22T19:00:00-07:00</updated><entry><title>Learning Exercise 0 Answers</title><link href="https://dfrieds.com/teaching/learning-exercise-0" rel="alternate"></link><published>2018-07-22T19:00:00-07:00</published><updated>2018-07-22T19:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-07-22:/teaching/learning-exercise-0</id><summary type="html">&lt;p&gt;Learning class exercise given in class with answers&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Historic Weather Monthly Averages in San Francisco Dataset&lt;/h3&gt;
+&lt;p&gt;In the city of San Francisco, California, companies use technology to record the temperature throughout the day. With records of many years, they've created an average high and low temperature for each month. I found the data online and store it in Python lists below.&lt;/p&gt;
+&lt;p&gt;I'd like us to examine the data further to learn more from it.&lt;/p&gt;
+&lt;p&gt;Is San Francisco a cold or warm city? Let's use data to make our best suggestion!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;average_monthly_lows&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;46&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;48&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;49&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;49&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;51&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;53&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;54&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;55&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;55&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;54&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;54&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;average_monthly_highs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;57&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;62&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;63&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;68&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;70&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;69&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;63&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;57&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;months&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strftime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;%b&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date_range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1/2017&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1/2018&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;freq&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;M&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;months&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;average_monthly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;average_monthly_highs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                  &lt;span class="s1"&gt;&amp;#39;average_monthly_low&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;average_monthly_lows&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Make a line plot of the historical &lt;code&gt;average_high&lt;/code&gt; over months&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Because temperature measurements are of a single point in time, not a summation or count, we ought to use a line chart to show a change over time. The x-axis is a time period too so it makes sense to connect the dots/points with lines since months proceed in a defined order.&lt;/li&gt;
+&lt;li&gt;x-axis ticks each represent the months of the years, starting in January and ending in December &lt;/li&gt;
+&lt;li&gt;y-axis should be Temperature (degrees Fahrenheit)&lt;/li&gt;
+&lt;li&gt;please provide a proper label for the title, x-label and y-label&lt;/li&gt;
+&lt;li&gt;please make the font larger for default on the x-ticks, y-ticks, x-label, y-label and title so it's more easily readable&lt;/li&gt;
+&lt;li&gt;please utilize a grid on your chart so we can more accurately see the measurement values&lt;/li&gt;
+&lt;li&gt;please mark the measurements taken with each month as a dot to distinguish them from the line&lt;/li&gt;
+&lt;li&gt;show all x-tick values (meaning every month value)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Hint: in Pandas Plot, there's an argument for &lt;code&gt;style&lt;/code&gt; in which you can pass in &lt;code&gt;o-&lt;/code&gt; so the exact measurements have circles and they're connected by lines.&lt;/p&gt;
+&lt;p&gt;Hint: if you use Matplotlib, Pandas Plot or Seaborn, you can use &lt;code&gt;sns.set_context("poster")&lt;/code&gt; to make all parts of the plot larger (see &lt;a href='https://seaborn.pydata.org/tutorial/aesthetics.html' rel='nofollow'&gt;this Seaborn aesthetics page&lt;/a&gt;.)&lt;/p&gt;
+&lt;p&gt;Hint: to show all x-tick values in Pandas Plot, Seaborn or Matplotlib, you can use &lt;code&gt;plt.xticks(df.index, df['month'])&lt;/code&gt;. The first argument gives the locations to put the ticks and the second argument gives the tick labels.&lt;/p&gt;
+&lt;p&gt;Hint: in Pandas Plot, there's a parameter for &lt;code&gt;grid&lt;/code&gt; which you can set to &lt;code&gt;True&lt;/code&gt; to show a grid.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# I can take this series, with the index as the month and the values for average_monthly_high and call Pandas plot&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_monthly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;month
+Jan    57
+Feb    60
+Mar    62
+Apr    63
+May    64
+Jun    67
+Jul    67
+Aug    68
+Sep    70
+Oct    69
+Nov    63
+Dec    57
+Name: average_monthly_high, dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Steps explained:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sns.set_context("poster")&lt;/code&gt; makes the figure size bigger, larger font for x-label &amp;amp; y-label &amp;amp; x-ticks &amp;amp; y-ticks &amp;amp; title. Uses Seaborn background color, line colors and adds a grid. These styles propogate for all graphs in this Notebook.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;df.set_index('month')['average_monthly_high'].plot(style='o-')&lt;/code&gt; uses a Pandas series with &lt;code&gt;month&lt;/code&gt; as the index and &lt;code&gt;average_monthly_high&lt;/code&gt; as the values; I call the &lt;code&gt;plot()&lt;/code&gt; method to create a plot that uses the index as the x-axis and series values as the y-values. &lt;code&gt;style=o-&lt;/code&gt; adds dots/circles for the plot measurements in which the circles are connected by lines (making a line plot).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.title("Historical Monthly Temperature High in San Francisco, California", y=1.015)&lt;/code&gt; sets a title name and the &lt;code&gt;y&lt;/code&gt; argument sets spacing/padding between the top of the plot and the title. Try setting it to &lt;code&gt;1.1&lt;/code&gt; to see the changes.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.xlabel("Month", labelpad=15)&lt;/code&gt; sets the name for the x-axis label and &lt;code&gt;labelpad&lt;/code&gt; adds padding/spacing between the bottom of the plot and the label name. Try different numerical values there to see what happens.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.xticks(df.index, df['month'])&lt;/code&gt; re-names the x-tick values to be the names of the months.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.ylabel("Temperature (degrees Fahrenheit)", labelpad=15);&lt;/code&gt; sets the y-axis label name and &lt;code&gt;labelpad&lt;/code&gt; adds padding/spacing between the side of the plot and the label name. The &lt;code&gt;;&lt;/code&gt; stops text output besides the plot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;talk&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;darkgrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_monthly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;o-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Historical Monthly Temperature High in San Francisco, California&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.013&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Month&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xticks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Temperature (degrees Fahrenheit)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="learning_exercise_0_answers_files/learning_exercise_0_answers_8_0.png"&gt;&lt;/p&gt;
+&lt;h3&gt;What month in San Francisco has the highest average temperature?&lt;/h3&gt;
+&lt;p&gt;September&lt;/p&gt;
+&lt;p&gt;Note, we could also get the answer programmatically to verify.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_monthly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ascending&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;iloc&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;Sep&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Make a line plot of the historical &lt;code&gt;average_high&lt;/code&gt; and &lt;code&gt;average_low&lt;/code&gt; over months&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Because temperature measurements are of a single point in time, not a summation or count, we ought to use a line chart to show a change over time. The x-axis is a time period too so it makes sense to connect the dots/points with lines since months proceed in a defined order.&lt;/li&gt;
+&lt;li&gt;x-axis ticks each represent the months of the years, starting in January and ending in December &lt;/li&gt;
+&lt;li&gt;y-axis should be Temperature (degrees Fahrenheit)&lt;/li&gt;
+&lt;li&gt;provide a proper label for the title, x-label and y-label&lt;/li&gt;
+&lt;li&gt;make the font larger for default on the x-ticks, y-ticks, x-label, y-label and title so it's more easily readable&lt;/li&gt;
+&lt;li&gt;utilize a grid on your chart so we can more accurately see the measurement values&lt;/li&gt;
+&lt;li&gt;mark the measurements taken with each month as a dot to distinguish them from the line&lt;/li&gt;
+&lt;li&gt;show all x-tick values (meaning every month value)&lt;/li&gt;
+&lt;li&gt;make sure the lines for &lt;code&gt;average_monthly_high&lt;/code&gt; and &lt;code&gt;average_monthly_low&lt;/code&gt; are different colors&lt;/li&gt;
+&lt;li&gt;include a label that identifies the color of each line/column being plotted&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We can set the index of our dataframe to be &lt;code&gt;month&lt;/code&gt; and we'll have two columns of &lt;code&gt;average_monthly_high&lt;/code&gt; and &lt;code&gt;average_monthly_low&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;average_monthly_high&lt;/th&gt;
+      &lt;th&gt;average_monthly_low&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Jan&lt;/th&gt;
+      &lt;td&gt;57&lt;/td&gt;
+      &lt;td&gt;46&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Feb&lt;/th&gt;
+      &lt;td&gt;60&lt;/td&gt;
+      &lt;td&gt;48&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Mar&lt;/th&gt;
+      &lt;td&gt;62&lt;/td&gt;
+      &lt;td&gt;49&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Apr&lt;/th&gt;
+      &lt;td&gt;63&lt;/td&gt;
+      &lt;td&gt;49&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;May&lt;/th&gt;
+      &lt;td&gt;64&lt;/td&gt;
+      &lt;td&gt;51&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Jun&lt;/th&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;53&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Jul&lt;/th&gt;
+      &lt;td&gt;67&lt;/td&gt;
+      &lt;td&gt;54&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Aug&lt;/th&gt;
+      &lt;td&gt;68&lt;/td&gt;
+      &lt;td&gt;55&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sep&lt;/th&gt;
+      &lt;td&gt;70&lt;/td&gt;
+      &lt;td&gt;55&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Oct&lt;/th&gt;
+      &lt;td&gt;69&lt;/td&gt;
+      &lt;td&gt;54&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Nov&lt;/th&gt;
+      &lt;td&gt;63&lt;/td&gt;
+      &lt;td&gt;50&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Dec&lt;/th&gt;
+      &lt;td&gt;57&lt;/td&gt;
+      &lt;td&gt;54&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Steps explained:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;df.set_index('month').plot(style='o-')&lt;/code&gt; uses a Pandas DataFrame with &lt;code&gt;month&lt;/code&gt; as the index and two columns of &lt;code&gt;average_monthly_high&lt;/code&gt; and &lt;code&gt;average_monthly_low&lt;/code&gt;. I call the &lt;code&gt;plot()&lt;/code&gt; method to create a plot that share the same index of &lt;code&gt;month&lt;/code&gt; but have two lists of y-values for the highs and lows; &lt;code&gt;style=o-&lt;/code&gt; adds dots/circles for the plot measurements in which the circles are connected by lines (making a line plot).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.title("Historical Monthly Averages in San Francisco", y=1.015)&lt;/code&gt; sets a title name and the &lt;code&gt;y&lt;/code&gt; argument sets spacing/padding between the top of the plot and the title. Try setting it to &lt;code&gt;1.1&lt;/code&gt; to see the changes.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.xlabel("Month", labelpad=15)&lt;/code&gt; sets the name for the x-axis label and &lt;code&gt;labelpad&lt;/code&gt; adds padding/spacing between the bottom of the plot and the label name. Try different numerical values there to see what happens.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.xticks(df.index, df['month'])&lt;/code&gt; re-names the x-tick values to be the names of the months.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.ylabel("Temperature (degrees Fahrenheit)", labelpad=15);&lt;/code&gt; sets the y-axis label name and &lt;code&gt;labelpad&lt;/code&gt; adds padding/spacing between the side of the plot and the label name. The &lt;code&gt;;&lt;/code&gt; stops text output besides the plot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;o-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Historical Monthly Averages in San Francisco&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.013&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Month&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xticks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Temperature (degrees Fahrenheit)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="learning_exercise_0_answers_files/learning_exercise_0_answers_17_0.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Create new columns for &lt;code&gt;average_yearly_high&lt;/code&gt; and &lt;code&gt;average_yearly_low&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;Hint: if you did df['new_column'] = 8 ... that would create a new column (filling all available rows) for a column each with the value of 8. You can use similar logic to make a new column for the &lt;em&gt;mean&lt;/em&gt; (otherwise known as &lt;em&gt;average&lt;/em&gt;) of the monthly high and monthly low.&lt;/p&gt;
+&lt;p&gt;Hint: you can find the &lt;em&gt;mean&lt;/em&gt; of a Pandas series by calling the &lt;code&gt;mean()&lt;/code&gt; method. Documentation on this method &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.mean.html' rel='nofollow'&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_yearly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_monthly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_yearly_low&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_monthly_low&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Same plot as before, but include &lt;code&gt;average_yearly_high&lt;/code&gt; and &lt;code&gt;average_yearly_low&lt;/code&gt; too - each as a dotted line&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Because temperature measurements are of a single point in time, not a summation or count, we ought to use a line chart to show a change over time. The x-axis is a time period too so it makes sense to connect the dots/points with lines since months proceed in a defined order.&lt;/li&gt;
+&lt;li&gt;x-axis ticks each represent the months of the years, starting in January and ending in December &lt;/li&gt;
+&lt;li&gt;y-axis should be Temperature (degrees Fahrenheit)&lt;/li&gt;
+&lt;li&gt;please provide a proper label for the title, x-label and y-label&lt;/li&gt;
+&lt;li&gt;please make the font larger for default on the x-ticks, y-ticks, x-label, y-label and title so it's more easily readable&lt;/li&gt;
+&lt;li&gt;please utilize a grid on your chart so we can more accurately see the measurement values&lt;/li&gt;
+&lt;li&gt;please mark the measurements taken with each month as a dot to distinguish them from the line&lt;/li&gt;
+&lt;li&gt;show all x-tick values (meaning every month value)&lt;/li&gt;
+&lt;li&gt;make sure the lines for &lt;code&gt;average_monthly_high&lt;/code&gt; and &lt;code&gt;average_monthly_low&lt;/code&gt; are different colors&lt;/li&gt;
+&lt;li&gt;include a legend that identifies the color of each line/column being plotted&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Hint: In Seaborn, Matplotlib, and Pandas Plot, you can also plot multiple lines by calling &lt;code&gt;plt.plot()&lt;/code&gt; multiple times - each time including the column and styles for your line as arguments inside &lt;code&gt;plot()&lt;/code&gt;. See an example at &lt;a href='https://python-graph-gallery.com/122-multiple-lines-chart/' rel='nofollow'&gt;this link&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Steps explained:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;df.set_index('month')[['average_monthly_high', 'average_monthly_low']].plot(style='o-')&lt;/code&gt; uses a Pandas DataFrame with &lt;code&gt;month&lt;/code&gt; as the index and two columns of &lt;code&gt;average_monthly_high&lt;/code&gt; and &lt;code&gt;average_monthly_low&lt;/code&gt;. I call the &lt;code&gt;plot()&lt;/code&gt; method to create a plot that share the same index of &lt;code&gt;month&lt;/code&gt; but have two lists of y-values for the highs and lows; &lt;code&gt;style=o-&lt;/code&gt; adds dots/circles for the plot measurements in which the circles are connected by lines (making a line plot).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.plot(df['average_yearly_high'], '--', linewidth=1.5, color='steelblue')&lt;/code&gt; plots the values from &lt;code&gt;average_yearly_high&lt;/code&gt; on the y-axis given the same index values from the Pandas &lt;code&gt;plot()&lt;/code&gt; call above. &lt;code&gt;--&lt;/code&gt; sets a line style of dotted lines, &lt;code&gt;linewidth&lt;/code&gt; sets the line width to be 1.5 pixels. &lt;code&gt;color='steelblue'&lt;/code&gt; sets the color of the line to be a blue-ish color.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.plot(df['average_yearly_low'], '--', linewidth=1.5, color='green')')&lt;/code&gt; plots the values from &lt;code&gt;average_yearly_low&lt;/code&gt; on the y-axis given the same index values from the Pandas &lt;code&gt;plot()&lt;/code&gt; call above. &lt;code&gt;--&lt;/code&gt; sets a line style of dotted lines, &lt;code&gt;linewidth&lt;/code&gt; sets the line width to be 1.5 pixels. &lt;code&gt;color='green'&lt;/code&gt; sets the color of the line to be a green color.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.title("Historical Monthly Averages in San Francisco", y=1.1)&lt;/code&gt; sets a title name and the &lt;code&gt;y&lt;/code&gt; argument sets spacing/padding between the top of the plot and the title. Try setting it to &lt;code&gt;1.1&lt;/code&gt; to see the changes.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.xlabel("Month", labelpad=15)&lt;/code&gt; sets the name for the x-axis label and &lt;code&gt;labelpad&lt;/code&gt; adds padding/spacing between the bottom of the plot and the label name. Try different numerical values there to see what happens.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.xticks(df.index, df['month'])&lt;/code&gt; re-names the x-tick values to be the names of the months.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.ylabel("Temperature (degrees Fahrenheit)", labelpad=15);&lt;/code&gt; sets the y-axis label name and &lt;code&gt;labelpad&lt;/code&gt; adds padding/spacing between the side of the plot and the label name. The &lt;code&gt;;&lt;/code&gt; stops text output besides the plot.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plt.legend();&lt;/code&gt; shows the legend for all 4 lines.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)[[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_monthly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;average_monthly_low&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;o-&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_yearly_high&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linewidth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;steelblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;average_yearly_low&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linewidth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;orange&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Historical Monthly Averages in San Francisco&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.013&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Month&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xticks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Temperature (degrees Fahrenheit)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="learning_exercise_0_answers_files/learning_exercise_0_answers_24_0.png"&gt;&lt;/p&gt;
+&lt;h3&gt;What months in San Francisco have their average monthly high temperature above the yearly average high?&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;average_monthly_high&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;average_yearly_high&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tolist&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;May&amp;#39;, &amp;#39;Jun&amp;#39;, &amp;#39;Jul&amp;#39;, &amp;#39;Aug&amp;#39;, &amp;#39;Sep&amp;#39;, &amp;#39;Oct&amp;#39;]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;May, June, July, August, September and October&lt;/p&gt;
+&lt;h3&gt;What months in San Francisco have their average monthly low temperature below the yearly average low?&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;average_monthly_low&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;average_yearly_low&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tolist&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;Jan&amp;#39;, &amp;#39;Feb&amp;#39;, &amp;#39;Mar&amp;#39;, &amp;#39;Apr&amp;#39;, &amp;#39;May&amp;#39;, &amp;#39;Nov&amp;#39;]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;January, February, March, April, May and November&lt;/p&gt;</content><category term="line plot"></category><category term="benchmarking"></category></entry><entry><title>Sample Project Start: Bay Area Bike Share Data</title><link href="https://dfrieds.com/teaching/sample-project-msis-2629" rel="alternate"></link><published>2018-06-24T17:00:00-07:00</published><updated>2018-06-24T17:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-06-24:/teaching/sample-project-msis-2629</id><summary type="html">&lt;p&gt;2018 summer MSIS 2629 sample bay area bike share data project&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Thought Process&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;Construct hypotheses on questions I want answered about this dataset.&lt;/li&gt;
 &lt;li&gt;Understand the fields, values, and number of observations.&lt;/li&gt;
