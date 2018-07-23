@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="histogram plot python pandas">
+  <meta name="keywords" content="categorical scatter plot">
 
-  <meta name="description" content="Create a histogram plot from the tips dataset in Python using the Pandas library">
-  <meta property="og:description"  content="Create a histogram plot from the tips dataset in Python using the Pandas library">
-  <meta name="twitter:description" content="Create a histogram plot from the tips dataset in Python using the Pandas library">
+  <meta name="description" content="Examples of various categorical scatter plots to work with small data">
+  <meta property="og:description"  content="Examples of various categorical scatter plots to work with small data">
+  <meta name="twitter:description" content="Examples of various categorical scatter plots to work with small data">
 
-  <meta property="og:title" content="Histogram Plot using Pandas">
-  <meta name="twitter:title" content="Histogram Plot using Pandas">
+  <meta property="og:title" content="When to Use Categorical Scatterplots">
+  <meta name="twitter:title" content="When to Use Categorical Scatterplots">
 
-  <link rel="canonical" href="https://dfrieds.com/data-visualizations/histogram-plot-python-pandas"/>
+  <link rel="canonical" href="https://dfrieds.com/data-visualizations/when-use-categorical-scatterplots"/>
 
-  <title>Histogram Plot using Pandas - Data Visualizations</title>
+  <title>When to Use Categorical Scatterplots - Data Visualizations</title>
 
   
 
@@ -148,38 +148,50 @@
 
 <section id="content" class="body">
   <header>
-    <div class="posttype"> Data Visualizations Pandas Plot Tutorial</div>
+    <div class="posttype"> Data Visualizations Best Practices Tutorial</div>
     <h1 class="articleh1">
-      Histogram Plot using Pandas
+      When to Use Categorical Scatterplots
     </h1>
 
     <ul class ="row article_info">
       
       <li>
-        Mar 4&nbsp;&nbsp;&bull;&nbsp;&nbsp;2 min read
+        Jul 22&nbsp;&nbsp;&bull;&nbsp;&nbsp;5 min read
       </li>
       <li class="tagarticle">
-        Key Terms:         histogram plot
+        Key Terms:         scatter plot
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <h4>Import Modules</h4>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+    <p>Often times in businesses we want to visualize the distribution from several categorical variables provided in a dataset. </p>
+<p>To display the distribution of a category of data, typically people use a box plot or histogram. However, sometimes those visualizations may be improperly used. If you have a small number of data points for one category - often 5 - 80 points, I'd recommend you start with a categorical scatter plot for comparison.</p>
+<p>Below, I'll illustrate a few examples.</p>
+<h4>Import Modules</h4>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 
 
-<h4>Read in Tips Dataset from URL</h4>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv&#39;</span><span class="p">)</span>
+<h4>Set Global Styles for Visualizations</h4>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<h4>Preview the Data</h4>
-<h5>Preview the top 5 rows</h5>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<h3>Example: Tips Dataset</h3>
+<p>In the examples below, I utilize the dataset <code>tips</code> provided in the Seaborn visualization library. </p>
+<p>Each row in this dataset is a record of a meal at a restaurant. For each meal, the restuarant recorded values for the total bill amount in U.S. dollars, tip amount, gender/sex of the waiter, day, meal and table size.</p>
+<h4>Load <code>flights</code> Dataset</h4>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;tips&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Preview the First 5 Rows of Data</h4>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 
 
@@ -248,44 +260,69 @@
       <td>Dinner</td>
       <td>4</td>
     </tr>
+    <tr>
+      <th>5</th>
+      <td>25.29</td>
+      <td>4.71</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>8.77</td>
+      <td>2.00</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>26.88</td>
+      <td>3.12</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
+    </tr>
   </tbody>
 </table>
 </div>
 
-<h5>View the count of values per colummn and data types</h5>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<h4>Visualize Total Bill Amount by Table Size</h4>
+<p>This categorical scatter plot below, more specifically called a <code>swarm plot</code>, helps illustrate the count of records for each table size and the distribution of bill amounts by table size.</p>
+<p>A swarm plot is ideal here because we have so few records of meals with several table sizes such as 1, 5, and 6. </p>
+<p>Alternatively, if we tried to use a histogram or box plot to illustrate these few records for category, we'd get a false representation of the bill amounts by table size. The reason for that is that it's bad practice to compare just 4 records for a table size of 1 to 156 record for a table size of 2. For the 4 records of table size of 1 person, those could be a false representation since they may have all made very very small purchases and therefore small <code>total_bill</code> amounts in our dataset.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;total_bill&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;swarm&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_tips</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">8.5</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=.</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;table size [number of people]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;total bill amount [$]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Bill Amounts by Table Size&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.013</span><span class="p">);</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 244 entries, 0 to 243
-Data columns (total 7 columns):
-total_bill    244 non-null float64
-tip           244 non-null float64
-sex           244 non-null object
-smoker        244 non-null object
-day           244 non-null object
-time          244 non-null object
-size          244 non-null int64
-dtypes: float64(2), int64(1), object(4)
-memory usage: 13.4+ KB
+<p><img alt="png" src="when_use_categorical_scatter_plots_files/when_use_categorical_scatter_plots_14_0.png"></p>
+<h4>Interpretation of Distribution of Bill Amounts by Table Size</h4>
+<p>There's few records of bill amounts for table sizes of 1, 5, and 6. The restaurant mostly gets table sizes of 2 and 3.</p>
+<p>Generally, as the table size increases, total bill amount increases. </p>
+<p>For a table size of 2, most bill amounts are between 10 and 20 U.S. dollars. </p>
+<h4>Visualize Total Bill Amount by Table Size and Gender/Sex</h4>
+<p>To improve on the visualization from above, I'm curious if there's any patterns of bill amounts for tables by waiter or waitresses' gender.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;total_bill&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;swarm&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_tips</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">8.5</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=.</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;table size [number of people]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;total bill amount [$]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Bill Amounts by Table Size&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.013</span><span class="p">);</span>
 </pre></div>
 
 
-<h4>Plot a Simple Histogram of Tip Amounts</h4>
-<p>We access the <em>tip</em> column, call the <code>plot</code> method and pass in <code>hist</code> to the <code>kind</code> argument to output a histogram plot.</p>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">);</span>
-</pre></div>
-
-
-<p><img alt="png" src="histogram_plot_pandas_files/histogram_plot_pandas_12_0.png"></p>
-<h4>Plot a Simple Histogram of Total Bill Amounts</h4>
-<p>We access the <em>total_bill</em> column, call the <code>plot</code> method and pass in <code>hist</code> to the <code>kind</code> argument to output a histogram plot.</p>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">);</span>
-</pre></div>
-
-
-<p><img alt="png" src="histogram_plot_pandas_files/histogram_plot_pandas_15_0.png"></p>
+<p><img alt="png" src="when_use_categorical_scatter_plots_files/when_use_categorical_scatter_plots_19_0.png"></p>
+<h4>Interpration of Visualization of Total Bill Amount by Table Size and Gender/Sex</h4>
+<p>There's no clear pattern of bill amounts by table size and gender. </p>
+<p>At a glance, it's likely males have served more tables than females. Males often hold the top few spots for highest bill amount by table size too.</p>
   </div>
 </section>
 
