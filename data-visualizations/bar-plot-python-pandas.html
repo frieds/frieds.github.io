@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="line plot python pandas">
+  <meta name="keywords" content="bar plot python pandas">
 
-  <meta name="description" content="Create simple line plots in Python using the Pandas library based on personal Fitbit activity data">
-  <meta property="og:description"  content="Create simple line plots in Python using the Pandas library based on personal Fitbit activity data">
-  <meta name="twitter:description" content="Create simple line plots in Python using the Pandas library based on personal Fitbit activity data">
+  <meta name="description" content="Create simple bar plots in Python using the Pandas library based on the Seaborn tips dataset">
+  <meta property="og:description"  content="Create simple bar plots in Python using the Pandas library based on the Seaborn tips dataset">
+  <meta name="twitter:description" content="Create simple bar plots in Python using the Pandas library based on the Seaborn tips dataset">
 
-  <meta property="og:title" content="Line Plot using Pandas">
-  <meta name="twitter:title" content="Line Plot using Pandas">
+  <meta property="og:title" content="Bar Plot using Pandas">
+  <meta name="twitter:title" content="Bar Plot using Pandas">
 
-  <link rel="canonical" href="https://dfrieds.com/data-visualizations/line-plot-python-pandas"/>
+  <link rel="canonical" href="https://dfrieds.com/data-visualizations/bar-plot-python-pandas"/>
 
-  <title>Line Plot using Pandas - Data Visualizations</title>
+  <title>Bar Plot using Pandas - Data Visualizations</title>
 
   
 
@@ -150,22 +150,22 @@
   <header>
     <div class="posttype"> Data Visualizations Pandas Plot Tutorial</div>
     <h1 class="articleh1">
-      Line Plot using Pandas
+      Bar Plot using Pandas
     </h1>
 
     <ul class ="row article_info">
       
       <li>
-        Mar 10&nbsp;&nbsp;&bull;&nbsp;&nbsp;3 min read
+        Sep 13&nbsp;&nbsp;&bull;&nbsp;&nbsp;3 min read
       </li>
       <li class="tagarticle">
-        Key Terms:         line plot
+        Key Terms:         bar plot
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <h4>Import Modules</h4>
+    <h3>Import Modules</h3>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
@@ -173,30 +173,16 @@
 </pre></div>
 
 
-<h4>Generate a Line Plot from My Fitbit Activity Data</h4>
-<p>More often, you'll be asked to generate a line plot to show a trend over time.</p>
-<p>Below is my Fitbit activity of steps for each day over a 15 day time period.</p>
-<div class="highlight"><pre><span></span><span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2018-02-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-02&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-03&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-04&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;2018-02-05&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-06&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-07&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-08&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;2018-02-09&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-10&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-11&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-12&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;2018-02-13&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-14&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-02-15&#39;</span><span class="p">]</span>
+<p>Bar charts are great at visualizing counts of categorical data. Let's try them out in Pandas Plot.</p>
+<h3>Read in Tips Dataset from Seaborn Library</h3>
+<p>This data contains logs of tips received by waiters and waittresses at a restaurant.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;tips&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11178</span><span class="p">,</span> <span class="mi">9769</span><span class="p">,</span> <span class="mi">11033</span><span class="p">,</span> <span class="mi">9757</span><span class="p">,</span> <span class="mi">10045</span><span class="p">,</span> <span class="mi">9987</span><span class="p">,</span> <span class="mi">11067</span><span class="p">,</span> <span class="mi">11326</span><span class="p">,</span> <span class="mi">9976</span><span class="p">,</span>
-                   <span class="mi">11359</span><span class="p">,</span> <span class="mi">10428</span><span class="p">,</span> <span class="mi">10296</span><span class="p">,</span> <span class="mi">9377</span><span class="p">,</span> <span class="mi">10705</span><span class="p">,</span> <span class="mi">9426</span><span class="p">]</span>
-</pre></div>
-
-
-<h4>Convert Data into Pandas Dataframe</h4>
-<p>We create a Pandas DataFrame from our lists, naming the columns <em>date</em> and <em>steps</em>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="n">dates</span><span class="p">,</span> <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="n">steps</span><span class="p">})</span>
-</pre></div>
-
-
-<h5>Preview top 5 rows of dataframe</h5>
-<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<h3>Preview the Data</h3>
+<p>Preview the top 5 rows.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 
@@ -205,109 +191,122 @@
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>date</th>
-      <th>steps</th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>sex</th>
+      <th>smoker</th>
+      <th>day</th>
+      <th>time</th>
+      <th>size</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>2018-02-01</td>
-      <td>11178</td>
+      <td>16.99</td>
+      <td>1.01</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>2018-02-02</td>
-      <td>9769</td>
+      <td>10.34</td>
+      <td>1.66</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2018-02-03</td>
-      <td>11033</td>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2018-02-04</td>
-      <td>9757</td>
+      <td>23.68</td>
+      <td>3.31</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2018-02-05</td>
-      <td>10045</td>
+      <td>24.59</td>
+      <td>3.61</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-<h5>See data types and count of values in fields</h5>
-<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<p>With this tips dataset, we have several categorical fields including sex, day, time and size (# of people seated at a table).</p>
+<h3>Examine Count of Tips Recorded by Gender</h3>
+<p>First, we can call the <code>value_counts</code> method on the <code>sex</code> (aka gender) field to see the count of unique values for each gender type.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 15 entries, 0 to 14
-Data columns (total 2 columns):
-date     15 non-null object
-steps    15 non-null int64
-dtypes: int64(1), object(1)
-memory usage: 320.0+ bytes
+<div class="highlight"><pre><span></span>Male      157
+Female     87
+Name: sex, dtype: int64
 </pre></div>
 
 
-<h4>Convert Strings to Datetime Objects</h4>
-<p>In our plot, we want dates on the x-axis and steps on the y-axis.</p>
-<p>However, Pandas plotting does not allow for strings - the data type in our <code>dates</code> list - to appear on the x-axis.</p>
-<p>We must convert the dates as strings into <strong>datetime</strong> objects.</p>
-<h5>Use <code>to_datetime</code> method</h5>
-<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_fitbit_activity</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
+<p>The output above is a Pandas Series in which the index items are Male and Female and the values are the count of each index item in our original tips sex field.</p>
+<h3>Visualize Count of Tips Recorded by Gender</h3>
+<p>We access the <em>sex</em> field, call the <code>value_counts</code> method to get a count of unique values, then call the <code>plot</code> method and pass in <code>bar</code> (for bar chart) to the <code>kind</code> argument.</p>
+<p>Please see the <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.plot.html' rel='nofollow'>Pandas Series official documentation page</a> for more information.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">);</span>
 </pre></div>
 
 
-<h5>Verify <em>date</em> field changed to datetime type</h5>
-<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 15 entries, 0 to 14
-Data columns (total 2 columns):
-date     15 non-null datetime64[ns]
-steps    15 non-null int64
-dtypes: datetime64[ns](1), int64(1)
-memory usage: 320.0 bytes
-</pre></div>
-
-
-<p>The <em>date</em> field changed to have all values contain the datetime type.</p>
-<h4>Plot Steps Over Time</h4>
-<p>In a Pandas line plot, the index of the dataframe is plotted on the x-axis. Currently, we have an index of values from 0 to 15 on each integer increment.</p>
-<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">index</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>RangeIndex(start=0, stop=15, step=1)
-</pre></div>
-
-
-<p>We need to set our <em>date</em> field to be the index of our dataframe so it's plotted accordingly on the x-axis.</p>
-<p>Below, I utilize the Pandas Series <code>plot</code> method. Here is the <a rel='nofollow' href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.plot.html'>official documentation page</a>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
-</pre></div>
-
-
-<p><img alt="png" src="line_plot_pandas_files/line_plot_pandas_25_0.png"></p>
+<p><img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_17_0.png"></p>
+<p>In our tips dataset, we have more records of tips for male waiters than female waitresses.</p>
 <h4>Style Plot</h4>
-<p>Below, I'll make lots of changes to our simple plot so it is easier to interpret.</p>
-<p>Many of these steps are explained in more detail in my tutorial called <a href='https://dfrieds.com/data-visualizations/line-plots-python-matplotlib' rel='nofollow'>Line Plots using Matplotlib</a>.</p>
+<p>Below, I apply several styles to our plot from above so it's easier to interpret.</p>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.4</span><span class="p">)</span>
-<span class="n">df_fitbit_activity</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Daily Step Count&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;My Daily Step Count Tracked by Fitbit&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">22</span><span class="p">);</span>
+<span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">rot</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Gender&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Count of People&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Count of People Who Received Tips by Gender&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">);</span>
 </pre></div>
 
 
-<p><img alt="png" src="line_plot_pandas_files/line_plot_pandas_28_0.png"></p>
+<p><img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_21_0.png"></p>
+<h3>Visualize Count of Days for Recorded Tips</h3>
+<p>We access the day field, call the value_counts method to get a count of unique values, then call the <code>plot</code> method and pass in <code>bar</code> (for bar chart) to the <code>kind</code> argument.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_24_0.png"></p>
+<p>Most of our tip records were on Saturday followed by Sunday. Only 4 days have recorded tips.</p>
+<h4>Style Plot</h4>
+<p>Below, I apply several styles to our plot from above so it's easier to interpret. I turn our vertical bar plot into a horizontal bar plot.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;barh&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Count of Tips&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Day of Week&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Count of Tips by Day of Week&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_28_0.png"></p>
   </div>
 </section>
 
