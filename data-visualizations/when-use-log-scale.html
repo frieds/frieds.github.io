@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Sep 15&nbsp;&nbsp;&bull;&nbsp;&nbsp;5 min read
+        Sep 19&nbsp;&nbsp;&bull;&nbsp;&nbsp;8 min read
       </li>
       <li class="tagarticle">
         Key Terms:         log scale
@@ -169,10 +169,12 @@
 <p>Simply put, log scales can help visualize between large descrepancies of values on a single axis -  such as if you wanted to compare net worth of individuals worth \$40,000 and \$800,000,000.</p>
 <h3>Import Modules</h3>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">ticker</span>
+<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="kn">as</span> <span class="nn">tick</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">ScalarFormatter</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="kn">as</span> <span class="nn">tick</span>
 <span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 
@@ -230,13 +232,14 @@
 </tr>
 </tbody>
 </table>
+<p>A linear scale assigns equal horizontal or vertical distances to axes values. Take note of the sequential x-axes and y-axes values that each increase by 200.</p>
 <div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">y_values</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;y=x Function On a Y-Axis Linear Scale&quot;</span><span class="p">);</span>
 </pre></div>
 
 
-<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_9_0.png"></p>
+<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_10_0.png"></p>
 <h3>Log Scale</h3>
 <p>First off, what are logarithms? Logarithms help us answer the question: how many of one number do we multiply to get <em>another number</em>?</p>
 <p>For example, how many 3s do we multiply to get 9? The answer is 3 x 3 = 9 so we had to multiple 3 <em>twice</em> to get 9.</p>
@@ -244,7 +247,7 @@
 <p>The number line scale below by <a href='https://www.mathsisfun.com/definitions/logarithmic-scale.html' rel='nofollow'>Math is Fun</a> helps visualize the differences between a linear scale and logarithm scale.</p>
 <p><img alt="Log scale versus linear scale on a number line" src="https://www.mathsisfun.com/numbers/images/logarithmic-scale.svg"></p>
 <p>Going back to our earlier example, below is the function <code>y=x</code> with the y-axis on a logarithmic scale.</p>
-<p>All the same data points from above are plotted; however, notice how the y-axis tick values jump from <code>1</code> to <code>10</code> to <code>100</code> to <code>1K</code>.</p>
+<p>All the same data points from above are plotted; however, notice how the y-axis tick values jump from <code>1</code> to <code>10</code> to <code>100</code> to <code>1K</code>. With each y-axis tick value, there's an exponential increase.</p>
 <div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">y_values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;linear scale&#39;</span><span class="p">);</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
@@ -254,7 +257,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_14_0.png"></p>
+<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_15_0.png"></p>
 <h3>Real-Life Example: Visualizing Net Worth of People</h3>
 <p>I attended the University of Michigan for college.</p>
 <p>Below, I randomly generated fake net worth data for 8 individuals. Since I went to Michigan, I also found the actual net worth data for 3 extremely wealthy alumni of the university including: Stephen M. Ross, Madonna and Tom Brady.</p>
@@ -354,7 +357,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_22_0.png"></p>
+<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_23_0.png"></p>
 <p>It's glaringly obvious that we cannot see the net worth of the 8 least wealthy individuals. This is a big problem as it makes this graph uninterpretable. </p>
 <h4>High Net Worth Individuals Bar Chart - Log Scale</h4>
 <p>Here is a horizontal bar chart of the names of individuals and their net worth on a <strong>logarithmic</strong> scale.</p>
@@ -367,9 +370,118 @@
 </pre></div>
 
 
-<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_26_0.png"></p>
+<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_27_0.png"></p>
 <p>Look closely at how the scale on the x-axis changed.</p>
 <p>This visualization is much better! We can now easily interpret the net worth of all 11 individuals on this visualization.</p>
+<h3>Real-Life Example: Tesla Inc. (TSLA) Stock Price Over Time</h3>
+<p>Tesla is a company best known for their electric vehicles. They IPOed on June 29, 2010. Since then, their stock has been trading on the NASDAQ as the symbol TSLA. </p>
+<p>In recent years, the Tesla stock has surged upwards despite a lot of volatility. </p>
+<div class="highlight"><pre><span></span><span class="n">df_tesla</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;TSLA.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">df_tesla</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Close</th>
+      <th>Adj Close</th>
+      <th>Volume</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2010-06-29</td>
+      <td>19.000000</td>
+      <td>25.00</td>
+      <td>17.540001</td>
+      <td>23.889999</td>
+      <td>23.889999</td>
+      <td>18766300</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2010-06-30</td>
+      <td>25.790001</td>
+      <td>30.42</td>
+      <td>23.299999</td>
+      <td>23.830000</td>
+      <td>23.830000</td>
+      <td>17187100</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2010-07-01</td>
+      <td>25.000000</td>
+      <td>25.92</td>
+      <td>20.270000</td>
+      <td>21.959999</td>
+      <td>21.959999</td>
+      <td>8218800</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2010-07-02</td>
+      <td>23.000000</td>
+      <td>23.10</td>
+      <td>18.709999</td>
+      <td>19.200001</td>
+      <td>19.200001</td>
+      <td>5139800</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2010-07-06</td>
+      <td>20.000000</td>
+      <td>20.00</td>
+      <td>15.830000</td>
+      <td>16.110001</td>
+      <td>16.110001</td>
+      <td>6866900</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="highlight"><pre><span></span><span class="n">df_tesla</span><span class="p">[</span><span class="s1">&#39;date_datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_tesla</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+<span class="n">df_tesla</span><span class="p">[</span><span class="s1">&#39;date_month_day_year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tesla</span><span class="p">[</span><span class="s1">&#39;date_datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%-d</span><span class="s1">, %Y&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Tesla Stock Price Over Time - Linear Scale</h4>
+<p>On this linear scale below, we can see the huge spike around April 2013. However, before that, at a glance, the stock looks fairly stable. TSLA seemed like a rather boring holding early on.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tesla</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date_month_day_year&#39;</span><span class="p">)[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">rot</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Close Price&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Tesla Inc. (TSLA) Stock Price Over Time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_36_0.png"></p>
+<h4>Tesla Stock Price Over Time - Log Scale</h4>
+<p>The visualization below shows the trend of the TSLA stock price over time on a <strong>log</strong> scale.</p>
+<p>The linear scale above was a bit deceiving. Now, it's much easier to see that in the first ~3 years (until April 2013) after the IPO, the stock significantly increased from ~<code>18</code> to ~<code>37</code> - doubling in price. That would be a great return for investors! Yet, nowadays I'd be hard-pressed to find investors touting the first 3 years of Tesla's stock performance.</p>
+<div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">df_tesla</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date_month_day_year&#39;</span><span class="p">)[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">rot</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Close Price&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Tesla Inc. (TSLA) Stock Price Over Time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="p">]:</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">]);</span>
+</pre></div>
+
+
+<p><img alt="png" src="when_use_log_scale_files/when_use_log_scale_39_0.png"></p>
   </div>
 </section>
 
