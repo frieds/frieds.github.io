@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data Science Tutorials">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="bin data pandas">
+
+  <meta name="description" content="How to Bin Values in Python Pandas">
+  <meta property="og:description"  content="How to Bin Values in Python Pandas">
+  <meta name="twitter:description" content="How to Bin Values in Python Pandas">
+
+  <meta property="og:title" content="Bin Values into Discrete Intervals">
+  <meta name="twitter:title" content="Bin Values into Discrete Intervals">
+
+  <link rel="canonical" href="https://dfrieds.com/python/bin-values-python-pandas"/>
+
+  <title>Bin Values into Discrete Intervals - Python</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full Atom Feed" />    <link href="https://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />      <link href="https://dfrieds.com/feeds/python.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories Atom Feed" />    <link href="https://dfrieds.com/feeds/python.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="python"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles
+              </a>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials
+              </a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+              </div>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://twitter.com/_DanFriedman" target="blank">Twitter</a>
+                <a class="dropdown-item" href="https://github.com/frieds" target="blank">GitHub</a>
+                <a class="dropdown-item" href="https://linkedin.com/in/danfriedman33" target="blank">LinkedIn</a>
+              </div>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> Python Data Analysis in pandas Tutorial</div>
+    <h1 class="articleh1">
+      Bin Values into Discrete Intervals
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        Nov 20&nbsp;&nbsp;&bull;&nbsp;&nbsp;7 min read
+      </li>
+      <li class="tagarticle">
+        Key Terms:         categorical data,
+        python,
+        pandas,
+        bin
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <h3>Import Modules</h3>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</pre></div>
+
+
+<h3>Why Bin Data</h3>
+<p>Often times you have numerical data on very large scales. Sometimes, it can be easier to bin the values into groups. This is helpful to more easily perform descriptive statistics by groups as a generalization of patterns in the data.</p>
+<p>We'll cover an example below of binning age values into groups. </p>
+<h3>Binning in pandas with Age Example</h3>
+<p>First, let's create a simple pandas DataFrame assigned to the variable <code>df_ages</code> with just one colum for <code>age</code>. This column will contain 40 random age values between 20 and 100 (inclusive on each end).</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">40</span><span class="p">)})</span>
+</pre></div>
+
+
+<p>Let's preview the first 5 rows of <code>df_ages</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>84</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>99</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>93</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Ages are often denoted by decade - saying people are in their 20s or 30s. To get to that denotion, it helps to understand that someone in their 20s is between the age of 20-29. Let's create a new column called <code>age_range</code> that provides that nearly 10-year window of ages.</p>
+<p>First, let's create a list assigned to the variable <code>age_ranges</code> that creates list items in a list comprehension. Each list item created is a value of <code>age - age+9</code> for ages in the range of 20 to 100 with a step value of 10. I also printed the output of <code>age_ranges</code>.</p>
+<p>If the syntax below still seems daunting, you can learn more about string formatting from <a href='https://dfrieds.com/python/string-formatting' rel='nofollow'>this tutorial</a> on my website and the <code>range()</code> function via <a href='https://realpython.com/python-range/' rel='nofollow'>this article</a> on Real Python.</p>
+<div class="highlight"><pre><span></span><span class="n">age_ranges</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;{0} - {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">age</span> <span class="o">+</span> <span class="mi">9</span><span class="p">)</span> <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span>
+<span class="n">age_ranges</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>[&#39;20 - 29&#39;,
+ &#39;30 - 39&#39;,
+ &#39;40 - 49&#39;,
+ &#39;50 - 59&#39;,
+ &#39;60 - 69&#39;,
+ &#39;70 - 79&#39;,
+ &#39;80 - 89&#39;,
+ &#39;90 - 99&#39;]
+</pre></div>
+
+
+<p>Create a variable <code>count_unique_age_ranges</code> that's the count of items in the <code>age_ranges</code> list above.</p>
+<div class="highlight"><pre><span></span><span class="n">count_unique_age_ranges</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_ranges</span><span class="p">)</span>
+<span class="n">count_unique_age_ranges</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>8
+</pre></div>
+
+
+<p>In order to bin our ages, we want to use the pandas <code>cut()</code> method. </p>
+<p>For the argument <code>x</code>, we pass in the values in the <code>age</code> column from our <code>df_ages</code> DataFrame.</p>
+<p>For the argument <code>bins</code>, we pass in the number of bins we want to create designated by the variable <code>count_unique_age_ranges</code>.</p>
+<p>For the argument <code>labels</code>, we specify the labels for our returned binned column which is the list we created above assigned to the variable <code>age_ranges</code>.</p>
+<p>With the returned output of the <code>cut()</code> method, we'll create a new column in <code>df_ages</code> called <code>age_range</code>.</p>
+<p>Since we want 8 bins originally from the <code>age</code> column, this <code>cut()</code> method knows to make bins with ages between 20-29, 30-39 and so forth. It just so happens that we designate the values in <code>age_range</code> to be a similar looking string value. </p>
+<p>The order of values we specify in the labels <code>age_ranges</code> matter too! The first item, <code>20-29</code>, corresponds to the first bin created that will contain age values in the range of 20-29, and so forth.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_range&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">count_unique_age_ranges</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">age_ranges</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Let's preview the first few rows of <code>df_ages</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>age_range</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>37</td>
+      <td>30 - 39</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>37</td>
+      <td>30 - 39</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>84</td>
+      <td>80 - 89</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>99</td>
+      <td>90 - 99</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>93</td>
+      <td>90 - 99</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>We can apply the <code>info()</code> method to our DataFrame. Notice next to our new column called <code>age_range</code> that the data type is a <code>category</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 40 entries, 0 to 39
+Data columns (total 2 columns):
+age          40 non-null int64
+age_range    40 non-null category
+dtypes: category(1), int64(1)
+memory usage: 504.0 bytes
+</pre></div>
+
+
+<p>Let's create another new column to define someone's age denoted by decade. So, if you're 28, you're in your 20s and if you're 54, you're in your 50s. We'll later call this column <code>age_by_decade</code>.</p>
+<p>First, let's create a list assigned to the variable <code>age_by_decade</code> that creates list items by the decade names. We'll simply take each age from 20 to 100 with a step of 10 and simply append an <em>s</em> to the end of each <code>age</code> value. </p>
+<div class="highlight"><pre><span></span><span class="n">age_by_decade</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;{0}s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span>
+<span class="n">age_by_decade</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>[&#39;20s&#39;, &#39;30s&#39;, &#39;40s&#39;, &#39;50s&#39;, &#39;60s&#39;, &#39;70s&#39;, &#39;80s&#39;, &#39;90s&#39;]
+</pre></div>
+
+
+<p>Create a variable <code>count_unique_age_decades</code> that's the count of items in the <code>age_by_decade</code> list above.</p>
+<div class="highlight"><pre><span></span><span class="n">count_unique_age_decades</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_by_decade</span><span class="p">)</span>
+<span class="n">count_unique_age_decades</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>8
+</pre></div>
+
+
+<p>Let's create a new column called <code>age_by_decade</code> that's made using the pandas <code>cut()</code> method. </p>
+<p>For the argument <code>x</code>, we pass in the values in the <code>age</code> column from our <code>df_ages</code> DataFrame.</p>
+<p>For the argument <code>bins</code>, we pass in the number of bins we want to create designated by the variable <code>count_unique_age_decades</code>.</p>
+<p>For the argument <code>labels</code>, we specify the labels for our returned binned column which is the list we created above assigned to the variable <code>age_by_decade</code>.</p>
+<p>With the returned output of the <code>cut()</code> method, we'll create a new column in <code>df_ages</code> called <code>age_by_decade</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_by_decade&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">count_unique_age_decades</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">age_by_decade</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Preview the first 5 rows of <code>df_ages</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>age_range</th>
+      <th>age_by_decade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>37</td>
+      <td>30 - 39</td>
+      <td>30s</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>37</td>
+      <td>30 - 39</td>
+      <td>30s</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>84</td>
+      <td>80 - 89</td>
+      <td>80s</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>99</td>
+      <td>90 - 99</td>
+      <td>90s</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>93</td>
+      <td>90 - 99</td>
+      <td>90s</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>You can learn more about the intricate details of the Pandas <code>cut()</code> method on the <a href='https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.cut.html' rel='nofollow'>official documentation page</a>.</p>
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+        <center>This project contains 56 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+          <br/>
+          Copyright &copy; Dan Friedman,
+          <time datetime="2018">2018</time>.
+        </center>
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #c0c6c3" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#f9f9f9" );
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+  <!-- <script type="text/javascript">
+    $(document).on('click', 'a[href^="#"]', function (event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 500);
+    });
+  </script> -->
+
+</body>
+
+</html>

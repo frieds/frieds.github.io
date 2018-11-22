@@ -1,5 +1,468 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-09-23T15:00:00-07:00</updated><entry><title>Intro Logger Module</title><link href="https://dfrieds.com/python/logger-module" rel="alternate"></link><published>2018-09-23T15:00:00-07:00</published><updated>2018-09-23T15:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-09-23:/python/logger-module</id><summary type="html">&lt;p&gt;Introduction to the logger module to track the progress of your code and debug more easily&lt;/p&gt;</summary><content type="html">&lt;p&gt;Downsides of using the &lt;code&gt;print()&lt;/code&gt; function in a Python program:
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-22T13:20:00-08:00</updated><entry><title>Categorical Data</title><link href="https://dfrieds.com/python/categorical-data-python-pandas" rel="alternate"></link><published>2018-11-22T13:20:00-08:00</published><updated>2018-11-22T13:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-22:/python/categorical-data-python-pandas</id><summary type="html">&lt;p&gt;Overview of categorical data and its use in pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;What is Categorical Data&lt;/h3&gt;
+&lt;p&gt;Categorical data has a limited number of values to choose from for a field of data. Some examples of fields and values are:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Field&lt;/th&gt;
+&lt;th&gt;Potential Values&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Blood type&lt;/td&gt;
+&lt;td&gt;O negative, O positive, A negative, B negative&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Customer responses on satisfaction of a product&lt;/td&gt;
+&lt;td&gt;happy, content, sad&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Eye color&lt;/td&gt;
+&lt;td&gt;green, blue, brown&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;There are two common types of categorical data: nominal and ordinal.&lt;/p&gt;
+&lt;p&gt;Nominal categorical data has values with no inherent order such as the eye color example above. &lt;/p&gt;
+&lt;p&gt;Ordinal categorical data contains values with an intended order. One example is the customer responses above. There's an inherent order with the values - happy is a more positive measurement than content. In my list of potential values, I ordered the values from responses that deem the product most-likeable to least-likeable.&lt;/p&gt;
+&lt;h3&gt;Categorical Data in Pandas&lt;/h3&gt;
+&lt;p&gt;Generally, the pandas data type of categorical columns is similar to simply strings of text or numerical values. However, with using ordinal categorical data types, there's a few small differences that would affect my typical workflow. Those differences in pandas are sorting as well as calculuating the minimum and maximum values in a column.&lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Create Survey Responses Data&lt;/h3&gt;
+&lt;p&gt;Create a Python list of survey responses that are either &lt;code&gt;happy&lt;/code&gt;, &lt;code&gt;content&lt;/code&gt;, or &lt;code&gt;sad&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;responses&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;happy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;happy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;happy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create a pandas categorical data structure of these responses; set the &lt;code&gt;ordered&lt;/code&gt; argument to &lt;code&gt;True&lt;/code&gt; so that order is declared by the &lt;code&gt;categories&lt;/code&gt; argument which is the rank of responses in the order of &lt;code&gt;happy&lt;/code&gt;, &lt;code&gt;content&lt;/code&gt;, or &lt;code&gt;sad&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;survey_responses&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Categorical&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;responses&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;categories&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;happy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;ordered&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View the data type of &lt;code&gt;survey_responses&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;survey_responses&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pandas.core.categorical.Categorical
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create a pandas DataFrame with one column called &lt;code&gt;response&lt;/code&gt; with the &lt;code&gt;survey_responses&lt;/code&gt; data structure.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_survey_responses&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;response&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;survey_responses&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Analyze Survey Responses Data&lt;/h3&gt;
+&lt;p&gt;Preview the first 5 rows of &lt;code&gt;df_survey_responses&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_survey_responses&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;response&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;happy&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;happy&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Descriptive Statistics&lt;/h4&gt;
+&lt;p&gt;Use the &lt;code&gt;describe()&lt;/code&gt; method on a Pandas DataFrame to get statistics of columns or you could call this method directly on a series. We'll call it on the DataFrame below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;count&lt;/code&gt; shows the number of responses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;unique&lt;/code&gt; shows the number of unique categorical values&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;top&lt;/code&gt; shows the highest-occuring categorical value&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;freq&lt;/code&gt; shows the frequency/count of the highest-occuring categorical value&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_survey_responses&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;response&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;count&lt;/th&gt;
+      &lt;td&gt;14&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;unique&lt;/th&gt;
+      &lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;top&lt;/th&gt;
+      &lt;td&gt;sad&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;freq&lt;/th&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Sorting&lt;/h4&gt;
+&lt;p&gt;Sort the responses in the &lt;code&gt;response&lt;/code&gt; column by ascending order and you'll see they appear with &lt;code&gt;high&lt;/code&gt; at the top and &lt;code&gt;low&lt;/code&gt; at the bottom.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_survey_responses&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;response&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;response&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;happy&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;happy&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;happy&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;content&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;sad&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;9&lt;/th&gt;
+      &lt;td&gt;sad&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Count of unique occurences of survey responses&lt;/h4&gt;
+&lt;p&gt;Call the &lt;code&gt;value_counts()&lt;/code&gt; method on the &lt;code&gt;response&lt;/code&gt; column to get a count of occurences for each of the categorical responses. Notice how &lt;code&gt;low&lt;/code&gt; was mentioned the most and &lt;code&gt;high&lt;/code&gt; the least.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_survey_responses&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;response&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sad        6
+content    5
+happy      3
+Name: response, dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Calculate the Least-Occuring Value in the &lt;code&gt;response&lt;/code&gt; Column&lt;/h4&gt;
+&lt;p&gt;The result of a pandas Series &lt;code&gt;min()&lt;/code&gt; method may be different than what you expect. We're returned &lt;code&gt;happy&lt;/code&gt; because it's the least-occuring category type in the &lt;code&gt;response&lt;/code&gt; column. Only 3 responses included &lt;code&gt;happy&lt;/code&gt; and there's more responses of the &lt;code&gt;content&lt;/code&gt; and &lt;code&gt;sad&lt;/code&gt; categories.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_survey_responses&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;response&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;happy&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Calculate Most-Occuring Value in &lt;code&gt;response&lt;/code&gt; Column&lt;/h4&gt;
+&lt;p&gt;Call the &lt;code&gt;max()&lt;/code&gt; method on the &lt;code&gt;response&lt;/code&gt; column and we're returned &lt;code&gt;sad&lt;/code&gt; which is the most-occuring categorical value.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_survey_responses&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;response&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;sad&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can learn more about the differences in working with categorical data in Pandas from the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/categorical.html' rel='nofollow'&gt;official documentation page&lt;/a&gt;. &lt;/p&gt;</content><category term="categorical data"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Bin Values into Discrete Intervals</title><link href="https://dfrieds.com/python/bin-values-python-pandas" rel="alternate"></link><published>2018-11-20T14:00:00-08:00</published><updated>2018-11-20T14:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-20:/python/bin-values-python-pandas</id><summary type="html">&lt;p&gt;How to Bin Values in Python Pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Why Bin Data&lt;/h3&gt;
+&lt;p&gt;Often times you have numerical data on very large scales. Sometimes, it can be easier to bin the values into groups. This is helpful to more easily perform descriptive statistics by groups as a generalization of patterns in the data.&lt;/p&gt;
+&lt;p&gt;We'll cover an example below of binning age values into groups. &lt;/p&gt;
+&lt;h3&gt;Binning in pandas with Age Example&lt;/h3&gt;
+&lt;p&gt;First, let's create a simple pandas DataFrame assigned to the variable &lt;code&gt;df_ages&lt;/code&gt; with just one colum for &lt;code&gt;age&lt;/code&gt;. This column will contain 40 random age values between 20 and 100 (inclusive on each end).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's preview the first 5 rows of &lt;code&gt;df_ages&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;age&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;37&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;37&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;84&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;99&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;93&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ages are often denoted by decade - saying people are in their 20s or 30s. To get to that denotion, it helps to understand that someone in their 20s is between the age of 20-29. Let's create a new column called &lt;code&gt;age_range&lt;/code&gt; that provides that nearly 10-year window of ages.&lt;/p&gt;
+&lt;p&gt;First, let's create a list assigned to the variable &lt;code&gt;age_ranges&lt;/code&gt; that creates list items in a list comprehension. Each list item created is a value of &lt;code&gt;age - age+9&lt;/code&gt; for ages in the range of 20 to 100 with a step value of 10. I also printed the output of &lt;code&gt;age_ranges&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If the syntax below still seems daunting, you can learn more about string formatting from &lt;a href='https://dfrieds.com/python/string-formatting' rel='nofollow'&gt;this tutorial&lt;/a&gt; on my website and the &lt;code&gt;range()&lt;/code&gt; function via &lt;a href='https://realpython.com/python-range/' rel='nofollow'&gt;this article&lt;/a&gt; on Real Python.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;age_ranges&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{0} - {1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="n"&gt;age_ranges&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;20 - 29&amp;#39;,
+ &amp;#39;30 - 39&amp;#39;,
+ &amp;#39;40 - 49&amp;#39;,
+ &amp;#39;50 - 59&amp;#39;,
+ &amp;#39;60 - 69&amp;#39;,
+ &amp;#39;70 - 79&amp;#39;,
+ &amp;#39;80 - 89&amp;#39;,
+ &amp;#39;90 - 99&amp;#39;]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create a variable &lt;code&gt;count_unique_age_ranges&lt;/code&gt; that's the count of items in the &lt;code&gt;age_ranges&lt;/code&gt; list above.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_ranges&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age_ranges&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;count_unique_age_ranges&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;8
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In order to bin our ages, we want to use the pandas &lt;code&gt;cut()&lt;/code&gt; method. &lt;/p&gt;
+&lt;p&gt;For the argument &lt;code&gt;x&lt;/code&gt;, we pass in the values in the &lt;code&gt;age&lt;/code&gt; column from our &lt;code&gt;df_ages&lt;/code&gt; DataFrame.&lt;/p&gt;
+&lt;p&gt;For the argument &lt;code&gt;bins&lt;/code&gt;, we pass in the number of bins we want to create designated by the variable &lt;code&gt;count_unique_age_ranges&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For the argument &lt;code&gt;labels&lt;/code&gt;, we specify the labels for our returned binned column which is the list we created above assigned to the variable &lt;code&gt;age_ranges&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With the returned output of the &lt;code&gt;cut()&lt;/code&gt; method, we'll create a new column in &lt;code&gt;df_ages&lt;/code&gt; called &lt;code&gt;age_range&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Since we want 8 bins originally from the &lt;code&gt;age&lt;/code&gt; column, this &lt;code&gt;cut()&lt;/code&gt; method knows to make bins with ages between 20-29, 30-39 and so forth. It just so happens that we designate the values in &lt;code&gt;age_range&lt;/code&gt; to be a similar looking string value. &lt;/p&gt;
+&lt;p&gt;The order of values we specify in the labels &lt;code&gt;age_ranges&lt;/code&gt; matter too! The first item, &lt;code&gt;20-29&lt;/code&gt;, corresponds to the first bin created that will contain age values in the range of 20-29, and so forth.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_range&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cut&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;bins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_ranges&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;age_ranges&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's preview the first few rows of &lt;code&gt;df_ages&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;age&lt;/th&gt;
+      &lt;th&gt;age_range&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;37&lt;/td&gt;
+      &lt;td&gt;30 - 39&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;37&lt;/td&gt;
+      &lt;td&gt;30 - 39&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;84&lt;/td&gt;
+      &lt;td&gt;80 - 89&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;99&lt;/td&gt;
+      &lt;td&gt;90 - 99&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;93&lt;/td&gt;
+      &lt;td&gt;90 - 99&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We can apply the &lt;code&gt;info()&lt;/code&gt; method to our DataFrame. Notice next to our new column called &lt;code&gt;age_range&lt;/code&gt; that the data type is a &lt;code&gt;category&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;class &amp;#39;pandas.core.frame.DataFrame&amp;#39;&amp;gt;
+RangeIndex: 40 entries, 0 to 39
+Data columns (total 2 columns):
+age          40 non-null int64
+age_range    40 non-null category
+dtypes: category(1), int64(1)
+memory usage: 504.0 bytes
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's create another new column to define someone's age denoted by decade. So, if you're 28, you're in your 20s and if you're 54, you're in your 50s. We'll later call this column &lt;code&gt;age_by_decade&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;First, let's create a list assigned to the variable &lt;code&gt;age_by_decade&lt;/code&gt; that creates list items by the decade names. We'll simply take each age from 20 to 100 with a step of 10 and simply append an &lt;em&gt;s&lt;/em&gt; to the end of each &lt;code&gt;age&lt;/code&gt; value. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;age_by_decade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{0}s&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="n"&gt;age_by_decade&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;20s&amp;#39;, &amp;#39;30s&amp;#39;, &amp;#39;40s&amp;#39;, &amp;#39;50s&amp;#39;, &amp;#39;60s&amp;#39;, &amp;#39;70s&amp;#39;, &amp;#39;80s&amp;#39;, &amp;#39;90s&amp;#39;]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create a variable &lt;code&gt;count_unique_age_decades&lt;/code&gt; that's the count of items in the &lt;code&gt;age_by_decade&lt;/code&gt; list above.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_decades&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age_by_decade&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;count_unique_age_decades&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;8
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's create a new column called &lt;code&gt;age_by_decade&lt;/code&gt; that's made using the pandas &lt;code&gt;cut()&lt;/code&gt; method. &lt;/p&gt;
+&lt;p&gt;For the argument &lt;code&gt;x&lt;/code&gt;, we pass in the values in the &lt;code&gt;age&lt;/code&gt; column from our &lt;code&gt;df_ages&lt;/code&gt; DataFrame.&lt;/p&gt;
+&lt;p&gt;For the argument &lt;code&gt;bins&lt;/code&gt;, we pass in the number of bins we want to create designated by the variable &lt;code&gt;count_unique_age_decades&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For the argument &lt;code&gt;labels&lt;/code&gt;, we specify the labels for our returned binned column which is the list we created above assigned to the variable &lt;code&gt;age_by_decade&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With the returned output of the &lt;code&gt;cut()&lt;/code&gt; method, we'll create a new column in &lt;code&gt;df_ages&lt;/code&gt; called &lt;code&gt;age_by_decade&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_by_decade&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cut&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;bins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_decades&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;age_by_decade&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Preview the first 5 rows of &lt;code&gt;df_ages&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;age&lt;/th&gt;
+      &lt;th&gt;age_range&lt;/th&gt;
+      &lt;th&gt;age_by_decade&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;37&lt;/td&gt;
+      &lt;td&gt;30 - 39&lt;/td&gt;
+      &lt;td&gt;30s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;37&lt;/td&gt;
+      &lt;td&gt;30 - 39&lt;/td&gt;
+      &lt;td&gt;30s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;84&lt;/td&gt;
+      &lt;td&gt;80 - 89&lt;/td&gt;
+      &lt;td&gt;80s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;99&lt;/td&gt;
+      &lt;td&gt;90 - 99&lt;/td&gt;
+      &lt;td&gt;90s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;93&lt;/td&gt;
+      &lt;td&gt;90 - 99&lt;/td&gt;
+      &lt;td&gt;90s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can learn more about the intricate details of the Pandas &lt;code&gt;cut()&lt;/code&gt; method on the &lt;a href='https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.cut.html' rel='nofollow'&gt;official documentation page&lt;/a&gt;.&lt;/p&gt;</content><category term="categorical data"></category><category term="python"></category><category term="pandas"></category><category term="bin"></category></entry><entry><title>Intro Logger Module</title><link href="https://dfrieds.com/python/logger-module" rel="alternate"></link><published>2018-09-23T15:00:00-07:00</published><updated>2018-09-23T15:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-09-23:/python/logger-module</id><summary type="html">&lt;p&gt;Introduction to the logger module to track the progress of your code and debug more easily&lt;/p&gt;</summary><content type="html">&lt;p&gt;Downsides of using the &lt;code&gt;print()&lt;/code&gt; function in a Python program:
 - Cannot easily see &lt;em&gt;when&lt;/em&gt; (date and time) the code was executed.
 - Cannot easily identify the &lt;em&gt;line number&lt;/em&gt; the print function was executed.
 - Cannot easily identify the &lt;em&gt;Python script&lt;/em&gt; in which the print function was executed. (Multiple Python scripts can be utilized in a Python program.)
@@ -1771,161 +2234,4 @@ Taylor received a 95 on the exam
 &lt;p&gt;Notice how we assigned the variable &lt;code&gt;name&lt;/code&gt; to the first item in each tuple and &lt;code&gt;grade&lt;/code&gt; to the second item. &lt;/p&gt;
 &lt;p&gt;Then, we printed a string that uses these two variables to explain their relevance.&lt;/p&gt;
 &lt;p&gt;The zip object (that we returned above) is an &lt;strong&gt;iterator&lt;/strong&gt;, which is any object that iterates through a sequence. &lt;/p&gt;
-&lt;p&gt;Iterators are similar to lists in some ways; but unlike lists, you can't use an index to select an element from an iterator.&lt;/p&gt;</content><category term="zip"></category></entry><entry><title>Dictionary Methods</title><link href="https://dfrieds.com/python/dictionary-methods" rel="alternate"></link><published>2018-03-26T20:00:00-07:00</published><updated>2018-03-26T20:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-03-26:/python/dictionary-methods</id><summary type="html">&lt;p&gt;Dictionary methods to retrive keys, values and loop over key value pairs&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dictionaries have methods that allow for modification of dictionary structures. I'll cover a few important ones in this tutorial.&lt;/p&gt;
-&lt;h4&gt;Access dictionary keys&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;keys()&lt;/code&gt; method outputs a &lt;code&gt;dict_keys&lt;/code&gt; object that presents a list of a dictionary's keys.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dan&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Dan Friedman&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;San Francisco&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;profession&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Data Scientist&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dan&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keys&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dict_keys([&amp;#39;name&amp;#39;, &amp;#39;location&amp;#39;, &amp;#39;profession&amp;#39;])
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Access dictionary values&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;values()&lt;/code&gt; method outputs a &lt;code&gt;dict_values&lt;/code&gt; object that presents a list of a dictionary's values.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dan&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dict_values([&amp;#39;Dan Friedman&amp;#39;, &amp;#39;San Francisco&amp;#39;, &amp;#39;Data Scientist&amp;#39;])
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Loop over key-value pairs&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;items()&lt;/code&gt; method outputs a &lt;code&gt;dict_items&lt;/code&gt; object that's a sequence of tuples in which each tuple is a key-value pair.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dan&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dict_items([(&amp;#39;name&amp;#39;, &amp;#39;Dan Friedman&amp;#39;), (&amp;#39;location&amp;#39;, &amp;#39;San Francisco&amp;#39;), (&amp;#39;profession&amp;#39;, &amp;#39;Data Scientist&amp;#39;)])
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can iterate over this &lt;code&gt;dict_items&lt;/code&gt; object in a &lt;code&gt;for&lt;/code&gt; loop.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;dan&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;A key of {0} corresponds to a value of {1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;A key of name corresponds to a value of Dan Friedman
-A key of location corresponds to a value of San Francisco
-A key of profession corresponds to a value of Data Scientist
-&lt;/pre&gt;&lt;/div&gt;</content><category term="dictionaries"></category></entry><entry><title>Dictionaries Basics</title><link href="https://dfrieds.com/python/dictionaries" rel="alternate"></link><published>2018-03-25T22:00:00-07:00</published><updated>2018-03-25T22:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-03-25:/python/dictionaries</id><summary type="html">&lt;p&gt;Dictionaries data structure in Python&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Dictionary Definition&lt;/h3&gt;
-&lt;p&gt;A &lt;strong&gt;dictionary&lt;/strong&gt; is a Python data structure. It contains a collection of indices called &lt;strong&gt;keys&lt;/strong&gt; and a collection of &lt;strong&gt;values&lt;/strong&gt; associated with each key.&lt;/p&gt;
-&lt;p&gt;In other programming languages, you may hear of a similar data structure to a Python dictionary called a &lt;strong&gt;hashtable&lt;/strong&gt;. The hashtable algorithm is used in the Python source code to implement a dictionary object.&lt;/p&gt;
-&lt;p&gt;The association of a key and a value is called a &lt;strong&gt;key-value pair&lt;/strong&gt; or an &lt;strong&gt;item&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;A simple dictionary example is a &lt;strong&gt;mapping&lt;/strong&gt; of English words as keys to Spanish words as values.&lt;/p&gt;
-&lt;p&gt;In a dictionary, each key is unique.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;english_to_spanish&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;one&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;uno&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In English, &lt;code&gt;one&lt;/code&gt; is equalivalent to &lt;code&gt;uno&lt;/code&gt; in Spanish.&lt;/p&gt;
-&lt;p&gt;We enclose a dictionary in curly braces.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;one&lt;/code&gt; is a key and &lt;code&gt;uno&lt;/code&gt; is its value.&lt;/p&gt;
-&lt;h4&gt;Add a key-value pair to a dictionary&lt;/h4&gt;
-&lt;p&gt;The code below adds a key of &lt;code&gt;two&lt;/code&gt; with a corresponding value of &lt;code&gt;dos&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;english_to_spanish&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;two&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dose&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;english_to_spanish&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{&amp;#39;one&amp;#39;: &amp;#39;uno&amp;#39;, &amp;#39;two&amp;#39;: &amp;#39;dose&amp;#39;}
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Modify an existing value in a dictionary&lt;/h4&gt;
-&lt;p&gt;Above, we spelled the Spanish equivalent of the number two incorrectly. We wrote &lt;em&gt;dose&lt;/em&gt; when it is spelled &lt;em&gt;dos&lt;/em&gt;. &lt;/p&gt;
-&lt;p&gt;Dictionaries are mutable so we can change this key's value in our structure. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;english_to_spanish&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;two&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dos&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;english_to_spanish&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{&amp;#39;one&amp;#39;: &amp;#39;uno&amp;#39;, &amp;#39;two&amp;#39;: &amp;#39;dos&amp;#39;}
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Lookup a key's corresponding value&lt;/h4&gt;
-&lt;p&gt;Dictionaries allow for easy lookup of values.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;english_to_spanish&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;one&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;uno&amp;#39;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Check if a key appears in a dictionary&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;in&lt;/code&gt; operator can be used to see if a key exists in a dictionary. If it does, we return &lt;code&gt;True&lt;/code&gt;, otherwise &lt;code&gt;False&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;two&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;english_to_spanish&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;True
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Counts for each unique item&lt;/h4&gt;
-&lt;p&gt;A common use case of dictionary is to count the occurences of unique elements in a list or similar data structure. The advantage of using a dictionary here is that we don't have to know ahead of time which letters appear in our list. Also, with a dictionary, we &lt;em&gt;only&lt;/em&gt; make keys for letters that do appear.&lt;/p&gt;
-&lt;p&gt;Below is a list of grades. We want to know the count of each of the grades. &lt;/p&gt;
-&lt;p&gt;Since each grade letter is unique, each can be a key in a dictionary with its value being the count of occurences.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;letter_grades&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;B+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;A&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;B+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;A&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;A+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;A-&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;A&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_each_grade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
-
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;letter&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;letter_grades&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;letter&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;count_of_each_grade&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;count_of_each_grade&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;letter&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;count_of_each_grade&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;letter&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_each_grade&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{&amp;#39;A&amp;#39;: 3, &amp;#39;A+&amp;#39;: 1, &amp;#39;A-&amp;#39;: 1, &amp;#39;B+&amp;#39;: 2}
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The dictionary &lt;code&gt;count_of_each_grade&lt;/code&gt; tells us there were 3 &lt;em&gt;A&lt;/em&gt; grades, 1 &lt;em&gt;A+&lt;/em&gt; and so forth.&lt;/p&gt;
-&lt;h4&gt;Data types allowed for keys and values&lt;/h4&gt;
-&lt;p&gt;In a Python dictionary, the keys must be immutable meaning they can't be changed in place. Therefore, keys can be a data type such as a:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;tuple (must contain only mutable objects)&lt;/li&gt;
-&lt;li&gt;int&lt;/li&gt;
-&lt;li&gt;float&lt;/li&gt;
-&lt;li&gt;string&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;A key &lt;em&gt;cannot&lt;/em&gt; be a list since lists are mutable and can be modified in place with index assignments or using methods like &lt;code&gt;append&lt;/code&gt; or &lt;code&gt;extend&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Values in a dictionary do not have to be unique. The values of a dictionary can be of &lt;em&gt;any&lt;/em&gt; data type.&lt;/p&gt;
-&lt;p&gt;Here's an example of an acceptable dictionary with various data types as keys and values.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;9.5&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;3.14&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;3.1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;A more complex example&lt;/h4&gt;
-&lt;p&gt;A common use case of dictionaries in software applications is to store personally identifiable information of users.&lt;/p&gt;
-&lt;p&gt;In a software application, there could be two users with the same first and last name. Therefore, each user is tyipcally assigned a unique id as an integer. &lt;/p&gt;
-&lt;p&gt;If we lookup a user's id, we may find information about them as seen below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;users&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Dan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;last_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Friedman&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dan@dfrieds.com&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
-        &lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;May&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;last_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Parker&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;aunt-may@gmail.com&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This example shows how a value can also be another dictionary of key-value pairs.&lt;/p&gt;</content><category term="dictionaries"></category></entry></feed>
+&lt;p&gt;Iterators are similar to lists in some ways; but unlike lists, you can't use an index to select an element from an iterator.&lt;/p&gt;</content><category term="zip"></category></entry></feed>
