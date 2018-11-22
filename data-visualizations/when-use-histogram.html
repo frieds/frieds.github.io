@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Jun 13&nbsp;&nbsp;&bull;&nbsp;&nbsp;10 min read
+        Jun 13&nbsp;&nbsp;&bull;&nbsp;&nbsp;8 min read
       </li>
       <li class="tagarticle">
         Key Terms:         histogram
@@ -165,8 +165,9 @@
   </header>
 
   <div class='article_content'>
-    <p><strong>Histograms</strong> visualize the shape of the distribution for a variable that contains numerical values. A histogram displays data using bars of different heights.</p>
+    <p><strong>Histograms</strong> visualize the shape of the distribution for a single continuous variable that contains numerical values. A histogram displays data using bars of different heights.</p>
 <p>Histograms are slightly similar to vertical bar charts; however, with histograms, numerical values are grouped into <strong>bins</strong>. For example, you could create a histogram of the mass (in pounds) of everyone at your university. In doing so, you'd need to create bins so that the mass of people from 40 pounds to 60 pounds is one bin, and 60 pounds to 80 pounds is another bin, and so forth. </p>
+<p>In histogram plots, the bars should should have no spacing between them.</p>
 <p>Similar to box plots, histograms visualize the distribution of a dataset. However, box plots are often more ideal for identifying outliers, if any exist.</p>
 <p>Below, I'll walk through a few examples below of when histograms are useful.</p>
 <h4>Import Modules</h4>
@@ -174,6 +175,11 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<p>Makes all figure sizes larger.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mf">11.5</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">)})</span>
 </pre></div>
 
 
@@ -285,11 +291,11 @@ Name: duration_minutes, dtype: float64
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s2">&quot;talk&quot;</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;duration_minutes&#39;</span><span class="p">],</span> <span class="n">kde</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">hist_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">91</span><span class="p">]})</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Histogram of Duration of Bike Rides (in Minutes)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Ride Duration (Minutes)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Frequency&#39;</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;ride duration [minutes]&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;frequency&#39;</span><span class="p">);</span>
 </pre></div>
 
 
-<p><img alt="png" src="when_use_histograms_files/when_use_histograms_18_0.png"></p>
+<p><img alt="png" src="when_use_histograms_files/when_use_histograms_20_0.png"></p>
 <h4>Interpretation of Bike Ride Duration Histogram</h4>
 <p>The highest occurence of bike rides are around 7 minutes.</p>
 <p>Most bike rides are just from 3 - 15 minutes which I consider fairly short rides. Therefore, I could theorize that bay area bike share members infrequently use these bikes for long strenous exercises riding long distances. Rather, they likely use bike rides for short distances.</p>
@@ -346,45 +352,16 @@ Name: age_years, dtype: float64
 
 <div class="highlight"><pre><span></span><span class="n">ax2</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">df_age_members</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">hist_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">80</span><span class="p">]})</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Histogram of Age of Bike Members&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Age (Years)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Frequency&#39;</span><span class="p">);</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;age [years]&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;frequency&#39;</span><span class="p">);</span>
 </pre></div>
 
 
-<p><img alt="png" src="when_use_histograms_files/when_use_histograms_34_0.png"></p>
+<p><img alt="png" src="when_use_histograms_files/when_use_histograms_36_0.png"></p>
 <h4>Interpretation of Histogram of Age of Bike Riders</h4>
 <p>The most frequent age group of riders is people aged 24 - 35 with a peak around 29.</p>
 <p>Past roughly 35 years of age, as people get older, they're less likely to be a member of the bay area bike share program. However, there's still several thousand members who are 55 years or older.</p>
 <p>There's a wide range of age of bike riders - from 18 to 60+.</p>
 <p>This histogram is positively skewed too. There's a long tail of bins with ever-decreasing frequency that extend to the right of our peak. </p>
-<h3>Example: Distribution of Count of Rides by Day of Week For Two User Types</h3>
-<p>As I mentioned earlier, there's two user types; one is called <em>Customer</em> and simply means you pay for individual rides. Another type is called a <em>Subscriber</em> (aka a member) in which you pay a monthly subscription fee that includes unlimited rides for rides less than 30 minutes. </p>
-<p>I'm curious of the differences in riding patterns of <em>Customers</em> and <em>Subscribers</em>. At what times of the day do they ride most often?</p>
-<p>I'll create a histogram for each user type to see their distribution of count of rides by hour of day.</p>
-<h4>Create new field to convert start_time into <code>datetime</code> type</h4>
-<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;start_time_datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">])</span>
-</pre></div>
-
-
-<h4>Plot Distribution of Count of Rides by Hour of Day for <em>Customer</em> Type</h4>
-<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;axes.grid&#39;</span> <span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
-<span class="n">ax3</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;user_type&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Customer&#39;</span><span class="p">][</span><span class="s1">&#39;start_time_datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="n">ax3</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Histogram of Count of Rides by Hour of Day for One-time Customers&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">)</span>
-<span class="n">ax3</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Hours past midnight&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span><span class="p">);</span>
-</pre></div>
-
-
-<p><img alt="png" src="when_use_histograms_files/when_use_histograms_42_0.png"></p>
-<h4>Plot Distribution of Count of Rides by Hour of Day for <em>Subscriber</em> Type</h4>
-<div class="highlight"><pre><span></span><span class="n">ax4</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;user_type&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Subscriber&#39;</span><span class="p">][</span><span class="s1">&#39;start_time_datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkmagenta&#39;</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="n">ax4</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Histogram of Count of Rides by Hour of Day for Subscribers&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">)</span>
-<span class="n">ax4</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Hours past midnight&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span><span class="p">);</span>
-</pre></div>
-
-
-<p><img alt="png" src="when_use_histograms_files/when_use_histograms_44_0.png"></p>
-<h4>Interpretation of Histograms on Rides by Hour of Day</h4>
-<p>These two histograms are very different! The most noticeable thing is that Subscribers tend to ride mostly around 8am (8 hours past midnight) and 5pm (17 hours past midnight). I hypothesize they're mainly using the bikes for commuting since those are standard commuting hours of the day! The Subscriber distribution is rouhgly bimodal too since we see two large peaks.</p>
-<p>The one-time Customers histogram reveals a different riding pattern. There is a single peak in which most customers ride around 5pm. Notwithstanding this peak, there's a somewhat uniform distribution of rides from 7am to 7pm. </p>
   </div>
 </section>
 
