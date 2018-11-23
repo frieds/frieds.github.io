@@ -1,5 +1,387 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-22T13:20:00-08:00</updated><entry><title>Categorical Data</title><link href="https://dfrieds.com/python/categorical-data-python-pandas" rel="alternate"></link><published>2018-11-22T13:20:00-08:00</published><updated>2018-11-22T13:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-22:/python/categorical-data-python-pandas</id><summary type="html">&lt;p&gt;Overview of categorical data and its use in pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;What is Categorical Data&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-23T09:15:00-08:00</updated><entry><title>Crosstabs</title><link href="https://dfrieds.com/python/crosstabs-python-pandas" rel="alternate"></link><published>2018-11-23T09:15:00-08:00</published><updated>2018-11-23T09:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/crosstabs-python-pandas</id><summary type="html">&lt;p&gt;Implementing a Crosstab in Python using pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Module&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Get Tips Dataset&lt;/h3&gt;
+&lt;p&gt;Let's get the &lt;code&gt;tips&lt;/code&gt; dataset from the &lt;code&gt;seaborn&lt;/code&gt; library and assign it to the DataFrame &lt;code&gt;df_tips&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_dataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tips&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Each row represents a unique dinner for a party and the following fields:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;column name&lt;/th&gt;
+&lt;th&gt;column description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;total_bill&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;financial amount of meal in U.S. dollars&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tip&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;financial amount of the meal's tip in U.S. dollars&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sex&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;gender of server&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;smoker&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;boolean to represent if server smokes or not&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;day&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;day of week&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;time&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;meal name (Lunch or Dinner)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;size&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;count of people eating meal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Preview the first 5 rows of &lt;code&gt;df_tips&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;total_bill&lt;/th&gt;
+      &lt;th&gt;tip&lt;/th&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;smoker&lt;/th&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;size&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;16.99&lt;/td&gt;
+      &lt;td&gt;1.01&lt;/td&gt;
+      &lt;td&gt;Female&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;10.34&lt;/td&gt;
+      &lt;td&gt;1.66&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;21.01&lt;/td&gt;
+      &lt;td&gt;3.50&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;23.68&lt;/td&gt;
+      &lt;td&gt;3.31&lt;/td&gt;
+      &lt;td&gt;Male&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;24.59&lt;/td&gt;
+      &lt;td&gt;3.61&lt;/td&gt;
+      &lt;td&gt;Female&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;Implement Crosstabs with Tips Dataset&lt;/h3&gt;
+&lt;p&gt;A &lt;strong&gt;crosstab&lt;/strong&gt; computes some aggregated metrics among two or more columns in a dataset - typically of categorical values. By default in pandas, &lt;code&gt;crosstab()&lt;/code&gt; computes an aggregated metric of a count (aka frequency).&lt;/p&gt;
+&lt;p&gt;Let's compute a simple crosstab across the &lt;code&gt;day&lt;/code&gt; and &lt;code&gt;sex&lt;/code&gt; column. We want our returned index to be the unique values from &lt;code&gt;day&lt;/code&gt; and our returned columns to be the unique values from &lt;code&gt;sex&lt;/code&gt;. Each of the values inside our table represent a count across the index and column. For example, 30 males received tips on Thursday.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;Male&lt;/th&gt;
+      &lt;th&gt;Female&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Thur&lt;/th&gt;
+      &lt;td&gt;30&lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Fri&lt;/th&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sat&lt;/th&gt;
+      &lt;td&gt;59&lt;/td&gt;
+      &lt;td&gt;28&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sun&lt;/th&gt;
+      &lt;td&gt;58&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our results of 30 matches what we see above.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sex==&amp;#39;Male&amp;#39; and day==&amp;#39;Thur&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;30
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument &lt;code&gt;margins&lt;/code&gt; to &lt;code&gt;True&lt;/code&gt;to get these totals.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;Male&lt;/th&gt;
+      &lt;th&gt;Female&lt;/th&gt;
+      &lt;th&gt;All&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Thur&lt;/th&gt;
+      &lt;td&gt;30&lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+      &lt;td&gt;62&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Fri&lt;/th&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;19&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sat&lt;/th&gt;
+      &lt;td&gt;59&lt;/td&gt;
+      &lt;td&gt;28&lt;/td&gt;
+      &lt;td&gt;87&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sun&lt;/th&gt;
+      &lt;td&gt;58&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;76&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;All&lt;/th&gt;
+      &lt;td&gt;157&lt;/td&gt;
+      &lt;td&gt;87&lt;/td&gt;
+      &lt;td&gt;244&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;For each row value, we can calculate what percentage it is of the row's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;index&lt;/code&gt; (since index applies to each row).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;Male&lt;/th&gt;
+      &lt;th&gt;Female&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Thur&lt;/th&gt;
+      &lt;td&gt;0.483871&lt;/td&gt;
+      &lt;td&gt;0.516129&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Fri&lt;/th&gt;
+      &lt;td&gt;0.526316&lt;/td&gt;
+      &lt;td&gt;0.473684&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sat&lt;/th&gt;
+      &lt;td&gt;0.678161&lt;/td&gt;
+      &lt;td&gt;0.321839&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sun&lt;/th&gt;
+      &lt;td&gt;0.763158&lt;/td&gt;
+      &lt;td&gt;0.236842&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;All&lt;/th&gt;
+      &lt;td&gt;0.643443&lt;/td&gt;
+      &lt;td&gt;0.356557&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;For each column value, we can calculate what percentage it is of the column's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;columns&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;columns&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;Male&lt;/th&gt;
+      &lt;th&gt;Female&lt;/th&gt;
+      &lt;th&gt;All&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Thur&lt;/th&gt;
+      &lt;td&gt;0.191083&lt;/td&gt;
+      &lt;td&gt;0.367816&lt;/td&gt;
+      &lt;td&gt;0.254098&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Fri&lt;/th&gt;
+      &lt;td&gt;0.063694&lt;/td&gt;
+      &lt;td&gt;0.103448&lt;/td&gt;
+      &lt;td&gt;0.077869&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sat&lt;/th&gt;
+      &lt;td&gt;0.375796&lt;/td&gt;
+      &lt;td&gt;0.321839&lt;/td&gt;
+      &lt;td&gt;0.356557&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sun&lt;/th&gt;
+      &lt;td&gt;0.369427&lt;/td&gt;
+      &lt;td&gt;0.206897&lt;/td&gt;
+      &lt;td&gt;0.311475&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;All the returned outputs above looks a bit strange due to the indices and column names. In my opinion, an easier-to-use format to read and utilize is to flatten this returned output. To do that, I'll chain the &lt;code&gt;reset_index()&lt;/code&gt; method to the end. This removes the &lt;code&gt;day&lt;/code&gt; as our index and instead makes it a column instead.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;columns&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;Male&lt;/th&gt;
+      &lt;th&gt;Female&lt;/th&gt;
+      &lt;th&gt;All&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Thur&lt;/td&gt;
+      &lt;td&gt;0.191083&lt;/td&gt;
+      &lt;td&gt;0.367816&lt;/td&gt;
+      &lt;td&gt;0.254098&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Fri&lt;/td&gt;
+      &lt;td&gt;0.063694&lt;/td&gt;
+      &lt;td&gt;0.103448&lt;/td&gt;
+      &lt;td&gt;0.077869&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Sat&lt;/td&gt;
+      &lt;td&gt;0.375796&lt;/td&gt;
+      &lt;td&gt;0.321839&lt;/td&gt;
+      &lt;td&gt;0.356557&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;0.369427&lt;/td&gt;
+      &lt;td&gt;0.206897&lt;/td&gt;
+      &lt;td&gt;0.311475&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;</content><category term="crosstabs"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Categorical Data</title><link href="https://dfrieds.com/python/categorical-data-python-pandas" rel="alternate"></link><published>2018-11-22T13:20:00-08:00</published><updated>2018-11-22T13:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-22:/python/categorical-data-python-pandas</id><summary type="html">&lt;p&gt;Overview of categorical data and its use in pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;What is Categorical Data&lt;/h3&gt;
 &lt;p&gt;Categorical data has a limited number of values to choose from for a field of data. Some examples of fields and values are:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -230,7 +612,7 @@ Name: response, dtype: int64
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;You can learn more about the differences in working with categorical data in Pandas from the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/categorical.html' rel='nofollow'&gt;official documentation page&lt;/a&gt;. &lt;/p&gt;</content><category term="categorical data"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Bin Values into Discrete Intervals</title><link href="https://dfrieds.com/python/bin-values-python-pandas" rel="alternate"></link><published>2018-11-20T14:00:00-08:00</published><updated>2018-11-20T14:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-20:/python/bin-values-python-pandas</id><summary type="html">&lt;p&gt;How to Bin Values in Python Pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;p&gt;You can learn more about the differences in working with categorical data in Pandas from the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/categorical.html' rel='nofollow'&gt;official documentation page&lt;/a&gt;. &lt;/p&gt;</content><category term="categorical data"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Bin Values into Discrete Intervals</title><link href="https://dfrieds.com/python/bin-values-python-pandas" rel="alternate"></link><published>2018-11-20T14:00:00-08:00</published><updated>2018-11-20T14:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-20:/python/bin-values-python-pandas</id><summary type="html">&lt;p&gt;How to Bin Values in Python with pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -2175,63 +2557,4 @@ Ride #3 started on 4-01-2018 and distance traveled was 6.2 miles
 
 
 &lt;p&gt;Notice how &lt;code&gt;Brown&lt;/code&gt; appears before &lt;code&gt;Williams&lt;/code&gt; since &lt;em&gt;b&lt;/em&gt; comes before &lt;em&gt;w&lt;/em&gt; in the alphabet.&lt;/p&gt;
-&lt;p&gt;This is just one example of how storing dictionary keys as tuples could be valuable for later data manipulation.&lt;/p&gt;</content><category term="tuples"></category></entry><entry><title>Zip Function</title><link href="https://dfrieds.com/python/zip-function" rel="alternate"></link><published>2018-04-01T14:00:00-07:00</published><updated>2018-04-01T14:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-01:/python/zip-function</id><summary type="html">&lt;p&gt;Python's zip function takes two related sequences and joins them together on their indexes into one data structure.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Sometimes, you may be passed two data separate data structures that have related information. &lt;/p&gt;
-&lt;p&gt;A simple example could be a list of grades on an exam in alphabetical order of students' names and another list of the student's names. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;grades&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;92&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;95&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Jill&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Emily&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Taylor&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Because these two are related, we ought to put them in a single data structure.&lt;/p&gt;
-&lt;p&gt;One way to easily do this is use the built-in Python function called &lt;code&gt;zip&lt;/code&gt;. This function takes two or more sequences and returns a list of tuples where each tuple contains one element from each sequence.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;zip at 0x1105f2dc8&amp;gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This result is a &lt;strong&gt;zip object&lt;/strong&gt;. We'll explain this concept later.&lt;/p&gt;
-&lt;p&gt;If we want to see our result in a list, we can use Python's built-in &lt;code&gt;list&lt;/code&gt; function and pass in this zip object.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[(&amp;#39;Jill&amp;#39;, 100), (&amp;#39;Emily&amp;#39;, 92), (&amp;#39;Taylor&amp;#39;, 95)]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We're returned a list of tuples in which each tuple contains the name of the student and their grade on the exam.&lt;/p&gt;
-&lt;p&gt;Alternatively, we can loop over the elements in our zip object.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name_grade&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name_grade&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(&amp;#39;Jill&amp;#39;, 100)
-(&amp;#39;Emily&amp;#39;, 92)
-(&amp;#39;Taylor&amp;#39;, 95)
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Each tuple contains the name of the student and their grade on the exam.&lt;/p&gt;
-&lt;p&gt;We can also use &lt;em&gt;tuple assignment&lt;/em&gt; in a &lt;code&gt;for&lt;/code&gt; loop to extract the elements in each tuple.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;grade&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{0} received a {1} on the exam&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;grade&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Jill received a 100 on the exam
-Emily received a 92 on the exam
-Taylor received a 95 on the exam
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Notice how we assigned the variable &lt;code&gt;name&lt;/code&gt; to the first item in each tuple and &lt;code&gt;grade&lt;/code&gt; to the second item. &lt;/p&gt;
-&lt;p&gt;Then, we printed a string that uses these two variables to explain their relevance.&lt;/p&gt;
-&lt;p&gt;The zip object (that we returned above) is an &lt;strong&gt;iterator&lt;/strong&gt;, which is any object that iterates through a sequence. &lt;/p&gt;
-&lt;p&gt;Iterators are similar to lists in some ways; but unlike lists, you can't use an index to select an element from an iterator.&lt;/p&gt;</content><category term="zip"></category></entry></feed>
+&lt;p&gt;This is just one example of how storing dictionary keys as tuples could be valuable for later data manipulation.&lt;/p&gt;</content><category term="tuples"></category></entry></feed>
