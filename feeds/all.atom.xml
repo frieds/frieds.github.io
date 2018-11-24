@@ -1,5 +1,911 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-23T20:00:00-08:00</updated><entry><title>Pivot Tables</title><link href="https://dfrieds.com/python/pivot-table-python-pandas" rel="alternate"></link><published>2018-11-23T20:00:00-08:00</published><updated>2018-11-23T20:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/pivot-table-python-pandas</id><summary type="html">&lt;p&gt;Implementing a pivot table in Python using pandas with simple examples&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Pivot tables&lt;/strong&gt; allow us to perform group-bys on columns and specify aggregate metrics for columns too. This data analysis technique is very popular in GUI spreadsheet applications and also works well in Python using pandas.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-24T11:15:00-08:00</updated><entry><title>Query/Filter Columns</title><link href="https://dfrieds.com/python/query-python-pandas" rel="alternate"></link><published>2018-11-24T11:15:00-08:00</published><updated>2018-11-24T11:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-24:/python/query-python-pandas</id><summary type="html">&lt;p&gt;Filter columns in a DataFrame using the query method&lt;/p&gt;</summary><content type="html">&lt;p&gt;In pandas, we can query the columns of DataFrames with boolean expressions using the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html' rel='nofollow'&gt;&lt;code&gt;query()&lt;/code&gt;&lt;/a&gt; method. I'll walk through lots of simple examples.&lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Get Flights Data&lt;/h3&gt;
+&lt;p&gt;Let's get the &lt;code&gt;flights&lt;/code&gt; dataset included in the &lt;code&gt;seaborn&lt;/code&gt; library and assign it to the DataFrame &lt;code&gt;df_flights&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_dataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;flights&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Preview the first few rows of &lt;code&gt;df_flights&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;Each row represents a month's flight history details. The &lt;code&gt;passengers&lt;/code&gt; column represents that total number of passengers that flew that month.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;118&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;March&lt;/td&gt;
+      &lt;td&gt;132&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;April&lt;/td&gt;
+      &lt;td&gt;129&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;May&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This dataset spans 1949 to 1960.&lt;/p&gt;
+&lt;h3&gt;Practice Filtering Rows and Columns&lt;/h3&gt;
+&lt;h4&gt;Query for rows in which year is equal to 1949&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;year==1949&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;118&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;March&lt;/td&gt;
+      &lt;td&gt;132&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;April&lt;/td&gt;
+      &lt;td&gt;129&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;May&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;June&lt;/td&gt;
+      &lt;td&gt;135&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;July&lt;/td&gt;
+      &lt;td&gt;148&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;August&lt;/td&gt;
+      &lt;td&gt;148&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;September&lt;/td&gt;
+      &lt;td&gt;136&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;9&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;October&lt;/td&gt;
+      &lt;td&gt;119&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;10&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;November&lt;/td&gt;
+      &lt;td&gt;104&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;11&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;December&lt;/td&gt;
+      &lt;td&gt;118&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Query for rows in which month is equal to January&lt;/h4&gt;
+&lt;p&gt;Notice how &lt;code&gt;'January'&lt;/code&gt; is in single quotes because it's a string.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month==&amp;#39;January&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;12&lt;/th&gt;
+      &lt;td&gt;1950&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;115&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;24&lt;/th&gt;
+      &lt;td&gt;1951&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;145&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;36&lt;/th&gt;
+      &lt;td&gt;1952&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;171&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;48&lt;/th&gt;
+      &lt;td&gt;1953&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;196&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;60&lt;/th&gt;
+      &lt;td&gt;1954&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;204&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;72&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;242&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;84&lt;/th&gt;
+      &lt;td&gt;1956&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;96&lt;/th&gt;
+      &lt;td&gt;1957&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;315&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;108&lt;/th&gt;
+      &lt;td&gt;1958&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;340&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;120&lt;/th&gt;
+      &lt;td&gt;1959&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;360&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;132&lt;/th&gt;
+      &lt;td&gt;1960&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;417&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Query for rows in which year is equal to 1949 and month is equal to January&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;year==1949 and month==&amp;#39;January&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Query for rows in which month is January or February&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month==[&amp;#39;January&amp;#39;, &amp;#39;February&amp;#39;]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;118&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;12&lt;/th&gt;
+      &lt;td&gt;1950&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;115&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;13&lt;/th&gt;
+      &lt;td&gt;1950&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;126&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;24&lt;/th&gt;
+      &lt;td&gt;1951&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;145&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;25&lt;/th&gt;
+      &lt;td&gt;1951&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;150&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;36&lt;/th&gt;
+      &lt;td&gt;1952&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;171&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;37&lt;/th&gt;
+      &lt;td&gt;1952&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;180&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;48&lt;/th&gt;
+      &lt;td&gt;1953&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;196&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;49&lt;/th&gt;
+      &lt;td&gt;1953&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;196&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;60&lt;/th&gt;
+      &lt;td&gt;1954&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;204&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;61&lt;/th&gt;
+      &lt;td&gt;1954&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;188&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;72&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;242&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;73&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;233&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;84&lt;/th&gt;
+      &lt;td&gt;1956&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;85&lt;/th&gt;
+      &lt;td&gt;1956&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;277&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;96&lt;/th&gt;
+      &lt;td&gt;1957&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;315&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;97&lt;/th&gt;
+      &lt;td&gt;1957&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;301&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;108&lt;/th&gt;
+      &lt;td&gt;1958&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;340&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;109&lt;/th&gt;
+      &lt;td&gt;1958&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;318&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;120&lt;/th&gt;
+      &lt;td&gt;1959&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;360&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;121&lt;/th&gt;
+      &lt;td&gt;1959&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;342&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;132&lt;/th&gt;
+      &lt;td&gt;1960&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;417&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;133&lt;/th&gt;
+      &lt;td&gt;1960&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;391&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Query for rows in which month equals January and year is less than 1955&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month==&amp;#39;January&amp;#39; and year&amp;lt;1955&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;12&lt;/th&gt;
+      &lt;td&gt;1950&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;115&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;24&lt;/th&gt;
+      &lt;td&gt;1951&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;145&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;36&lt;/th&gt;
+      &lt;td&gt;1952&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;171&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;48&lt;/th&gt;
+      &lt;td&gt;1953&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;196&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;60&lt;/th&gt;
+      &lt;td&gt;1954&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;204&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Query for rows in which month equals January and year is greater than 1955&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month==&amp;#39;January&amp;#39; and year&amp;gt;1955&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;84&lt;/th&gt;
+      &lt;td&gt;1956&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;96&lt;/th&gt;
+      &lt;td&gt;1957&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;315&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;108&lt;/th&gt;
+      &lt;td&gt;1958&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;340&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;120&lt;/th&gt;
+      &lt;td&gt;1959&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;360&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;132&lt;/th&gt;
+      &lt;td&gt;1960&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;417&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Query for rows in which month equals January and the year is not 1955&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month==&amp;#39;January&amp;#39; and year!=1955&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;12&lt;/th&gt;
+      &lt;td&gt;1950&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;115&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;24&lt;/th&gt;
+      &lt;td&gt;1951&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;145&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;36&lt;/th&gt;
+      &lt;td&gt;1952&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;171&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;48&lt;/th&gt;
+      &lt;td&gt;1953&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;196&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;60&lt;/th&gt;
+      &lt;td&gt;1954&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;204&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;84&lt;/th&gt;
+      &lt;td&gt;1956&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;96&lt;/th&gt;
+      &lt;td&gt;1957&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;315&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;108&lt;/th&gt;
+      &lt;td&gt;1958&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;340&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;120&lt;/th&gt;
+      &lt;td&gt;1959&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;360&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;132&lt;/th&gt;
+      &lt;td&gt;1960&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;417&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Query for rows in which month equals January or year equals 1955&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;month==&amp;#39;January&amp;#39; or year==1955&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;12&lt;/th&gt;
+      &lt;td&gt;1950&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;115&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;24&lt;/th&gt;
+      &lt;td&gt;1951&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;145&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;36&lt;/th&gt;
+      &lt;td&gt;1952&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;171&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;48&lt;/th&gt;
+      &lt;td&gt;1953&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;196&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;60&lt;/th&gt;
+      &lt;td&gt;1954&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;204&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;72&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;242&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;73&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;233&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;74&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;March&lt;/td&gt;
+      &lt;td&gt;267&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;75&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;April&lt;/td&gt;
+      &lt;td&gt;269&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;76&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;May&lt;/td&gt;
+      &lt;td&gt;270&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;77&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;June&lt;/td&gt;
+      &lt;td&gt;315&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;78&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;July&lt;/td&gt;
+      &lt;td&gt;364&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;79&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;August&lt;/td&gt;
+      &lt;td&gt;347&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;80&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;September&lt;/td&gt;
+      &lt;td&gt;312&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;81&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;October&lt;/td&gt;
+      &lt;td&gt;274&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;82&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;November&lt;/td&gt;
+      &lt;td&gt;237&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;83&lt;/th&gt;
+      &lt;td&gt;1955&lt;/td&gt;
+      &lt;td&gt;December&lt;/td&gt;
+      &lt;td&gt;278&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;84&lt;/th&gt;
+      &lt;td&gt;1956&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;96&lt;/th&gt;
+      &lt;td&gt;1957&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;315&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;108&lt;/th&gt;
+      &lt;td&gt;1958&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;340&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;120&lt;/th&gt;
+      &lt;td&gt;1959&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;360&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;132&lt;/th&gt;
+      &lt;td&gt;1960&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;417&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;</content><category term="query"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Pivot Tables</title><link href="https://dfrieds.com/python/pivot-table-python-pandas" rel="alternate"></link><published>2018-11-23T20:00:00-08:00</published><updated>2018-11-23T20:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/pivot-table-python-pandas</id><summary type="html">&lt;p&gt;Implementing a pivot table in Python using pandas with simple examples&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Pivot tables&lt;/strong&gt; allow us to perform group-bys on columns and specify aggregate metrics for columns too. This data analysis technique is very popular in GUI spreadsheet applications and also works well in Python using pandas.&lt;/p&gt;
 &lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
@@ -3492,145 +4398,4 @@ memory usage: 504.0 bytes
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;&lt;img alt="png" src="when_use_log_scale_files/when_use_log_scale_39_0.png"&gt;&lt;/p&gt;</content><category term="log scale"></category></entry><entry><title>Bar Plot using Pandas</title><link href="https://dfrieds.com/data-visualizations/bar-plot-python-pandas" rel="alternate"></link><published>2018-09-13T15:30:00-07:00</published><updated>2018-09-13T15:30:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-09-13:/data-visualizations/bar-plot-python-pandas</id><summary type="html">&lt;p&gt;Create simple bar plots in Python using the Pandas library based on the Seaborn tips dataset&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Bar charts are great at visualizing counts of categorical data. Let's try them out in Pandas Plot.&lt;/p&gt;
-&lt;h3&gt;Read in Tips Dataset from Seaborn Library&lt;/h3&gt;
-&lt;p&gt;This data contains logs of tips received by waiters and waittresses at a restaurant.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_dataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tips&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Preview the Data&lt;/h3&gt;
-&lt;p&gt;Preview the top 5 rows.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th&gt;total_bill&lt;/th&gt;
-      &lt;th&gt;tip&lt;/th&gt;
-      &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;smoker&lt;/th&gt;
-      &lt;th&gt;day&lt;/th&gt;
-      &lt;th&gt;time&lt;/th&gt;
-      &lt;th&gt;size&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;0&lt;/th&gt;
-      &lt;td&gt;16.99&lt;/td&gt;
-      &lt;td&gt;1.01&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;1&lt;/th&gt;
-      &lt;td&gt;10.34&lt;/td&gt;
-      &lt;td&gt;1.66&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;2&lt;/th&gt;
-      &lt;td&gt;21.01&lt;/td&gt;
-      &lt;td&gt;3.50&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;3&lt;/th&gt;
-      &lt;td&gt;23.68&lt;/td&gt;
-      &lt;td&gt;3.31&lt;/td&gt;
-      &lt;td&gt;Male&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;4&lt;/th&gt;
-      &lt;td&gt;24.59&lt;/td&gt;
-      &lt;td&gt;3.61&lt;/td&gt;
-      &lt;td&gt;Female&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
-      &lt;td&gt;Dinner&lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;p&gt;With this tips dataset, we have several categorical fields including sex, day, time and size (# of people seated at a table).&lt;/p&gt;
-&lt;h3&gt;Examine Count of Tips Recorded by Gender&lt;/h3&gt;
-&lt;p&gt;First, we can call the &lt;code&gt;value_counts&lt;/code&gt; method on the &lt;code&gt;sex&lt;/code&gt; (aka gender) field to see the count of unique values for each gender type.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Male      157
-Female     87
-Name: sex, dtype: int64
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The output above is a Pandas Series in which the index items are Male and Female and the values are the count of each index item in our original tips sex field.&lt;/p&gt;
-&lt;h3&gt;Visualize Count of Tips Recorded by Gender&lt;/h3&gt;
-&lt;p&gt;We access the &lt;em&gt;sex&lt;/em&gt; field, call the &lt;code&gt;value_counts&lt;/code&gt; method to get a count of unique values, then call the &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;bar&lt;/code&gt; (for bar chart) to the &lt;code&gt;kind&lt;/code&gt; argument.&lt;/p&gt;
-&lt;p&gt;Please see the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.plot.html' rel='nofollow'&gt;Pandas Series official documentation page&lt;/a&gt; for more information.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_17_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;In our tips dataset, we have more records of tips for male waiters than female waitresses.&lt;/p&gt;
-&lt;h4&gt;Style Plot&lt;/h4&gt;
-&lt;p&gt;Below, I apply several styles to our plot from above so it's easier to interpret.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;font_scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;rot&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Gender&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Count of People&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Count of People Who Received Tips by Gender&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.02&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_21_0.png"&gt;&lt;/p&gt;
-&lt;h3&gt;Visualize Count of Days for Recorded Tips&lt;/h3&gt;
-&lt;p&gt;We access the day field, call the value_counts method to get a count of unique values, then call the &lt;code&gt;plot&lt;/code&gt; method and pass in &lt;code&gt;bar&lt;/code&gt; (for bar chart) to the &lt;code&gt;kind&lt;/code&gt; argument.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_24_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Most of our tip records were on Saturday followed by Sunday. Only 4 days have recorded tips.&lt;/p&gt;
-&lt;h4&gt;Style Plot&lt;/h4&gt;
-&lt;p&gt;Below, I apply several styles to our plot from above so it's easier to interpret. I turn our vertical bar plot into a horizontal bar plot.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kind&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;barh&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Count of Tips Received&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Day of Week&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Count of Tips by Day of Week&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.02&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="bar_chart_pandas_files/bar_chart_pandas_28_0.png"&gt;&lt;/p&gt;</content><category term="bar plot"></category></entry></feed>
+&lt;p&gt;&lt;img alt="png" src="when_use_log_scale_files/when_use_log_scale_39_0.png"&gt;&lt;/p&gt;</content><category term="log scale"></category></entry></feed>
