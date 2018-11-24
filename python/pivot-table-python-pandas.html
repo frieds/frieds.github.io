@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;5 min read
+        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;9 min read
       </li>
       <li class="tagarticle">
         Key Terms:         pivot table,
@@ -245,26 +245,162 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>year
-1949    1520
-1950    1676
-1951    2042
-1952    2364
-1953    2700
-1954    2867
-1955    3408
-1956    3939
-1957    4421
-1958    4572
-1959    5140
-1960    5714
-Name: passengers, dtype: int64
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>total_passengers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1949</td>
+      <td>1520</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1950</td>
+      <td>1676</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1951</td>
+      <td>2042</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1952</td>
+      <td>2364</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1953</td>
+      <td>2700</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1954</td>
+      <td>2867</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1955</td>
+      <td>3408</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1956</td>
+      <td>3939</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1957</td>
+      <td>4421</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1958</td>
+      <td>4572</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1959</td>
+      <td>5140</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1960</td>
+      <td>5714</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>We can see above that every year, the total number of passengers that flew increased each year. However, this pivot table is poorly documented. It's unclear what the values in the series mean. To fix this, we'll cast this outputted series to a DataFrame and rename the aggregated column to be clearer.</p>
+<p>We used the <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.reset_index.html' rel='nofollow'><code>reset_index()</code></a> method to cast our series to a DataFrame with a new index and then chain the <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rename.html' rel='nofollow'><code>rename()</code></a> method to rename a column.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_flights</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;passengers&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;passengers&#39;</span><span class="p">:</span> <span class="s1">&#39;total_passengers&#39;</span><span class="p">})</span>
 </pre></div>
 
 
-<p>We can see above that every year, the total number of passengers that flew increased each year. </p>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>total_passengers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1949</td>
+      <td>1520</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1950</td>
+      <td>1676</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1951</td>
+      <td>2042</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1952</td>
+      <td>2364</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1953</td>
+      <td>2700</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1954</td>
+      <td>2867</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1955</td>
+      <td>3408</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1956</td>
+      <td>3939</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1957</td>
+      <td>4421</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1958</td>
+      <td>4572</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1959</td>
+      <td>5140</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1960</td>
+      <td>5714</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 <p>Now, I want to know the sum of passengers per month in the dataset. So, from pandas, we'll call the the <code>pivot_table()</code> method and include all of the same arguments above, except we'll set the <code>index</code> to be <code>month</code> since that's the column from <code>df_flights</code> that we want to appear as a unique value in each row.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_flights</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;passengers&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_flights</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;passengers&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;passengers&#39;</span><span class="p">:</span> <span class="s1">&#39;total_passengers&#39;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -287,48 +423,426 @@ Name: passengers, dtype: int64
 
 <p>Our results indicate most people flew in the summer months of July and August.</p>
 <p>Now, I want to know the average number of passengers that flew per month in the dataset. So, from pandas, we'll call the the <code>pivot_table()</code> method and include all of the same arguments from the previous operation, except we'll set the <code>aggfunc</code> to <code>mean</code> since we want to find the mean (aka average) number of passengers that flew in each unique month.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_flights</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;passengers&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_flights</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;passengers&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;passengers&#39;</span><span class="p">:</span> <span class="s1">&#39;average_number_of_passengers&#39;</span><span class="p">})</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>month
-January      241.750000
-February     235.000000
-March        270.166667
-April        267.083333
-May          271.833333
-June         311.666667
-July         351.333333
-August       351.083333
-September    302.416667
-October      266.583333
-November     232.833333
-December     261.833333
-Name: passengers, dtype: float64
-</pre></div>
-
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>month</th>
+      <th>average_number_of_passengers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>January</td>
+      <td>241.750000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>February</td>
+      <td>235.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>March</td>
+      <td>270.166667</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>April</td>
+      <td>267.083333</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>May</td>
+      <td>271.833333</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>June</td>
+      <td>311.666667</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>July</td>
+      <td>351.333333</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>August</td>
+      <td>351.083333</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>September</td>
+      <td>302.416667</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>October</td>
+      <td>266.583333</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>November</td>
+      <td>232.833333</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>December</td>
+      <td>261.833333</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <p>Now, I want to know the maximum number of passengers that flew per month in the dataset. So, from pandas, we'll call the the <code>pivot_table()</code> method and include all of the same arguments from the previous operation, except we'll set the <code>aggfunc</code> to <code>max</code> since we want to find the maximum (aka largest) number of passengers that flew in each unique month.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_flights</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;passengers&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_flights</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;passengers&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;passengers&#39;</span><span class="p">:</span> <span class="s1">&#39;median_number_of_passengers&#39;</span><span class="p">})</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>month
-January      223.0
-February     214.5
-March        251.5
-April        252.0
-May          252.0
-June         289.5
-July         333.0
-August       320.0
-September    285.5
-October      251.5
-November     220.0
-December     253.5
-Name: passengers, dtype: float64
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>month</th>
+      <th>median_number_of_passengers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>January</td>
+      <td>223.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>February</td>
+      <td>214.5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>March</td>
+      <td>251.5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>April</td>
+      <td>252.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>May</td>
+      <td>252.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>June</td>
+      <td>289.5</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>July</td>
+      <td>333.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>August</td>
+      <td>320.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>September</td>
+      <td>285.5</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>October</td>
+      <td>251.5</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>November</td>
+      <td>220.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>December</td>
+      <td>253.5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Example 2: Pivot Tables with Tips Dataset</h3>
+<h4>Get Data</h4>
+<p>Let's get the <code>tips</code> dataset included in the <code>seaborn</code> library and assign it to the DataFrame <code>df_tips</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;tips&#39;</span><span class="p">)</span>
 </pre></div>
 
+
+<p>Each row represents a unique meal for a party of people and the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>column name</th>
+<th>column description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>total_bill</code></td>
+<td>financial amount of meal in U.S. dollars</td>
+</tr>
+<tr>
+<td><code>tip</code></td>
+<td>financial amount of the meal's tip in U.S. dollars</td>
+</tr>
+<tr>
+<td><code>sex</code></td>
+<td>gender of server</td>
+</tr>
+<tr>
+<td><code>smoker</code></td>
+<td>boolean to represent if server smokes or not</td>
+</tr>
+<tr>
+<td><code>day</code></td>
+<td>day of week</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>meal name (Lunch or Dinner)</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>count of people eating meal</td>
+</tr>
+</tbody>
+</table>
+<p>Preview the first 5 rows of <code>df_tips</code>. </p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>sex</th>
+      <th>smoker</th>
+      <th>day</th>
+      <th>time</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.99</td>
+      <td>1.01</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.34</td>
+      <td>1.66</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.68</td>
+      <td>3.31</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.59</td>
+      <td>3.61</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4>Implement Pivot Tables</h4>
+<p>For each day and meal type, I'm curious what was the median bill amount. So, from pandas, we'll call the <code>pivot_table()</code> method and set the following arguments:</p>
+<ul>
+<li><code>data</code> to be our DataFrame <code>df_tips</code></li>
+<li><code>index</code> to be [<code>day</code>, <code>time</code>] since we want to aggregate by both of those columns so each row represents a unique type of meal for a day </li>
+<li><code>values</code> as <code>total_bill</code> since that's the column we want to apply some aggregate operation on</li>
+<li><code>aggfunc</code> to <code>median</code> since we want to find the median value in our <code>total_bill</code> column for each day's meal type in our dataset</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_tips</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;total_bill&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;total_bill&#39;</span><span class="p">:</span> <span class="s1">&#39;median_total_bill&#39;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>day</th>
+      <th>time</th>
+      <th>median_total_bill</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Thur</td>
+      <td>Lunch</td>
+      <td>16.000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Thur</td>
+      <td>Dinner</td>
+      <td>18.780</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Fri</td>
+      <td>Lunch</td>
+      <td>13.420</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Fri</td>
+      <td>Dinner</td>
+      <td>18.665</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Sat</td>
+      <td>Lunch</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Sat</td>
+      <td>Dinner</td>
+      <td>18.240</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Sun</td>
+      <td>Lunch</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>19.630</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Now, I'm curious for each day's meal type, what was the maximum tip value and median total bill. We can do this in one pivot table operation too! From pandas, we'll call the <code>pivot_table()</code> method and set the following arguments:</p>
+<ul>
+<li><code>data</code> to be our DataFrame <code>df_tips</code></li>
+<li><code>index</code> to be [<code>day</code>, <code>time</code>] since we want to aggregate by both of those columns so each row represents a unique type of meal for a day </li>
+<li><code>values</code> as [<code>total_bill</code>, <code>tip</code>] since we want to perform a specific aggregate operation on each of those columns</li>
+<li><code>aggfunc</code> to <code>{'total_bill': 'median', 'tip': 'max'}</code> since we want to find the median value for the <code>total_bill</code> column and the maximum value for the <code>tip</code> column</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_tips</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">,</span> <span class="s1">&#39;tip&#39;</span><span class="p">],</span> <span class="n">aggfunc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;total_bill&#39;</span><span class="p">:</span> <span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="s1">&#39;tip&#39;</span><span class="p">:</span> <span class="s1">&#39;max&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;tip&#39;</span><span class="p">:</span> <span class="s1">&#39;max_tip&#39;</span><span class="p">,</span> <span class="s1">&#39;total_bill&#39;</span><span class="p">:</span> <span class="s1">&#39;median_total_bill&#39;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>day</th>
+      <th>time</th>
+      <th>max_tip</th>
+      <th>median_total_bill</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Thur</td>
+      <td>Lunch</td>
+      <td>6.70</td>
+      <td>16.000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Thur</td>
+      <td>Dinner</td>
+      <td>3.00</td>
+      <td>18.780</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Fri</td>
+      <td>Lunch</td>
+      <td>3.48</td>
+      <td>13.420</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Fri</td>
+      <td>Dinner</td>
+      <td>4.73</td>
+      <td>18.665</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Sat</td>
+      <td>Dinner</td>
+      <td>10.00</td>
+      <td>18.240</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>6.50</td>
+      <td>19.630</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <h3>Aggregate Operations</h3>
 <p>Other aggregate operations you could perform with the following values to pass to the <code>aggfunc</code> argument are:</p>
