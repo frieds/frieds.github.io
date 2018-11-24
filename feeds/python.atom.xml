@@ -1,5 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-23T09:15:00-08:00</updated><entry><title>Crosstabs</title><link href="https://dfrieds.com/python/crosstabs-python-pandas" rel="alternate"></link><published>2018-11-23T09:15:00-08:00</published><updated>2018-11-23T09:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/crosstabs-python-pandas</id><summary type="html">&lt;p&gt;Implementing a Crosstab in Python using pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Module&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-23T12:00:00-08:00</updated><entry><title>Pivot Tables</title><link href="https://dfrieds.com/python/pivot-table-python-pandas" rel="alternate"></link><published>2018-11-23T12:00:00-08:00</published><updated>2018-11-23T12:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/pivot-table-python-pandas</id><summary type="html">&lt;p&gt;Implementing a pivot table in Python using pandas with simple examples&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Pivot tables&lt;/strong&gt; allow us to perform group-bys on columns and specify aggregate metrics for columns too. This data analysis technique is very popular in GUI spreadsheet applications and also works well in Python using pandas.&lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example 1: Pivot Tables with Flights Dataset&lt;/h3&gt;
+&lt;h4&gt;Get Data&lt;/h4&gt;
+&lt;p&gt;Let's get the &lt;code&gt;flights&lt;/code&gt; dataset included in the &lt;code&gt;seaborn&lt;/code&gt; library and assign it to the DataFrame &lt;code&gt;df_flights&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_dataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;flights&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Preview the first few rows of &lt;code&gt;df_flights&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;Each row represents a month's flight history details. The &lt;code&gt;passengers&lt;/code&gt; column represents that total number of passengers that flew that month.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;year&lt;/th&gt;
+      &lt;th&gt;month&lt;/th&gt;
+      &lt;th&gt;passengers&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;January&lt;/td&gt;
+      &lt;td&gt;112&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;February&lt;/td&gt;
+      &lt;td&gt;118&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;March&lt;/td&gt;
+      &lt;td&gt;132&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;April&lt;/td&gt;
+      &lt;td&gt;129&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;1949&lt;/td&gt;
+      &lt;td&gt;May&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Implement Pivot Tables&lt;/h4&gt;
+&lt;p&gt;I want to know the sum of passengers that flew on planes for each year. So, from pandas, we'll call the &lt;code&gt;pivot_table()&lt;/code&gt; method and set the following arguments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;data&lt;/code&gt; to be our DataFrame &lt;code&gt;df_flights&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;year&lt;/code&gt; since that's the column from &lt;code&gt;df_flights&lt;/code&gt; that we want to appear as a unique value in each row&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as &lt;code&gt;passengers&lt;/code&gt; since that's the column we want to apply some aggregate operation on&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;sum&lt;/code&gt; since we want to sum (aka total) up all values in &lt;code&gt;passengers&lt;/code&gt; that belong to a unique year&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;year
+1949    1520
+1950    1676
+1951    2042
+1952    2364
+1953    2700
+1954    2867
+1955    3408
+1956    3939
+1957    4421
+1958    4572
+1959    5140
+1960    5714
+Name: passengers, dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can see above that every year, the total number of passengers that flew increased each year. &lt;/p&gt;
+&lt;p&gt;Now, I want to know the sum of passengers per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments above, except we'll set the &lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;month&lt;/code&gt; since that's the column from &lt;code&gt;df_flights&lt;/code&gt; that we want to appear as a unique value in each row.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;month
+January      2901
+February     2820
+March        3242
+April        3205
+May          3262
+June         3740
+July         4216
+August       4213
+September    3629
+October      3199
+November     2794
+December     3142
+Name: passengers, dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Our results indicate most people flew in the summer months of July and August.&lt;/p&gt;
+&lt;p&gt;Now, I want to know the average number of passengers that flew per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments from the previous operation, except we'll set the &lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;mean&lt;/code&gt; since we want to find the mean (aka average) number of passengers that flew in each unique month.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;month
+January      241.750000
+February     235.000000
+March        270.166667
+April        267.083333
+May          271.833333
+June         311.666667
+July         351.333333
+August       351.083333
+September    302.416667
+October      266.583333
+November     232.833333
+December     261.833333
+Name: passengers, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, I want to know the maximum number of passengers that flew per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments from the previous operation, except we'll set the &lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;max&lt;/code&gt; since we want to find the maximum (aka largest) number of passengers that flew in each unique month.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;median&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;month
+January      223.0
+February     214.5
+March        251.5
+April        252.0
+May          252.0
+June         289.5
+July         333.0
+August       320.0
+September    285.5
+October      251.5
+November     220.0
+December     253.5
+Name: passengers, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Aggregate Operations&lt;/h3&gt;
+&lt;p&gt;Other aggregate operations you could perform with the following values to pass to the &lt;code&gt;aggfunc&lt;/code&gt; argument are:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;value&lt;/th&gt;
+&lt;th&gt;description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sum&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;summation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mean&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;average&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;count&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;count&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;max&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;maximum value&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;min&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;minimum value&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;np.std&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;standard deviation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;median&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;median&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</content><category term="pivot table"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Crosstabs</title><link href="https://dfrieds.com/python/crosstabs-python-pandas" rel="alternate"></link><published>2018-11-23T09:15:00-08:00</published><updated>2018-11-23T09:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/crosstabs-python-pandas</id><summary type="html">&lt;p&gt;Implementing a Crosstab in Python using pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Module&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -125,7 +327,7 @@
 &lt;/div&gt;
 
 &lt;h3&gt;Implement Crosstabs with Tips Dataset&lt;/h3&gt;
-&lt;p&gt;A &lt;strong&gt;crosstab&lt;/strong&gt; computes some aggregated metrics among two or more columns in a dataset - typically of categorical values. By default in pandas, &lt;code&gt;crosstab()&lt;/code&gt; computes an aggregated metric of a count (aka frequency).&lt;/p&gt;
+&lt;p&gt;A &lt;strong&gt;crosstab&lt;/strong&gt; computes some aggregated metrics among two or more columns in a dataset that contain categorical values. By default in pandas, &lt;code&gt;crosstab()&lt;/code&gt; computes an aggregated metric of a count (aka frequency).&lt;/p&gt;
 &lt;p&gt;Let's compute a simple crosstab across the &lt;code&gt;day&lt;/code&gt; and &lt;code&gt;sex&lt;/code&gt; column. We want our returned index to be the unique values from &lt;code&gt;day&lt;/code&gt; and our returned columns to be the unique values from &lt;code&gt;sex&lt;/code&gt;. Each of the values inside our table represent a count across the index and column. For example, 30 males received tips on Thursday.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -170,6 +372,7 @@
 &lt;/table&gt;
 &lt;/div&gt;
 
+&lt;p&gt;In this example, we passed in two columns from our DataFrame. However, one nice feature of &lt;code&gt;crosstab()&lt;/code&gt; is you don't need the data to be in a DataFrame. For the &lt;code&gt;index&lt;/code&gt; and &lt;code&gt;columns&lt;/code&gt; arguments, you can pass in two numpy arrays.&lt;/p&gt;
 &lt;p&gt;Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our results of 30 matches what we see above.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sex==&amp;#39;Male&amp;#39; and day==&amp;#39;Thur&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -381,7 +584,9 @@
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;/div&gt;</content><category term="crosstabs"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Categorical Data</title><link href="https://dfrieds.com/python/categorical-data-python-pandas" rel="alternate"></link><published>2018-11-22T13:20:00-08:00</published><updated>2018-11-22T13:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-22:/python/categorical-data-python-pandas</id><summary type="html">&lt;p&gt;Overview of categorical data and its use in pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;What is Categorical Data&lt;/h3&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can learn more about details of using &lt;code&gt;crosstab()&lt;/code&gt; from the official pandas &lt;a href='https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.crosstab.html' rel='nofollow'&gt;documentation page&lt;/a&gt;.&lt;/p&gt;</content><category term="crosstabs"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Categorical Data</title><link href="https://dfrieds.com/python/categorical-data-python-pandas" rel="alternate"></link><published>2018-11-22T13:20:00-08:00</published><updated>2018-11-22T13:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-22:/python/categorical-data-python-pandas</id><summary type="html">&lt;p&gt;Overview of categorical data and its use in pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;What is Categorical Data&lt;/h3&gt;
 &lt;p&gt;Categorical data has a limited number of values to choose from for a field of data. Some examples of fields and values are:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -2358,203 +2563,4 @@ Wall time: 4.25 s
 Ride #3 started on 4-01-2018 and distance traveled was 6.2 miles
 Ride #3 started on 4-01-2018 and distance traveled was 6.2 miles
 Ride #3 started on 4-01-2018 and distance traveled was 6.2 miles
-&lt;/pre&gt;&lt;/div&gt;</content><category term="strings"></category></entry><entry><title>Tuple Basics</title><link href="https://dfrieds.com/python/tuples" rel="alternate"></link><published>2018-04-01T14:00:00-07:00</published><updated>2018-04-01T14:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-01:/python/tuples</id><summary type="html">&lt;p&gt;A tuple is a Python data structure used to store data that shouldn't be modified later.&lt;/p&gt;</summary><content type="html">&lt;p&gt;A tuple is a sequence of values. The values can be of any type. &lt;/p&gt;
-&lt;p&gt;A major difference between tuples and other data structures is that tuples are immutable. Because tuples are immutable, you can't modify elements inside of a tuple. &lt;/p&gt;
-&lt;p&gt;This immutability could be helpful if you're writing a program and want to store data that shouldn't be changed. Possible examples include:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;credit card information&lt;/li&gt;
-&lt;li&gt;birthdate&lt;/li&gt;
-&lt;li&gt;birth name&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;How to create a tuple&lt;/h4&gt;
-&lt;p&gt;Tuples are comma-separated values. It is common to enclose tuples in parentheses.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;To create a tuple with a single element, you have to include a final comma.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;more_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can verify this data structure is a tuple by passing it into the &lt;code&gt;type()&lt;/code&gt; function.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;more_data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;tuple
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Retrieve a tuple element via indexing&lt;/h4&gt;
-&lt;p&gt;Similar to lists, tuples can be indexed by integers using the bracket operator.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can retrieve the number &lt;code&gt;3&lt;/code&gt; in our &lt;code&gt;values&lt;/code&gt; tuple at index position of &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; 
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;3
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Tuple assignment&lt;/h4&gt;
-&lt;p&gt;In Python, you can call the &lt;code&gt;split()&lt;/code&gt; method on a string and pass in an argument to split the string on. &lt;/p&gt;
-&lt;p&gt;We can split the string below, my email address, in half on the &lt;code&gt;@&lt;/code&gt; symbol since there is just one in the string.&lt;/p&gt;
-&lt;p&gt;This operation returns a list.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dan@dfrieds.com&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;@&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;dan&amp;#39;, &amp;#39;dfrieds.com&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can also assign &lt;code&gt;username&lt;/code&gt; and &lt;code&gt;domain&lt;/code&gt;, comma-separated tuple elements, to be the result of the two elements after the split operation.&lt;/p&gt;
-&lt;p&gt;In doing this, the number of variables on the left and the number of variables on the right side of our expression have to be the same. In this case, it's 2.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;domain&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dan@dfrieds.com&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;@&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;dan&amp;#39;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;domain&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;dfrieds.com&amp;#39;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The right side of this assignment returned a list. However, in Python, for tuple assignments, it could work with any kind of sequence such as a string, list or tuple.&lt;/p&gt;
-&lt;h4&gt;Tuples as return values of functions&lt;/h4&gt;
-&lt;p&gt;A function can only return one value. However, that one value could be a tuple - similar to the effect of returning multiple values.&lt;/p&gt;
-&lt;p&gt;For example, we can use a built-in Python function called &lt;code&gt;divmod&lt;/code&gt; to compute the quotient and remainder at the same time.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;9/2 = 4.5
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;However, you can also express that result as a quotient of 4 with a remainder of 1.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;divmod&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(4, 1)
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can store this result as a tuple.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tuple_result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;divmod&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tuple_result&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(4, 1)
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Or we can use tuple assignment to store the elements separately as variables.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;quotient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;remainder&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;divmod&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;quotient&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;4
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;remainder&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can also write our own function that returns a tuple of two elements.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_quotient_and_remainder&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dividend&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;divisor&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="sd"&gt;    Given two numbers, calculate the quotient and remainder &lt;/span&gt;
-
-&lt;span class="sd"&gt;    :param dividend: a number meant to be the numerator of our equation&lt;/span&gt;
-&lt;span class="sd"&gt;    :param divisor: a number meant to be the denominator of our equation&lt;/span&gt;
-&lt;span class="sd"&gt;    :returns: quotient, remainder: a tuple of our (quotient, remainder) &lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class="n"&gt;quotient&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dividend&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;divisor&lt;/span&gt;
-    &lt;span class="n"&gt;remainder&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dividend&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;divisor&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;quotient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;remainder&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;calculate_quotient_and_remainder&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(4, 1)
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Tuples and dictionaries&lt;/h4&gt;
-&lt;h5&gt;&lt;code&gt;items&lt;/code&gt; method for dictionaries&lt;/h5&gt;
-&lt;p&gt;Tuples can be useful as dictionary keys too since they can hold multiple values. &lt;/p&gt;
-&lt;p&gt;You cannot use a Python list for a dictionary key.&lt;/p&gt;
-&lt;p&gt;Let's say you had a record of friends and their phone numbers in a program stored as a dictionary.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;friends&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Eric Friedman&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;5555555555&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Dan Friedman&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;5551231234&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Dictionaries have a method called &lt;code&gt;items&lt;/code&gt; that returns a sequence of tuples, where each tuple is a key-value pair.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;friends&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dict_items([(&amp;#39;Eric Friedman&amp;#39;, 5555555555), (&amp;#39;Dan Friedman&amp;#39;, 5551231234)])
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This result is a &lt;code&gt;dict_items&lt;/code&gt; object, which is an iterator that iterates the key-value pairs.&lt;/p&gt;
-&lt;h5&gt;Sort dictionary keys&lt;/h5&gt;
-&lt;p&gt;A common operation you may want to do with a record of contact names and phone numbers is to sort names by either first name or last name.&lt;/p&gt;
-&lt;p&gt;We can use the Python built-in &lt;code&gt;sorted&lt;/code&gt; method to sort our keys alphabetically. Because of our string names, this will default to sort by first names alphabetically.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;sorted&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;friends&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[(&amp;#39;Dan Friedman&amp;#39;, 5551231234), (&amp;#39;Eric Friedman&amp;#39;, 5555555555)]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Notice how &lt;code&gt;Dan&lt;/code&gt; appears now before &lt;code&gt;Eric&lt;/code&gt; and we're returned a new list of tuples.&lt;/p&gt;
-&lt;p&gt;However, what if we want to sort by last name? &lt;/p&gt;
-&lt;p&gt;There may be a complex way to do it given our current data structure. However, we could simply represent the keys of our dictionary as (first_name, last_name) - a tuple. This may help us more easily sort by first or last name later on.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;new_friends&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Dan&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Williams&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="mi"&gt;5555555555&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Jamie&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Brown&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="mi"&gt;5551231234&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This code below sorts the friends last names alphabetically from A to Z.&lt;/p&gt;
-&lt;p&gt;We pass a value to the second argument of &lt;code&gt;sorted&lt;/code&gt; that's a small anonymous function; this function uses the &lt;code&gt;lambda&lt;/code&gt; keyword so we sort by the value at index &lt;code&gt;1&lt;/code&gt; in each dictionary key - in which index &lt;code&gt;1&lt;/code&gt; is the last name of each tuple.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;sorted&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new_friends&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[((&amp;#39;Jamie&amp;#39;, &amp;#39;Brown&amp;#39;), 5551231234), ((&amp;#39;Dan&amp;#39;, &amp;#39;Williams&amp;#39;), 5555555555)]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Notice how &lt;code&gt;Brown&lt;/code&gt; appears before &lt;code&gt;Williams&lt;/code&gt; since &lt;em&gt;b&lt;/em&gt; comes before &lt;em&gt;w&lt;/em&gt; in the alphabet.&lt;/p&gt;
-&lt;p&gt;This is just one example of how storing dictionary keys as tuples could be valuable for later data manipulation.&lt;/p&gt;</content><category term="tuples"></category></entry></feed>
+&lt;/pre&gt;&lt;/div&gt;</content><category term="strings"></category></entry></feed>
