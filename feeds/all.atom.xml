@@ -69,9 +69,9 @@
 &lt;p&gt;I want to know the sum of passengers that flew on planes for each year. So, from pandas, we'll call the &lt;code&gt;pivot_table()&lt;/code&gt; method and set the following arguments:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;data&lt;/code&gt; to be our DataFrame &lt;code&gt;df_flights&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;year&lt;/code&gt; since that's the column from &lt;code&gt;df_flights&lt;/code&gt; that we want to appear as a unique value in each row&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as &lt;code&gt;passengers&lt;/code&gt; since that's the column we want to apply some aggregate operation on&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;sum&lt;/code&gt; since we want to sum (aka total) up all values in &lt;code&gt;passengers&lt;/code&gt; that belong to a unique year&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;'year'&lt;/code&gt; since that's the column from &lt;code&gt;df_flights&lt;/code&gt; that we want to appear as a unique value in each row&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as &lt;code&gt;'passengers'&lt;/code&gt; since that's the column we want to apply some aggregate operation on&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;'sum'&lt;/code&gt; since we want to sum (aka total) up all values in &lt;code&gt;passengers&lt;/code&gt; that belong to a unique year&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -94,8 +94,8 @@ Name: passengers, dtype: int64
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;We can see above that every year, the total number of passengers that flew increased each year. However, this pivot table is poorly documented. It's unclear what the values in the series mean. To fix this, we'll cast this outputted series to a DataFrame and rename the aggregated column to be clearer.&lt;/p&gt;
-&lt;p&gt;We used the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.reset_index.html' rel='nofollow'&gt;&lt;code&gt;reset_index()&lt;/code&gt;&lt;/a&gt; method to cast our series to a DataFrame with a new index and then chain the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rename.html' rel='nofollow'&gt;&lt;code&gt;rename()&lt;/code&gt;&lt;/a&gt; method to rename a column.&lt;/p&gt;
+&lt;p&gt;We can see above that every year, the total number of passengers that flew increased each year. However, this pivot table is poorly documented. There's no column name or label for the values on the right. To fix this, we'll cast this outputted series to a DataFrame and rename the aggregated column to be clearer.&lt;/p&gt;
+&lt;p&gt;Use the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.reset_index.html' rel='nofollow'&gt;&lt;code&gt;reset_index()&lt;/code&gt;&lt;/a&gt; method to cast our series to a DataFrame with a new index and then chain the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rename.html' rel='nofollow'&gt;&lt;code&gt;rename()&lt;/code&gt;&lt;/a&gt; method to rename the &lt;code&gt;'passengers'&lt;/code&gt; column to &lt;code&gt;'total_passengers'&lt;/code&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -174,7 +174,7 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Now, I want to know the sum of passengers per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments above, except we'll set the &lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;month&lt;/code&gt; since that's the column from &lt;code&gt;df_flights&lt;/code&gt; that we want to appear as a unique value in each row.&lt;/p&gt;
+&lt;p&gt;Now, I want to know the sum of passengers that flew per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments above, except we'll set the &lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;'month'&lt;/code&gt; since that's the column from &lt;code&gt;df_flights&lt;/code&gt; that we want to appear as a unique value in each row.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -254,8 +254,9 @@ Name: passengers, dtype: int64
 &lt;/div&gt;
 
 &lt;p&gt;Our results indicate most people flew in the summer months of July and August.&lt;/p&gt;
-&lt;p&gt;Now, I want to know the average number of passengers that flew per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments from the previous operation, except we'll set the &lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;mean&lt;/code&gt; since we want to find the mean (aka average) number of passengers that flew in each unique month.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;average_number_of_passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;p&gt;Now, I want to know the average number of passengers that flew per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments from the previous operation, except we'll set the &lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;'mean'&lt;/code&gt; since we want to find the mean (aka average) number of passengers that flew in each unique month.&lt;/p&gt;
+&lt;p&gt;I also rounded the &lt;code&gt;average_number_of_passengers&lt;/code&gt; column to 1 decimal place so it's easier to read.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;average_number_of_passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -272,69 +273,69 @@ Name: passengers, dtype: int64
     &lt;tr&gt;
       &lt;th&gt;0&lt;/th&gt;
       &lt;td&gt;January&lt;/td&gt;
-      &lt;td&gt;241.750000&lt;/td&gt;
+      &lt;td&gt;241.8&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;1&lt;/th&gt;
       &lt;td&gt;February&lt;/td&gt;
-      &lt;td&gt;235.000000&lt;/td&gt;
+      &lt;td&gt;235.0&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;2&lt;/th&gt;
       &lt;td&gt;March&lt;/td&gt;
-      &lt;td&gt;270.166667&lt;/td&gt;
+      &lt;td&gt;270.2&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;3&lt;/th&gt;
       &lt;td&gt;April&lt;/td&gt;
-      &lt;td&gt;267.083333&lt;/td&gt;
+      &lt;td&gt;267.1&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;4&lt;/th&gt;
       &lt;td&gt;May&lt;/td&gt;
-      &lt;td&gt;271.833333&lt;/td&gt;
+      &lt;td&gt;271.8&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;5&lt;/th&gt;
       &lt;td&gt;June&lt;/td&gt;
-      &lt;td&gt;311.666667&lt;/td&gt;
+      &lt;td&gt;311.7&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;6&lt;/th&gt;
       &lt;td&gt;July&lt;/td&gt;
-      &lt;td&gt;351.333333&lt;/td&gt;
+      &lt;td&gt;351.3&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;7&lt;/th&gt;
       &lt;td&gt;August&lt;/td&gt;
-      &lt;td&gt;351.083333&lt;/td&gt;
+      &lt;td&gt;351.1&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;8&lt;/th&gt;
       &lt;td&gt;September&lt;/td&gt;
-      &lt;td&gt;302.416667&lt;/td&gt;
+      &lt;td&gt;302.4&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;9&lt;/th&gt;
       &lt;td&gt;October&lt;/td&gt;
-      &lt;td&gt;266.583333&lt;/td&gt;
+      &lt;td&gt;266.6&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;10&lt;/th&gt;
       &lt;td&gt;November&lt;/td&gt;
-      &lt;td&gt;232.833333&lt;/td&gt;
+      &lt;td&gt;232.8&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;11&lt;/th&gt;
       &lt;td&gt;December&lt;/td&gt;
-      &lt;td&gt;261.833333&lt;/td&gt;
+      &lt;td&gt;261.8&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Now, I want to know the maximum number of passengers that flew per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments from the previous operation, except we'll set the &lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;max&lt;/code&gt; since we want to find the maximum (aka largest) number of passengers that flew in each unique month.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;median&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;median_number_of_passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;p&gt;Now, I want to know the maximum number of passengers that flew per month in the dataset. So, from pandas, we'll call the the &lt;code&gt;pivot_table()&lt;/code&gt; method and include all of the same arguments from the previous operation, except we'll set the &lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;'max'&lt;/code&gt; since we want to find the maximum (aka largest) number of passengers that flew in each unique month.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_flights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;month&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;max&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;max_number_of_passengers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -344,69 +345,69 @@ Name: passengers, dtype: int64
     &lt;tr style="text-align: right;"&gt;
       &lt;th&gt;&lt;/th&gt;
       &lt;th&gt;month&lt;/th&gt;
-      &lt;th&gt;median_number_of_passengers&lt;/th&gt;
+      &lt;th&gt;max_number_of_passengers&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
     &lt;tr&gt;
       &lt;th&gt;0&lt;/th&gt;
       &lt;td&gt;January&lt;/td&gt;
-      &lt;td&gt;223.0&lt;/td&gt;
+      &lt;td&gt;417&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;1&lt;/th&gt;
       &lt;td&gt;February&lt;/td&gt;
-      &lt;td&gt;214.5&lt;/td&gt;
+      &lt;td&gt;391&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;2&lt;/th&gt;
       &lt;td&gt;March&lt;/td&gt;
-      &lt;td&gt;251.5&lt;/td&gt;
+      &lt;td&gt;419&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;3&lt;/th&gt;
       &lt;td&gt;April&lt;/td&gt;
-      &lt;td&gt;252.0&lt;/td&gt;
+      &lt;td&gt;461&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;4&lt;/th&gt;
       &lt;td&gt;May&lt;/td&gt;
-      &lt;td&gt;252.0&lt;/td&gt;
+      &lt;td&gt;472&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;5&lt;/th&gt;
       &lt;td&gt;June&lt;/td&gt;
-      &lt;td&gt;289.5&lt;/td&gt;
+      &lt;td&gt;535&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;6&lt;/th&gt;
       &lt;td&gt;July&lt;/td&gt;
-      &lt;td&gt;333.0&lt;/td&gt;
+      &lt;td&gt;622&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;7&lt;/th&gt;
       &lt;td&gt;August&lt;/td&gt;
-      &lt;td&gt;320.0&lt;/td&gt;
+      &lt;td&gt;606&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;8&lt;/th&gt;
       &lt;td&gt;September&lt;/td&gt;
-      &lt;td&gt;285.5&lt;/td&gt;
+      &lt;td&gt;508&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;9&lt;/th&gt;
       &lt;td&gt;October&lt;/td&gt;
-      &lt;td&gt;251.5&lt;/td&gt;
+      &lt;td&gt;461&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;10&lt;/th&gt;
       &lt;td&gt;November&lt;/td&gt;
-      &lt;td&gt;220.0&lt;/td&gt;
+      &lt;td&gt;390&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;11&lt;/th&gt;
       &lt;td&gt;December&lt;/td&gt;
-      &lt;td&gt;253.5&lt;/td&gt;
+      &lt;td&gt;432&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
@@ -419,7 +420,7 @@ Name: passengers, dtype: int64
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Each row represents a unique meal for a party of people and the following fields:&lt;/p&gt;
+&lt;p&gt;Each row represents a unique meal for a party of people at a restaurant; the dataset includes the following fields:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -533,12 +534,12 @@ Name: passengers, dtype: int64
 &lt;/div&gt;
 
 &lt;h4&gt;Implement Pivot Tables&lt;/h4&gt;
-&lt;p&gt;For each day and meal type, I'm curious what was the median bill amount. So, from pandas, we'll call the &lt;code&gt;pivot_table()&lt;/code&gt; method and set the following arguments:&lt;/p&gt;
+&lt;p&gt;For each day and meal type, I'm curious to find the median bill amount. So, from pandas, we'll call the &lt;code&gt;pivot_table()&lt;/code&gt; method and set the following arguments:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;data&lt;/code&gt; to be our DataFrame &lt;code&gt;df_tips&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be [&lt;code&gt;day&lt;/code&gt;, &lt;code&gt;time&lt;/code&gt;] since we want to aggregate by both of those columns so each row represents a unique type of meal for a day &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as &lt;code&gt;total_bill&lt;/code&gt; since that's the column we want to apply some aggregate operation on&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;median&lt;/code&gt; since we want to find the median value in our &lt;code&gt;total_bill&lt;/code&gt; column for each day's meal type in our dataset&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;['day', 'time']&lt;/code&gt; since we want to aggregate by both of those columns so each row represents a unique type of meal for a day &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as &lt;code&gt;'total_bill'&lt;/code&gt; since that's the column we want to apply some aggregate operation on&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;'median'&lt;/code&gt; since we want to find the median value in our &lt;code&gt;total_bill&lt;/code&gt; column for each day's meal type in our dataset&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;median&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;median_total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -610,8 +611,8 @@ Name: passengers, dtype: int64
 &lt;p&gt;Now, I'm curious for each day's meal type, what was the maximum tip value and median total bill. We can do this in one pivot table operation too! From pandas, we'll call the &lt;code&gt;pivot_table()&lt;/code&gt; method and set the following arguments:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;data&lt;/code&gt; to be our DataFrame &lt;code&gt;df_tips&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be [&lt;code&gt;day&lt;/code&gt;, &lt;code&gt;time&lt;/code&gt;] since we want to aggregate by both of those columns so each row represents a unique type of meal for a day &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as [&lt;code&gt;total_bill&lt;/code&gt;, &lt;code&gt;tip&lt;/code&gt;] since we want to perform a specific aggregate operation on each of those columns&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;['day', 'time']&lt;/code&gt; since we want to aggregate by both of those columns so each row represents a unique type of meal for a day &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as &lt;code&gt;['total_bill', 'tip']&lt;/code&gt; since we want to perform a specific aggregate operation on each of those columns&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;{'total_bill': 'median', 'tip': 'max'}&lt;/code&gt; since we want to find the median value for the &lt;code&gt;total_bill&lt;/code&gt; column and the maximum value for the &lt;code&gt;tip&lt;/code&gt; column&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;median&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;max&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;max_tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;median_total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
@@ -676,6 +677,266 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
+&lt;p&gt;Now, I'm curious for each day's meal type, what was the total amount of tips and total bills. I'd also like a new row for the sum of the &lt;code&gt;total_tip&lt;/code&gt; and &lt;code&gt;total_bill&lt;/code&gt; columns. To implement this, from pandas, we'll call the &lt;code&gt;pivot_table()&lt;/code&gt; method and set the following arguments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;data&lt;/code&gt; to be our DataFrame &lt;code&gt;df_tips&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;index&lt;/code&gt; to be &lt;code&gt;['day', 'time']&lt;/code&gt; since we want to aggregate by both of those columns so each row represents a unique type of meal for a day &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;values&lt;/code&gt; as &lt;code&gt;['total_bill', 'tip']&lt;/code&gt; since we want to perform a specific aggregate operation on each of those columns&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;aggfunc&lt;/code&gt; to &lt;code&gt;'sum'&lt;/code&gt; since we want to find the sum (aka total) for each column passed to the &lt;code&gt;values&lt;/code&gt; argument&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;margins&lt;/code&gt; to &lt;code&gt;True&lt;/code&gt; to add up the numerical columns&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;total_tip&lt;/th&gt;
+      &lt;th&gt;total_bill&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Thur&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;168.83&lt;/td&gt;
+      &lt;td&gt;1077.55&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Thur&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;3.00&lt;/td&gt;
+      &lt;td&gt;18.78&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Fri&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;16.68&lt;/td&gt;
+      &lt;td&gt;89.92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Fri&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;35.28&lt;/td&gt;
+      &lt;td&gt;235.96&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;Sat&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Sat&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;260.40&lt;/td&gt;
+      &lt;td&gt;1778.40&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;247.39&lt;/td&gt;
+      &lt;td&gt;1627.16&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;All&lt;/td&gt;
+      &lt;td&gt;&lt;/td&gt;
+      &lt;td&gt;731.58&lt;/td&gt;
+      &lt;td&gt;4827.77&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instead of the final row saying &lt;code&gt;All&lt;/code&gt;, I'd prefer it say &lt;code&gt;total&lt;/code&gt;. We can perform this change in our &lt;code&gt;pivot_table()&lt;/code&gt; method. Utilize all the same code as above and we'll add a new argument called &lt;code&gt;margins_name&lt;/code&gt; and set it to &lt;code&gt;'total'&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;total_tip&lt;/th&gt;
+      &lt;th&gt;total_bill&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Thur&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;168.83&lt;/td&gt;
+      &lt;td&gt;1077.55&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Thur&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;3.00&lt;/td&gt;
+      &lt;td&gt;18.78&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Fri&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;16.68&lt;/td&gt;
+      &lt;td&gt;89.92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Fri&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;35.28&lt;/td&gt;
+      &lt;td&gt;235.96&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;Sat&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Sat&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;260.40&lt;/td&gt;
+      &lt;td&gt;1778.40&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;247.39&lt;/td&gt;
+      &lt;td&gt;1627.16&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;total&lt;/td&gt;
+      &lt;td&gt;&lt;/td&gt;
+      &lt;td&gt;731.58&lt;/td&gt;
+      &lt;td&gt;4827.77&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I don't like how in the output above, we see &lt;code&gt;NaN&lt;/code&gt; values in our columns. Those essentially mean there were no numerical values to perform in the aggregate operations so we're left with a value of &lt;code&gt;NaN&lt;/code&gt; equivalent to not a number. We can fill in those &lt;code&gt;NaN&lt;/code&gt; values with &lt;code&gt;0&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We can perform this change in our &lt;code&gt;pivot_table()&lt;/code&gt; method. Utilize all the same code as above and we'll add a new argument called &lt;code&gt;fill_value&lt;/code&gt; and set it to &lt;code&gt;0&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fill_value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;total_tip&lt;/th&gt;
+      &lt;th&gt;total_bill&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Thur&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;168.83&lt;/td&gt;
+      &lt;td&gt;1077.55&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Thur&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;3.00&lt;/td&gt;
+      &lt;td&gt;18.78&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Fri&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;16.68&lt;/td&gt;
+      &lt;td&gt;89.92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Fri&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;35.28&lt;/td&gt;
+      &lt;td&gt;235.96&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;Sat&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Sat&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;260.40&lt;/td&gt;
+      &lt;td&gt;1778.40&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Lunch&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Sun&lt;/td&gt;
+      &lt;td&gt;Dinner&lt;/td&gt;
+      &lt;td&gt;247.39&lt;/td&gt;
+      &lt;td&gt;1627.16&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;total&lt;/td&gt;
+      &lt;td&gt;&lt;/td&gt;
+      &lt;td&gt;731.58&lt;/td&gt;
+      &lt;td&gt;4827.77&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;h3&gt;Aggregate Operations&lt;/h3&gt;
 &lt;p&gt;Other aggregate operations you could perform with the following values to pass to the &lt;code&gt;aggfunc&lt;/code&gt; argument are:&lt;/p&gt;
 &lt;table&gt;
@@ -687,35 +948,36 @@ Name: passengers, dtype: int64
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;sum&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;'sum'&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;summation&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;mean&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;'mean'&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;average&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;count&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;'count'&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;count&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;max&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;'max'&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;maximum value&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;min&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;'min'&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;minimum value&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;np.std&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;'np.std'&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;standard deviation&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;median&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;'median'&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;median&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;</content><category term="pivot table"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Crosstabs</title><link href="https://dfrieds.com/python/crosstabs-python-pandas" rel="alternate"></link><published>2018-11-23T09:15:00-08:00</published><updated>2018-11-23T09:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/crosstabs-python-pandas</id><summary type="html">&lt;p&gt;Implementing a Crosstab in Python using pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Module&lt;/h3&gt;
+&lt;/table&gt;</content><category term="pivot table"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Crosstabs</title><link href="https://dfrieds.com/python/crosstabs-python-pandas" rel="alternate"></link><published>2018-11-23T09:15:00-08:00</published><updated>2018-11-23T09:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-23:/python/crosstabs-python-pandas</id><summary type="html">&lt;p&gt;Implementing a Crosstab in Python using pandas&lt;/p&gt;</summary><content type="html">&lt;p&gt;A &lt;strong&gt;crosstab&lt;/strong&gt; computes aggregated metrics among two or more columns in a dataset that contains categorical values. &lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -727,7 +989,7 @@ Name: passengers, dtype: int64
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Each row represents a unique meal for a party of people and the following fields:&lt;/p&gt;
+&lt;p&gt;Each row represents a unique meal at a restaurant for a party of people; the dataset contains the following fields:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -772,6 +1034,19 @@ Name: passengers, dtype: int64
 
 
 &lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
 &lt;table border="1" class="dataframe"&gt;
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
@@ -841,13 +1116,26 @@ Name: passengers, dtype: int64
 &lt;/div&gt;
 
 &lt;h3&gt;Implement Crosstabs with Tips Dataset&lt;/h3&gt;
-&lt;p&gt;A &lt;strong&gt;crosstab&lt;/strong&gt; computes some aggregated metrics among two or more columns in a dataset that contain categorical values. By default in pandas, &lt;code&gt;crosstab()&lt;/code&gt; computes an aggregated metric of a count (aka frequency).&lt;/p&gt;
-&lt;p&gt;Let's compute a simple crosstab across the &lt;code&gt;day&lt;/code&gt; and &lt;code&gt;sex&lt;/code&gt; column. We want our returned index to be the unique values from &lt;code&gt;day&lt;/code&gt; and our returned columns to be the unique values from &lt;code&gt;sex&lt;/code&gt;. Each of the values inside our table represent a count across the index and column. For example, 30 males received tips on Thursday.&lt;/p&gt;
+&lt;p&gt;Let's compute a simple crosstab across the &lt;code&gt;day&lt;/code&gt; and &lt;code&gt;sex&lt;/code&gt; column. We want our returned index to be the unique values from &lt;code&gt;day&lt;/code&gt; and our returned columns to be the unique values from &lt;code&gt;sex&lt;/code&gt;. By default in pandas, &lt;code&gt;crosstab()&lt;/code&gt; computes an aggregated metric of a count (aka frequency).&lt;/p&gt;
+&lt;p&gt;So, each of the values inside our table represent a count across the index and column. For example, males served 30 unique groups across all Thursdays in our dataset.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
 &lt;table border="1" class="dataframe"&gt;
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
@@ -887,7 +1175,7 @@ Name: passengers, dtype: int64
 &lt;/div&gt;
 
 &lt;p&gt;In this example, we passed in two columns from our DataFrame. However, one nice feature of &lt;code&gt;crosstab()&lt;/code&gt; is you don't need the data to be in a DataFrame. For the &lt;code&gt;index&lt;/code&gt; and &lt;code&gt;columns&lt;/code&gt; arguments, you can pass in two numpy arrays.&lt;/p&gt;
-&lt;p&gt;Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our results of 30 matches what we see above.&lt;/p&gt;
+&lt;p&gt;Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our query below matches the 30 number we see above.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sex==&amp;#39;Male&amp;#39; and day==&amp;#39;Thur&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -896,12 +1184,25 @@ Name: passengers, dtype: int64
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument &lt;code&gt;margins&lt;/code&gt; to &lt;code&gt;True&lt;/code&gt;to get these totals.&lt;/p&gt;
+&lt;p&gt;For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument &lt;code&gt;margins&lt;/code&gt; to &lt;code&gt;True&lt;/code&gt; to get these totals.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
 &lt;table border="1" class="dataframe"&gt;
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
@@ -952,12 +1253,94 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;For each row value, we can calculate what percentage it is of the row's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;index&lt;/code&gt; (since index applies to each row).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;In &lt;code&gt;crosstab()&lt;/code&gt;, we can also rename the &lt;code&gt;All&lt;/code&gt; column. First, use all the same arguments from above. Then, set the argument &lt;code&gt;margins_name&lt;/code&gt; to &lt;code&gt;total_meals_served&lt;/code&gt; .&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;total_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;Male&lt;/th&gt;
+      &lt;th&gt;Female&lt;/th&gt;
+      &lt;th&gt;total_meals_served&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Thur&lt;/th&gt;
+      &lt;td&gt;30&lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+      &lt;td&gt;62&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Fri&lt;/th&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;19&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sat&lt;/th&gt;
+      &lt;td&gt;59&lt;/td&gt;
+      &lt;td&gt;28&lt;/td&gt;
+      &lt;td&gt;87&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sun&lt;/th&gt;
+      &lt;td&gt;58&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+      &lt;td&gt;76&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;total_meals_served&lt;/th&gt;
+      &lt;td&gt;157&lt;/td&gt;
+      &lt;td&gt;87&lt;/td&gt;
+      &lt;td&gt;244&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;For each cell value, we can calculate what percentage it is of the row's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;'index'&lt;/code&gt; (since index applies to each row).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;proportion_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
 &lt;table border="1" class="dataframe"&gt;
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
@@ -993,7 +1376,7 @@ Name: passengers, dtype: int64
       &lt;td&gt;0.236842&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;th&gt;All&lt;/th&gt;
+      &lt;th&gt;proportion_meals_served&lt;/th&gt;
       &lt;td&gt;0.643443&lt;/td&gt;
       &lt;td&gt;0.356557&lt;/td&gt;
     &lt;/tr&gt;
@@ -1001,19 +1384,32 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;For each column value, we can calculate what percentage it is of the column's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;columns&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;columns&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;For each cell value, we can calculate what percentage it is of the column's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;'columns'&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;proportion_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;columns&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
 &lt;table border="1" class="dataframe"&gt;
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
       &lt;th&gt;sex&lt;/th&gt;
       &lt;th&gt;Male&lt;/th&gt;
       &lt;th&gt;Female&lt;/th&gt;
-      &lt;th&gt;All&lt;/th&gt;
+      &lt;th&gt;proportion_meals_served&lt;/th&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;day&lt;/th&gt;
@@ -1043,55 +1439,6 @@ Name: passengers, dtype: int64
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;Sun&lt;/th&gt;
-      &lt;td&gt;0.369427&lt;/td&gt;
-      &lt;td&gt;0.206897&lt;/td&gt;
-      &lt;td&gt;0.311475&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;p&gt;All the returned outputs above looks a bit strange due to the indices and column names. In my opinion, an easier-to-use format to read and utilize is to flatten this returned output. To do that, I'll chain the &lt;code&gt;reset_index()&lt;/code&gt; method to the end. This removes the &lt;code&gt;day&lt;/code&gt; as our index and instead makes it a column instead.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;columns&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;day&lt;/th&gt;
-      &lt;th&gt;Male&lt;/th&gt;
-      &lt;th&gt;Female&lt;/th&gt;
-      &lt;th&gt;All&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;0&lt;/th&gt;
-      &lt;td&gt;Thur&lt;/td&gt;
-      &lt;td&gt;0.191083&lt;/td&gt;
-      &lt;td&gt;0.367816&lt;/td&gt;
-      &lt;td&gt;0.254098&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;1&lt;/th&gt;
-      &lt;td&gt;Fri&lt;/td&gt;
-      &lt;td&gt;0.063694&lt;/td&gt;
-      &lt;td&gt;0.103448&lt;/td&gt;
-      &lt;td&gt;0.077869&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;2&lt;/th&gt;
-      &lt;td&gt;Sat&lt;/td&gt;
-      &lt;td&gt;0.375796&lt;/td&gt;
-      &lt;td&gt;0.321839&lt;/td&gt;
-      &lt;td&gt;0.356557&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;3&lt;/th&gt;
-      &lt;td&gt;Sun&lt;/td&gt;
       &lt;td&gt;0.369427&lt;/td&gt;
       &lt;td&gt;0.206897&lt;/td&gt;
       &lt;td&gt;0.311475&lt;/td&gt;

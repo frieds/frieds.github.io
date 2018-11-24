@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;5 min read
+        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;6 min read
       </li>
       <li class="tagarticle">
         Key Terms:         crosstabs,
@@ -167,7 +167,8 @@
   </header>
 
   <div class='article_content'>
-    <h3>Import Module</h3>
+    <p>A <strong>crosstab</strong> computes aggregated metrics among two or more columns in a dataset that contains categorical values. </p>
+<h3>Import Modules</h3>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 </pre></div>
@@ -179,7 +180,7 @@
 </pre></div>
 
 
-<p>Each row represents a unique meal for a party of people and the following fields:</p>
+<p>Each row represents a unique meal at a restaurant for a party of people; the dataset contains the following fields:</p>
 <table>
 <thead>
 <tr>
@@ -224,6 +225,19 @@
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -293,13 +307,26 @@
 </div>
 
 <h3>Implement Crosstabs with Tips Dataset</h3>
-<p>A <strong>crosstab</strong> computes some aggregated metrics among two or more columns in a dataset that contain categorical values. By default in pandas, <code>crosstab()</code> computes an aggregated metric of a count (aka frequency).</p>
-<p>Let's compute a simple crosstab across the <code>day</code> and <code>sex</code> column. We want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from <code>sex</code>. Each of the values inside our table represent a count across the index and column. For example, 30 males received tips on Thursday.</p>
+<p>Let's compute a simple crosstab across the <code>day</code> and <code>sex</code> column. We want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from <code>sex</code>. By default in pandas, <code>crosstab()</code> computes an aggregated metric of a count (aka frequency).</p>
+<p>So, each of the values inside our table represent a count across the index and column. For example, males served 30 unique groups across all Thursdays in our dataset.</p>
 <div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">])</span>
 </pre></div>
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -339,7 +366,7 @@
 </div>
 
 <p>In this example, we passed in two columns from our DataFrame. However, one nice feature of <code>crosstab()</code> is you don't need the data to be in a DataFrame. For the <code>index</code> and <code>columns</code> arguments, you can pass in two numpy arrays.</p>
-<p>Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our results of 30 matches what we see above.</p>
+<p>Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our query below matches the 30 number we see above.</p>
 <div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">))</span>
 </pre></div>
 
@@ -348,12 +375,25 @@
 </pre></div>
 
 
-<p>For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument <code>margins</code> to <code>True</code>to get these totals.</p>
+<p>For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument <code>margins</code> to <code>True</code> to get these totals.</p>
 <div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -404,12 +444,94 @@
 </table>
 </div>
 
-<p>For each row value, we can calculate what percentage it is of the row's total. To do that, set the <code>normalize</code> argument to <code>index</code> (since index applies to each row).</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+<p>In <code>crosstab()</code>, we can also rename the <code>All</code> column. First, use all the same arguments from above. Then, set the argument <code>margins_name</code> to <code>total_meals_served</code> .</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;total_meals_served&quot;</span><span class="p">)</span>
 </pre></div>
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sex</th>
+      <th>Male</th>
+      <th>Female</th>
+      <th>total_meals_served</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+      <td>76</td>
+    </tr>
+    <tr>
+      <th>total_meals_served</th>
+      <td>157</td>
+      <td>87</td>
+      <td>244</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>For each cell value, we can calculate what percentage it is of the row's total. To do that, set the <code>normalize</code> argument to <code>'index'</code> (since index applies to each row).</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -445,7 +567,7 @@
       <td>0.236842</td>
     </tr>
     <tr>
-      <th>All</th>
+      <th>proportion_meals_served</th>
       <td>0.643443</td>
       <td>0.356557</td>
     </tr>
@@ -453,19 +575,32 @@
 </table>
 </div>
 
-<p>For each column value, we can calculate what percentage it is of the column's total. To do that, set the <code>normalize</code> argument to <code>columns</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+<p>For each cell value, we can calculate what percentage it is of the column's total. To do that, set the <code>normalize</code> argument to <code>'columns'</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>sex</th>
       <th>Male</th>
       <th>Female</th>
-      <th>All</th>
+      <th>proportion_meals_served</th>
     </tr>
     <tr>
       <th>day</th>
@@ -495,55 +630,6 @@
     </tr>
     <tr>
       <th>Sun</th>
-      <td>0.369427</td>
-      <td>0.206897</td>
-      <td>0.311475</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<p>All the returned outputs above looks a bit strange due to the indices and column names. In my opinion, an easier-to-use format to read and utilize is to flatten this returned output. To do that, I'll chain the <code>reset_index()</code> method to the end. This removes the <code>day</code> as our index and instead makes it a column instead.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-</pre></div>
-
-
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>sex</th>
-      <th>day</th>
-      <th>Male</th>
-      <th>Female</th>
-      <th>All</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Thur</td>
-      <td>0.191083</td>
-      <td>0.367816</td>
-      <td>0.254098</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Fri</td>
-      <td>0.063694</td>
-      <td>0.103448</td>
-      <td>0.077869</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Sat</td>
-      <td>0.375796</td>
-      <td>0.321839</td>
-      <td>0.356557</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Sun</td>
       <td>0.369427</td>
       <td>0.206897</td>
       <td>0.311475</td>
