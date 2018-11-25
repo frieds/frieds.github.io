@@ -1,5 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-24T17:20:00-08:00</updated><entry><title>Pivot without aggregation</title><link href="https://dfrieds.com/python/pivot-python-pandas" rel="alternate"></link><published>2018-11-24T17:20:00-08:00</published><updated>2018-11-24T17:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-24:/python/pivot-python-pandas</id><summary type="html">&lt;p&gt;Pivot a pandas DataFrame without applying an aggregate operation&lt;/p&gt;</summary><content type="html">&lt;p&gt;In pandas, we can pivot our DataFrame without applying an aggregate operation. This pivot is helpful to see our data in a different way - often turning a format with many rows that would require scrolling into a new format with fewer rows but perhaps more columns.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-25T07:40:00-08:00</updated><entry><title>Melt - "unpivot" a DataFrame</title><link href="https://dfrieds.com/python/melt-unpivot-python-pandas" rel="alternate"></link><published>2018-11-25T07:40:00-08:00</published><updated>2018-11-25T07:40:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-25:/python/melt-unpivot-python-pandas</id><summary type="html">&lt;p&gt;Unpivot a pandas DataFrame (Python) using the melt() method&lt;/p&gt;</summary><content type="html">&lt;p&gt;In pandas, we can "unpivot" a DataFrame - turn it from a &lt;em&gt;wide&lt;/em&gt; format - many columns - to a &lt;em&gt;long&lt;/em&gt; format - few columns but many rows. We can accomplish this with the pandas &lt;a href='https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.melt.html' rel='nofollow'&gt;&lt;code&gt;melt()&lt;/code&gt;&lt;/a&gt; method. This can be helpful for further analysis of our new unpivoted DataFrame.&lt;/p&gt;
+&lt;h3&gt;Import Module&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example: Pivot Tesla Car Acceleration Details&lt;/h3&gt;
+&lt;p&gt;Here is fictional acceleration tests for three popular Tesla car models. In order to verify acceleration of the cars, I figured a third-party may make three &lt;em&gt;runs&lt;/em&gt; to test the three models alongside one another.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tesla Model S P100D&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tesla Model X P100D&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;three&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tesla Model 3 AWD Dual Motor&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;s_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.51&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.54&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;x_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.92&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.91&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.93&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;three_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;three&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;3.33&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;3.31&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;3.35&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s_data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x_data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;three_data&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; 
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;car_model&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Sept 1 9am&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Sept 1 10am&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Sept 1 11am&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;car_model&lt;/th&gt;
+      &lt;th&gt;Sept 1 9am&lt;/th&gt;
+      &lt;th&gt;Sept 1 10am&lt;/th&gt;
+      &lt;th&gt;Sept 1 11am&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Tesla Model S P100D&lt;/td&gt;
+      &lt;td&gt;2.50&lt;/td&gt;
+      &lt;td&gt;2.51&lt;/td&gt;
+      &lt;td&gt;2.54&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Tesla Model X P100D&lt;/td&gt;
+      &lt;td&gt;2.92&lt;/td&gt;
+      &lt;td&gt;2.91&lt;/td&gt;
+      &lt;td&gt;2.93&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Tesla Model 3 AWD Dual Motor&lt;/td&gt;
+      &lt;td&gt;3.33&lt;/td&gt;
+      &lt;td&gt;3.31&lt;/td&gt;
+      &lt;td&gt;3.35&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Notice how this DataFrame features four columns, one for the car model name, and three for acceleration &lt;em&gt;runs&lt;/em&gt; of a car. If they were to continue with this trend of data collection and do far more &lt;em&gt;runs&lt;/em&gt;, this dataset would have lots of columns - perhaps making it daunting to visualize and analyze. &lt;/p&gt;
+&lt;p&gt;I want to "unpivot" this data from a wide format to a long format using the pandas &lt;code&gt;melt()&lt;/code&gt; method.&lt;/p&gt;
+&lt;p&gt;On the &lt;code&gt;df&lt;/code&gt; DataFrame, we'll call the &lt;code&gt;melt()&lt;/code&gt; method and set the following arguments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;id_vars&lt;/code&gt; to &lt;code&gt;['car_model']&lt;/code&gt; since each row from &lt;code&gt;df&lt;/code&gt; is identified by the car model name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;var_name&lt;/code&gt; to &lt;code&gt;'date'&lt;/code&gt; since this new column needs a name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;value_name&lt;/code&gt; to &lt;code&gt;'0-60mph_in_seconds'&lt;/code&gt; since this new column needs a name&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_unpivoted&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;melt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id_vars&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;car_model&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;var_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;0-60mph_in_seconds&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df_unpivoted&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;car_model&lt;/th&gt;
+      &lt;th&gt;date&lt;/th&gt;
+      &lt;th&gt;0-60mph_in_seconds&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Tesla Model S P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 9am&lt;/td&gt;
+      &lt;td&gt;2.50&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Tesla Model X P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 9am&lt;/td&gt;
+      &lt;td&gt;2.92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Tesla Model 3 AWD Dual Motor&lt;/td&gt;
+      &lt;td&gt;Sept 1 9am&lt;/td&gt;
+      &lt;td&gt;3.33&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Tesla Model S P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 10am&lt;/td&gt;
+      &lt;td&gt;2.51&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;Tesla Model X P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 10am&lt;/td&gt;
+      &lt;td&gt;2.91&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Tesla Model 3 AWD Dual Motor&lt;/td&gt;
+      &lt;td&gt;Sept 1 10am&lt;/td&gt;
+      &lt;td&gt;3.31&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Tesla Model S P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 11am&lt;/td&gt;
+      &lt;td&gt;2.54&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Tesla Model X P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 11am&lt;/td&gt;
+      &lt;td&gt;2.93&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;Tesla Model 3 AWD Dual Motor&lt;/td&gt;
+      &lt;td&gt;Sept 1 11am&lt;/td&gt;
+      &lt;td&gt;3.35&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After this "unpivot", we can easily calculate the minimum (essentially the fastest) 0-60 time that we'd publish in a final report. To do so, we take our &lt;code&gt;df_unpivoted&lt;/code&gt; DataFrame, group by the &lt;code&gt;car_model&lt;/code&gt; column, and find the minimum value in the &lt;code&gt;0-60mph_in_seconds&lt;/code&gt; column.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_unpivoted&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;car_model&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;0-60mph_in_seconds&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;car_model
+Tesla Model 3 AWD Dual Motor    3.31
+Tesla Model S P100D             2.50
+Tesla Model X P100D             2.91
+Name: 0-60mph_in_seconds, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;</content><category term="unpivot"></category><category term="melt"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Pivot without aggregation</title><link href="https://dfrieds.com/python/pivot-python-pandas" rel="alternate"></link><published>2018-11-24T17:20:00-08:00</published><updated>2018-11-24T17:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-24:/python/pivot-python-pandas</id><summary type="html">&lt;p&gt;Pivot a pandas DataFrame without applying an aggregate operation&lt;/p&gt;</summary><content type="html">&lt;p&gt;In pandas, we can pivot our DataFrame without applying an aggregate operation. This pivot is helpful to see our data in a different way - often turning a format with many rows that would require scrolling into a new format with fewer rows but perhaps more columns.&lt;/p&gt;
 &lt;h3&gt;Import Module&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -4203,110 +4380,4 @@ Wall time: 11 s
 &lt;p&gt;&lt;strong&gt;Conclusion:&lt;/strong&gt; program completes much faster &lt;em&gt;with&lt;/em&gt; multiprocessing at approximately 4 subprocesses running concurrently.&lt;/p&gt;
 &lt;p&gt;Multiprocessing here was helpful for this CPU intensive task because we could benefit from using multiple cores and avoid the global interpreter lock.&lt;/p&gt;
 &lt;p&gt;Interestingly, spinning up additional subprocesses past 4 has no major effect on improving runtime of our program. Notice how the total program runtime with 4 subprocesses is equivalent to the program with 5 subprocesses.&lt;/p&gt;
-&lt;p&gt;Threads provide no benefit in Python for CPU intensive tasks like these because of the global interpreter lock.&lt;/p&gt;</content><category term="multithreading"></category><category term="multiprocessing"></category></entry><entry><title>Read in CSV Files for Data Analysis</title><link href="https://dfrieds.com/python/read-in-csv-files" rel="alternate"></link><published>2018-04-08T12:00:00-07:00</published><updated>2018-04-08T12:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-08:/python/read-in-csv-files</id><summary type="html">&lt;p&gt;Import CSV files into your Python program to analyze the data&lt;/p&gt;</summary><content type="html">&lt;p&gt;Python is a great programming language for data analysis. &lt;/p&gt;
-&lt;p&gt;CSV files are comma-separated values to store data, similar to a table format.&lt;/p&gt;
-&lt;p&gt;The CSV format is a common import and export format for spreadsheets and databases. You'll likely encounter it early on in the field of data science.&lt;/p&gt;
-&lt;p&gt;We'll cover how to read in data from a CSV in which a CSV file is in your Python program's directory/folder on your computer.&lt;/p&gt;
-&lt;h4&gt;Import CSV module&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;csv&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Read in bike rides CSV&lt;/h4&gt;
-&lt;p&gt;In my directory as this Python program, I created a CSV named &lt;code&gt;bike_rides.csv&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;open&lt;/code&gt; is a Python built-in function to open a file on your local computer with the argument being the file path. A default argument of &lt;code&gt;open&lt;/code&gt; is &lt;code&gt;mode=r&lt;/code&gt; to open the contents of a file with only permission to read the file, &lt;em&gt;not&lt;/em&gt; write to it or perform a different operation. We'll provide an alias as &lt;code&gt;file&lt;/code&gt; so we can easily use that name in another operation.&lt;/p&gt;
-&lt;p&gt;From the &lt;code&gt;csv&lt;/code&gt; module in Python, we'll call the &lt;code&gt;reader&lt;/code&gt; method and pass in &lt;code&gt;file&lt;/code&gt; to create a &lt;em&gt;csv reader&lt;/em&gt; object. &lt;/p&gt;
-&lt;p&gt;Once we have this &lt;em&gt;csv reader&lt;/em&gt; object, we can iterate over the rows of our CSV file and print the output.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bike_rides.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;csv_reader_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;CSV row: {0}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CSV row: [&amp;#39;ride_number&amp;#39;, &amp;#39;date&amp;#39;, &amp;#39;miles_rode&amp;#39;, &amp;#39;ride_duration&amp;#39;]
-CSV row: [&amp;#39;1&amp;#39;, &amp;#39;4-02-2018&amp;#39;, &amp;#39;5.1&amp;#39;, &amp;#39;29.4&amp;#39;]
-CSV row: [&amp;#39;2&amp;#39;, &amp;#39;4-03-2018&amp;#39;, &amp;#39;3.3&amp;#39;, &amp;#39;20&amp;#39;]
-CSV row: [&amp;#39;3&amp;#39;, &amp;#39;4-04-2018&amp;#39;, &amp;#39;4.5&amp;#39;, &amp;#39;21.8&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Each row in our CSV is a &lt;em&gt;list&lt;/em&gt; of &lt;em&gt;strings&lt;/em&gt; since there are single-quotes around each value.&lt;/p&gt;
-&lt;h3&gt;Calculate Descriptive Statistics on Bike Rides&lt;/h3&gt;
-&lt;p&gt;Commonly, when we read in data from a CSV, we may want to analyze the data or perform some analysis. We can perform these calculations as we loop over all data in our CSV.&lt;/p&gt;
-&lt;h4&gt;Count the number of bike rides&lt;/h4&gt;
-&lt;p&gt;Our &lt;code&gt;csv_reader_object&lt;/code&gt; has a method called &lt;code&gt;line_num&lt;/code&gt; that returns the number of lines in our CSV. If we perform this operation, we're returned &lt;code&gt;4&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;line_num&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;4
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;There are 4 rows in this CSV; however, there may be a header row (displaying field names) so we shouldn't count this row in our calculation for the count of bike rides.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;csv&lt;/code&gt; class in Python has a &lt;code&gt;Sniffer&lt;/code&gt; class to deduce the format of a CSV. With the &lt;code&gt;has_header&lt;/code&gt; method of &lt;code&gt;Sniffer&lt;/code&gt;, we can check if the first row contains column headers. &lt;/p&gt;
-&lt;p&gt;If the first row is a header, let's skip that row in counting the number of bike ride records in our csv. To skip that header row, we can use the built-in &lt;code&gt;next&lt;/code&gt; function and pass in our &lt;code&gt;csv_reader_object&lt;/code&gt;; this will retrive the &lt;em&gt;next&lt;/em&gt; item after our header to begin our data analysis.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_rides&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bike_rides.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;csv_reader_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sniffer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_header&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;count_of_rides&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_of_rides&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;3
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Based on our manual observation above, we can confirm there are 3 records of bike rides.&lt;/p&gt;
-&lt;h4&gt;Average miles rode per bike ride&lt;/h4&gt;
-&lt;p&gt;All rows in our CSV contains &lt;em&gt;strings&lt;/em&gt;. To perform a math operation, we need to convert the values to an arithmetic data type - either an &lt;em&gt;integer&lt;/em&gt; or a &lt;em&gt;float&lt;/em&gt;. &lt;/p&gt;
-&lt;p&gt;We'll convert the values in the &lt;em&gt;miles_rode&lt;/em&gt; field to floats.&lt;/p&gt;
-&lt;p&gt;Also, note we still have to skip the header row in this calculation.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;total_miles_rode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In each row, a record of a bike ride, at index &lt;code&gt;2&lt;/code&gt;, there's a value for &lt;code&gt;miles_rode&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;row_index_miles_rode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bike_rides.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;csv_reader_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sniffer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_header&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;csv_reader_object&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;float_miles_rode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;row_index_miles_rode&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-        &lt;span class="n"&gt;total_miles_rode&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;float_miles_rode&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;total_miles_rode&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;12.899999999999999
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;average_miles_per_ride&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;total_miles_rode&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;count_of_rides&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;average_miles_per_ride&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;4.3
-&lt;/pre&gt;&lt;/div&gt;</content><category term="input"></category><category term="csv"></category></entry></feed>
+&lt;p&gt;Threads provide no benefit in Python for CPU intensive tasks like these because of the global interpreter lock.&lt;/p&gt;</content><category term="multithreading"></category><category term="multiprocessing"></category></entry></feed>
