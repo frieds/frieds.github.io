@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="unpivot pandas">
+  <meta name="keywords" content="value counts pandas">
 
-  <meta name="description" content="Unpivot a pandas DataFrame (Python) using the melt() method">
-  <meta property="og:description"  content="Unpivot a pandas DataFrame (Python) using the melt() method">
-  <meta name="twitter:description" content="Unpivot a pandas DataFrame (Python) using the melt() method">
+  <meta name="description" content="Count unique occurences of values in pandas DataFrame column">
+  <meta property="og:description"  content="Count unique occurences of values in pandas DataFrame column">
+  <meta name="twitter:description" content="Count unique occurences of values in pandas DataFrame column">
 
-  <meta property="og:title" content="Melt: Unpivot a DataFrame">
-  <meta name="twitter:title" content="Melt: Unpivot a DataFrame">
+  <meta property="og:title" content="Count unique occurences of values">
+  <meta name="twitter:title" content="Count unique occurences of values">
 
-  <link rel="canonical" href="https://dfrieds.com/python/melt-unpivot-python-pandas"/>
+  <link rel="canonical" href="https://dfrieds.com/python/value-counts-python-pandas"/>
 
-  <title>Melt: Unpivot a DataFrame - Python</title>
+  <title>Count unique occurences of values - Python</title>
 
   
 
@@ -150,106 +150,40 @@
   <header>
     <div class="posttype"> Python Data Analysis in pandas Tutorial</div>
     <h1 class="articleh1">
-      Melt: Unpivot a DataFrame
+      Count unique occurences of values
     </h1>
 
     <ul class ="row article_info">
       
       <li>
-        Nov 25&nbsp;&nbsp;&bull;&nbsp;&nbsp;4 min read
+        Nov 25&nbsp;&nbsp;&bull;&nbsp;&nbsp;5 min read
       </li>
       <li class="tagarticle">
-        Key Terms:         unpivot,
-        melt,
-        python,
+        Key Terms:         python,
         pandas
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <p>In pandas, we can "unpivot" a DataFrame - turn it from a <em>wide</em> format - many columns - to a <em>long</em> format - few columns but many rows. We can accomplish this with the pandas <a href='https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.melt.html' rel='nofollow'><code>melt()</code></a> method. This can be helpful for further analysis of our new unpivoted DataFrame.</p>
+    <p>In pandas, for a column in a DataFrame, we can use the <code>value_counts()</code> method to easily count the unique occurences of values. </p>
+<p>There's additional interesting analyis we can do with <code>value_counts()</code> too. We'll try them out using the titanic dataset. </p>
 <h3>Import Module</h3>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 </pre></div>
 
 
-<h3>Example: Pivot Tesla Car Acceleration Details</h3>
-<p>Here is fictional acceleration tests for three popular Tesla car models. In order to verify acceleration of the cars, I figured a third-party may make three <em>runs</em> to test the three models alongside one another.</p>
-<div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;Tesla Model S P100D&#39;</span>
-<span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Tesla Model X P100D&#39;</span>
-<span class="n">three</span> <span class="o">=</span> <span class="s1">&#39;Tesla Model 3 AWD Dual Motor&#39;</span>
-
-<span class="n">s_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.51</span><span class="p">,</span> <span class="mf">2.54</span><span class="p">]</span>
-<span class="n">x_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mf">2.92</span><span class="p">,</span> <span class="mf">2.91</span><span class="p">,</span> <span class="mf">2.93</span><span class="p">]</span>
-<span class="n">three_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">three</span><span class="p">,</span> <span class="mf">3.33</span><span class="p">,</span> <span class="mf">3.31</span><span class="p">,</span> <span class="mf">3.35</span><span class="p">]</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">s_data</span><span class="p">,</span> <span class="n">x_data</span><span class="p">,</span> <span class="n">three_data</span><span class="p">]</span> 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;car_model&#39;</span><span class="p">,</span> <span class="s1">&#39;Sept 1 9am&#39;</span><span class="p">,</span> <span class="s1">&#39;Sept 1 10am&#39;</span><span class="p">,</span> <span class="s1">&#39;Sept 1 11am&#39;</span><span class="p">])</span>
-<span class="n">df</span>
+<h3>Get Titanic Dataset</h3>
+<p>We'll use the <em>titanic</em> dataset included in the seaborn library. </p>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>car_model</th>
-      <th>Sept 1 9am</th>
-      <th>Sept 1 10am</th>
-      <th>Sept 1 11am</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Tesla Model S P100D</td>
-      <td>2.50</td>
-      <td>2.51</td>
-      <td>2.54</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Tesla Model X P100D</td>
-      <td>2.92</td>
-      <td>2.91</td>
-      <td>2.93</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Tesla Model 3 AWD Dual Motor</td>
-      <td>3.33</td>
-      <td>3.31</td>
-      <td>3.35</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<p>Notice how this DataFrame features four columns, one for the car model name, and three for acceleration <em>runs</em> of a car. If they were to continue with this trend of data collection and do far more <em>runs</em>, this dataset would have lots of columns - perhaps making it daunting to visualize and analyze. </p>
-<p>I want to "unpivot" this data from a wide format to a long format using the pandas <code>melt()</code> method.</p>
-<p>On the <code>df</code> DataFrame, we'll call the <code>melt()</code> method and set the following arguments:</p>
-<ul>
-<li><code>id_vars</code> to <code>['car_model']</code> since each row from <code>df</code> is identified by the car model name</li>
-<li><code>var_name</code> to <code>'date'</code> since this new column needs a name</li>
-<li><code>value_name</code> to <code>'0-60mph_in_seconds'</code> since this new column needs a name</li>
-</ul>
-<div class="highlight"><pre><span></span><span class="n">df_unpivoted</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;car_model&#39;</span><span class="p">],</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;0-60mph_in_seconds&#39;</span><span class="p">)</span>
-<span class="n">df_unpivoted</span>
+<p>Below is a preview of the first few rows of the dataset.</p>
+<p>Each row includes details of a person who boarded the famous Titanic cruise ship. </p>
+<p>In this tutorial, we're just going to utilize the <code>sex</code> and <code>fare</code> columns. The <code>sex</code> column classifies the person's gender as male or female. The <code>fare</code> column indicates the dollar amount each person paid to board the Titanic.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 
@@ -271,80 +205,188 @@
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>car_model</th>
-      <th>date</th>
-      <th>0-60mph_in_seconds</th>
+      <th>survived</th>
+      <th>pclass</th>
+      <th>sex</th>
+      <th>age</th>
+      <th>sibsp</th>
+      <th>parch</th>
+      <th>fare</th>
+      <th>embarked</th>
+      <th>class</th>
+      <th>who</th>
+      <th>adult_male</th>
+      <th>deck</th>
+      <th>embark_town</th>
+      <th>alive</th>
+      <th>alone</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>Tesla Model S P100D</td>
-      <td>Sept 1 9am</td>
-      <td>2.50</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.2500</td>
+      <td>S</td>
+      <td>Third</td>
+      <td>man</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>no</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Tesla Model X P100D</td>
-      <td>Sept 1 9am</td>
-      <td>2.92</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>71.2833</td>
+      <td>C</td>
+      <td>First</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>C</td>
+      <td>Cherbourg</td>
+      <td>yes</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Tesla Model 3 AWD Dual Motor</td>
-      <td>Sept 1 9am</td>
-      <td>3.33</td>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.9250</td>
+      <td>S</td>
+      <td>Third</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>yes</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Tesla Model S P100D</td>
-      <td>Sept 1 10am</td>
-      <td>2.51</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>53.1000</td>
+      <td>S</td>
+      <td>First</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>C</td>
+      <td>Southampton</td>
+      <td>yes</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Tesla Model X P100D</td>
-      <td>Sept 1 10am</td>
-      <td>2.91</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>Tesla Model 3 AWD Dual Motor</td>
-      <td>Sept 1 10am</td>
-      <td>3.31</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Tesla Model S P100D</td>
-      <td>Sept 1 11am</td>
-      <td>2.54</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>Tesla Model X P100D</td>
-      <td>Sept 1 11am</td>
-      <td>2.93</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>Tesla Model 3 AWD Dual Motor</td>
-      <td>Sept 1 11am</td>
-      <td>3.35</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.0500</td>
+      <td>S</td>
+      <td>Third</td>
+      <td>man</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>no</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-<p>After this "unpivot", we can easily calculate the minimum (essentially the fastest) 0-60 time that we'd publish in a final report. To do so, we take our <code>df_unpivoted</code> DataFrame, group by the <code>car_model</code> column, and find the minimum value in the <code>0-60mph_in_seconds</code> column.</p>
-<div class="highlight"><pre><span></span><span class="n">df_unpivoted</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;car_model&#39;</span><span class="p">)[</span><span class="s1">&#39;0-60mph_in_seconds&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<h3>Fun with <code>value_counts()</code></h3>
+<p>Here is the simple use of <code>value_counts()</code> we call on the <code>sex</code> column that returns us the count of occurences of each of the unique values in this column. </p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>car_model
-Tesla Model 3 AWD Dual Motor    3.31
-Tesla Model S P100D             2.50
-Tesla Model X P100D             2.91
-Name: 0-60mph_in_seconds, dtype: float64
+<div class="highlight"><pre><span></span>male      577
+female    314
+Name: sex, dtype: int64
+</pre></div>
+
+
+<p>Now, we want to do the same operation, but this time sort our outputted values in the <code>sex</code> column, male and female, so that values that start with the letter <em>a</em> appear at the top and values that start with letter <em>z</em> appear at the bottom. This is considered ascending order.</p>
+<p><em>f</em> is before <em>m</em> in the alphabet so we see female before male.</p>
+<p>In our <code>value_counts</code> method, we'll set the argument <code>ascending</code> to <code>True</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>female    314
+male      577
+Name: sex, dtype: int64
+</pre></div>
+
+
+<p>Often times, we want to know what percentage of the whole is for each value that appears in the column. For example, if we took the two counts above, 577 and 314 and we sum them up, we'd get 891. So, what percentage of people on the titanic were male. The calculation is 577/891 x 100 = 64.75%. </p>
+<p>To calculate this in pandas with the <code>value_counts()</code> method, set the argument <code>normalize</code> to <code>True</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>male      0.647587
+female    0.352413
+Name: sex, dtype: float64
+</pre></div>
+
+
+<p>Before we try a new <code>value_counts()</code> argument, let's take a look at some basic descriptive statistics of the <code>fare</code> column. To accomplish this, we'll call the <code>describe()</code> method on the column.</p>
+<p>There's 891 values of fare data, a mean of \$32 and a standard deviation of \$49 which indicates a fairly wide spread of data.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;fare&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>count    891.000000
+mean      32.204208
+std       49.693429
+min        0.000000
+25%        7.910400
+50%       14.454200
+75%       31.000000
+max      512.329200
+Name: fare, dtype: float64
+</pre></div>
+
+
+<p>Another interesting feature of the <code>value_counts()</code> method is that it can be used to bin continuous data into discrete intervals. We set the argument <code>bins</code> to an integer representing the number of bins to create. </p>
+<p>For each bin, the range of fare amounts in dollar values is the same. One contains fares from \$73.19 to \$146.38 which is a range of \$73.19. Another bin contains fares from \$146.38 to \$73.19 which is also a range of \$73.19. See how the ranges are same! However, inside each range of fare values can contain a different count of the number of tickets bought by passengers of the Titanic.</p>
+<p>We can see most people paid under \$73.19 for their ticket.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;fare&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>(-0.513, 73.19]       789
+(73.19, 146.38]        71
+(146.38, 219.57]       15
+(219.57, 292.76]       13
+(439.139, 512.329]      3
+(365.949, 439.139]      0
+(292.76, 365.949]       0
+Name: fare, dtype: int64
 </pre></div>
   </div>
 </section>
