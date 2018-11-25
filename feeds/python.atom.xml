@@ -1,5 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-24T11:15:00-08:00</updated><entry><title>Query/Filter Columns</title><link href="https://dfrieds.com/python/query-python-pandas" rel="alternate"></link><published>2018-11-24T11:15:00-08:00</published><updated>2018-11-24T11:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-24:/python/query-python-pandas</id><summary type="html">&lt;p&gt;Filter columns in a DataFrame using the query method&lt;/p&gt;</summary><content type="html">&lt;p&gt;In pandas, we can query the columns of DataFrames with boolean expressions using the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html' rel='nofollow'&gt;&lt;code&gt;query()&lt;/code&gt;&lt;/a&gt; method. I'll walk through lots of simple examples.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Tutorials - Python</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/python.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-11-24T17:20:00-08:00</updated><entry><title>Pivot without aggregation</title><link href="https://dfrieds.com/python/pivot-python-pandas" rel="alternate"></link><published>2018-11-24T17:20:00-08:00</published><updated>2018-11-24T17:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-24:/python/pivot-python-pandas</id><summary type="html">&lt;p&gt;Pivot a pandas DataFrame without applying an aggregate operation&lt;/p&gt;</summary><content type="html">&lt;p&gt;In pandas, we can pivot our DataFrame without applying an aggregate operation. This pivot is helpful to see our data in a different way - often turning a format with many rows that would require scrolling into a new format with fewer rows but perhaps more columns.&lt;/p&gt;
+&lt;h3&gt;Import Module&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example: Pivot Tesla Car Acceleration Details&lt;/h3&gt;
+&lt;p&gt;Here is fictional acceleration tests for three popular Tesla car models. In order to verify acceleration of the cars, I figured a third-party may make three &lt;em&gt;runs&lt;/em&gt; to test the three models alongside one another.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tesla Model S P100D&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tesla Model X P100D&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;three&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Tesla Model 3 AWD Dual Motor&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;models&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;three&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;span class="n"&gt;dates&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Sept 1 9am&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Sept 1 10am&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Sept 1 11am&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;span class="n"&gt;acceleration_times&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.92&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;3.33&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.51&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.91&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;3.31&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.51&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.92&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;3.3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;car_model&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+        &lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;dates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+        &lt;span class="s1"&gt;&amp;#39;0-60mph_in_seconds&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;acceleration_times&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; 
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;car_model&lt;/th&gt;
+      &lt;th&gt;date&lt;/th&gt;
+      &lt;th&gt;0-60mph_in_seconds&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Tesla Model S P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 9am&lt;/td&gt;
+      &lt;td&gt;2.50&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Tesla Model X P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 9am&lt;/td&gt;
+      &lt;td&gt;2.92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Tesla Model 3 AWD Dual Motor&lt;/td&gt;
+      &lt;td&gt;Sept 1 9am&lt;/td&gt;
+      &lt;td&gt;3.33&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Tesla Model S P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 10am&lt;/td&gt;
+      &lt;td&gt;2.51&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;Tesla Model X P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 10am&lt;/td&gt;
+      &lt;td&gt;2.91&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Tesla Model 3 AWD Dual Motor&lt;/td&gt;
+      &lt;td&gt;Sept 1 10am&lt;/td&gt;
+      &lt;td&gt;3.31&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Tesla Model S P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 11am&lt;/td&gt;
+      &lt;td&gt;2.51&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Tesla Model X P100D&lt;/td&gt;
+      &lt;td&gt;Sept 1 11am&lt;/td&gt;
+      &lt;td&gt;2.92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;Tesla Model 3 AWD Dual Motor&lt;/td&gt;
+      &lt;td&gt;Sept 1 11am&lt;/td&gt;
+      &lt;td&gt;3.30&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I want to pivot this data so each row is a unique car model, the columns are dates and the values in the table are the acceleration speeds.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pivot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;car_model&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;0-60mph_in_seconds&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;date&lt;/th&gt;
+      &lt;th&gt;Sept 1 10am&lt;/th&gt;
+      &lt;th&gt;Sept 1 11am&lt;/th&gt;
+      &lt;th&gt;Sept 1 9am&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;car_model&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Tesla Model 3 AWD Dual Motor&lt;/th&gt;
+      &lt;td&gt;3.31&lt;/td&gt;
+      &lt;td&gt;3.30&lt;/td&gt;
+      &lt;td&gt;3.33&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Tesla Model S P100D&lt;/th&gt;
+      &lt;td&gt;2.51&lt;/td&gt;
+      &lt;td&gt;2.51&lt;/td&gt;
+      &lt;td&gt;2.50&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Tesla Model X P100D&lt;/th&gt;
+      &lt;td&gt;2.91&lt;/td&gt;
+      &lt;td&gt;2.92&lt;/td&gt;
+      &lt;td&gt;2.92&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This format may be easier to read so you can easily focus your attention on just the acceleration times for the 3 models.&lt;/p&gt;
+&lt;p&gt;You can read more about pandas &lt;code&gt;pivot()&lt;/code&gt; on the official &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.pivot.html' rel='nofollow'&gt;documentation page&lt;/a&gt;.&lt;/p&gt;</content><category term="pivot"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Query/Filter Columns</title><link href="https://dfrieds.com/python/query-python-pandas" rel="alternate"></link><published>2018-11-24T11:15:00-08:00</published><updated>2018-11-24T11:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-24:/python/query-python-pandas</id><summary type="html">&lt;p&gt;Filter columns in a DataFrame using the query method&lt;/p&gt;</summary><content type="html">&lt;p&gt;In pandas, we can query the columns of DataFrames with boolean expressions using the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html' rel='nofollow'&gt;&lt;code&gt;query()&lt;/code&gt;&lt;/a&gt; method. I'll walk through lots of simple examples.&lt;/p&gt;
 &lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
@@ -4145,157 +4309,4 @@ CSV row: [&amp;#39;3&amp;#39;, &amp;#39;4-04-2018&amp;#39;, &amp;#39;4.5&amp;#39
 
 
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;4.3
-&lt;/pre&gt;&lt;/div&gt;</content><category term="input"></category><category term="csv"></category></entry><entry><title>List Comprehensions</title><link href="https://dfrieds.com/python/list-comprehensions" rel="alternate"></link><published>2018-04-07T13:00:00-07:00</published><updated>2018-04-07T13:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-04-07:/python/list-comprehensions</id><summary type="html">&lt;p&gt;Python's list comprehensions allow you to create lists with more concise code and often shorter execution times than a traditional multi-line program&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;List comprehensions&lt;/strong&gt; provide a concise way to create lists.&lt;/p&gt;
-&lt;h3&gt;Comparison of Multi-line Program Versus List Comprehension&lt;/h3&gt;
-&lt;p&gt;Here's a simple example in which we create a new list of squares.&lt;/p&gt;
-&lt;p&gt;We'll loop over this list below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[1, 2, 3, 4]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In Python, we can iterate over just &lt;code&gt;range(1, 5)&lt;/code&gt; to iterate over &lt;code&gt;1&lt;/code&gt; through &lt;code&gt;4&lt;/code&gt; including the value &lt;code&gt;4&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;range(1, 5)&lt;/code&gt; gives us an immutable sequence. We can iterate over it but we cannot simply index a value from it.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;small_range&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Each number in the list will put to the power of 2, otherwise called &lt;em&gt;number squared&lt;/em&gt;.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;number&lt;/th&gt;
-&lt;th&gt;squared operation&lt;/th&gt;
-&lt;th&gt;number squared&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;1&lt;sup&gt;2&lt;/sup&gt;&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;2&lt;/td&gt;
-&lt;td&gt;2&lt;sup&gt;2&lt;/sup&gt;&lt;/td&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;3&lt;/td&gt;
-&lt;td&gt;3&lt;sup&gt;2&lt;/sup&gt;&lt;/td&gt;
-&lt;td&gt;9&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;td&gt;4&lt;sup&gt;2&lt;/sup&gt;&lt;/td&gt;
-&lt;td&gt;16&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Our result should be a list: &lt;code&gt;[1, 4, 9, 36]&lt;/code&gt;&lt;/p&gt;
-&lt;h4&gt;Multi-line program&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;squares&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;small_range&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;squares&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;squares&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[1, 4, 9, 16]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;List comprehension&lt;/h4&gt;
-&lt;p&gt;A list comprehension consists of brackets &lt;code&gt;[]&lt;/code&gt; containing an expression followed by a &lt;code&gt;for&lt;/code&gt; clause. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;small_range&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[1, 4, 9, 16]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;We can assign a variable to the result of this list comprehension.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;squares_again&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;small_range&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;squares_again&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[1, 4, 9, 16]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Additional Simple List Comprehension Examples&lt;/h3&gt;
-&lt;p&gt;You can also use any number of &lt;code&gt;if&lt;/code&gt; clauses in a list comprehension.&lt;/p&gt;
-&lt;p&gt;We can create a new list to remove all mentions of the name &lt;code&gt;dan&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;jamie&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;names_without_dan&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;names_without_dan&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;sean&amp;#39;, &amp;#39;bill&amp;#39;, &amp;#39;jamie&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Similar to our initial example of creating squares of numbers, we can use a list comprehension to create a list of tuples with each tuple a pair of a value and its square.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[(1, 1), (2, 4), (3, 9), (4, 16)]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Measuring the Performance of List Comprehensions&lt;/h3&gt;
-&lt;p&gt;Often times, using list comprehensions over traditional multi-line programs can result in code that executes in a shorter period of time. This is especially useful if you're doing operations on large datasets. &lt;/p&gt;
-&lt;p&gt;We'll mimic the example above with the only difference being we'll iterative over all numbers from &lt;code&gt;1&lt;/code&gt; to &lt;code&gt;12000000&lt;/code&gt; - that's 1.2 million operations!  &lt;/p&gt;
-&lt;p&gt;In Jupyter Notebooks, we can use &lt;code&gt;%%time&lt;/code&gt; to measure the runtime of code blocks.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;big_range&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;12000001&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Multi-line program&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;
-
-&lt;span class="n"&gt;many_squares&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;big_range&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;many_squares&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CPU times: user 5.33 s, sys: 284 ms, total: 5.62 s
-Wall time: 5.64 s
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;List Comprehension&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;
-
-&lt;span class="n"&gt;many_squares_again&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;big_range&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CPU times: user 3.98 s, sys: 259 ms, total: 4.24 s
-Wall time: 4.25 s
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This list comprehension takes over &lt;strong&gt;25% less time&lt;/strong&gt; to compute than the multi-line program.&lt;/p&gt;
-&lt;p&gt;Performance results of list comprehensions vary. Sometimes, your program will run in significantly less time; other time, runtime may be on part with a multi-line program.&lt;/p&gt;
-&lt;p&gt;I'd encourage you to try both in your programs to see what works best.&lt;/p&gt;</content><category term="lists"></category><category term="list comprehensions"></category></entry></feed>
+&lt;/pre&gt;&lt;/div&gt;</content><category term="input"></category><category term="csv"></category></entry></feed>
