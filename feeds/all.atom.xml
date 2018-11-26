@@ -188,7 +188,7 @@ Name: sex, dtype: float64
 
 
 &lt;p&gt;Before we try a new &lt;code&gt;value_counts()&lt;/code&gt; argument, let's take a look at some basic descriptive statistics of the &lt;code&gt;fare&lt;/code&gt; column. To accomplish this, we'll call the &lt;code&gt;describe()&lt;/code&gt; method on the column.&lt;/p&gt;
-&lt;p&gt;There's 891 values of fare data, a mean of \$32 and a standard deviation of \$49 which indicates a fairly wide spread of data.&lt;/p&gt;
+&lt;p&gt;There's 891 values of fare data, a mean of 32 and a standard deviation of 49 which indicates a fairly wide spread of data.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fare&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -206,8 +206,8 @@ Name: fare, dtype: float64
 
 
 &lt;p&gt;Another interesting feature of the &lt;code&gt;value_counts()&lt;/code&gt; method is that it can be used to bin continuous data into discrete intervals. We set the argument &lt;code&gt;bins&lt;/code&gt; to an integer representing the number of bins to create. &lt;/p&gt;
-&lt;p&gt;For each bin, the range of fare amounts in dollar values is the same. One contains fares from \$73.19 to \$146.38 which is a range of \$73.19. Another bin contains fares from \$146.38 to \$73.19 which is also a range of \$73.19. See how the ranges are same! However, inside each range of fare values can contain a different count of the number of tickets bought by passengers of the Titanic.&lt;/p&gt;
-&lt;p&gt;We can see most people paid under \$73.19 for their ticket.&lt;/p&gt;
+&lt;p&gt;For each bin, the range of fare amounts in dollar values is the same. One contains fares from 73.19 to 146.38 which is a range of 73.19. Another bin contains fares from 146.38 to 73.19 which is also a range of 73.19. See how the ranges are same! However, inside each range of fare values can contain a different count of the number of tickets bought by passengers of the Titanic.&lt;/p&gt;
+&lt;p&gt;We can see most people paid under 73.19 for their ticket.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fare&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_counts&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -2642,7 +2642,64 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;In this example, we passed in two columns from our DataFrame. However, one nice feature of &lt;code&gt;crosstab()&lt;/code&gt; is you don't need the data to be in a DataFrame. For the &lt;code&gt;index&lt;/code&gt; and &lt;code&gt;columns&lt;/code&gt; arguments, you can pass in two numpy arrays.&lt;/p&gt;
+&lt;p&gt;One issue with this crosstab output is the column names are nonsensical. Just saying &lt;code&gt;Male&lt;/code&gt; or &lt;code&gt;Female&lt;/code&gt; isn't very specific. They should be renamed to be clearer. We can use the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rename.html' rel='nofollow'&gt;rename()&lt;/a&gt; method and set the argument &lt;code&gt;columns&lt;/code&gt; to be a dictionary in which the keys are the current column names and the values are the respective new names to set.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Male&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;count_meals_served_by_males&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Female&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;count_meals_served_by_females&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;count_meals_served_by_males&lt;/th&gt;
+      &lt;th&gt;count_meals_served_by_females&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Thur&lt;/th&gt;
+      &lt;td&gt;30&lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Fri&lt;/th&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sat&lt;/th&gt;
+      &lt;td&gt;59&lt;/td&gt;
+      &lt;td&gt;28&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sun&lt;/th&gt;
+      &lt;td&gt;58&lt;/td&gt;
+      &lt;td&gt;18&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In this example, we passed in two columns from our DataFrame. However, one nice feature of &lt;code&gt;crosstab()&lt;/code&gt; is that you don't need the data to be in a DataFrame. For the &lt;code&gt;index&lt;/code&gt; and &lt;code&gt;columns&lt;/code&gt; arguments, you can pass in two numpy arrays.&lt;/p&gt;
 &lt;p&gt;Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our query below matches the 30 number we see above.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sex==&amp;#39;Male&amp;#39; and day==&amp;#39;Thur&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -2652,8 +2709,8 @@ Name: passengers, dtype: int64
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument &lt;code&gt;margins&lt;/code&gt; to &lt;code&gt;True&lt;/code&gt; to get these totals.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument &lt;code&gt;margins&lt;/code&gt; to &lt;code&gt;True&lt;/code&gt; to get these totals. By default, the returned output will have a column and row name of &lt;code&gt;All&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Male&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;count_meals_served_by_males&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Female&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;count_meals_served_by_females&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2675,8 +2732,8 @@ Name: passengers, dtype: int64
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
       &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;Male&lt;/th&gt;
-      &lt;th&gt;Female&lt;/th&gt;
+      &lt;th&gt;count_meals_served_by_males&lt;/th&gt;
+      &lt;th&gt;count_meals_served_by_females&lt;/th&gt;
       &lt;th&gt;All&lt;/th&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -2721,8 +2778,8 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;In &lt;code&gt;crosstab()&lt;/code&gt;, we can also rename the &lt;code&gt;All&lt;/code&gt; column. First, use all the same arguments from above. Then, set the argument &lt;code&gt;margins_name&lt;/code&gt; to &lt;code&gt;total_meals_served&lt;/code&gt; .&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;total_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;In the &lt;code&gt;crosstab()&lt;/code&gt; method, we can also rename the &lt;code&gt;All&lt;/code&gt; column. First, use all the same arguments from above. Then, set the argument &lt;code&gt;margins_name&lt;/code&gt; to &lt;code&gt;count_meals_served&lt;/code&gt; .&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;count_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Male&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;count_meals_served_by_males&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Female&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;count_meals_served_by_females&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2744,9 +2801,9 @@ Name: passengers, dtype: int64
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
       &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;Male&lt;/th&gt;
-      &lt;th&gt;Female&lt;/th&gt;
-      &lt;th&gt;total_meals_served&lt;/th&gt;
+      &lt;th&gt;count_meals_served_by_males&lt;/th&gt;
+      &lt;th&gt;count_meals_served_by_females&lt;/th&gt;
+      &lt;th&gt;count_meals_served&lt;/th&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;day&lt;/th&gt;
@@ -2781,7 +2838,7 @@ Name: passengers, dtype: int64
       &lt;td&gt;76&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;th&gt;total_meals_served&lt;/th&gt;
+      &lt;th&gt;count_meals_served&lt;/th&gt;
       &lt;td&gt;157&lt;/td&gt;
       &lt;td&gt;87&lt;/td&gt;
       &lt;td&gt;244&lt;/td&gt;
@@ -2791,7 +2848,7 @@ Name: passengers, dtype: int64
 &lt;/div&gt;
 
 &lt;p&gt;For each cell value, we can calculate what percentage it is of the row's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;'index'&lt;/code&gt; (since index applies to each row).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;proportion_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;proportion_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Male&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;proportion_meals_served_by_males&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Female&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;proportion_meals_served_by_females&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2813,8 +2870,8 @@ Name: passengers, dtype: int64
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
       &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;Male&lt;/th&gt;
-      &lt;th&gt;Female&lt;/th&gt;
+      &lt;th&gt;proportion_meals_served_by_males&lt;/th&gt;
+      &lt;th&gt;proportion_meals_served_by_females&lt;/th&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;day&lt;/th&gt;
@@ -2852,8 +2909,8 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;For each cell value, we can calculate what percentage it is of the column's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;'columns'&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;proportion_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;columns&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;For each cell value, we can also calculate what percentage it is of the column's total. To do that, set the &lt;code&gt;normalize&lt;/code&gt; argument to &lt;code&gt;'columns'&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;margins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;margins_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;proportion_meals_served&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;columns&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Male&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;proportion_meals_served_by_males&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Female&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;proportion_meals_served_by_females&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2875,8 +2932,8 @@ Name: passengers, dtype: int64
   &lt;thead&gt;
     &lt;tr style="text-align: right;"&gt;
       &lt;th&gt;sex&lt;/th&gt;
-      &lt;th&gt;Male&lt;/th&gt;
-      &lt;th&gt;Female&lt;/th&gt;
+      &lt;th&gt;proportion_meals_served_by_males&lt;/th&gt;
+      &lt;th&gt;proportion_meals_served_by_females&lt;/th&gt;
       &lt;th&gt;proportion_meals_served&lt;/th&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -2915,6 +2972,89 @@ Name: passengers, dtype: int64
 &lt;/table&gt;
 &lt;/div&gt;
 
+&lt;p&gt;Given two categorical columns, the &lt;code&gt;crosstab()&lt;/code&gt; method can additionally utilize a column with numerical values to perform an aggregate operation. That sentence may sound daunting - so let's walk through it with a simple example.&lt;/p&gt;
+&lt;p&gt;We know there exists &lt;code&gt;total_bill&lt;/code&gt; values in our datasets for males that served meals on Thursday. Below, I preview the first few &lt;code&gt;total_bill&lt;/code&gt; values that meet this criteria.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sex==&amp;#39;Male&amp;#39; and day==&amp;#39;Thur&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;77    27.20
+78    22.76
+79    17.29
+80    19.44
+81    16.66
+Name: total_bill, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We may want to know the average bill size that meet the criteria above. So, given that series, we can calculate the mean and we arrive at a result of 18.71.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sex==&amp;#39;Male&amp;#39; and day==&amp;#39;Thur&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;18.714666666666666
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, we can perform this same operation using the &lt;code&gt;crosstab()&lt;/code&gt; method. Same as before, we want our returned index to be the unique values from &lt;code&gt;day&lt;/code&gt; and our returned columns to be the unique values from &lt;code&gt;sex&lt;/code&gt;. Additionally, we want the values inside the table to be from our &lt;code&gt;total_bill&lt;/code&gt; column so we'll set the argument &lt;code&gt;values&lt;/code&gt; to be &lt;code&gt;df_tips['total_bill']&lt;/code&gt;. We also want to calculate the mean total bill for each combination of a day and gender so we'll set the &lt;code&gt;aggfunc&lt;/code&gt; argument to &lt;code&gt;'mean'&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;crosstab&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;day&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sex&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;aggfunc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Male&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;mean_bill_size_meals_served_by_males&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Female&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;mean_bill_size_meals_served_by_females&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;sex&lt;/th&gt;
+      &lt;th&gt;mean_bill_size_meals_served_by_males&lt;/th&gt;
+      &lt;th&gt;mean_bill_size_meals_served_by_females&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;day&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Thur&lt;/th&gt;
+      &lt;td&gt;18.714667&lt;/td&gt;
+      &lt;td&gt;16.715312&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Fri&lt;/th&gt;
+      &lt;td&gt;19.857000&lt;/td&gt;
+      &lt;td&gt;14.145556&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sat&lt;/th&gt;
+      &lt;td&gt;20.802542&lt;/td&gt;
+      &lt;td&gt;19.680357&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sun&lt;/th&gt;
+      &lt;td&gt;21.887241&lt;/td&gt;
+      &lt;td&gt;19.872222&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This crosstab calculation outputted the same 18.71 value as expected!&lt;/p&gt;
+&lt;p&gt;We can pass in many other aggregate methods to the &lt;code&gt;aggfunc&lt;/code&gt; method too such as mean and standard deviation.&lt;/p&gt;
 &lt;p&gt;You can learn more about details of using &lt;code&gt;crosstab()&lt;/code&gt; from the official pandas &lt;a href='https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.crosstab.html' rel='nofollow'&gt;documentation page&lt;/a&gt;.&lt;/p&gt;</content><category term="crosstabs"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Categorical Data</title><link href="https://dfrieds.com/python/categorical-data-python-pandas" rel="alternate"></link><published>2018-11-22T13:20:00-08:00</published><updated>2018-11-22T13:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-22:/python/categorical-data-python-pandas</id><summary type="html">&lt;p&gt;Overview of categorical data and its use in pandas&lt;/p&gt;</summary><content type="html">&lt;h3&gt;What is Categorical Data&lt;/h3&gt;
 &lt;p&gt;Categorical data has a limited number of values to choose from for a field of data. Some examples of fields and values are:&lt;/p&gt;
 &lt;table&gt;

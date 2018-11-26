@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;6 min read
+        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;9 min read
       </li>
       <li class="tagarticle">
         Key Terms:         crosstabs,
@@ -365,7 +365,64 @@
 </table>
 </div>
 
-<p>In this example, we passed in two columns from our DataFrame. However, one nice feature of <code>crosstab()</code> is you don't need the data to be in a DataFrame. For the <code>index</code> and <code>columns</code> arguments, you can pass in two numpy arrays.</p>
+<p>One issue with this crosstab output is the column names are nonsensical. Just saying <code>Male</code> or <code>Female</code> isn't very specific. They should be renamed to be clearer. We can use the <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rename.html' rel='nofollow'>rename()</a> method and set the argument <code>columns</code> to be a dictionary in which the keys are the current column names and the values are the respective new names to set.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sex</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>In this example, we passed in two columns from our DataFrame. However, one nice feature of <code>crosstab()</code> is that you don't need the data to be in a DataFrame. For the <code>index</code> and <code>columns</code> arguments, you can pass in two numpy arrays.</p>
 <p>Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our query below matches the 30 number we see above.</p>
 <div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">))</span>
 </pre></div>
@@ -375,8 +432,8 @@
 </pre></div>
 
 
-<p>For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument <code>margins</code> to <code>True</code> to get these totals.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<p>For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument <code>margins</code> to <code>True</code> to get these totals. By default, the returned output will have a column and row name of <code>All</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -398,8 +455,8 @@
   <thead>
     <tr style="text-align: right;">
       <th>sex</th>
-      <th>Male</th>
-      <th>Female</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
       <th>All</th>
     </tr>
     <tr>
@@ -444,8 +501,8 @@
 </table>
 </div>
 
-<p>In <code>crosstab()</code>, we can also rename the <code>All</code> column. First, use all the same arguments from above. Then, set the argument <code>margins_name</code> to <code>total_meals_served</code> .</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;total_meals_served&quot;</span><span class="p">)</span>
+<p>In the <code>crosstab()</code> method, we can also rename the <code>All</code> column. First, use all the same arguments from above. Then, set the argument <code>margins_name</code> to <code>count_meals_served</code> .</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;count_meals_served&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -467,9 +524,9 @@
   <thead>
     <tr style="text-align: right;">
       <th>sex</th>
-      <th>Male</th>
-      <th>Female</th>
-      <th>total_meals_served</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
+      <th>count_meals_served</th>
     </tr>
     <tr>
       <th>day</th>
@@ -504,7 +561,7 @@
       <td>76</td>
     </tr>
     <tr>
-      <th>total_meals_served</th>
+      <th>count_meals_served</th>
       <td>157</td>
       <td>87</td>
       <td>244</td>
@@ -514,7 +571,7 @@
 </div>
 
 <p>For each cell value, we can calculate what percentage it is of the row's total. To do that, set the <code>normalize</code> argument to <code>'index'</code> (since index applies to each row).</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -536,8 +593,8 @@
   <thead>
     <tr style="text-align: right;">
       <th>sex</th>
-      <th>Male</th>
-      <th>Female</th>
+      <th>proportion_meals_served_by_males</th>
+      <th>proportion_meals_served_by_females</th>
     </tr>
     <tr>
       <th>day</th>
@@ -575,8 +632,8 @@
 </table>
 </div>
 
-<p>For each cell value, we can calculate what percentage it is of the column's total. To do that, set the <code>normalize</code> argument to <code>'columns'</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+<p>For each cell value, we can also calculate what percentage it is of the column's total. To do that, set the <code>normalize</code> argument to <code>'columns'</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -598,8 +655,8 @@
   <thead>
     <tr style="text-align: right;">
       <th>sex</th>
-      <th>Male</th>
-      <th>Female</th>
+      <th>proportion_meals_served_by_males</th>
+      <th>proportion_meals_served_by_females</th>
       <th>proportion_meals_served</th>
     </tr>
     <tr>
@@ -638,6 +695,89 @@
 </table>
 </div>
 
+<p>Given two categorical columns, the <code>crosstab()</code> method can additionally utilize a column with numerical values to perform an aggregate operation. That sentence may sound daunting - so let's walk through it with a simple example.</p>
+<p>We know there exists <code>total_bill</code> values in our datasets for males that served meals on Thursday. Below, I preview the first few <code>total_bill</code> values that meet this criteria.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">)[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>77    27.20
+78    22.76
+79    17.29
+80    19.44
+81    16.66
+Name: total_bill, dtype: float64
+</pre></div>
+
+
+<p>We may want to know the average bill size that meet the criteria above. So, given that series, we can calculate the mean and we arrive at a result of 18.71.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">)[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>18.714666666666666
+</pre></div>
+
+
+<p>Now, we can perform this same operation using the <code>crosstab()</code> method. Same as before, we want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from <code>sex</code>. Additionally, we want the values inside the table to be from our <code>total_bill</code> column so we'll set the argument <code>values</code> to be <code>df_tips['total_bill']</code>. We also want to calculate the mean total bill for each combination of a day and gender so we'll set the <code>aggfunc</code> argument to <code>'mean'</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">],</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sex</th>
+      <th>mean_bill_size_meals_served_by_males</th>
+      <th>mean_bill_size_meals_served_by_females</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>18.714667</td>
+      <td>16.715312</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>19.857000</td>
+      <td>14.145556</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>20.802542</td>
+      <td>19.680357</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>21.887241</td>
+      <td>19.872222</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>This crosstab calculation outputted the same 18.71 value as expected!</p>
+<p>We can pass in many other aggregate methods to the <code>aggfunc</code> method too such as mean and standard deviation.</p>
 <p>You can learn more about details of using <code>crosstab()</code> from the official pandas <a href='https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.crosstab.html' rel='nofollow'>documentation page</a>.</p>
   </div>
 </section>
