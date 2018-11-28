@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;9 min read
+        Nov 23&nbsp;&nbsp;&bull;&nbsp;&nbsp;20 min read
       </li>
       <li class="tagarticle">
         Key Terms:         crosstabs,
@@ -307,6 +307,7 @@
 </div>
 
 <h3>Implement Crosstabs with Tips Dataset</h3>
+<h4>Grouping By a Single Field for the Index and Column</h4>
 <p>Let's compute a simple crosstab across the <code>day</code> and <code>sex</code> column. We want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from <code>sex</code>. By default in pandas, <code>crosstab()</code> computes an aggregated metric of a count (aka frequency).</p>
 <p>So, each of the values inside our table represent a count across the index and column. For example, males served 30 unique groups across all Thursdays in our dataset.</p>
 <div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">])</span>
@@ -422,18 +423,8 @@
 </table>
 </div>
 
-<p>In this example, we passed in two columns from our DataFrame. However, one nice feature of <code>crosstab()</code> is that you don't need the data to be in a DataFrame. For the <code>index</code> and <code>columns</code> arguments, you can pass in two numpy arrays.</p>
-<p>Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our query below matches the 30 number we see above.</p>
-<div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">))</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>30
-</pre></div>
-
-
-<p>For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument <code>margins</code> to <code>True</code> to get these totals. By default, the returned output will have a column and row name of <code>All</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+<p>Also, in the output above, see where it says <code>sex</code> as the column name and <code>day</code> for the row name? We can modify those names using arguments in the <code>crosstab()</code> method. Let's set the <code>colnames</code> argument to <code>gender</code> since that's a more specific name than <code>sex</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -454,7 +445,155 @@
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>sex</th>
+      <th>gender</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>In this example, we passed in two columns from our DataFrame. However, one nice feature of <code>crosstab()</code> is that you don't need the data to be in a DataFrame. For the <code>index</code> and <code>columns</code> arguments, you can pass in two numpy arrays.</p>
+<p>Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our query below matches the 30 number we see above.</p>
+<div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>30
+</pre></div>
+
+
+<p>Alternatively, given the crosstab output above, you can present it in a different format that may be easier for further analysis. I won't dive into details of this operation, but in addition to the code above, you can chain the <code>unstack()</code> method and then the <code>reset_index()</code> method to pivot the DataFrame so each row is a unique combination of a value from <code>sex</code> and <code>day</code> with the appropriate count of meals served.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;count_meals_served&quot;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>day</th>
+      <th>count_meals_served</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Male</td>
+      <td>Thur</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Male</td>
+      <td>Fri</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Male</td>
+      <td>Sat</td>
+      <td>59</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Male</td>
+      <td>Sun</td>
+      <td>58</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Female</td>
+      <td>Thur</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Female</td>
+      <td>Fri</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Female</td>
+      <td>Sat</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Female</td>
+      <td>Sun</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument <code>margins</code> to <code>True</code> to get these totals. By default, the returned output will have a column and row name of <code>All</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>gender</th>
       <th>count_meals_served_by_males</th>
       <th>count_meals_served_by_females</th>
       <th>All</th>
@@ -502,7 +641,7 @@
 </div>
 
 <p>In the <code>crosstab()</code> method, we can also rename the <code>All</code> column. First, use all the same arguments from above. Then, set the argument <code>margins_name</code> to <code>count_meals_served</code> .</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;count_meals_served&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;count_meals_served&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -523,7 +662,7 @@
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>sex</th>
+      <th>gender</th>
       <th>count_meals_served_by_males</th>
       <th>count_meals_served_by_females</th>
       <th>count_meals_served</th>
@@ -571,7 +710,7 @@
 </div>
 
 <p>For each cell value, we can calculate what percentage it is of the row's total. To do that, set the <code>normalize</code> argument to <code>'index'</code> (since index applies to each row).</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -592,7 +731,7 @@
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>sex</th>
+      <th>gender</th>
       <th>proportion_meals_served_by_males</th>
       <th>proportion_meals_served_by_females</th>
     </tr>
@@ -633,7 +772,7 @@
 </div>
 
 <p>For each cell value, we can also calculate what percentage it is of the column's total. To do that, set the <code>normalize</code> argument to <code>'columns'</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -654,7 +793,7 @@
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>sex</th>
+      <th>gender</th>
       <th>proportion_meals_served_by_males</th>
       <th>proportion_meals_served_by_females</th>
       <th>proportion_meals_served</th>
@@ -720,7 +859,7 @@ Name: total_bill, dtype: float64
 
 
 <p>Now, we can perform this same operation using the <code>crosstab()</code> method. Same as before, we want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from <code>sex</code>. Additionally, we want the values inside the table to be from our <code>total_bill</code> column so we'll set the argument <code>values</code> to be <code>df_tips['total_bill']</code>. We also want to calculate the mean total bill for each combination of a day and gender so we'll set the <code>aggfunc</code> argument to <code>'mean'</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">],</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_females&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_females&quot;</span><span class="p">})</span>
 </pre></div>
 
 
@@ -741,7 +880,7 @@ Name: total_bill, dtype: float64
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>sex</th>
+      <th>gender</th>
       <th>mean_bill_size_meals_served_by_males</th>
       <th>mean_bill_size_meals_served_by_females</th>
     </tr>
@@ -779,6 +918,676 @@ Name: total_bill, dtype: float64
 <p>This crosstab calculation outputted the same 18.71 value as expected!</p>
 <p>We can pass in many other aggregate methods to the <code>aggfunc</code> method too such as mean and standard deviation.</p>
 <p>You can learn more about details of using <code>crosstab()</code> from the official pandas <a href='https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.crosstab.html' rel='nofollow'>documentation page</a>.</p>
+<h4>Grouping By Multiple Fields for the Index and/or Columns</h4>
+<p>We can also use the <code>crosstabs()</code> method to group by multiple pandas columns for the <code>index</code> or <code>columns</code> arguments. </p>
+<p>For example, we can find out for days of the week, for each gender, what was the count of meals they served for lunch or dinner. In pandas We want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from all combinations of the <code>sex</code> (gender) and <code>time</code> (meal time) columns. </p>
+<p>To interpret a value from our table below, across all Thursdays in our dataset, females served 31 lunch meals.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;meal&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Lunch&quot;</span><span class="p">:</span> <span class="s2">&quot;count_lunch_meals_served&quot;</span><span class="p">,</span> <span class="s2">&quot;Dinner&quot;</span><span class="p">:</span> <span class="s2">&quot;count_dinner_meals_served&quot;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>gender</th>
+      <th colspan="2" halign="left">Male</th>
+      <th colspan="2" halign="left">Female</th>
+    </tr>
+    <tr>
+      <th>meal</th>
+      <th>count_lunch_meals_served</th>
+      <th>count_dinner_meals_served</th>
+      <th>count_lunch_meals_served</th>
+      <th>count_dinner_meals_served</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>0</td>
+      <td>31</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>3</td>
+      <td>7</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>0</td>
+      <td>59</td>
+      <td>0</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>We can verify the logic in a value with a separate query. I'm curious to see the count of meals on Thursday served by females during lunch time. Our result on this query is 31 which matches the value in the crosstab above!</p>
+<div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;day==&#39;Thur&#39; and sex==&#39;Female&#39; and time==&#39;Lunch&#39;&quot;</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>31
+</pre></div>
+
+
+<p>If you're familiar with the <code>groupby()</code> method in pandas, the code below performs a similar operation to the crosstab above, but the output format is a little different.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">])[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>day   sex   
+Thur  Male      30
+      Female    32
+Fri   Male      10
+      Female     9
+Sat   Male      59
+      Female    28
+Sun   Male      58
+      Female    18
+Name: time, dtype: int64
+</pre></div>
+
+
+<p>We can also group by multiple pandas columns in the <code>index</code> argument of the <code>crosstabs()</code> method. </p>
+<p>Below is a fairly complex operation. The code below helps us find out for every combination of day of the week, gender and meal type what was the count of meals served for the various group sizes (ex - party of two people versus party of three). </p>
+<p>In our output, the index includes unique values from the <code>day</code> and <code>sex</code> fields while columns include unique values from the <code>time</code> and <code>size</code> fields.</p>
+<p>To interpret a value from our table below, across all Thursdays in our dataset, males 24 lunch meals that contained a group of 2 people.</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;meal&#39;</span><span class="p">,</span> <span class="s1">&#39;party_people_size&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Lunch&quot;</span><span class="p">:</span> <span class="s2">&quot;count_lunch_meals_served&quot;</span><span class="p">,</span> <span class="s2">&quot;Dinner&quot;</span><span class="p">:</span> <span class="s2">&quot;count_dinner_meals_served&quot;</span><span class="p">})</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>meal</th>
+      <th colspan="6" halign="left">count_lunch_meals_served</th>
+      <th colspan="6" halign="left">count_dinner_meals_served</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>party_people_size</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th>sex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="2" valign="top">Thur</th>
+      <th>Male</th>
+      <td>0</td>
+      <td>24</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>1</td>
+      <td>23</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Fri</th>
+      <th>Male</th>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Sat</th>
+      <th>Male</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>34</td>
+      <td>13</td>
+      <td>11</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>19</td>
+      <td>5</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Sun</th>
+      <th>Male</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>32</td>
+      <td>9</td>
+      <td>14</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>6</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>We can verify 24 lunch meals for a party of 2 were served by males on Thursdays with the query below too.</p>
+<div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;day==&#39;Thur&#39; and sex==&#39;Male&#39; and time==&#39;Lunch&#39; and size==2&quot;</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>24
+</pre></div>
+
+
+<h3>Style Output</h3>
+<p>While the above output is daunting to read with all the cells, there's a cool trick in Seaborn to make your DataFrame output appear as a heatmap. I added some code based off the example from the <a href='https://pandas.pydata.org/pandas-docs/stable/style.html#Builtin-Styles' rel='nofollow'>pandas documention</a> for built-in styles. Now, we can more easily identify the large values as being dark orange colors in our visualization below.</p>
+<div class="highlight"><pre><span></span><span class="n">orange</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">light_palette</span><span class="p">(</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">as_cmap</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;meal&#39;</span><span class="p">,</span> <span class="s1">&#39;party_people_size&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Lunch&quot;</span><span class="p">:</span> <span class="s2">&quot;count_lunch_meals_served&quot;</span><span class="p">,</span> <span class="s2">&quot;Dinner&quot;</span><span class="p">:</span> <span class="s2">&quot;count_dinner_meals_served&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
+</pre></div>
+
+
+<style  type="text/css" >
+    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col1 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col2 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col3 {
+            background-color:  #ffc04d;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col4 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col5 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col7 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col9 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col0 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col1 {
+            background-color:  #ffa809;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col2 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col3 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col5 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col7 {
+            background-color:  #fff4df;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col9 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col0 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col1 {
+            background-color:  #ffefd3;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col7 {
+            background-color:  #ffe8bd;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col9 {
+            background-color:  #fff0d5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col1 {
+            background-color:  #ffecc9;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col2 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col7 {
+            background-color:  #ffeac4;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col9 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col7 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col8 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col9 {
+            background-color:  #ffb631;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col10 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col6 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col7 {
+            background-color:  #ffc965;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col8 {
+            background-color:  #ffd78d;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col9 {
+            background-color:  #ffebc5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col7 {
+            background-color:  #ffaa0e;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col8 {
+            background-color:  #ffbe46;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col9 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col10 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col11 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col7 {
+            background-color:  #ffe5b7;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col8 {
+            background-color:  #ffd17b;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col9 {
+            background-color:  #ffdfa4;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col10 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col11 {
+            background-color:  #fff6e5;
+        }</style>
+
+<p><table id="T_7df34398_f262_11e8_865c_2200dc4aac00" > 
+<thead>    <tr> 
+        <th class="blank" ></th> 
+        <th class="index_name level0" >meal</th> 
+        <th class="col_heading level0 col0" colspan=6>count_lunch_meals_served</th> 
+        <th class="col_heading level0 col6" colspan=6>count_dinner_meals_served</th> 
+    </tr>    <tr> 
+        <th class="blank" ></th> 
+        <th class="index_name level1" >party_people_size</th> 
+        <th class="col_heading level1 col0" >1</th> 
+        <th class="col_heading level1 col1" >2</th> 
+        <th class="col_heading level1 col2" >3</th> 
+        <th class="col_heading level1 col3" >4</th> 
+        <th class="col_heading level1 col4" >5</th> 
+        <th class="col_heading level1 col5" >6</th> 
+        <th class="col_heading level1 col6" >1</th> 
+        <th class="col_heading level1 col7" >2</th> 
+        <th class="col_heading level1 col8" >3</th> 
+        <th class="col_heading level1 col9" >4</th> 
+        <th class="col_heading level1 col10" >5</th> 
+        <th class="col_heading level1 col11" >6</th> 
+    </tr>    <tr> 
+        <th class="index_name level0" >day</th> 
+        <th class="index_name level1" >sex</th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+    </tr></thead> 
+<tbody>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row0" class="row_heading level0 row0" rowspan=2>Thur</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row0" class="row_heading level1 row0" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col0" class="data row0 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col1" class="data row0 col1" >24</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col2" class="data row0 col2" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col3" class="data row0 col3" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col4" class="data row0 col4" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col5" class="data row0 col5" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col6" class="data row0 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col7" class="data row0 col7" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col8" class="data row0 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col9" class="data row0 col9" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col10" class="data row0 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col11" class="data row0 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row1" class="row_heading level1 row1" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col0" class="data row1 col0" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col1" class="data row1 col1" >23</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col2" class="data row1 col2" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col3" class="data row1 col3" >3</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col4" class="data row1 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col5" class="data row1 col5" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col6" class="data row1 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col7" class="data row1 col7" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col8" class="data row1 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col9" class="data row1 col9" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col10" class="data row1 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col11" class="data row1 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row2" class="row_heading level0 row2" rowspan=2>Fri</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row2" class="row_heading level1 row2" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col0" class="data row2 col0" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col1" class="data row2 col1" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col2" class="data row2 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col3" class="data row2 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col4" class="data row2 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col5" class="data row2 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col6" class="data row2 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col7" class="data row2 col7" >6</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col8" class="data row2 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col9" class="data row2 col9" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col10" class="data row2 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col11" class="data row2 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row3" class="row_heading level1 row3" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col0" class="data row3 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col1" class="data row3 col1" >3</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col2" class="data row3 col2" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col3" class="data row3 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col4" class="data row3 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col5" class="data row3 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col6" class="data row3 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col7" class="data row3 col7" >5</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col8" class="data row3 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col9" class="data row3 col9" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col10" class="data row3 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col11" class="data row3 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row4" class="row_heading level0 row4" rowspan=2>Sat</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row4" class="row_heading level1 row4" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col0" class="data row4 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col1" class="data row4 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col2" class="data row4 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col3" class="data row4 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col4" class="data row4 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col5" class="data row4 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col6" class="data row4 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col7" class="data row4 col7" >34</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col8" class="data row4 col8" >13</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col9" class="data row4 col9" >11</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col10" class="data row4 col10" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col11" class="data row4 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row5" class="row_heading level1 row5" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col0" class="data row5 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col1" class="data row5 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col2" class="data row5 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col3" class="data row5 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col4" class="data row5 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col5" class="data row5 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col6" class="data row5 col6" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col7" class="data row5 col7" >19</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col8" class="data row5 col8" >5</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col9" class="data row5 col9" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col10" class="data row5 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col11" class="data row5 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row6" class="row_heading level0 row6" rowspan=2>Sun</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row6" class="row_heading level1 row6" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col0" class="data row6 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col1" class="data row6 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col2" class="data row6 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col3" class="data row6 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col4" class="data row6 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col5" class="data row6 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col6" class="data row6 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col7" class="data row6 col7" >32</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col8" class="data row6 col8" >9</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col9" class="data row6 col9" >14</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col10" class="data row6 col10" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col11" class="data row6 col11" >1</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row7" class="row_heading level1 row7" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col0" class="data row7 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col1" class="data row7 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col2" class="data row7 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col3" class="data row7 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col4" class="data row7 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col5" class="data row7 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col6" class="data row7 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col7" class="data row7 col7" >7</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col8" class="data row7 col8" >6</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col9" class="data row7 col9" >4</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col10" class="data row7 col10" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col11" class="data row7 col11" >0</td> 
+    </tr></tbody> 
+</table> </p>
   </div>
 </section>
 
@@ -788,7 +1597,7 @@ Name: total_bill, dtype: float64
   <footer class="footer">
     <div class="container">
       <p class="text-muted">
-        <center>This project contains 61 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+        <center>This project contains 62 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
           <br/>
           Copyright &copy; Dan Friedman,
           <time datetime="2018">2018</time>.
