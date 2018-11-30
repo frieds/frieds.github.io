@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 28&nbsp;&nbsp;&bull;&nbsp;&nbsp;8 min read
+        Nov 28&nbsp;&nbsp;&bull;&nbsp;&nbsp;11 min read
       </li>
       <li class="tagarticle">
         Key Terms:         mean,
@@ -175,6 +175,7 @@
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 
@@ -184,7 +185,7 @@
 </pre></div>
 
 
-<h3>Get Tips Dataset</h3>
+<h3>Example 1: Tips Dataset</h3>
 <p>Let's get the <code>tips</code> dataset from the <code>seaborn</code> library and assign it to the DataFrame <code>df_tips</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;tips&#39;</span><span class="p">)</span>
 </pre></div>
@@ -316,7 +317,7 @@
 </table>
 </div>
 
-<h3>Visualize Distribution of Total Bill Amounts</h3>
+<h4>Visualize Distribution of Total Bill Amounts</h4>
 <p>First off, I like to visualize the distribution of data in a field. Below is a histogram to illustrate the distribution of values in the <code>total_bill</code> field. The x-axis indicates total bill amounts and the y-axis indicates the frequency (aka count) of occurences of those total bill amounts.</p>
 <p>From a visual standpoint, it looks like most total bill amounts are around 12 to 20. I can also see a long tail to the right in which there are total bill amounts up to 50.</p>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -327,7 +328,7 @@
 
 
 <p><img alt="png" src="mean_median_mode_files/mean_median_mode_13_0.png"></p>
-<h3>Mode</h3>
+<h4>Mode</h4>
 <p>The <strong>mode</strong> is the most frequently occuring value in a field. </p>
 <p>We can use the pandas <code>mode()</code> method to calculate the mode of <code>total_bill</code> column in <code>df_tips</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mode</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -406,7 +407,7 @@
 </table>
 </div>
 
-<h3>Mean</h3>
+<h4>Mean</h4>
 <p>The <strong>mean</strong>, also known as the <em>average</em>, is the average of the values in a field. To calculate this: add up all the numbers and divide by how many numbers there are. This is equivalent to the sum of a field divided by the count. </p>
 <p>We can use the pandas <code>mean()</code> method to calculate the mean of the <code>total_bill</code> column in <code>df_tips</code> and I'll round this value to two decimal places.</p>
 <div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
@@ -418,7 +419,7 @@
 
 
 <p>The mean is 19.79</p>
-<h3>Median</h3>
+<h4>Median</h4>
 <p>Once a set of values are sorted, the <strong>median</strong> is the <em>middle</em> value. </p>
 <p>We can use the pandas <code>median()</code> method to calculate the median of the <code>total_bill</code> column in <code>df_tips</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
@@ -430,7 +431,7 @@
 
 
 <p>The median is 17.795</p>
-<h3>Visualize Mean, Median and Mode on Our Total Bill Histogram</h3>
+<h4>Visualize Mean, Median and Mode on Our Total Bill Histogram</h4>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;total bill [$]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
@@ -455,6 +456,125 @@
 <p>Hypothetically, if in one day four meals had total bill values of 15, 20, 25 and 60, our mean would be 40; yet a value of 40 would be much higher than the majority of our values since it's far larger than 15, 20 and 25. So, in this instance, the mean would be a poor measure to describe the "center" of the data.</p>
 <h4>Median</h4>
 <p>The median is typically a good measurement to describe the "center" of a set of values. An advantage of the median is that it's less biased when working with skewed data. For example, to continue on the simple example above, if in one day four meals had total bill values of 15, 20, 25 and 60, our mean would be 40; this number seems very far off from the "center" of the values. The mean calculation is heavily skewed by this large value of 60. However, the median of these four values is 22.5 (halfway between 20 and 25) which seems closer to the "center" of the data and is less biased than the mean.</p>
+<h3>Example 2: Geography Majors at UNC</h3>
+<p>This is a fictional dataset that includes the net worth values of geography graduates from the last 20 years at the University of North Carolina at Chapel Hill. We'll illustrate the central tendancy of these net worth values.</p>
+<p>First, I'll generate this random data using numpy's random module and <a href='https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.normal.html' rel='nofollow'>normal() method</a> and assign it to the DataFrame <code>df_net_worth</code>. </p>
+<div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="c1"># seed random number generator with fixed value so we always get same values below</span>
+<span class="n">net_worth_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">80000</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">25000</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2800</span><span class="p">))</span>
+<span class="n">michael_jordan_net_worth</span> <span class="o">=</span> <span class="mi">1700000000</span>
+<span class="n">net_worth_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">michael_jordan_net_worth</span><span class="p">)</span>
+<span class="n">df_net_worth</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;net_worth&#39;</span><span class="p">:</span> <span class="n">net_worth_values</span><span class="p">})</span>
+</pre></div>
+
+
+<p>Preview the first few rows of <code>df_net_worth</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_net_worth</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>net_worth</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>92417.853825</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>76543.392471</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>96192.213453</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>118075.746410</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>74146.165632</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Let's examine common percentile values. We'll use the <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.quantile.html' rel='nofollow'><code>quantile()</code> Series method</a> in pandas.</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">percentile</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]:</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">df_net_worth</span><span class="p">[</span><span class="s1">&#39;net_worth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="n">percentile</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{0}th percentile is {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">percentile</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>0.01th percentile is 24703.45221676233
+0.25th percentile is 64268.41515768028
+0.5th percentile is 80707.95940326153
+0.75th percentile is 96829.53378174896
+0.99th percentile is 139096.81236548402
+</pre></div>
+
+
+<p>It seems our 55th percentile is a value of 80,707 and values are typically within 24,000 and 140,000. </p>
+<p>We can visualize our net worth values in this range of 26,000 to 14,000. The visualization below shows a fairly normal distributon and I'd figure the "center" of our data is around 80,000.</p>
+<div class="highlight"><pre><span></span><span class="n">df_net_worth</span><span class="p">[</span><span class="s1">&#39;net_worth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">26000</span><span class="p">,</span> <span class="mi">140000</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;net worth [$]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Net Worth Values of UNC Geography Graduates&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="mean_median_mode_files/mean_median_mode_45_0.png"></p>
+<p>We can calculate the mean <code>net_worth</code> value at 6,877,572</p>
+<div class="highlight"><pre><span></span><span class="n">df_net_worth</span><span class="p">[</span><span class="s1">&#39;net_worth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>687757.978984199
+</pre></div>
+
+
+<p>This value of 6,877,572 seems way higher than the 80,000 we expected. Why is that?</p>
+<p>Well, the famous NBA basketball player Michael Jordan also attended UNC and graduated with a degree in Geography. He has a net worth of 1.7B. His super high net worth skews the mean to be a very high number. </p>
+<p>Let's calculate the median value of the <code>net_worth</code> column below. The median is 80,708 which which seems like a far more reasonable metric to describe the "center" of the data.</p>
+<div class="highlight"><pre><span></span><span class="n">median</span> <span class="o">=</span> <span class="n">df_net_worth</span><span class="p">[</span><span class="s1">&#39;net_worth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+<span class="n">median</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>80707.95940326153
+</pre></div>
+
+
+<p>Let's plot this median on our histogram so we can better see how it represents the "center" of the data.</p>
+<div class="highlight"><pre><span></span><span class="n">df_net_worth</span><span class="p">[</span><span class="s1">&#39;net_worth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">26000</span><span class="p">,</span> <span class="mi">140000</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;net worth [$]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Net Worth Values of UNC Geography Graduates&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">median</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;darkslateblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="mean_median_mode_files/mean_median_mode_51_0.png"></p>
   </div>
 </section>
 
@@ -464,7 +584,7 @@
   <footer class="footer">
     <div class="container">
       <p class="text-muted">
-        <center>This project contains 63 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+        <center>This project contains 64 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
           <br/>
           Copyright &copy; Dan Friedman,
           <time datetime="2018">2018</time>.
