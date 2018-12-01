@@ -156,7 +156,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 30&nbsp;&nbsp;&bull;&nbsp;&nbsp;3 min read
+        Nov 30&nbsp;&nbsp;&bull;&nbsp;&nbsp;5 min read
       </li>
       <li class="tagarticle">
         Key Terms:         normal distribution,
@@ -175,17 +175,22 @@
 <li>grades on tests</li>
 </ul>
 <h3>Import Modules</h3>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 
 
+<p>I turn warnings off in this post because of an <a href='https://stackoverflow.com/a/52817582' rel='nofollow'>issue in Scipy</a> that will be fixed in a later version.</p>
+<div class="highlight"><pre><span></span><span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+
+
 <p>Visualization styling code</p>
-<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mf">11.5</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">)})</span>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mf">12.5</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">)})</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -198,7 +203,7 @@
 <li><code>size</code> as number of samples</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># seed random number generator with fixed value so we always get same values below</span>
-<span class="n">normal_distr_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">200</span><span class="p">))</span>
+<span class="n">normal_distr_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1300</span><span class="p">))</span>
 </pre></div>
 
 
@@ -214,7 +219,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="normal_distribution_files/normal_distribution_11_0.png"></p>
+<p><img alt="png" src="normal_distribution_files/normal_distribution_13_0.png"></p>
 <p>This curve above is often called a "bell curve" since it looks like a bell seen below.</p>
 <p><img alt="Image of bell to resemble a bell curve" src="images/bell_256.png"></p>
 <p>When we say the data is "normally distributed", the normal distribution should have the following characteristics:</p>
@@ -231,7 +236,7 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>100.08
+<div class="highlight"><pre><span></span>100.325
 </pre></div>
 
 
@@ -251,11 +256,11 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>ModeResult(mode=array([100]), count=array([9]))
+<div class="highlight"><pre><span></span>ModeResult(mode=array([101]), count=array([35]))
 </pre></div>
 
 
-<p>100 equals 100 which equals 100. So, it seems in this dataset that the mean, median and mode are the same values.</p>
+<p>100 equals 100 which is very close to 101. So, it seems in this dataset that the mean, median and mode are the same values.</p>
 <h5>Verify 50% of values less than mean and 50% above mean</h5>
 <div class="highlight"><pre><span></span><span class="n">count_values_above_mean</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -267,7 +272,7 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>96
+<div class="highlight"><pre><span></span>643
 </pre></div>
 
 
@@ -276,11 +281,80 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>104
+<div class="highlight"><pre><span></span>657
 </pre></div>
 
 
-<p>96 values greater than the mean value and 104 values less than the mean. That roughly fits our criteria to help prove this is a normal distribution.</p>
+<p>643 values are above the mean and 657 values are below the mean. This roughly fits our criteria to help prove that this is a normal distribution.</p>
+<h3>Standard Deviations with a Normal Distribution</h3>
+<p>For the <code>normal_distr_values</code> we plotted above in a histogram. I can also plot it in KDE form which you can simply think of as a line of best fit to smooth out the histogram. You can learn more about KDE plots in Python through this great Jake Vanderplas <a href='https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/' rel='nofollow'>article</a>. </p>
+<p>Below is our result.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">,</span> <span class="n">rug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;hotpink&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KDE Plot of Normal Distribution of Values&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.012</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="normal_distribution_files/normal_distribution_30_0.png"></p>
+<p>Let's calculate the values for one, two and three positive standard deviations from the mean of <code>normal_distr_values</code>, and one, two and three negative standard deviations from the mean of <code>normal_distr_values</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">plus_one_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+<span class="n">minus_one_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+
+<span class="n">plus_two_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+<span class="n">minus_two_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+
+<span class="n">plus_three_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+<span class="n">minus_three_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Since we have a normal distribution, the following logic on standard deviations applies to this dataset.</p>
+<div class="highlight"><pre><span></span><span class="n">kde</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="mi">50000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;hotpink&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minus_one_std_dev</span><span class="p">,</span> <span class="n">plus_one_std_dev</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;hotpink&#39;</span><span class="p">,)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">100.5</span><span class="p">,</span> <span class="n">y</span><span class="o">=.</span><span class="mo">00</span><span class="mi">85</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> 
+         <span class="n">s</span><span class="o">=</span><span class="s2">&quot;68</span><span class="si">% o</span><span class="s2">f values fall within</span><span class="se">\n</span><span class="s2"> this shaded area of</span><span class="se">\n</span><span class="s2"> plus or minus 1 standard</span><span class="se">\n</span><span class="s2"> deviation from the mean&quot;</span><span class="p">,</span> 
+         <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span> <span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round, pad=0.25&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KDE Plot of Normal Distribution of Values&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.012</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="normal_distribution_files/normal_distribution_34_0.png"></p>
+<div class="highlight"><pre><span></span><span class="n">kde</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;hotpink&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minus_two_std_dev</span><span class="p">,</span> <span class="n">plus_two_std_dev</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;hotpink&#39;</span><span class="p">,)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">y</span><span class="o">=.</span><span class="mo">0075</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> 
+         <span class="n">s</span><span class="o">=</span><span class="s2">&quot;95</span><span class="si">% o</span><span class="s2">f values fall within</span><span class="se">\n</span><span class="s2"> this shaded area of</span><span class="se">\n</span><span class="s2"> plus or minus 2 standard</span><span class="se">\n</span><span class="s2"> deviations from the mean&quot;</span><span class="p">,</span> 
+         <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span> <span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round, pad=0.4&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KDE Plot of Normal Distribution of Values&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.012</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="normal_distribution_files/normal_distribution_35_0.png"></p>
+<div class="highlight"><pre><span></span><span class="n">kde</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;hotpink&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minus_three_std_dev</span><span class="p">,</span> <span class="n">plus_three_std_dev</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;hotpink&#39;</span><span class="p">,)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">y</span><span class="o">=.</span><span class="mo">0075</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> 
+         <span class="n">s</span><span class="o">=</span><span class="s2">&quot;99.7</span><span class="si">% o</span><span class="s2">f values fall within</span><span class="se">\n</span><span class="s2"> this shaded area of</span><span class="se">\n</span><span class="s2"> plus or minus 3 standard</span><span class="se">\n</span><span class="s2"> deviations from the mean&quot;</span><span class="p">,</span> 
+         <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span> <span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round, pad=0.4&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KDE Plot of Normal Distribution of Values&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.012</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="normal_distribution_files/normal_distribution_36_0.png"></p>
   </div>
 </section>
 
