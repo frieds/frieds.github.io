@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data Science Tutorials">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="kmeans from scratch python">
+
+  <meta name="description" content="Explanation of K-Means clustering algorithm, an easy-to-understand library K-Means library built from "scratch" in Python, and implementation of K-Means with a simple example">
+  <meta property="og:description"  content="Explanation of K-Means clustering algorithm, an easy-to-understand library K-Means library built from "scratch" in Python, and implementation of K-Means with a simple example">
+  <meta name="twitter:description" content="Explanation of K-Means clustering algorithm, an easy-to-understand library K-Means library built from "scratch" in Python, and implementation of K-Means with a simple example">
+
+  <meta property="og:title" content="K-Means Algorithm from Scratch">
+  <meta name="twitter:title" content="K-Means Algorithm from Scratch">
+
+  <link rel="canonical" href="https://dfrieds.com/machine-learning/k-means-from-scratch-python"/>
+
+  <title>K-Means Algorithm from Scratch - Machine Learning</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full Atom Feed" />    <link href="https://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />      <link href="https://dfrieds.com/feeds/machine-learning.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories Atom Feed" />    <link href="https://dfrieds.com/feeds/machine-learning.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="machine-learning"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles
+              </a>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials
+              </a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+              </div>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://twitter.com/_DanFriedman" target="blank">Twitter</a>
+                <a class="dropdown-item" href="https://github.com/frieds" target="blank">GitHub</a>
+                <a class="dropdown-item" href="https://linkedin.com/in/danfriedman33" target="blank">LinkedIn</a>
+              </div>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> Machine Learning Clustering </div>
+    <h1 class="articleh1">
+      K-Means Algorithm from Scratch
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        Dec 2&nbsp;&nbsp;&bull;&nbsp;&nbsp;25 min read
+      </li>
+      <li class="tagarticle">
+        Key Terms:         clustering,
+        object oriented programming,
+        math,
+        dictionaries,
+        lists,
+        functions
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <h3>Intro to Clustering</h3>
+<p>Clustering is an unsupervised machine learning method that segments similar data points into groups.</p>
+<p>It's considered unsupervised because there's no ground truth value to predict. Instead, we're trying to create structure/meaning from the data.</p>
+<p>In this tutorial, we'll walk through the code of the K-Means clustering algorithm.</p>
+<h3>K-Means Clustering Explanation</h3>
+<p>K-Means is a fairly reasonable clustering algorithm to understand. The steps are outlined below.</p>
+<p>1) Assign <code>k</code> value as the number of desired clusters.</p>
+<p>2) Randomly assign centroids of clusters from points in our dataset.</p>
+<p>3) Assign each dataset point to the nearest centroid based on the Euclidean distance metric; this creates <strong>clusters</strong>.
+    - Euclidean distance computes the distance between two objects using the Pythagorean Theorem. If you walked three blocks North and four blocks West, your Euclidean distance is five blocks.</p>
+<p>4) Move centroids to the mean value of the clustered dataset points.</p>
+<p>5) Iterate/repeat steps 3-4 until centroids don't move or we reach our maximum number of iterations allowed (called <strong>convergence</strong>).</p>
+<p>Optionally, you could repeat steps 2-5 a fixed number of times (such as 10). With each new random initialization of centroids, you may get slightly different results. With different results, you'll likely have different centroids and slightly different dataset points in each cluster.</p>
+<p>But how do you measure the success of running steps 2-5? With each run of steps 2-5 you can measure the <strong>inertia</strong>. Inertia is the sum of squares for all dataset points to their closest centroid. You can measure inertia after each convergence.</p>
+<p>If you repeat steps 2-5 multiple times and measure the inertia each time, the optimal clusters are the final assignments with the smallest inertia.</p>
+<h3>Why I Wrote K-Means from Scratch</h3>
+<p>I thought it'd be fun, and it was! I also wanted to understand step by step how it worked and get practice working with the code behind complex algorithms.</p>
+<p>The foundations behind <em>relatively</em> simple machine learning algorithms such as K-Means for clustering, linear regression for regression, and logistic regression for classification are widespread in other algorithms and in deep learning. I plan to code more of these <em>relatively</em> simple algorithms in the future.</p>
+<h3>My K-Means Library Versus Sci-kit Learn Library</h3>
+<p>Disclaimer: the code below is nowhere near as feature-rich or performant as the algorithm in the <a href='https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html' rel='nofollow'>sklearn library</a>. However, it is fairly easy to read, understand and can help you better understand the math used in many clustering algorithms.</p>
+<h3>Code K-Means Algorithm From Scratch</h3>
+<h4>Import Modules</h4>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<h4>Define Logging Format</h4>
+<div class="highlight"><pre><span></span><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(lineno)s</span><span class="s1"> - </span><span class="si">%(funcName)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Set Visualization Styles</h4>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Visualization of Simple Dataset</h4>
+<p>Our dataset points.</p>
+<div class="highlight"><pre><span></span><span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+</pre></div>
+
+
+<p>Call on the <code>scatter</code> method on our pyplot object and pass in our list of x-values, y-values and a single color for all our points.</p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;midnightblue&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="k-means-clustering-from-scratch_files/k-means-clustering-from-scratch_20_0.png"></p>
+<h4>KMeans Class</h4>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">KMeans</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculations associated with K-Means clustering on a set of n-dimensional data points to find clusters - closely</span>
+<span class="sd">    located groups - of dataset points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_numpy_array</span><span class="p">,</span> <span class="n">k_number_of_clusters</span><span class="p">,</span> <span class="n">number_of_centroid_initializations</span><span class="p">,</span>
+                 <span class="n">max_number_of_iterations</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attributes associated with all K-Means clustering of data points</span>
+<span class="sd">        :param dataset_numpy_array: numpy array of n-dimensional points you&#39;d like to cluster</span>
+<span class="sd">        :param k_number_of_clusters: number of clusters to create</span>
+<span class="sd">        :param max_number_of_iterations: maximum number of possible iterations to run K-Means</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset_numpy_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_number_of_clusters</span> <span class="o">=</span> <span class="n">k_number_of_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_instances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_centroid_initializations</span> <span class="o">=</span> <span class="n">number_of_centroid_initializations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inertia_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_number_of_iterations</span> <span class="o">=</span> <span class="n">max_number_of_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusters_all_iterations_record</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># all centroids and clustered dataset points</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_euclidean_distance</span><span class="p">(</span><span class="n">n_dimensional_numpy_array_0</span><span class="p">,</span> <span class="n">n_dimensional_numpy_array_1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Static method to calculate the normalized Euclidean distance between any n-dimensional numpy arrays</span>
+<span class="sd">        :param n_dimensional_numpy_array_0: one n-dimensional numpy array (aka a point in space)</span>
+<span class="sd">        :param n_dimensional_numpy_array_1: another n-dimensional numpy array (aka a point in space)</span>
+<span class="sd">        :return: magnitude of Euclidean distance between two n-dimensional numpy arrays; scalar value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">n_dimensional_numpy_array_0</span> <span class="o">-</span> <span class="n">n_dimensional_numpy_array_1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_random_initial_centroids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create random initial centroids based on dataset; creates # of centroids to match # of clusters</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">random_dataset_indices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_instances</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_number_of_clusters</span><span class="p">)</span>
+        <span class="n">random_initial_centroids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="n">random_dataset_indices</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">random_initial_centroids</span>
+
+    <span class="k">def</span> <span class="nf">assign_dataset_points_to_closest_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given any number of centroid values, assign each point to its closest centroid based on the Euclidean distance</span>
+<span class="sd">        metric. Use data structure cluster_iteration_record to keep track of the centroid and associated points in a</span>
+<span class="sd">        single iteration.</span>
+<span class="sd">        :param centroids: numpy array of centroid values</span>
+<span class="sd">        :return: record of centroid and associated dataset points in its cluster for a single K-Means iteration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;clustering dataset points to centroids...&quot;</span><span class="p">)</span>
+        <span class="n">cluster_single_iteration_record</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dataset_point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">:</span>
+            <span class="n">euclidean_distances_between_dataset_point_and_centroids</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">centroid</span> <span class="ow">in</span> <span class="n">centroids</span><span class="p">:</span>
+                <span class="n">distance_between_centroid_and_dataset_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euclidean_distance</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">dataset_point</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Euclidean distance between dataset point {} and centroid {} is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">dataset_point</span><span class="p">,</span> <span class="n">centroid</span><span class="p">,</span> <span class="n">distance_between_centroid_and_dataset_point</span><span class="p">))</span>
+                <span class="n">euclidean_distances_between_dataset_point_and_centroids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance_between_centroid_and_dataset_point</span><span class="p">)</span>
+            <span class="n">index_of_closest_centroid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">euclidean_distances_between_dataset_point_and_centroids</span><span class="p">)</span>
+            <span class="n">closest_centroid</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">centroids</span><span class="p">[</span><span class="n">index_of_closest_centroid</span><span class="p">])</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;dataset point {} is closest to centroid {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset_point</span><span class="p">,</span> <span class="n">centroid</span><span class="p">))</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;dataset point {} now belongs to cluster with centroid {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset_point</span><span class="p">,</span> <span class="n">centroid</span><span class="p">))</span>
+            <span class="n">cluster_single_iteration_record</span><span class="p">[</span><span class="n">closest_centroid</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dataset_point</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cluster_single_iteration_record: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cluster_single_iteration_record</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">cluster_single_iteration_record</span>
+
+    <span class="k">def</span> <span class="nf">run_kmeans_initialized_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initialization_number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign dataset points to clusters based on nearest centroid; update centroids based on mean of cluster points.</span>
+<span class="sd">        Repeat steps above until centroids don&#39;t move or we&#39;ve reached max_number_of_iterations.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">centroids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_random_initial_centroids</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;random initial centroids are {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">centroids</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clusters_all_iterations_record</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>  <span class="c1"># list of record of iteration centroids and clustered points</span>
+
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_number_of_iterations</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;starting iteration number {}...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">))</span>
+            <span class="n">cluster_single_iteration_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assign_dataset_points_to_closest_centroid</span><span class="p">(</span><span class="n">centroids</span><span class="o">=</span><span class="n">centroids</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clusters_all_iterations_record</span><span class="p">[</span><span class="n">initialization_number</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_single_iteration_record</span><span class="p">)</span>
+            <span class="n">updated_centroids</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">centroid</span> <span class="ow">in</span> <span class="n">cluster_single_iteration_record</span><span class="p">:</span>
+                <span class="n">cluster_dataset_points</span> <span class="o">=</span> <span class="n">cluster_single_iteration_record</span><span class="p">[</span><span class="n">centroid</span><span class="p">]</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;calculating the mean of {} clustered dataset points associated with centroid {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">cluster_dataset_points</span><span class="p">),</span> <span class="n">centroid</span><span class="p">))</span>
+                <span class="n">updated_centroid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cluster_dataset_points</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mean of the clustered dataset points is the new centroid at {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">updated_centroid</span><span class="p">))</span>
+                <span class="n">updated_centroids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated_centroid</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;check if we meet early stopping criteria...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euclidean_distance</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">updated_centroids</span><span class="p">),</span> <span class="n">centroids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;updated centroids {} are the same as previous iteration centroids {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">updated_centroids</span><span class="p">,</span> <span class="n">centroids</span><span class="p">))</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;we&#39;ve reached convergence of centroid values; end clustering&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;use new updated_centroids values for next iteration...&quot;</span><span class="p">)</span>
+            <span class="n">centroids</span> <span class="o">=</span> <span class="n">updated_centroids</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements K-Means the max number_of_centroid_initializations times; each time, there&#39;s new initial centroids.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;perform K-Means {} times with new centroids at each start&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_centroid_initializations</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">initialization_number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_centroid_initializations</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_kmeans_initialized_centroid</span><span class="p">(</span><span class="n">initialization_number</span><span class="o">=</span><span class="n">initialization_number</span><span class="p">)</span>
+
+            <span class="c1"># index of -1 is for the last cluster assignment of the iteration</span>
+            <span class="n">inertia_of_last_cluster_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inertia</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters_all_iterations_record</span><span class="p">[</span><span class="n">initialization_number</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inertia_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inertia_of_last_cluster_record</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">inertia</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the sum of squared distances of dataset points to their cluster centers for all clusters - defined as inertia</span>
+<span class="sd">        :return: cluster_sum_of_squares_points_to_clusters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cluster_sum_of_squares_points_to_clusters</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cluster points: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">clusters</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">centroid</span><span class="p">,</span> <span class="n">cluster_points</span> <span class="ow">in</span> <span class="n">clusters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;the cluster has a centroid at: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">centroid</span><span class="p">))</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;calculate sum of squares from centroid to all points in that cluster...&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">cluster_point</span> <span class="ow">in</span> <span class="n">cluster_points</span><span class="p">:</span>
+                <span class="n">euclidean_norm_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euclidean_distance</span><span class="p">(</span><span class="n">cluster_point</span><span class="p">,</span> <span class="n">centroid</span><span class="p">)</span>
+                <span class="n">euclidean_norm_distance_squared</span> <span class="o">=</span> <span class="n">euclidean_norm_distance</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;squared euclidean dist from centroid {} to point {} is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">cluster_point</span><span class="p">,</span>
+                                                                                                 <span class="n">euclidean_norm_distance_squared</span><span class="p">))</span>
+                <span class="n">cluster_sum_of_squares_points_to_clusters</span> <span class="o">+=</span> <span class="n">euclidean_norm_distance_squared</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;inertia is: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cluster_sum_of_squares_points_to_clusters</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">cluster_sum_of_squares_points_to_clusters</span>
+
+    <span class="k">def</span> <span class="nf">index_lowest_inertia_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In our list of inertia_values, finds the index of the minimum inertia</span>
+<span class="sd">        :return: index_lowest_inertia</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">minimum_inertia_value</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inertia_values</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;minimum_inertia_value: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">minimum_inertia_value</span><span class="p">))</span>
+        <span class="n">index_lowest_inertia</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inertia_values</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">minimum_inertia_value</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;index_lowest_inertia: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index_lowest_inertia</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">index_lowest_inertia</span>
+
+    <span class="k">def</span> <span class="nf">final_iteration_optimal_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get results of optimal cluster assignment based  on the lowest inertia value</span>
+<span class="sd">        :return: dictionary with keys as centroids and values as list of dataset points in the clusters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># -1 gets us the final iteration from a centroid initialization of running K-Means</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusters_all_iterations_record</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index_lowest_inertia_cluster</span><span class="p">()][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">final_iteration_optimal_cluster_centroids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get centroids of the optimal cluster assignment based on the lowest inertia value</span>
+<span class="sd">        :return: list of tuples with tuples holding centroid locations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_iteration_optimal_cluster</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">plot_clusters</span><span class="p">(</span><span class="n">clusters</span><span class="p">,</span> <span class="n">x_axis_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">y_axis_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Static method to plot final cluster assignments if we only have 2 features from our dataset</span>
+<span class="sd">        :param clusters: dictionary with centroids as keys and values as list of dataset points in that cluster</span>
+<span class="sd">        :param x_axis_label: x axis label</span>
+<span class="sd">        :param y_axis_label: y axis label</span>
+<span class="sd">        :param plot_title: plot title</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">list_of_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;firebrick&#39;</span><span class="p">,</span> <span class="s1">&#39;gold&#39;</span><span class="p">,</span> <span class="s1">&#39;navy&#39;</span><span class="p">,</span> <span class="s1">&#39;lightseagreen&#39;</span><span class="p">,</span> <span class="s1">&#39;deepskyblue&#39;</span><span class="p">,</span> <span class="s1">&#39;mediumpurple&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;darkmagenta&#39;</span><span class="p">,</span> <span class="s1">&#39;palevioletred&#39;</span><span class="p">,</span> <span class="s1">&#39;darkgreen&#39;</span><span class="p">,</span>  <span class="s1">&#39;darkorange&#39;</span><span class="p">,</span> <span class="s1">&#39;darkslategray&#39;</span><span class="p">,</span> <span class="s1">&#39;dimgrey&#39;</span><span class="p">]</span>
+        <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">centroid</span><span class="p">,</span> <span class="n">cluster_points</span> <span class="ow">in</span> <span class="n">clusters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">cluster_color</span> <span class="o">=</span> <span class="n">list_of_colors</span><span class="p">[</span><span class="n">color_index</span><span class="p">]</span>
+            <span class="n">x_values_index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">y_values_index</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;plot centroid {} as {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">cluster_color</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">centroid</span><span class="p">[</span><span class="n">x_values_index</span><span class="p">],</span> <span class="n">centroid</span><span class="p">[</span><span class="n">y_values_index</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cluster_color</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;create lists of x-values and y-values for cluster points...&quot;</span><span class="p">)</span>
+            <span class="n">cluster_points_x_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">cluster_point</span><span class="p">[</span><span class="n">x_values_index</span><span class="p">]</span> <span class="k">for</span> <span class="n">cluster_point</span> <span class="ow">in</span> <span class="n">cluster_points</span><span class="p">]</span>
+            <span class="n">cluster_points_y_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">cluster_point</span><span class="p">[</span><span class="n">y_values_index</span><span class="p">]</span> <span class="k">for</span> <span class="n">cluster_point</span> <span class="ow">in</span> <span class="n">cluster_points</span><span class="p">]</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;plot dataset points in cluster with centroid {} as {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">cluster_color</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cluster_points_x_values</span><span class="p">,</span> <span class="n">cluster_points_y_values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cluster_color</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+
+            <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">plot_title</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x_axis_label</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">y_axis_label</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dimensional_numpy_array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict which cluster a new point belongs to; calculates euclidean distance from point to all centroids</span>
+<span class="sd">        :param n_dimensional_numpy_array: new observation that has same n-dimensions as dataset points</span>
+<span class="sd">        :return: closest_centroid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># initially assign closest_centroid as large value; we&#39;ll reassign it later</span>
+        <span class="n">closest_centroid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">for</span> <span class="n">centroid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_iteration_optimal_cluster_centroids</span><span class="p">():</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euclidean_distance</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">n_dimensional_numpy_array</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">closest_centroid</span><span class="p">:</span>
+                <span class="n">closest_centroid</span> <span class="o">=</span> <span class="n">centroid</span>
+        <span class="k">return</span> <span class="n">closest_centroid</span>
+</pre></div>
+
+
+<h3>Implement K-Means on Original 4-Point Dataset</h3>
+<p>The beauty of logging statements is that for each message executed you can see:</p>
+<ul>
+<li>line number</li>
+<li>encapsulated function</li>
+<li>logging level</li>
+<li>text message</li>
+</ul>
+<p>Below is the extensive logging messages for running my algorithm. Please ignore the strange colors. That's something I'll fix later.</p>
+<div class="highlight"><pre><span></span><span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="n">k_means_object</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">dataset_numpy_array</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">k_number_of_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">number_of_centroid_initializations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">k_means_object</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;inertia values: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k_means_object</span><span class="o">.</span><span class="n">inertia_values</span><span class="p">))</span>
+<span class="n">index_lowest_inertia_cluster</span> <span class="o">=</span> <span class="n">k_means_object</span><span class="o">.</span><span class="n">index_lowest_inertia_cluster</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;lowest inertia value at centroid initialization #{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index_lowest_inertia_cluster</span><span class="p">))</span>
+<span class="n">optimal_cluster_assignment</span> <span class="o">=</span> <span class="n">k_means_object</span><span class="o">.</span><span class="n">final_iteration_optimal_cluster</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;optimal_cluster_assignment: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optimal_cluster_assignment</span><span class="p">))</span>
+<span class="n">optimal_centroids</span> <span class="o">=</span> <span class="n">k_means_object</span><span class="o">.</span><span class="n">final_iteration_optimal_cluster_centroids</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;optimal centroids: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">optimal_centroids</span><span class="p">))</span>
+<span class="n">k_means_object</span><span class="o">.</span><span class="n">plot_clusters</span><span class="p">(</span><span class="n">optimal_cluster_assignment</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">803</span> <span class="nt">-</span> <span class="nt">104</span> <span class="nt">-</span> <span class="nt">fit</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">perform</span> <span class="nt">K-Means</span> <span class="nt">1</span> <span class="nt">times</span> <span class="nt">with</span> <span class="nt">new</span> <span class="nt">centroids</span> <span class="nt">at</span> <span class="nt">each</span> <span class="nt">start</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">804</span> <span class="nt">-</span> <span class="nt">74</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">random</span> <span class="nt">initial</span> <span class="nt">centroids</span> <span class="nt">are</span> <span class="cp">[</span><span class="err">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span>
+ <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span><span class="o">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">805</span> <span class="nt">-</span> <span class="nt">78</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">starting</span> <span class="nt">iteration</span> <span class="nt">number</span> <span class="nt">1</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">807</span> <span class="nt">-</span> <span class="nt">49</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">clustering</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">to</span> <span class="nt">centroids</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">808</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">4</span><span class="nc">.242640687119285</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">810</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">2</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">811</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">812</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">814</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">3</span><span class="nc">.1622776601683795</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">815</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">0</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">816</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">818</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">820</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">0</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">821</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">3</span><span class="nc">.1622776601683795</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">823</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">824</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">826</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">2</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">827</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">4</span><span class="nc">.242640687119285</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">828</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">830</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">831</span> <span class="nt">-</span> <span class="nt">63</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">cluster_single_iteration_record</span><span class="o">:</span> <span class="nt">defaultdict</span><span class="o">(&lt;</span><span class="nt">class</span> <span class="s1">&#39;list&#39;</span><span class="o">&gt;,</span> <span class="p">{(</span><span class="m">3</span><span class="o">,</span> <span class="m">2</span><span class="p">)</span><span class="o">:</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="p">)</span><span class="o">,</span> <span class="n">array</span><span class="p">(</span><span class="cp">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="p">)]</span><span class="o">,</span> <span class="p">(</span><span class="m">4</span><span class="o">,</span> <span class="m">5</span><span class="p">)</span><span class="o">:</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="p">)</span><span class="o">,</span> <span class="n">array</span><span class="p">(</span><span class="cp">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="p">)]}</span><span class="o">)</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">832</span> <span class="nt">-</span> <span class="nt">85</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">calculating</span> <span class="nt">the</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">2</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">associated</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">3</span><span class="o">,</span> <span class="nt">2</span><span class="o">)</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">833</span> <span class="nt">-</span> <span class="nt">87</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">is</span> <span class="nt">the</span> <span class="nt">new</span> <span class="nt">centroid</span> <span class="nt">at</span> <span class="cp">[</span><span class="mi">2</span><span class="nx">.</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">834</span> <span class="nt">-</span> <span class="nt">85</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">calculating</span> <span class="nt">the</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">2</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">associated</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">4</span><span class="o">,</span> <span class="nt">5</span><span class="o">)</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">836</span> <span class="nt">-</span> <span class="nt">87</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">is</span> <span class="nt">the</span> <span class="nt">new</span> <span class="nt">centroid</span> <span class="nt">at</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">837</span> <span class="nt">-</span> <span class="nt">89</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">check</span> <span class="nt">if</span> <span class="nt">we</span> <span class="nt">meet</span> <span class="nt">early</span> <span class="nt">stopping</span> <span class="nt">criteria</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">838</span> <span class="nt">-</span> <span class="nt">95</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">use</span> <span class="nt">new</span> <span class="nt">updated_centroids</span> <span class="nt">values</span> <span class="nt">for</span> <span class="nt">next</span> <span class="nt">iteration</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">839</span> <span class="nt">-</span> <span class="nt">78</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">starting</span> <span class="nt">iteration</span> <span class="nt">number</span> <span class="nt">2</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">841</span> <span class="nt">-</span> <span class="nt">49</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">clustering</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">to</span> <span class="nt">centroids</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">843</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">2</span><span class="nx">.</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">1</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">845</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">5</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">846</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">847</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">848</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">2</span><span class="nx">.</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">1</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">850</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">3</span><span class="nc">.605551275463989</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">852</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">853</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">855</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">2</span><span class="nx">.</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">3</span><span class="nc">.605551275463989</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">856</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">1</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">858</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">860</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">862</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">2</span><span class="nx">.</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">5</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">863</span> <span class="nt">-</span> <span class="nt">56</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">Euclidean</span> <span class="nt">distance</span> <span class="nt">between</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">and</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">1</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">865</span> <span class="nt">-</span> <span class="nt">60</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">is</span> <span class="nt">closest</span> <span class="nt">to</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">866</span> <span class="nt">-</span> <span class="nt">61</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">dataset</span> <span class="nt">point</span> <span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span> <span class="nt">now</span> <span class="nt">belongs</span> <span class="nt">to</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">868</span> <span class="nt">-</span> <span class="nt">63</span> <span class="nt">-</span> <span class="nt">assign_dataset_points_to_closest_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">cluster_single_iteration_record</span><span class="o">:</span> <span class="nt">defaultdict</span><span class="o">(&lt;</span><span class="nt">class</span> <span class="s1">&#39;list&#39;</span><span class="o">&gt;,</span> <span class="p">{(</span><span class="m">2</span><span class="o">.</span><span class="m">0</span><span class="o">,</span> <span class="m">2</span><span class="o">.</span><span class="m">0</span><span class="p">)</span><span class="o">:</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="p">)</span><span class="o">,</span> <span class="n">array</span><span class="p">(</span><span class="cp">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="p">)]</span><span class="o">,</span> <span class="p">(</span><span class="m">5</span><span class="o">.</span><span class="m">0</span><span class="o">,</span> <span class="m">5</span><span class="o">.</span><span class="m">0</span><span class="p">)</span><span class="o">:</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="p">)</span><span class="o">,</span> <span class="n">array</span><span class="p">(</span><span class="cp">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="p">)]}</span><span class="o">)</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">870</span> <span class="nt">-</span> <span class="nt">85</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">calculating</span> <span class="nt">the</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">2</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">associated</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">2</span><span class="nc">.0</span><span class="o">,</span> <span class="nt">2</span><span class="nc">.0</span><span class="o">)</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">871</span> <span class="nt">-</span> <span class="nt">87</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">is</span> <span class="nt">the</span> <span class="nt">new</span> <span class="nt">centroid</span> <span class="nt">at</span> <span class="cp">[</span><span class="mi">2</span><span class="nx">.</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">872</span> <span class="nt">-</span> <span class="nt">85</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">calculating</span> <span class="nt">the</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">2</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">associated</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">5</span><span class="nc">.0</span><span class="o">,</span> <span class="nt">5</span><span class="nc">.0</span><span class="o">)</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">873</span> <span class="nt">-</span> <span class="nt">87</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">mean</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">clustered</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">is</span> <span class="nt">the</span> <span class="nt">new</span> <span class="nt">centroid</span> <span class="nt">at</span> <span class="cp">[</span><span class="mi">5</span><span class="nx">.</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">875</span> <span class="nt">-</span> <span class="nt">89</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">check</span> <span class="nt">if</span> <span class="nt">we</span> <span class="nt">meet</span> <span class="nt">early</span> <span class="nt">stopping</span> <span class="nt">criteria</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">877</span> <span class="nt">-</span> <span class="nt">92</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">updated</span> <span class="nt">centroids</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">2</span><span class="nx">.</span><span class="p">,</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span><span class="o">),</span> <span class="nt">array</span><span class="o">(</span><span class="cp">[</span><span class="mi">5</span><span class="nx">.</span><span class="p">,</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span><span class="o">)]</span> <span class="nt">are</span> <span class="nt">the</span> <span class="nt">same</span> <span class="nt">as</span> <span class="nt">previous</span> <span class="nt">iteration</span> <span class="nt">centroids</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">2</span><span class="nx">.</span><span class="p">,</span> <span class="mi">2</span><span class="nx">.</span><span class="cp">]</span><span class="o">),</span> <span class="nt">array</span><span class="o">(</span><span class="cp">[</span><span class="mi">5</span><span class="nx">.</span><span class="p">,</span> <span class="mi">5</span><span class="nx">.</span><span class="cp">]</span><span class="o">)]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">877</span> <span class="nt">-</span> <span class="nt">93</span> <span class="nt">-</span> <span class="nt">run_kmeans_initialized_centroid</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">we</span><span class="s1">&#39;ve reached convergence of centroid values; end clustering</span>
+<span class="s1">2018-12-02 09:32:00,879 - 119 - inertia - DEBUG - cluster points: defaultdict(&lt;class &#39;</span><span class="nt">list</span><span class="s1">&#39;&gt;, {(2.0, 2.0): </span><span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="s1">), array(</span><span class="cp">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="s1">)], (5.0, 5.0): </span><span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="s1">), array(</span><span class="cp">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="s1">)]})</span>
+<span class="s1">2018-12-02 09:32:00,880 - 122 - inertia - DEBUG - the cluster has a centroid at: (2.0, 2.0)</span>
+<span class="s1">2018-12-02 09:32:00,881 - 124 - inertia - DEBUG - calculate sum of squares from centroid to all points in that cluster...</span>
+<span class="s1">2018-12-02 09:32:00,882 - 129 - inertia - DEBUG - squared euclidean dist from centroid (2.0, 2.0) to point </span><span class="cp">[</span><span class="mi">1</span> <span class="mi">2</span><span class="cp">]</span><span class="s1"> is 1.0</span>
+<span class="s1">2018-12-02 09:32:00,883 - 129 - inertia - DEBUG - squared euclidean dist from centroid (2.0, 2.0) to point </span><span class="cp">[</span><span class="mi">3</span> <span class="mi">2</span><span class="cp">]</span><span class="s1"> is 1.0</span>
+<span class="s1">2018-12-02 09:32:00,884 - 122 - inertia - DEBUG - the cluster has a centroid at: (5.0, 5.0)</span>
+<span class="s1">2018-12-02 09:32:00,885 - 124 - inertia - DEBUG - calculate sum of squares from centroid to all points in that cluster...</span>
+<span class="s1">2018-12-02 09:32:00,886 - 129 - inertia - DEBUG - squared euclidean dist from centroid (5.0, 5.0) to point </span><span class="cp">[</span><span class="mi">4</span> <span class="mi">5</span><span class="cp">]</span><span class="s1"> is 1.0</span>
+<span class="s1">2018-12-02 09:32:00,888 - 129 - inertia - DEBUG - squared euclidean dist from centroid (5.0, 5.0) to point </span><span class="cp">[</span><span class="mi">6</span> <span class="mi">5</span><span class="cp">]</span><span class="s1"> is 1.0</span>
+<span class="s1">2018-12-02 09:32:00,888 - 131 - inertia - INFO - inertia is: 4.0</span>
+<span class="s1">2018-12-02 09:32:00,890 - 4 - &lt;module&gt; - INFO - inertia values: </span><span class="cp">[</span><span class="mf">4.0</span><span class="cp">]</span><span class="s1"></span>
+<span class="s1">2018-12-02 09:32:00,891 - 140 - index_lowest_inertia_cluster - DEBUG - minimum_inertia_value: 4.0</span>
+<span class="s1">2018-12-02 09:32:00,892 - 142 - index_lowest_inertia_cluster - DEBUG - index_lowest_inertia: 0</span>
+<span class="s1">2018-12-02 09:32:00,893 - 6 - &lt;module&gt; - INFO - lowest inertia value at centroid initialization #0</span>
+<span class="s1">2018-12-02 09:32:00,894 - 140 - index_lowest_inertia_cluster - DEBUG - minimum_inertia_value: 4.0</span>
+<span class="s1">2018-12-02 09:32:00,896 - 142 - index_lowest_inertia_cluster - DEBUG - index_lowest_inertia: 0</span>
+<span class="s1">2018-12-02 09:32:00,898 - 8 - &lt;module&gt; - INFO - optimal_cluster_assignment: defaultdict(&lt;class &#39;</span><span class="nt">list</span><span class="err">&#39;</span><span class="o">&gt;,</span> <span class="p">{(</span><span class="m">2</span><span class="o">.</span><span class="m">0</span><span class="o">,</span> <span class="m">2</span><span class="o">.</span><span class="m">0</span><span class="p">)</span><span class="o">:</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="p">)</span><span class="o">,</span> <span class="n">array</span><span class="p">(</span><span class="cp">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="cp">]</span><span class="p">)]</span><span class="o">,</span> <span class="p">(</span><span class="m">5</span><span class="o">.</span><span class="m">0</span><span class="o">,</span> <span class="m">5</span><span class="o">.</span><span class="m">0</span><span class="p">)</span><span class="o">:</span> <span class="cp">[</span><span class="kt">array</span><span class="p">(</span><span class="err">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="p">)</span><span class="o">,</span> <span class="n">array</span><span class="p">(</span><span class="cp">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="cp">]</span><span class="p">)]}</span><span class="o">)</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">899</span> <span class="nt">-</span> <span class="nt">140</span> <span class="nt">-</span> <span class="nt">index_lowest_inertia_cluster</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">minimum_inertia_value</span><span class="o">:</span> <span class="nt">4</span><span class="nc">.0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">900</span> <span class="nt">-</span> <span class="nt">142</span> <span class="nt">-</span> <span class="nt">index_lowest_inertia_cluster</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">index_lowest_inertia</span><span class="o">:</span> <span class="nt">0</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">901</span> <span class="nt">-</span> <span class="nt">10</span> <span class="nt">-</span> <span class="o">&lt;</span><span class="nt">module</span><span class="o">&gt;</span> <span class="nt">-</span> <span class="nt">INFO</span> <span class="nt">-</span> <span class="nt">optimal</span> <span class="nt">centroids</span><span class="o">:</span> <span class="cp">[</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span><span class="cp">]</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">902</span> <span class="nt">-</span> <span class="nt">178</span> <span class="nt">-</span> <span class="nt">plot_clusters</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">plot</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">2</span><span class="nc">.0</span><span class="o">,</span> <span class="nt">2</span><span class="nc">.0</span><span class="o">)</span> <span class="nt">as</span> <span class="nt">firebrick</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">950</span> <span class="nt">-</span> <span class="nt">181</span> <span class="nt">-</span> <span class="nt">plot_clusters</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">create</span> <span class="nt">lists</span> <span class="nt">of</span> <span class="nt">x-values</span> <span class="nt">and</span> <span class="nt">y-values</span> <span class="nt">for</span> <span class="nt">cluster</span> <span class="nt">points</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">951</span> <span class="nt">-</span> <span class="nt">185</span> <span class="nt">-</span> <span class="nt">plot_clusters</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">plot</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">in</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">2</span><span class="nc">.0</span><span class="o">,</span> <span class="nt">2</span><span class="nc">.0</span><span class="o">)</span> <span class="nt">as</span> <span class="nt">firebrick</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">955</span> <span class="nt">-</span> <span class="nt">178</span> <span class="nt">-</span> <span class="nt">plot_clusters</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">plot</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">5</span><span class="nc">.0</span><span class="o">,</span> <span class="nt">5</span><span class="nc">.0</span><span class="o">)</span> <span class="nt">as</span> <span class="nt">gold</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">959</span> <span class="nt">-</span> <span class="nt">181</span> <span class="nt">-</span> <span class="nt">plot_clusters</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">create</span> <span class="nt">lists</span> <span class="nt">of</span> <span class="nt">x-values</span> <span class="nt">and</span> <span class="nt">y-values</span> <span class="nt">for</span> <span class="nt">cluster</span> <span class="nt">points</span><span class="o">...</span>
+<span class="nt">2018-12-02</span> <span class="nt">09</span><span class="nd">:32:00</span><span class="o">,</span><span class="nt">960</span> <span class="nt">-</span> <span class="nt">185</span> <span class="nt">-</span> <span class="nt">plot_clusters</span> <span class="nt">-</span> <span class="nt">DEBUG</span> <span class="nt">-</span> <span class="nt">plot</span> <span class="nt">dataset</span> <span class="nt">points</span> <span class="nt">in</span> <span class="nt">cluster</span> <span class="nt">with</span> <span class="nt">centroid</span> <span class="o">(</span><span class="nt">5</span><span class="nc">.0</span><span class="o">,</span> <span class="nt">5</span><span class="nc">.0</span><span class="o">)</span> <span class="nt">as</span> <span class="nt">gold</span>
+</pre></div>
+
+
+<p><img alt="png" src="k-means-clustering-from-scratch_files/k-means-clustering-from-scratch_25_1.png"></p>
+<h3>Plot History of K-Means Iterations (One Centroid Initialization)</h3>
+<div class="highlight"><pre><span></span><span class="n">iterations</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">centroid_initialization</span> <span class="ow">in</span> <span class="n">k_means_object</span><span class="o">.</span><span class="n">clusters_all_iterations_record</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="n">centroid_initialization</span><span class="p">:</span>
+        <span class="n">iterations</span><span class="o">+=</span><span class="mi">1</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">centroid_initialization</span> <span class="ow">in</span> <span class="n">k_means_object</span><span class="o">.</span><span class="n">clusters_all_iterations_record</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">iteration_number</span><span class="p">,</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">centroid_initialization</span><span class="p">):</span>
+        <span class="n">k_means_object</span><span class="o">.</span><span class="n">plot_clusters</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">plot_title</span><span class="o">=</span><span class="s2">&quot;K-Means Clustering for Iteration {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration_number</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>2018-12-02 09:32:01,089 - 178 - plot_clusters - DEBUG - plot centroid (3, 2) as firebrick
+2018-12-02 09:32:01,142 - 181 - plot_clusters - DEBUG - create lists of x-values and y-values for cluster points...
+2018-12-02 09:32:01,143 - 185 - plot_clusters - DEBUG - plot dataset points in cluster with centroid (3, 2) as firebrick
+2018-12-02 09:32:01,146 - 178 - plot_clusters - DEBUG - plot centroid (4, 5) as gold
+2018-12-02 09:32:01,150 - 181 - plot_clusters - DEBUG - create lists of x-values and y-values for cluster points...
+2018-12-02 09:32:01,151 - 185 - plot_clusters - DEBUG - plot dataset points in cluster with centroid (4, 5) as gold
+</pre></div>
+
+
+<p><img alt="png" src="k-means-clustering-from-scratch_files/k-means-clustering-from-scratch_28_1.png"></p>
+<div class="highlight"><pre><span></span>2018-12-02 09:32:01,254 - 178 - plot_clusters - DEBUG - plot centroid (2.0, 2.0) as firebrick
+2018-12-02 09:32:01,297 - 181 - plot_clusters - DEBUG - create lists of x-values and y-values for cluster points...
+2018-12-02 09:32:01,298 - 185 - plot_clusters - DEBUG - plot dataset points in cluster with centroid (2.0, 2.0) as firebrick
+2018-12-02 09:32:01,301 - 178 - plot_clusters - DEBUG - plot centroid (5.0, 5.0) as gold
+2018-12-02 09:32:01,304 - 181 - plot_clusters - DEBUG - create lists of x-values and y-values for cluster points...
+2018-12-02 09:32:01,305 - 185 - plot_clusters - DEBUG - plot dataset points in cluster with centroid (5.0, 5.0) as gold
+</pre></div>
+
+
+<p><img alt="png" src="k-means-clustering-from-scratch_files/k-means-clustering-from-scratch_28_3.png"></p>
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+        <center>This project contains 67 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+          <br/>
+          Copyright &copy; Dan Friedman,
+          <time datetime="2018">2018</time>.
+        </center>
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #c0c6c3" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#f9f9f9" );
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+  <!-- <script type="text/javascript">
+    $(document).on('click', 'a[href^="#"]', function (event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 500);
+    });
+  </script> -->
+
+</body>
+
+</html>

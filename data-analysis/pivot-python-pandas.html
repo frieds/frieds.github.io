@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="unpivot pandas">
+  <meta name="keywords" content="pivot pandas">
 
-  <meta name="description" content="Unpivot a pandas DataFrame (Python) using the melt() method and through a simple example">
-  <meta property="og:description"  content="Unpivot a pandas DataFrame (Python) using the melt() method and through a simple example">
-  <meta name="twitter:description" content="Unpivot a pandas DataFrame (Python) using the melt() method and through a simple example">
+  <meta name="description" content="Learn how to pivot a pandas DataFrame and apply an aggregate metric using the pivot() method and through simple examples">
+  <meta property="og:description"  content="Learn how to pivot a pandas DataFrame and apply an aggregate metric using the pivot() method and through simple examples">
+  <meta name="twitter:description" content="Learn how to pivot a pandas DataFrame and apply an aggregate metric using the pivot() method and through simple examples">
 
-  <meta property="og:title" content="melt() Method: Unpivot a DataFrame">
-  <meta name="twitter:title" content="melt() Method: Unpivot a DataFrame">
+  <meta property="og:title" content="pivot() Method: Pivot DataFrame Without Aggregation Operation">
+  <meta name="twitter:title" content="pivot() Method: Pivot DataFrame Without Aggregation Operation">
 
-  <link rel="canonical" href="https://dfrieds.com/python/melt-unpivot-python-pandas"/>
+  <link rel="canonical" href="https://dfrieds.com/data-analysis/pivot-python-pandas"/>
 
-  <title>melt() Method: Unpivot a DataFrame - Python</title>
+  <title>pivot() Method: Pivot DataFrame Without Aggregation Operation - Data Analysis</title>
 
   
 
@@ -67,7 +67,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full Atom Feed" />    <link href="https://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />      <link href="https://dfrieds.com/feeds/python.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories Atom Feed" />    <link href="https://dfrieds.com/feeds/python.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full Atom Feed" />    <link href="https://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />      <link href="https://dfrieds.com/feeds/data-analysis.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories Atom Feed" />    <link href="https://dfrieds.com/feeds/data-analysis.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
 
   <!-- Start of Async Drift Code -->
   <script>
@@ -98,7 +98,7 @@
 </head>
 
 <body>
-  <div class="python"></div>
+  <div class="data-analysis"></div>
 
   <nav class="navbar navbar-expand-sm fixed-top">
     <div class="container">
@@ -148,19 +148,18 @@
 
 <section id="content" class="body">
   <header>
-    <div class="posttype"> Python Data Analysis in pandas Tutorial</div>
+    <div class="posttype"> Data Analysis Data Wrangling Tutorial</div>
     <h1 class="articleh1">
-      melt() Method: Unpivot a DataFrame
+      pivot() Method: Pivot DataFrame Without Aggregation Operation
     </h1>
 
     <ul class ="row article_info">
       
       <li>
-        Nov 25&nbsp;&nbsp;&bull;&nbsp;&nbsp;4 min read
+        Nov 24&nbsp;&nbsp;&bull;&nbsp;&nbsp;3 min read
       </li>
       <li class="tagarticle">
-        Key Terms:         unpivot,
-        melt,
+        Key Terms:         pivot,
         python,
         pandas
       </li>
@@ -168,7 +167,7 @@
   </header>
 
   <div class='article_content'>
-    <p>In pandas, we can "unpivot" a DataFrame - turn it from a <em>wide</em> format - many columns - to a <em>long</em> format - few columns but many rows. We can accomplish this with the pandas <a href='https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.melt.html' rel='nofollow'><code>melt()</code></a> method. This can be helpful for further analysis of our new unpivoted DataFrame.</p>
+    <p>In pandas, we can pivot our DataFrame without applying an aggregate operation. This pivot is helpful to see our data in a different way - often turning a format with many rows that would require scrolling into a new format with fewer rows but perhaps more columns.</p>
 <h3>Import Module</h3>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 </pre></div>
@@ -180,76 +179,15 @@
 <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Tesla Model X P100D&#39;</span>
 <span class="n">three</span> <span class="o">=</span> <span class="s1">&#39;Tesla Model 3 AWD Dual Motor&#39;</span>
 
-<span class="n">s_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.51</span><span class="p">,</span> <span class="mf">2.54</span><span class="p">]</span>
-<span class="n">x_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mf">2.92</span><span class="p">,</span> <span class="mf">2.91</span><span class="p">,</span> <span class="mf">2.93</span><span class="p">]</span>
-<span class="n">three_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">three</span><span class="p">,</span> <span class="mf">3.33</span><span class="p">,</span> <span class="mf">3.31</span><span class="p">,</span> <span class="mf">3.35</span><span class="p">]</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">three</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Sept 1 9am&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Sept 1 10am&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Sept 1 11am&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="n">acceleration_times</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.92</span><span class="p">,</span> <span class="mf">3.33</span><span class="p">,</span> <span class="mf">2.51</span><span class="p">,</span> <span class="mf">2.91</span><span class="p">,</span> <span class="mf">3.31</span><span class="p">,</span> <span class="mf">2.51</span><span class="p">,</span> <span class="mf">2.92</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">]</span>
 
-<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">s_data</span><span class="p">,</span> <span class="n">x_data</span><span class="p">,</span> <span class="n">three_data</span><span class="p">]</span> 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;car_model&#39;</span><span class="p">,</span> <span class="s1">&#39;Sept 1 9am&#39;</span><span class="p">,</span> <span class="s1">&#39;Sept 1 10am&#39;</span><span class="p">,</span> <span class="s1">&#39;Sept 1 11am&#39;</span><span class="p">])</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;car_model&#39;</span><span class="p">:</span> <span class="n">models</span><span class="p">,</span> 
+        <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="n">dates</span><span class="p">,</span> 
+        <span class="s1">&#39;0-60mph_in_seconds&#39;</span><span class="p">:</span> <span class="n">acceleration_times</span><span class="p">}</span> 
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="n">df</span>
-</pre></div>
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>car_model</th>
-      <th>Sept 1 9am</th>
-      <th>Sept 1 10am</th>
-      <th>Sept 1 11am</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Tesla Model S P100D</td>
-      <td>2.50</td>
-      <td>2.51</td>
-      <td>2.54</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Tesla Model X P100D</td>
-      <td>2.92</td>
-      <td>2.91</td>
-      <td>2.93</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Tesla Model 3 AWD Dual Motor</td>
-      <td>3.33</td>
-      <td>3.31</td>
-      <td>3.35</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<p>Notice how this DataFrame features four columns, one for the car model name, and three for acceleration <em>runs</em> of a car. If they were to continue with this trend of data collection and do far more <em>runs</em>, this dataset would have lots of columns - perhaps making it daunting to visualize and analyze. </p>
-<p>I want to "unpivot" this data from a wide format to a long format using the pandas <code>melt()</code> method.</p>
-<p>On the <code>df</code> DataFrame, we'll call the <code>melt()</code> method and set the following arguments:</p>
-<ul>
-<li><code>id_vars</code> to <code>['car_model']</code> since each row from <code>df</code> is identified by the car model name</li>
-<li><code>var_name</code> to <code>'date'</code> since this new column needs a name</li>
-<li><code>value_name</code> to <code>'0-60mph_in_seconds'</code> since this new column needs a name</li>
-</ul>
-<div class="highlight"><pre><span></span><span class="n">df_unpivoted</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;car_model&#39;</span><span class="p">],</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;0-60mph_in_seconds&#39;</span><span class="p">)</span>
-<span class="n">df_unpivoted</span>
 </pre></div>
 
 
@@ -317,35 +255,83 @@
       <th>6</th>
       <td>Tesla Model S P100D</td>
       <td>Sept 1 11am</td>
-      <td>2.54</td>
+      <td>2.51</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Tesla Model X P100D</td>
       <td>Sept 1 11am</td>
-      <td>2.93</td>
+      <td>2.92</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Tesla Model 3 AWD Dual Motor</td>
       <td>Sept 1 11am</td>
-      <td>3.35</td>
+      <td>3.30</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-<p>After this "unpivot", we can easily calculate the minimum (essentially the fastest) 0-60 time that we'd publish in a final report. To do so, we take our <code>df_unpivoted</code> DataFrame, group by the <code>car_model</code> column, and find the minimum value in the <code>0-60mph_in_seconds</code> column.</p>
-<div class="highlight"><pre><span></span><span class="n">df_unpivoted</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;car_model&#39;</span><span class="p">)[</span><span class="s1">&#39;0-60mph_in_seconds&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<p>I want to pivot this data so each row is a unique car model, the columns are dates and the values in the table are the acceleration speeds.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;car_model&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;0-60mph_in_seconds&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>car_model
-Tesla Model 3 AWD Dual Motor    3.31
-Tesla Model S P100D             2.50
-Tesla Model X P100D             2.91
-Name: 0-60mph_in_seconds, dtype: float64
-</pre></div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>date</th>
+      <th>Sept 1 10am</th>
+      <th>Sept 1 11am</th>
+      <th>Sept 1 9am</th>
+    </tr>
+    <tr>
+      <th>car_model</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Tesla Model 3 AWD Dual Motor</th>
+      <td>3.31</td>
+      <td>3.30</td>
+      <td>3.33</td>
+    </tr>
+    <tr>
+      <th>Tesla Model S P100D</th>
+      <td>2.51</td>
+      <td>2.51</td>
+      <td>2.50</td>
+    </tr>
+    <tr>
+      <th>Tesla Model X P100D</th>
+      <td>2.91</td>
+      <td>2.92</td>
+      <td>2.92</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>This format may be easier to read so you can easily focus your attention on just the acceleration times for the 3 models.</p>
+<p>You can read more about pandas <code>pivot()</code> on the official <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.pivot.html' rel='nofollow'>documentation page</a>.</p>
   </div>
 </section>
 
@@ -355,7 +341,7 @@ Name: 0-60mph_in_seconds, dtype: float64
   <footer class="footer">
     <div class="container">
       <p class="text-muted">
-        <center>This project contains 66 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+        <center>This project contains 67 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
           <br/>
           Copyright &copy; Dan Friedman,
           <time datetime="2018">2018</time>.

@@ -36,16 +36,16 @@
 
   <meta name="keywords" content="intro clustering machine learning">
 
-  <meta name="description" content="An introduction to what clustering is, a comparison to traditional segmentation and why clustering works better for large data">
-  <meta property="og:description"  content="An introduction to what clustering is, a comparison to traditional segmentation and why clustering works better for large data">
-  <meta name="twitter:description" content="An introduction to what clustering is, a comparison to traditional segmentation and why clustering works better for large data">
+  <meta name="description" content="An introduction to manual segmention of data into groups versus clustering">
+  <meta property="og:description"  content="An introduction to manual segmention of data into groups versus clustering">
+  <meta name="twitter:description" content="An introduction to manual segmention of data into groups versus clustering">
 
-  <meta property="og:title" content="Intro to Clustering">
-  <meta name="twitter:title" content="Intro to Clustering">
+  <meta property="og:title" content="Segmentation vs. Clustering">
+  <meta name="twitter:title" content="Segmentation vs. Clustering">
 
-  <link rel="canonical" href="https://dfrieds.com/machine-learning/intro-clustering"/>
+  <link rel="canonical" href="https://dfrieds.com/machine-learning/segmentation-vs-clustering"/>
 
-  <title>Intro to Clustering - Machine Learning</title>
+  <title>Segmentation vs. Clustering - Machine Learning</title>
 
   
 
@@ -150,7 +150,7 @@
   <header>
     <div class="posttype"> Machine Learning Clustering Tutorial</div>
     <h1 class="articleh1">
-      Intro to Clustering
+      Segmentation vs. Clustering
     </h1>
 
     <ul class ="row article_info">
@@ -208,8 +208,14 @@
 <p>In the table above, every row is considered an <strong>observation</strong>. Every column is considered a <strong>feature</strong>. We'll use this terminology going forward.</p>
 <h4>Import Modules</h4>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">pyplot</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<p>Set visualization styles.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -232,14 +238,15 @@
 
 <h4>Visualize Survey Data</h4>
 <p>In the visualization below, we can see some closely-knit groups of observations (our customers). We have lots of observations who are in the age range of 18 to 28 and earn on average roughly 50,000 U.S. dollars per year. Another more spread out group could be observations over the age of 30 who earn on average roughly 100,000 U.S. dollars per year. </p>
-<div class="highlight"><pre><span></span><span class="n">pyplot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ages</span><span class="p">,</span> <span class="n">incomes</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;income (U.S. dollars)&quot;</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Survey Data of Customers&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ages</span><span class="p">,</span> <span class="n">incomes</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;income (U.S. dollars)&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Survey Data of Customers&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">);</span>
 </pre></div>
 
 
-<p><img alt="png" src="intro-clustering_files/intro-clustering_11_0.png"></p>
+<p><img alt="png" src="intro-clustering_files/intro-clustering_13_0.png"></p>
 <h4>Create Segments in Code</h4>
 <p>By manual observation, we could segment these observations into two somewhat distinct groups. Two groups allow us to show each group a unique marketing video.</p>
 <p>In this example, we want to deliver a marketing message geared towards their income level; we can segment our observations into group by those who earn more than 65,000 U.S. dollars and those who earn less than or equal to that amount.</p>
@@ -271,15 +278,16 @@
 
 
 <p>In the plot below, we can see the lower earners as <em>green</em> in color and the higher earners as <em>orange</em> in color.</p>
-<div class="highlight"><pre><span></span><span class="n">pyplot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">below_sixty_five_thousand_earners_ages</span><span class="p">,</span> <span class="n">below_sixty_five_thousand_earners_incomes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">above_sixty_five_thousand_earners_ages</span><span class="p">,</span> <span class="n">above_sixty_five_thousand_earners_incomes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;income&quot;</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Groups of Customers Through Segmentation&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">below_sixty_five_thousand_earners_ages</span><span class="p">,</span> <span class="n">below_sixty_five_thousand_earners_incomes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">above_sixty_five_thousand_earners_ages</span><span class="p">,</span> <span class="n">above_sixty_five_thousand_earners_incomes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Groups of Customers Through Segmentation&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">);</span>
 </pre></div>
 
 
-<p><img alt="png" src="intro-clustering_files/intro-clustering_20_0.png"></p>
+<p><img alt="png" src="intro-clustering_files/intro-clustering_22_0.png"></p>
 <p>While this method of segmentation <em>works</em>, it's imperfect. </p>
 <p>Notice how there are several observations in the bottom-left group that are orange and right next to green observations; you'd think they should be in the same group yet with our threshold, they're in separate groups. </p>
 <p>A threshold of 65000 U.S. dollars is rather arbitrary and did a poor job of grouping several nearby observations.</p>
@@ -380,13 +388,16 @@
 <p>The semi-transparent large circles are the centers/centroids of each cluster.</p>
 <p>Clustering better identifies nearby observations in the same cluster; we don't see two observations that have practically the same features but are in different clusters like we did with our manual segmentation above.</p>
 <p>Also, because of this centroid-based clustering, we can detail the features of the centroid to explain to our stakeholders the general features of our clusters.</p>
-<div class="highlight"><pre><span></span><span class="n">pyplot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">observations_standardized</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">observations_standardized</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">kmeans_predictions</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">kmeans_cluster_centers</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">kmeans_cluster_centers</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">580</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Clusters of Customers Using K-Means&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">observations_standardized</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">observations_standardized</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">kmeans_predictions</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">kmeans_cluster_centers</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">kmeans_cluster_centers</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">680</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Clusters of Customers Using K-Means&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;age feature scaled&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;income feature scaled&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
 </pre></div>
 
 
-<p><img alt="png" src="intro-clustering_files/intro-clustering_35_0.png"></p>
+<p><img alt="png" src="intro-clustering_files/intro-clustering_37_0.png"></p>
   </div>
 </section>
 
@@ -396,7 +407,7 @@
   <footer class="footer">
     <div class="container">
       <p class="text-muted">
-        <center>This project contains 66 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+        <center>This project contains 67 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
           <br/>
           Copyright &copy; Dan Friedman,
           <time datetime="2018">2018</time>.
