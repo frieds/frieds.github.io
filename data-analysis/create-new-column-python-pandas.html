@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data Science Tutorials">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="create new column pandas">
+
+  <meta name="description" content="Learn how to create new columns in a pandas DataFrame through math operations and conditionals among various columns">
+  <meta property="og:description"  content="Learn how to create new columns in a pandas DataFrame through math operations and conditionals among various columns">
+  <meta name="twitter:description" content="Learn how to create new columns in a pandas DataFrame through math operations and conditionals among various columns">
+
+  <meta property="og:title" content="Create New Columns Based on Operations">
+  <meta name="twitter:title" content="Create New Columns Based on Operations">
+
+  <link rel="canonical" href="https://dfrieds.com/data-analysis/create-new-column-python-pandas"/>
+
+  <title>Create New Columns Based on Operations - Data Analysis</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full Atom Feed" />    <link href="https://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Full RSS Feed" />      <link href="https://dfrieds.com/feeds/data-analysis.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories Atom Feed" />    <link href="https://dfrieds.com/feeds/data-analysis.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Tutorials Categories RSS Feed" />    
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="data-analysis"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles
+              </a>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials
+              </a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#data-analysis">Data Analysis with pandas</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#math">Math</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+              </div>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://twitter.com/_DanFriedman" target="blank">Twitter</a>
+                <a class="dropdown-item" href="https://github.com/frieds" target="blank">GitHub</a>
+                <a class="dropdown-item" href="https://linkedin.com/in/danfriedman33" target="blank">LinkedIn</a>
+              </div>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> Data Analysis Data Wrangling Tutorial</div>
+    <h1 class="articleh1">
+      Create New Columns Based on Operations
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        Dec 24&nbsp;&nbsp;&bull;&nbsp;&nbsp;11 min read
+      </li>
+      <li class="tagarticle">
+        Key Terms:         python,
+        pandas
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <p>A pivotal part of data analysis is to create new columns based on some operation. This tutorial will cover multiple ways to do that.</p>
+<h3>Import Modules</h3>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<h3>Get Tips Dataset</h3>
+<p>Let's get the <code>tips</code> dataset from the Python <a href='https://seaborn.pydata.org/'><code>seaborn</code> visualization library</a> and assign it to the DataFrame <code>df_tips</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;tips&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Each row represents a unique meal at a restaurant for a party of people; the dataset contains the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>column name</th>
+<th>column description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>total_bill</code></td>
+<td>financial amount of meal in U.S. dollars</td>
+</tr>
+<tr>
+<td><code>tip</code></td>
+<td>financial amount of the meal's tip in U.S. dollars</td>
+</tr>
+<tr>
+<td><code>sex</code></td>
+<td>gender of server</td>
+</tr>
+<tr>
+<td><code>smoker</code></td>
+<td>boolean to represent if server smokes or not</td>
+</tr>
+<tr>
+<td><code>day</code></td>
+<td>day of week</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>meal name (Lunch or Dinner)</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>count of people eating meal</td>
+</tr>
+</tbody>
+</table>
+<p>Preview the first 5 rows of <code>df_tips</code> using the pandas series <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.head.html'><code>head()</code> method</a>. </p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>sex</th>
+      <th>smoker</th>
+      <th>day</th>
+      <th>time</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.99</td>
+      <td>1.01</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.34</td>
+      <td>1.66</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.68</td>
+      <td>3.31</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.59</td>
+      <td>3.61</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Create New Column Based on Mathematical Operations of Column(s)</h3>
+<p>We can perform mathematical operations on columns such as addition, division and multiplication.</p>
+<h4>Addition</h4>
+<p>Let's create a new column called <code>total_money_received</code> that's the addition of the <code>total_bill</code> and <code>tip</code> column. This total amount is how much money the restaurant receives for each order.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_money_received&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>Let's see a preview of these three columnns.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">,</span> <span class="s1">&#39;tip&#39;</span><span class="p">,</span> <span class="s1">&#39;total_money_received&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>total_money_received</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>192</th>
+      <td>28.44</td>
+      <td>2.56</td>
+      <td>31.00</td>
+    </tr>
+    <tr>
+      <th>181</th>
+      <td>23.33</td>
+      <td>5.65</td>
+      <td>28.98</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>14.73</td>
+      <td>2.20</td>
+      <td>16.93</td>
+    </tr>
+    <tr>
+      <th>215</th>
+      <td>12.90</td>
+      <td>1.10</td>
+      <td>14.00</td>
+    </tr>
+    <tr>
+      <th>196</th>
+      <td>10.34</td>
+      <td>2.00</td>
+      <td>12.34</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4>Division</h4>
+<p>Let's create a new column called <code>tip_proportion_of_total_bill</code> that's a calculation of <code>tip</code> values divided by their respective <code>total_bill</code> value.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip_proportion_of_total_bill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>Let's preview these three columns.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">,</span> <span class="s1">&#39;tip&#39;</span><span class="p">,</span> <span class="s1">&#39;tip_proportion_of_total_bill&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>tip_proportion_of_total_bill</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>120</th>
+      <td>11.69</td>
+      <td>2.31</td>
+      <td>0.197605</td>
+    </tr>
+    <tr>
+      <th>204</th>
+      <td>20.53</td>
+      <td>4.00</td>
+      <td>0.194837</td>
+    </tr>
+    <tr>
+      <th>225</th>
+      <td>16.27</td>
+      <td>2.50</td>
+      <td>0.153657</td>
+    </tr>
+    <tr>
+      <th>239</th>
+      <td>29.03</td>
+      <td>5.92</td>
+      <td>0.203927</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>0.166587</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>For aesthetic purposes of the values in the <code>tip_proportion_of_total_bill</code>, I will round all values to four decimal places using the <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.round.html'><code>round()</code> method</a> below.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip_proportion_of_total_bill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip_proportion_of_total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Additionally, I want to create a new column called <code>money_received_per_person</code> that's a calculation of <code>total_money_received</code> divided by <code>size</code>. I round values in this new column to two decimal places.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_money_received&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span>
+<span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Let's preview these three columns.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;total_money_received&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_money_received</th>
+      <th>size</th>
+      <th>money_received_per_person</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>96</th>
+      <td>31.28</td>
+      <td>2</td>
+      <td>15.64</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>42.07</td>
+      <td>3</td>
+      <td>14.02</td>
+    </tr>
+    <tr>
+      <th>183</th>
+      <td>29.67</td>
+      <td>4</td>
+      <td>7.42</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>11.50</td>
+      <td>2</td>
+      <td>5.75</td>
+    </tr>
+    <tr>
+      <th>185</th>
+      <td>25.69</td>
+      <td>5</td>
+      <td>5.14</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4>Multiplication</h4>
+<p>I want to create a new column called <code>tip_percentage_of_total_bill</code> that simply takes our column called <code>tip_proportion_of_total_bill</code> and multiplies the value by 100. I round values in this new column to two decimal places.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip_percentage_of_total_bill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip_proportion_of_total_bill&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span>
+<span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip_percentage_of_total_bill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;tip_percentage_of_total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Let's preview these columns recently used for multiplication.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">,</span> <span class="s1">&#39;tip&#39;</span><span class="p">,</span> <span class="s1">&#39;tip_proportion_of_total_bill&#39;</span><span class="p">,</span> <span class="s1">&#39;tip_percentage_of_total_bill&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>tip_proportion_of_total_bill</th>
+      <th>tip_percentage_of_total_bill</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.99</td>
+      <td>1.01</td>
+      <td>0.0594</td>
+      <td>5.94</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.34</td>
+      <td>1.66</td>
+      <td>0.1605</td>
+      <td>16.05</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>0.1666</td>
+      <td>16.66</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.68</td>
+      <td>3.31</td>
+      <td>0.1398</td>
+      <td>13.98</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.59</td>
+      <td>3.61</td>
+      <td>0.1468</td>
+      <td>14.68</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Create New Column Based on Mapping of Current Values to New Values</h3>
+<p>In our <code>day</code> column, we see the following unique values printed out below using the pandas series <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.unique.html'><code>unique</code> method</a>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="k">[Sun, Sat, Thur, Fri]</span>
+<span class="err">Categories</span> <span class="err">(4,</span> <span class="err">object):</span> <span class="k">[Sun, Sat, Thur, Fri]</span>
+</pre></div>
+
+
+<p>I don't like how the days are shortened names. The name <code>Sun</code> can be mapped to a longer and more colloquial name of <code>Sunday</code>.</p>
+<p>In pandas, we can use the series <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.map.html'><code>map()</code> method</a> to map our current values, the shortened 
+day names, to longer more colloquial names of days, our new values that we'll create in a new column called <code>day_long_name</code>.</p>
+<p>Below is a Python dictionary that assigns the short day names as keys and the longer names to their respective values.</p>
+<div class="highlight"><pre><span></span><span class="n">short_day_name_to_long_name</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Sun&#39;</span><span class="p">:</span> <span class="s1">&#39;Sunday&#39;</span><span class="p">,</span> <span class="s1">&#39;Sat&#39;</span><span class="p">:</span> <span class="s1">&#39;Saturday&#39;</span><span class="p">,</span> <span class="s1">&#39;Thur&#39;</span><span class="p">:</span> <span class="s1">&#39;Thursday&#39;</span><span class="p">,</span> <span class="s1">&#39;Fri&#39;</span><span class="p">:</span> <span class="s1">&#39;Friday&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>Let's assign the <code>map()</code> method to the <code>day</code> column and set the argument <code>arg</code> equal to our <code>short_day_name_to_long_name</code> dictionary. We'll set this equal to be the values in a new column assigned to <code>day_long_name</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day_long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">arg</span><span class="o">=</span><span class="n">short_day_name_to_long_name</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Let's preview a few random rows of <code>day</code> and <code>day_long_name</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;day_long_name&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>day</th>
+      <th>day_long_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>51</th>
+      <td>Sun</td>
+      <td>Sunday</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>Sat</td>
+      <td>Saturday</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>Thur</td>
+      <td>Thursday</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Sat</td>
+      <td>Saturday</td>
+    </tr>
+    <tr>
+      <th>159</th>
+      <td>Sun</td>
+      <td>Sunday</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Create New Column Based on Conditions Across Various Columns</h3>
+<p>If I were the owner of this restaurant, I'd want to learn more about the context of large groups who ordered a large dollar amount of food. To learn more about this category, I want to create a new column in our DataFrame with these characteristics.</p>
+<p>First off, let's analyze the distribution of values of in our <code>money_received_per_person</code> column with a boxplot.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_tips</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;Set2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;money received per person ($)&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Money Received Per Person for Meals at Restaurant&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="create_new_column_files/create_new_column_43_0.png"></p>
+<p>There's a median of roughly 8 U.S. dollars.</p>
+<p>Below, I assign variables for the 75th and 25th percentile that we'll use in our analysis to help create the category of big spenders per person.</p>
+<div class="highlight"><pre><span></span><span class="n">large_amt_paid_per_person</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="mf">0.75</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">large_amt_paid_per_person</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>10.71
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">small_amt_paid_per_person</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="mf">0.25</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">small_amt_paid_per_person</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>6.75
+</pre></div>
+
+
+<p>Below, I assign a variable <code>conditions</code> to be a list of conditions that characterize people served at our restaurant by the columns <code>money_received_per_person</code> and <code>size</code>. In our first index of the variable <code>conditions</code>, that condition is met if <code>money_received_per_person</code> is greater than <code>large_amt_paid_per_person</code> and <code>size</code> is greater than or equal to 3. </p>
+<div class="highlight"><pre><span></span><span class="n">conditions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">large_amt_paid_per_person</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">large_amt_paid_per_person</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">small_amt_paid_per_person</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">large_amt_paid_per_person</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">small_amt_paid_per_person</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">large_amt_paid_per_person</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">small_amt_paid_per_person</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">small_amt_paid_per_person</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+
+
+<p>There's a variable called <code>choices</code> that's a list of text strings that classify this category of people that meet this condition. In the example described above, I want to classify that group of people that spend a lot of money per person and are large groups as <code>big spenders &amp; large group</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;big spenders &amp; large group&#39;</span><span class="p">,</span> <span class="s1">&#39;big spenders &amp; small group&#39;</span><span class="p">,</span> 
+           <span class="s1">&#39;medium spenders &amp; large group&#39;</span><span class="p">,</span> <span class="s1">&#39;medium spenders &amp; small group&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;small spenders &amp; large group&#39;</span><span class="p">,</span> <span class="s1">&#39;small spenders &amp; small group&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>The numpy <code>select()</code> method returns an array drawn from elements in a choicelist. We can use our conditions above and are outcome choices to classify those groups of people based on money spent per person and group size.</p>
+<p>In the <code>select()</code> method below, I set the argument <code>condlist</code> to be our <code>conditions</code> and the argument <code>choicelist</code> to be our <code>choices</code>.  I created the variables <code>conditions</code> and <code>choices</code>. </p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;party_category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">condlist</span><span class="o">=</span><span class="n">conditions</span><span class="p">,</span> <span class="n">choicelist</span><span class="o">=</span><span class="n">choices</span><span class="p">)</span>
+</pre></div>
+
+
+<p>For the new column created <code>party_category</code>, I apply the <code>value_counts()</code> method to see a count of each of the unique values in the column.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;party_category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>medium spenders &amp; small group    82
+big spenders &amp; small group       48
+medium spenders &amp; large group    40
+small spenders &amp; large group     31
+small spenders &amp; small group     30
+big spenders &amp; large group       13
+Name: party_category, dtype: int64
+</pre></div>
+
+
+<p>Let's preview the relevant columns used in this analysis.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;money_received_per_person&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;party_category&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>money_received_per_person</th>
+      <th>size</th>
+      <th>party_category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>228</th>
+      <td>8.00</td>
+      <td>2</td>
+      <td>medium spenders &amp; small group</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>5.99</td>
+      <td>2</td>
+      <td>small spenders &amp; small group</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>15.64</td>
+      <td>2</td>
+      <td>big spenders &amp; small group</td>
+    </tr>
+    <tr>
+      <th>156</th>
+      <td>8.86</td>
+      <td>6</td>
+      <td>medium spenders &amp; large group</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9.00</td>
+      <td>2</td>
+      <td>medium spenders &amp; small group</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+        <center>This project contains 70 pages and is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+          <br/>
+          Copyright &copy; Dan Friedman,
+          <time datetime="2018">2018</time>.
+        </center>
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #038f6d" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#d6eed9" );
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+  <!-- <script type="text/javascript">
+    $(document).on('click', 'a[href^="#"]', function (event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 500);
+    });
+  </script> -->
+
+</body>
+
+</html>
