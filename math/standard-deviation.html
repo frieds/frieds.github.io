@@ -158,7 +158,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 30&nbsp;&nbsp;&bull;&nbsp;&nbsp;7 min read
+        Nov 30&nbsp;&nbsp;&bull;&nbsp;&nbsp;9 min read
       </li>
       <li class="tagarticle">
         Key Terms:         standard deviation,
@@ -171,6 +171,26 @@
 
   <div class='article_content'>
     <p><strong>Standard deviation</strong> is a measure of how spread out a set of values are from the mean.</p>
+<h3>Sample Vs. Population Standard Deviation</h3>
+<p>Samples tend to underestimate variability of a population. One reason for this is that the values in the sample don't include extremes. Therefore, there are different formulas to calculate a sample and population standard deviation.</p>
+<p><strong>Population standard deviation:</strong></p>
+<div class="math">$$ \sigma = \sqrt{\frac{1}{N}\sum_{i=1}^{N}(x_{i}-\mu)^{2}} $$</div>
+<ul>
+<li><span class="math">\(\sigma\)</span> = population standard deviation</li>
+<li><span class="math">\(N\)</span> = count of values in population</li>
+<li><span class="math">\(x_{i}\)</span> can represent any value in the population</li>
+<li><span class="math">\(\mu\)</span> is the population mean</li>
+</ul>
+<p>I'd describe this calculation above as: subtract the mean from each value and calculate its square and you are left with a new list of values. Sum up all those values and you are left with a single number. Lastly, multiple that value by 1 divided by the count of values in the population.</p>
+<p><strong>Sample standard deviation:</strong></p>
+<div class="math">$$ s = \sqrt{\frac{1}{N-1}\sum_{i=1}^{N}(x_{i}-\bar{x})^{2}} $$</div>
+<ul>
+<li><span class="math">\(s\)</span> = sample standard deviation</li>
+<li><span class="math">\(N\)</span> = count of values in sample</li>
+<li><span class="math">\(x_{i}\)</span> can represent any value in the sample</li>
+<li><span class="math">\(\bar{x}\)</span> is the sample mean</li>
+</ul>
+<p>In this article, my logic below will just cover analysis to calculate a population standard deviation.</p>
 <h3>Import Modules</h3>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
@@ -400,13 +420,14 @@
 </table>
 </div>
 
-<p>Create a new column called <code>total_bill_squared_differences</code> that's the square of <code>total_bill_diff_from_mean</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill_squared_differences&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill_diff_from_mean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<p>Create a new column called <code>total_bill_squared_differences_from_mean</code> that's the square of <code>total_bill_diff_from_mean</code>.</p>
+<p>The square of a value is equivalent to <span class="math">\(value*value\)</span>; hence the square of 3 is equivalent to <span class="math">\(3*3\)</span> which equals 9.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill_squared_differences_from_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill_diff_from_mean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
 
-<p>Preview the first few rows of <code>total_bill_diff_from_mean</code> and <code>total_bill_squared_differences</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;total_bill_diff_from_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;total_bill_squared_differences&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<p>Preview the first few rows of <code>total_bill_squared_differences_from_mean</code> and <code>total_bill_squared_differences</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;total_bill_diff_from_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;total_bill_squared_differences_from_mean&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 
@@ -463,8 +484,8 @@
 </div>
 
 <h5>3: Calculate the Variance</h5>
-<p>Calculate the average of values in the <code>total_bill_squared_differences</code> column and assign to to <code>variance_total_bill</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">variance_total_bill</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill_squared_differences&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<p>Calculate the average of values in the <code>total_bill_squared_differences_from_mean</code> column and assign the value to the variable <code>variance_total_bill</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">variance_total_bill</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill_squared_differences_from_mean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">variance_total_bill</span>
 </pre></div>
 
@@ -474,7 +495,7 @@
 
 
 <h5>4: Calculate the Standard Deviation</h5>
-<p>Use the <code>numpy</code> <code>sqrt()</code> method to find the square root of <code>variance_total_bill</code>.</p>
+<p>Use the NumPy <code>sqrt()</code> method to find the square root of <code>variance_total_bill</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">standard_deviation_total_bill</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance_total_bill</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">standard_deviation_total_bill</span>
 </pre></div>
@@ -484,6 +505,7 @@
 </pre></div>
 
 
+<p>I can summarize these four steps as the square root of the ((sum of squared deviations divided by n)). I put the parentheses around the latter part to specify an order of operations.</p>
 <h4>How to Calculate Standard Deviation: The Easy Way on Tips Dataset</h4>
 <p>Use the pandas <code>std()</code> method on our <code>total_bill</code> column.</p>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -507,7 +529,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="standard_deviation_files/standard_deviation_37_0.png"></p>
+<p><img alt="png" src="standard_deviation_files/standard_deviation_40_0.png"></p>
 <h3>Example 2: Tips Dataset Comparing Total Bill Standard Deviation Among Male and Female Servers</h3>
 <p>For each unique value in the <code>sex</code> column, let's see their mean <code>total_bill</code> value and standard deviation of their <code>total_bill</code> values. </p>
 <div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">gender</span> <span class="ow">in</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
@@ -532,9 +554,9 @@ Gender Male has a mean total bill value of 9.25 and a standard deviation of 20.7
 </pre></div>
 
 
-<p><img alt="png" src="standard_deviation_files/standard_deviation_42_0.png"></p>
+<p><img alt="png" src="standard_deviation_files/standard_deviation_45_0.png"></p>
 <h3>Example 3: Compare Vastly Different Standard Deviation Values</h3>
-<p>Using the <code>numpy</code> package's <code>random</code> module, we can call the <code>normal()</code> method to create a list of values with a normal distribution by setting the following arguments:</p>
+<p>Using the NumPy package's <code>random</code> module, we can call the <code>normal()</code> method to create a list of values with a normal distribution by setting the following arguments:</p>
 <ul>
 <li><code>loc</code> as the mean of the distribution</li>
 <li><code>scale</code> as the standard deviation of the distribution</li>
@@ -556,8 +578,63 @@ Gender Male has a mean total bill value of 9.25 and a standard deviation of 20.7
 </pre></div>
 
 
-<p><img alt="png" src="standard_deviation_files/standard_deviation_47_0.png"></p>
+<p><img alt="png" src="standard_deviation_files/standard_deviation_50_0.png"></p>
 <p>This histogram makes it evident that the <span style="color:orange">orange</span> values have a large standard deviation because there's a large spread of values from the mean as values extend to around -30 and 240. Hence the <span style="color:purple">purple</span> values have a smaller standard deviation because there's a minimal spread of values from the mean as values extend to just around 65 and 130.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "left",
+        indent = "1em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
   </div>
 </section>
 
