@@ -163,6 +163,7 @@
       <li class="tagarticle">
         Key Terms:         confidence interval,
         z-score,
+        standard error,
         statistics,
         standard deviation,
         normal distribution,
@@ -172,7 +173,8 @@
   </header>
 
   <div class='article_content'>
-    <h4>Import Modules</h4>
+    <p><strong>Confidence interval</strong> is a range of values in which there's a specified probability that the expected true population parameter lies within it.</p>
+<h4>Import Modules</h4>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="kn">as</span> <span class="nn">stats</span>
@@ -266,7 +268,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_15_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_16_0.png"></p>
 <p>It's tough to characterize this distribution. It's got one large peak around 140 pounds, and it's not a normal distribution since there's no symmetry around a central value.</p>
 <h3>Calculate Population Summary Statistics</h3>
 <h4>Calculation Population Mean</h4>
@@ -315,7 +317,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_29_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_30_0.png"></p>
 <p>Wow! This distribution of sample means looks normal! The curve is fairly symmetrical around the central value and the median is roughly equivalent to the mean (see below). Based on the central limit theorem, sampling a sufficient number of times with a sufficient size will result in a normal distribution of sample means.</p>
 <h3>Calculate Sampling Distribution (<span class="math">\(n=25\)</span>) Summary Statistics</h3>
 <h4>Calculate Median of Sample Means</h4>
@@ -400,7 +402,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_49_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_50_0.png"></p>
 <h4>Calculate Proportion of Sample Means Less Than Gym Sample Mean</h4>
 <p>What's the probability of seeing a sample mean with a value less than 163?</p>
 <p>Given this new sample mean of people at the gym, I can calculate the number of standard errors this value is from the mean of the sampling distribution. Let's calculate the z-score for <code>gym_sample_mean</code>.</p>
@@ -453,7 +455,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_57_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_58_0.png"></p>
 <h3>Critical Z-Scores</h3>
 <p>For the sampling distribution above, approximately 95% of the values will fall within 2 standard errors of the mean. Let's calculate the exact z-score values that bound 95% of the data. We know that the tails on each end should be 2.5% or 0.025 of values.</p>
 <p>Below I use a z-score of 1.96 to calculate a tail of 0.025.</p>
@@ -508,7 +510,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_66_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_67_0.png"></p>
 <p>Other critical z-scores:</p>
 <table>
 <thead>
@@ -586,7 +588,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_74_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_75_0.png"></p>
 <p>The population mean could range from the green to the purple horizontal dotted lines above. Below is another way of visualizing that.</p>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
@@ -596,7 +598,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_76_1.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_77_1.png"></p>
 <div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">lower_bound_95_perc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">standard_error</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="n">values2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">upper_bound_95_perc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">standard_error</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -613,7 +615,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_77_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_78_0.png"></p>
 <p>The <strong>interval estimate</strong> for the shaded area above is:</p>
 <div class="math">$$(GymSampleMean - 1.96*\frac{\sigma}{\sqrt{n}}, GymSampleMean + 1.96*\frac{\sigma}{\sqrt{n}}$$</div>
 <h3>Effect of Sample Size on Confidence Interval</h3>
