@@ -296,7 +296,7 @@
 <p>The mean sample mass of people who frequent the gym at least three times per week is 163 pounds.  I'm curious how this compares to our current population of people's mass. In order to compare this new sample of people from the gym, I need to compare it to an equivalent distribution of sample means from our population.</p>
 <p>I need to calculate where this sample mean of 163 pounds would fall on the distribution of sample means from the masses of people from the U.S. population.</p>
 <h3>Create List of Sample Means with <span class="math">\(n=25\)</span></h3>
-<p>Hypothetically, if It's biased to simply select a single sample from our population </p>
+<p>Hypothetically, it's biased to simply select a single sample from our population and compare it to the gym goers.</p>
 <p>Given our population mass values, I will take 300 samples each of 25 random values with replacement. For each sample, I will calculate the mean of the sample. I store all those sample means in the list <code>sample_means</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">sample_means</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">25</span>
@@ -308,7 +308,7 @@
 </pre></div>
 
 
-<h3>View Distribution of Sample Means</h3>
+<h3>View Distribution of Sample Means (Otherwise Called Sampling Distribution)</h3>
 <p>Let's view the distribution of these <code>sample_means</code> values.</p>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Sample Means ($n=25$) of People&#39;s Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
@@ -320,6 +320,7 @@
 <p><img alt="png" src="confidence_intervals_files/confidence_intervals_30_0.png"></p>
 <p>Wow! This distribution of sample means looks normal! The curve is fairly symmetrical around the central value and the median is roughly equivalent to the mean (see below). Based on the central limit theorem, sampling a sufficient number of times with a sufficient size will result in a normal distribution of sample means.</p>
 <h3>Calculate Sampling Distribution (<span class="math">\(n=25\)</span>) Summary Statistics</h3>
+<p>Below are summary statistic calculations for the sampling distribution visualized above.</p>
 <h4>Calculate Median of Sample Means</h4>
 <div class="highlight"><pre><span></span><span class="n">median_of_sample_means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
 <span class="n">median_of_sample_means</span>
@@ -402,7 +403,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_50_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_51_0.png"></p>
 <h4>Calculate Proportion of Sample Means Less Than Gym Sample Mean</h4>
 <p>What's the probability of seeing a sample mean with a value less than 163?</p>
 <p>Given this new sample mean of people at the gym, I can calculate the number of standard errors this value is from the mean of the sampling distribution. Let's calculate the z-score for <code>gym_sample_mean</code>.</p>
@@ -447,7 +448,7 @@
 <span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="n">gym_sample_mean</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;teal&#39;</span><span class="p">,)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">154</span><span class="p">,</span> <span class="n">y</span><span class="o">=.</span><span class="mo">01</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> 
-         <span class="n">s</span><span class="o">=</span><span class="s2">&quot;Sample mean of people at gym</span><span class="se">\n</span><span class="s2">greater than {0}</span><span class="si">% o</span><span class="s2">f sample means&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">prop_values_less_than_gym_sample_mean</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> 
+         <span class="n">s</span><span class="o">=</span><span class="s2">&quot;Sample mean of people at gym</span><span class="se">\n</span><span class="s2">greater than {0}</span><span class="si">% o</span><span class="s2">f sample means</span><span class="se">\n</span><span class="s2">from the general population&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">prop_values_less_than_gym_sample_mean</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> 
          <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span> <span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round, pad=0.1&quot;</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Sample Means ($n=25$) of People&#39;s Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
@@ -455,9 +456,9 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_58_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_59_0.png"></p>
 <h3>Critical Z-Scores</h3>
-<p>For the sampling distribution above, approximately 95% of the values will fall within 2 standard errors of the mean. Let's calculate the exact z-score values that bound 95% of the data. We know that the tails on each end should be 2.5% or 0.025 of values.</p>
+<p>For the sampling distribution above, approximately 95% of the values will fall within 2 standard errors of the mean. Let's calculate the exact z-score values that bound 95% of the data. We know that the tails on each end should be 2.5% or 0.025 of the the total area under the curve of the sampling distribution.</p>
 <p>Below I use a z-score of 1.96 to calculate a tail of 0.025.</p>
 <div class="highlight"><pre><span></span><span class="n">tail</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">1.96</span><span class="p">)</span>
 <span class="n">tail</span>
@@ -468,7 +469,7 @@
 </pre></div>
 
 
-<p>The area under the curve between the z-scores is approximately 0.95</p>
+<p>The area under the curve between the z-critcal scores is approximately 0.95</p>
 <div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">tail</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
@@ -510,7 +511,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_67_0.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_68_0.png"></p>
 <p>Other critical z-scores:</p>
 <table>
 <thead>
@@ -540,7 +541,7 @@
 <p>We can calculate where we'd expect 95% of the values to lie in this new distribution. 95% of new sample means of people from the gym would fall within 1.96 standard errors from the expected population mean.</p>
 <p><span class="math">\(\mu_{gym}\)</span> is the new population mean of people's masses who frequent the gym. Our best guess is <code>gym_sample_mean</code> though we know it'll likely be in some interval around that.</p>
 <p>We can express a generic formula for a 95% confidence interval for the expected population mass of gym goers as: </p>
-<div class="math">$$(\mu_{gym} - 1.96*\frac{\sigma}{\sqrt{n}},  \mu_{gym} + 1.96*\frac{\sigma}{\sqrt{n}}$$</div>
+<div class="math">$$(\mu_{gym} - 1.96*\frac{\sigma}{\sqrt{n}},  \mu_{gym} + 1.96*\frac{\sigma}{\sqrt{n}})$$</div>
 <ul>
 <li><span class="math">\(1.96\)</span> is the z-score for a 95% confidence interval (CI)</li>
 <li><span class="math">\(\frac{\sigma}{\sqrt{n}}\)</span> is equivalent to the standard error (std. dev. of the sampling distribution)</li>
@@ -588,25 +589,16 @@
 </pre></div>
 
 
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_75_0.png"></p>
-<p>The population mean could range from the green to the purple horizontal dotted lines above. Below is another way of visualizing that.</p>
-<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1a1f18d898&gt;
-</pre></div>
-
-
-<p><img alt="png" src="confidence_intervals_files/confidence_intervals_77_1.png"></p>
+<p><img alt="png" src="confidence_intervals_files/confidence_intervals_76_0.png"></p>
+<p>The population mean could range from the green to the purple vertical dotted lines above. Below is another way of visualizing that.</p>
 <div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">lower_bound_95_perc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">standard_error</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="n">values2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">upper_bound_95_perc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">standard_error</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">values2</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">gym_sample_mean</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean gym ppl (point estimate)&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">lower_bound_95_perc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;crimson&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;potential lower bound gym goers distr.&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">upper_bound_95_perc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;potential upper bound gym goers distr.&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;95% Confidence Interval for Bounds of Population of Masses of Frequent Gym Goers&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">lower_bound_95_perc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;crimson&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;lower 95% CI bound&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">upper_bound_95_perc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;upper 95% CI bound&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;95% Confidence Interval for Bounds of Expected Population of Masses of Frequent Gym Goers&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">bbox_props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">gym_sample_mean</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s2">&quot;Shaded area represents range</span><span class="se">\n</span><span class="s2">of expected population</span><span class="se">\n</span><span class="s2">mean ($\mu_{gym}$) - equivalent</span><span class="se">\n</span><span class="s2">to interval estimate of 95% CI&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> 
          <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">bbox_props</span><span class="p">)</span>
