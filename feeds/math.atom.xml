@@ -1,5 +1,330 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base - Math</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/math.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-12-28T20:00:00-08:00</updated><entry><title>Bessel's Correction</title><link href="https://dfrieds.com/math/bessels-correction" rel="alternate"></link><published>2018-12-28T20:00:00-08:00</published><updated>2018-12-28T20:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-12-28:/math/bessels-correction</id><summary type="html">&lt;p&gt;Understand the significance of Bessel's correction in calculating sample variance and sample standard deviation; visualize the bias in using the population standard deviation equation for samples&lt;/p&gt;</summary><content type="html">&lt;h4&gt;Import Modules&lt;/h4&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base - Math</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/math.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-02-11T14:40:00-08:00</updated><entry><title>T-Tests: Intro to Key Terms and Three Types of Tests</title><link href="https://dfrieds.com/math/intro-t-test-terms" rel="alternate"></link><published>2019-02-11T14:40:00-08:00</published><updated>2019-02-11T14:40:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-02-11:/math/intro-t-test-terms</id><summary type="html">&lt;p&gt;Learn about what are t-tests at a high level, the t-distribution, how to calculate t-critical values, degrees of freedom and an overview of the three types of tests. Lessons are in Python and use statistical packages.&lt;/p&gt;</summary><content type="html">&lt;p&gt;A t-test is a type of statistical hypothesis test. This type of test can determine if 1) a sample mean is &lt;em&gt;significantly&lt;/em&gt; different from a known population mean or 2) a sample mean is &lt;em&gt;significantly&lt;/em&gt; different from another sample mean. Typically, we associate t-tests with the latter.&lt;/p&gt;
+&lt;p&gt;There are three distinct types of t-tests: one sample t-tests, dependent sample t-tests and independent sample t-tests. Each type of test involves a comparison of &lt;em&gt;two&lt;/em&gt; groups. &lt;/p&gt;
+&lt;p&gt;Hypothesis tests for comparing &lt;em&gt;multiple&lt;/em&gt; groups are called &lt;a href='https://en.wikipedia.org/wiki/Analysis_of_variance'&gt;analysis of variance&lt;/a&gt; (ANOVA) and will be covered in another post.&lt;/p&gt;
+&lt;p&gt;Each of the three types of tests involve the same variable tested in the two groups. For example, a t-test can compare scores on the &lt;em&gt;same&lt;/em&gt; final exam for one teacher's students and another teacher's students. However, if one teacher provides an exam with different questions than another teacher, a simple hypothesis test can't adequately compare the students' performance against the other class because there are &lt;strong&gt;lurking variables&lt;/strong&gt;. These are variables that are not explained in the single score of student's performance but would affect the interpretation of the t-tests results. Some examples of lurking variables are difficulty of questions, number of questions on the exam and time allotted to complete the exam.&lt;/p&gt;
+&lt;h3&gt;Overview of Three Types of t-tests&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;type of test&lt;/th&gt;
+&lt;th&gt;group 1&lt;/th&gt;
+&lt;th&gt;group 2&lt;/th&gt;
+&lt;th&gt;purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;one sample t-test&lt;/td&gt;
+&lt;td&gt;population&lt;/td&gt;
+&lt;td&gt;sample&lt;/td&gt;
+&lt;td&gt;tests whether the mean of a population is &lt;em&gt;significantly&lt;/em&gt; different than a sample mean that's not included in the population&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;dependent sample t-test&lt;/td&gt;
+&lt;td&gt;sample&lt;/td&gt;
+&lt;td&gt;sample&lt;/td&gt;
+&lt;td&gt;tests whether the difference in means of two depenendent samples is &lt;em&gt;significantly&lt;/em&gt; different&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;independent sample t-test&lt;/td&gt;
+&lt;td&gt;sample&lt;/td&gt;
+&lt;td&gt;sample&lt;/td&gt;
+&lt;td&gt;tests whether the difference in means of two independent samples is &lt;em&gt;significantly&lt;/em&gt; different&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Each of these tests is considered a &lt;a href='https://en.wikipedia.org/wiki/Parametric_statistics'&gt;&lt;em&gt;parametric test&lt;/em&gt;&lt;/a&gt; because they assume that data comes from a population that meets specific probability distribution standards. These data requirements will be discussed individually for each test in separate posts.&lt;/p&gt;
+&lt;h3&gt;One Sample t-test Descriptive Example&lt;/h3&gt;
+&lt;p&gt;There was a private guitar teacher who taught students who have no previous guitar experience to play the song &lt;em&gt;Ziggy Stardust&lt;/em&gt; over the course of 3 months. Similarly, there was a music academy that taught thousands of students who have no previous guitar experience to play the song &lt;em&gt;Ziggy Stardust&lt;/em&gt; over the course of 3 months. At the end of 3 months, all students from each of these programs were graded on their final performance of &lt;em&gt;Ziggy Stardust&lt;/em&gt;. An official proctor counted the number of errors in each student's performance. &lt;/p&gt;
+&lt;p&gt;After all the data was collected, I calculated the mean number of errors by the private teacher's students and by the academy's students. Was there a &lt;em&gt;significant&lt;/em&gt; difference in the average number of errors for students' performance between the private teacher and the academy?&lt;/p&gt;
+&lt;p&gt;In this example, I consider the academy of students to be the &lt;em&gt;population&lt;/em&gt; and the group of students from the private teacher to be a &lt;em&gt;sample&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(H_{o}: \mu_{academy}=\bar{x}_{\textrm{private teacher}}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(H_{o}: \mu_{academy}\neq\bar{x}_{\textrm{private teacher}}\)&lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;Dependent Sample t-test Descriptive Example&lt;/h3&gt;
+&lt;p&gt;A sample of 19 people were told to lie in bed ready to fall asleep at 10pm every night and would be woken up by an alarm at 6:30am for 15 days in a row. In that period, they tried to sleep as much as possible. With each night's sleep, sensors and a computer helped record a measurement of that person's total hours slept. This same test was later performed for the same group of people under the same circumstances, but with one difference. Each night a person took a sleeping pill at 9:30pm. &lt;/p&gt;
+&lt;p&gt;After all the data was collected, I calculated the mean number of hours slept for people without using the pill and with using the pill. Does the sleeping pill help &lt;em&gt;significantly&lt;/em&gt; increase the average hours slept for the group than without the pill? &lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(H_{o}: \mu_{\textrm{no pill}} &amp;lt;= \mu_{pill}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(H_{o}: \mu_{\textrm{no pill}} &amp;gt; \mu_{pill}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;This is considered a pretest posttest type of t-test for dependent samples. The samples are considered &lt;em&gt;dependent&lt;/em&gt; on one another because the &lt;em&gt;same&lt;/em&gt; people who took the sleep test without the pills later the test again with sleeping pills.&lt;/p&gt;
+&lt;p&gt;The data was collected from two different samples. However, in the hypotheses above, I use symbols of &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; (a population mean) instead of &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; (a sample mean). This may seem confusing since we don't &lt;em&gt;exactly&lt;/em&gt; know the values of &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; for either sample from the start of the test.&lt;/p&gt;
+&lt;p&gt;These hypotheses are not about the &lt;em&gt;exact&lt;/em&gt; provided data. Rather, they're inferences about the &lt;em&gt;expected&lt;/em&gt; population means from which the samples come from. A proper t-test analysis performs calculations to help &lt;em&gt;infer&lt;/em&gt; what the &lt;em&gt;expected&lt;/em&gt; population mean of each sample would be given just a sample mean. This description is part of the field of &lt;strong&gt;inferential statistics&lt;/strong&gt;: use of a random sample of data taken from a population to describe and make inferences about the population. These inferences are important because they help to explain what &lt;em&gt;would likely&lt;/em&gt; happen if this same sleeping test was performed on a larger population of people. &lt;/p&gt;
+&lt;p&gt;Typically, in a dependent t-test example such as this, the exact populations are currently unknwown or one is unable to access the population data.&lt;/p&gt;
+&lt;h3&gt;Independent Sample t-test Descriptive Example&lt;/h3&gt;
+&lt;p&gt;There was a sample of professional basketball players in 1940 that attempted to jump as high as they could and measurements were taken on their reach by the top of their hande. The same test was performed on a sample of professional basketball players in 2019. After all this data was collected, I calculated the mean height in inches reached by the sample of players in 1940 and 2019. Do professional basketball players in 2019 jump &lt;em&gt;significantly&lt;/em&gt; higher on average than basketball players in 1940?&lt;/p&gt;
+&lt;p&gt;Similar to the example with dependent t-tests above, these hypotheses are an &lt;em&gt;inference&lt;/em&gt; on the &lt;em&gt;expected&lt;/em&gt; true population means from which each sample comes from.&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu_{1940} &amp;gt;= \mu_{2019}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(H_{A}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu_{1940} &amp;lt; \mu_{2019}\)&lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;Setup Code&lt;/h3&gt;
+&lt;h4&gt;Import Modules&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;stats&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Set Visualization Style&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;talk&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;darkgrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;t-distribution&lt;/h3&gt;
+&lt;p&gt;The &lt;strong&gt;t-distribution&lt;/strong&gt; is a probability distribution used to estimate population parameters in analysis for t-tests. &lt;/p&gt;
+&lt;p&gt;The math and logic used to infer the t-distribution is long and complex. For now, I'll provide a concise high-level overview of some calculations needed for a t-test and how a t-distribution comes into play.&lt;/p&gt;
+&lt;p&gt;Similar to z-tests in the calculation of a z-score, a t-test requires calculation of a t-statistic. A one-sample t-test helps determine if the mean of a population is &lt;em&gt;significantly&lt;/em&gt; different than a sample mean that's not included in the population. Both the mean and population have the same variable measurement. The equation for the t-statistic for a one-sample t-test is:&lt;/p&gt;
+&lt;div class="math"&gt;$$t=\frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}}$$&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is sample mean and is a point estimate&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is our &lt;em&gt;known&lt;/em&gt; current population mean&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(\frac{s}{\sqrt{n}}\)&lt;/span&gt; is our expected standard error for &lt;span class="math"&gt;\(\mu_{0}\)&lt;/span&gt; - the expected standard deviation of population that &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; comes from&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(s\)&lt;/span&gt; is the sample standard deviation (remember to use bessel's correction with &lt;span class="math"&gt;\(n-1\)&lt;/span&gt; in the denominator)&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is the sample size&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The calculation of the t-statistic varies with types of tests. &lt;/p&gt;
+&lt;p&gt;Also, similar to the calculation of z-critical values for z-tests, a t-test requires calculation of a t-critical value which just uses the initial alpha level and &lt;span class="math"&gt;\(n\)&lt;/span&gt; - the sample size. This calculation of the t-critical value utilizes the t-distribution and helps us determine the probability that the sample would come from the population its being compared to.&lt;/p&gt;
+&lt;p&gt;For a t-test, we compare where the resulting t-statistic lies on the t-distribution. In the t-distribution, the x-axis consists of t-values and the y-axis consists of the probability of occurences.&lt;/p&gt;
+&lt;h4&gt;Visualization of a t-distribution and a t-statistic&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;t_distribution_df_30&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;standard_t&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_distribution_df_30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;blue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t-distribution of $n=31$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axvline&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkslateblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linestyle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t-statistic of $-1$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;t-values&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;t-distribution and location of t-statistic&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="intro_t_tests_files/intro_t_tests_17_0.png"&gt;&lt;/p&gt;
+&lt;p&gt;The t distribution has the following characteristics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mean = 0 &lt;/li&gt;
+&lt;li&gt;symmetrical&lt;/li&gt;
+&lt;li&gt;typically not exactly normal given small &lt;span class="math"&gt;\(n\)&lt;/span&gt; values; a very high &lt;span class="math"&gt;\(n\)&lt;/span&gt; value will lead to a more normal t-distribution&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(variance = v/(v-2)\)&lt;/span&gt; in which &lt;span class="math"&gt;\(v\)&lt;/span&gt; is the degrees of freedom and &lt;span class="math"&gt;\(v&amp;gt;2\)&lt;/span&gt; (degrees of freedom explained below)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;T-test errors are more prone to errors in results than a z-test. The reason for this is that compared to the z-distribution, the t-distribution has larger variance. Visually we see a wider curve and thicker tails.&lt;/p&gt;
+&lt;h4&gt;Visualization of z-distribution and t-distribution&lt;/h4&gt;
+&lt;p&gt;This visualization is based on certain parameters such as the size of samples and/or population. They won't always appear in the exact shapes below but I still think the comparisons are a good &lt;em&gt;general&lt;/em&gt; point of reference.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;z_distribution&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;t_distribution&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;standard_t&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;z_distribution&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;z-distribution&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_distribution&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;red&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t-distribution&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;t-statistic or z-score&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of z-distribution and t-distribution&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="intro_t_tests_files/intro_t_tests_21_0.png"&gt;&lt;/p&gt;
+&lt;h4&gt;Degrees of Freedom&lt;/h4&gt;
+&lt;p&gt;We utilize &lt;strong&gt;degrees of freedom&lt;/strong&gt; in t-test calculations. Degrees of freedom is simply the freedom to vary. Imagine you had 10 students in your classroom who completed the final exam. If I picked out scores for 9 of the students, you must pick out the &lt;em&gt;one&lt;/em&gt; remaining student's score. For any 9 student scores I pick, you have &lt;span class="math"&gt;\(10-1 = 9\)&lt;/span&gt; student's scores to choose from. In variable terms, this means if you have &lt;span class="math"&gt;\(n\)&lt;/span&gt; numbers to choose from, you have &lt;span class="math"&gt;\(n-1\)&lt;/span&gt; degrees of freedom.&lt;/p&gt;
+&lt;p&gt;In statistics, the calculation for degrees of freedom is the count of observations in the sample that are free to vary when estimating statistical parameters.&lt;/p&gt;
+&lt;p&gt;The t-distribution is defined by the degrees of freedom value.&lt;/p&gt;
+&lt;p&gt;When the size of the sample, &lt;span class="math"&gt;\(n\)&lt;/span&gt;, increases:
+    - t-distribution approaches a more normal distribution
+    - t-distribution gets skinner tails (b/c the standard error decreases)
+    - standard deviation approaches the value of the inferred population standard deviation&lt;/p&gt;
+&lt;p&gt;Also, as &lt;span class="math"&gt;\(n\)&lt;/span&gt; increases, our confidence increases in our inference of where the true population mean (based off of &lt;span class="math"&gt;\(n\)&lt;/span&gt;) is expected to be.&lt;/p&gt;
+&lt;p&gt;Therefore, when running a one-sample t-test, it's ideal to utilize a larger sample size &lt;span class="math"&gt;\(n\)&lt;/span&gt; to increase confidence in the inferred population that's based off the sample.&lt;/p&gt;
+&lt;h4&gt;Visualization of t-distributions with Various Degrees of Freedom&lt;/h4&gt;
+&lt;p&gt;This visualization below outlines the points mentioned above about how the t-distribution changes with an increase in &lt;span class="math"&gt;\(n\)&lt;/span&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;t_distribution_df_5&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;standard_t&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;t_distribution_df_500&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;standard_t&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;500&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_distribution_df_5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;purple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t-distribution of df=5&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_distribution_df_500&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;green&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t-distribution of df=500&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;t values&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of z and t-distribution&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="intro_t_tests_files/intro_t_tests_26_0.png"&gt;&lt;/p&gt;
+&lt;h3&gt;t-critical Value&lt;/h3&gt;
+&lt;p&gt;For t-tests, we need to calculate a t-critical value which has some similarities to a z-score (critical) value. &lt;/p&gt;
+&lt;p&gt;Similarities of t-critical value to a z-score:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;identifies a boundary for a critical region of its respective distribution (for a t-test, the t-distribution)&lt;/li&gt;
+&lt;li&gt;for a one-tailed test, there's &lt;em&gt;either&lt;/em&gt; a positive or negative critical value with one tail probability&lt;/li&gt;
+&lt;li&gt;for a two-tailed test, there's a positive &lt;em&gt;and&lt;/em&gt; negative critical value with their respective tail probabilities&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For a t-test, we utilize knowledge of the alpha level, direction of the test and degrees of freedom.&lt;/p&gt;
+&lt;p&gt;I'm familiar with two ways to calculate the t-critical value. One way is using a table and another is done programatically using Python. I prefer the latter.&lt;/p&gt;
+&lt;p&gt;&lt;a href='https://udacity.com'&gt;Udacity&lt;/a&gt; hosts a table to identify t-critical values at &lt;a href='https://s3.amazonaws.com/udacity-hosted-downloads/t-table.jpg'&gt;this page&lt;/a&gt;. The values inside the table represent the t-critical values. Each row shows these t-critical values for a degrees of freedom (df) value. The columns are labeled for a right tail probability. This table can be used for one-tail and two-tail tests.&lt;/p&gt;
+&lt;p&gt;In Python, as part of the &lt;code&gt;Scipy&lt;/code&gt; package and &lt;code&gt;t&lt;/code&gt; class, there's a method called &lt;code&gt;ppf()&lt;/code&gt; that returns the t-critical value. The arguments of the method are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;q&lt;/code&gt; for the area under the curve of the t-distribution to the left of the t-critical value&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;df&lt;/code&gt; for the degrees of freedom (equivalent to &lt;span class="math"&gt;\(n-1\)&lt;/span&gt; for a one sample t-test)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Below is an example for a one-tailed test in the positive direction with an alpha of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt; and a degrees of freedom value of &lt;span class="math"&gt;\(30\)&lt;/span&gt;. Since this is a positive direction t-test, the area under the curve of the t-distribution to the left of the t-critical value is equivalent to &lt;span class="math"&gt;\(1-0.05 = 0.95\)&lt;/span&gt;. The returned t-critical value is &lt;code&gt;1.698&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ppf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1.6972608943617378
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In the table, for the row of &lt;em&gt;df&lt;/em&gt; equal to &lt;span class="math"&gt;\(30\)&lt;/span&gt; and &lt;em&gt;tail probability p&lt;/em&gt; (that aligns with their picture at the top of the page) equal to &lt;span class="math"&gt;\(.05\)&lt;/span&gt; there's the equivalent t-critical value of &lt;span class="math"&gt;\(1.697\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;If this was a one-tailed test in the negative direction with the same alpha of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt; and degrees of freedom of &lt;span class="math"&gt;\(30\)&lt;/span&gt;, the area under the curve of the t-distribution to the left of the t-critical value should be &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. I can use the &lt;code&gt;ppf()&lt;/code&gt; method and that returns a value of &lt;code&gt;-1.698&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ppf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.05&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;-1.6972608943617384
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This example illustrates that the t-table can be used for both one-tailed tests in the positive and negative direction.&lt;/p&gt;
+&lt;p&gt;This method works for two-tailed tests too. For an alpha level of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;, you have &lt;span class="math"&gt;\(0.025\)&lt;/span&gt; area under the curve to the left of the negative t-critical value and to the right of the positive t-critical value. Let's utilize a degrees of freedom value of &lt;span class="math"&gt;\(30\)&lt;/span&gt; again. Via the t-table, the t-critical value is 2.042 which we know means the t-critical value is &lt;span class="math"&gt;\(\pm2.042\)&lt;/span&gt; since this is a two-tailed test.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;ppf()&lt;/code&gt; method returns the same t-critical value of &lt;span class="math"&gt;\(-2.042\)&lt;/span&gt; which also equates to &lt;span class="math"&gt;\(\pm2.042\)&lt;/span&gt; for the two-tailed test. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ppf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.025&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;-2.042272456301238
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In a t-test, to reject the null hypothesis, I'd have to find a t-critical value greater than &lt;span class="math"&gt;\(2.042\)&lt;/span&gt; or less than &lt;span class="math"&gt;\(-2.042\)&lt;/span&gt;.&lt;/p&gt;
+&lt;h4&gt;Visualization of Change in t-critical Value with Change in Degrees of Freedom&lt;/h4&gt;
+&lt;p&gt;For an alpha level, as the degrees of freedom increases past &lt;span class="math"&gt;\(22\)&lt;/span&gt;, there is little change in the corresponding t-critical value.&lt;/p&gt;
+&lt;p&gt;Thus, if I wanted to run a one sample t-test, I would likely just get a sample of roughly size &lt;span class="math"&gt;\(23\)&lt;/span&gt; which equates to a degree of freedom of &lt;span class="math"&gt;\(22\)&lt;/span&gt;. I'd only opt to retrive a larger sample if retrieving that data was easy. &lt;/p&gt;
+&lt;p&gt;Below is a visualization that shows the change in t-critical value as the sample size increases for a one sample t-test in the positive direction with an alpha level of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;t_critical_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="n"&gt;degree_of_freedom_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;df_value&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;degree_of_freedom_values&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;t_critical_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ppf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;t_critical_values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_critical_value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;degree_of_freedom_values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t_critical_values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axvline&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;df = 22&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkslategray&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linestyle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;70&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.85&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;horizontalalignment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;center&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+         &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Minimal change in t-critical values&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;with increasing degrees of freedom for df&amp;gt;22&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+         &lt;span class="n"&gt;bbox&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;facecolor&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;whitesmoke&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;boxstyle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;round, pad=0.25&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;degrees of freedom [df]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;t-critical value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Change in T-Critical Values with Change in Sample Size for Alpha Level $0.05$&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="intro_t_tests_files/intro_t_tests_38_0.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Conditions for Rejecting the Null Hypothesis&lt;/h3&gt;
+&lt;p&gt;Similar to z-tests, with each t-test hypothesis, we want to determine if there is sufficient evidence to reject the null hypothesis. Below are details of hypothesis tests and means for evaluating the tests.&lt;/p&gt;
+&lt;p&gt;Below, the symbols of &lt;span class="math"&gt;\(\mu_{a}\)&lt;/span&gt; and &lt;span class="math"&gt;\(\mu_{b}\)&lt;/span&gt; are relevant for &lt;em&gt;just&lt;/em&gt; dependent and independent sample t-tests. &lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;null hypothesis&lt;/th&gt;
+&lt;th&gt;alternative hypothesis&lt;/th&gt;
+&lt;th&gt;alternative hypothesis interpretation&lt;/th&gt;
+&lt;th&gt;number of tails on t-distribution&lt;/th&gt;
+&lt;th&gt;tail(s) of t-distribution to reject the null&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;span class="math"&gt;\(\mu_{a} &amp;gt;=\mu_{b}\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span class="math"&gt;\(\mu_{a} &amp;lt; \mu_{b}\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;estimated population mean which contains sample &lt;span class="math"&gt;\(a\)&lt;/span&gt; will be less than the estimated population mean which contains sample &lt;span class="math"&gt;\(b\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;one&lt;/td&gt;
+&lt;td&gt;left&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;span class="math"&gt;\(\mu_{a} &amp;lt;= \mu_{b}\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span class="math"&gt;\(\mu_{a} &amp;gt; \mu_{b}\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;estimated population mean which contains sample &lt;span class="math"&gt;\(a\)&lt;/span&gt; will be greater than the estimated population mean which contains sample &lt;span class="math"&gt;\(b\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;one&lt;/td&gt;
+&lt;td&gt;right&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;span class="math"&gt;\(\mu_{a} = \mu_{b}\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span class="math"&gt;\(\mu_{a} \neq \mu_{b}\)&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;no prediction on a direction for the estimated population parameters&lt;/td&gt;
+&lt;td&gt;two&lt;/td&gt;
+&lt;td&gt;left or right&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Here's what it means to reject the null hypothesis:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The t-critical value falls within the t-critical region&lt;ul&gt;
+&lt;li&gt;For a one-tailed test in the positive direction, the t-statistic is greater than the t-critical value&lt;/li&gt;
+&lt;li&gt;For a one-tailed test in the negative direction, the t-statistic is less than the t-critical value&lt;/li&gt;
+&lt;li&gt;For a two-tailed test, the t-statistic is greater than the positive t-critical value &lt;em&gt;or&lt;/em&gt; the t-statistic is less than the negative t-critical value&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;The probability of obtaining the esatimated population parameter due to random chance (the p-value) is less than the alpha level&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "left",
+        indent = "1em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="t-tests"></category><category term="python"></category></entry><entry><title>Bessel's Correction</title><link href="https://dfrieds.com/math/bessels-correction" rel="alternate"></link><published>2018-12-28T20:00:00-08:00</published><updated>2018-12-28T20:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-12-28:/math/bessels-correction</id><summary type="html">&lt;p&gt;Understand the significance of Bessel's correction in calculating sample variance and sample standard deviation; visualize the bias in using the population standard deviation equation for samples&lt;/p&gt;</summary><content type="html">&lt;h4&gt;Import Modules&lt;/h4&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;stats&lt;/span&gt;
@@ -2880,494 +3205,4 @@ Gender Male has a mean total bill value of 9.25 and a standard deviation of 20.7
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="mean"></category><category term="median"></category><category term="mode"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Hypothesis Testing: One and Two-Tailed Tests</title><link href="https://dfrieds.com/math/hypothesis-testing" rel="alternate"></link><published>2018-01-08T11:42:00-08:00</published><updated>2018-01-08T11:42:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-01-08:/math/hypothesis-testing</id><summary type="html">&lt;p&gt;Learn how to setup hypothesis tests and validate if a single sample parameter is significantly different than the population parameter and the hypothetical true parameter&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Hypothesis testing&lt;/strong&gt; is is validating if a sample parameter (such as the mean) is &lt;em&gt;significantly&lt;/em&gt; different than a population parameter when the sample mean has a treatment effect.&lt;/p&gt;
-&lt;p&gt;I'll explain why the word &lt;em&gt;significantly&lt;/em&gt; is in italics later on. &lt;/p&gt;
-&lt;p&gt;Before reading this post, I'd recommend familiarity with the following terms: z-scores, normal distribution, standard deviation, standard error and the central limit theorem.&lt;/p&gt;
-&lt;h4&gt;Import Modules&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;stats&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;warnings&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Visualization styling code&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figure.figsize&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.5&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;talk&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Turn Off Warnings&lt;/h4&gt;
-&lt;p&gt;I turn warnings off in this post because of an &lt;a href='https://stackoverflow.com/a/52817582'&gt;issue in Scipy&lt;/a&gt; that will be fixed in a later version.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;warnings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filterwarnings&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ignore&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Hypothesis Tests Order of Steps&lt;/h3&gt;
-&lt;p&gt;Below are the steps used for performing a hypothesis test to compare a single sample group with treatment to a population and determine the statistical significance. This article will mainly detail steps 2 - 4 and 6 - 8. &lt;/p&gt;
-&lt;p&gt;1) Take measurements from a large control group we'll call the population.&lt;/p&gt;
-&lt;p&gt;2) Declare a null and alternative hypothesis.
-    - This information provides background for a one-tail or two-tail test.&lt;/p&gt;
-&lt;p&gt;3) Decide on an alpa level - the probability of obtaining a sample mean.&lt;/p&gt;
-&lt;p&gt;4) Apply a treatment to a new sample group of size &lt;span class="math"&gt;\(n\)&lt;/span&gt; and record measurements.
-    - We want to compare this treatment group to our population to see if this treatment had an effect.&lt;/p&gt;
-&lt;p&gt;5) Take a sufficient number of samples of size &lt;span class="math"&gt;\(n\)&lt;/span&gt; from the population values and record a single statistic of each sample such as the mean or median. This is called the &lt;strong&gt;sampling distribution&lt;/strong&gt;.
-    - A distribution of these sample means (or medians) would be a normal distribution based on the Central Limit Theorem.&lt;/p&gt;
-&lt;p&gt;6) Calculate the standard deviation of the sampling distribution - called the &lt;strong&gt;standard error&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;7) Compute how many standard errors the statistic (such as the mean) of the sample group with treatment is from the mean of the sampling distribution. This is called the z-score.&lt;/p&gt;
-&lt;p&gt;8) Determine if this sample group with treatment is &lt;em&gt;significantly&lt;/em&gt; different based on the pre-decided alpha level.&lt;/p&gt;
-&lt;h3&gt;One-Tail Hypothesis Tests&lt;/h3&gt;
-&lt;h4&gt;Visualization of One-Tail&lt;/h4&gt;
-&lt;p&gt;This visualization shades just the right-tail of the distribution that's an area of just 0.05 equivalent to 5%.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;two_std_from_mean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.645&lt;/span&gt;
-&lt;span class="n"&gt;kde&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gaussian_kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;pos&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;teal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;two_std_from_mean&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;teal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Sample Means for One-Tail Hypothesis Test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="hypothesis_testing_files/hypothesis_testing_14_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;For a one-tail test, the &lt;strong&gt;critical region&lt;/strong&gt; (shaded above) can be on the left or right side of the distribution. The critical region defines statistically &lt;em&gt;unlikely&lt;/em&gt; values.&lt;/p&gt;
-&lt;h4&gt;Levels of Likelihood for One-Tail Test&lt;/h4&gt;
-&lt;p&gt;Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. &lt;/p&gt;
-&lt;p&gt;The probability values are called &lt;strong&gt;&lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; levels&lt;/strong&gt; and all are &lt;em&gt;unlikely&lt;/em&gt; occurences. I call it &lt;em&gt;unlikely&lt;/em&gt; because this sample mean likely didn't occur by random chance. There may have been an effect on that sample mean.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;probability of obtaining sample mean (&lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; level)&lt;/th&gt;
-&lt;th&gt;equivalent percentage likelihood&lt;/th&gt;
-&lt;th&gt;z-score cutoff for one tail&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;0.05&lt;/td&gt;
-&lt;td&gt;5%&lt;/td&gt;
-&lt;td&gt;1.645&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;0.01&lt;/td&gt;
-&lt;td&gt;1%&lt;/td&gt;
-&lt;td&gt;2.33&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;0.001&lt;/td&gt;
-&lt;td&gt;0.1%&lt;/td&gt;
-&lt;td&gt;3.1&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Under a normal distribution, a z-score of roughly 1.645 has an area under the curve to the left of the z-value of 0.95 (95% probability). Any z-score of 1.65 or greater means you're &lt;em&gt;unlikely&lt;/em&gt; to sample such a sample from the sampling distribution. The region to the right of that z-value is called the &lt;strong&gt;critical region&lt;/strong&gt;. In this instance, the z-score is called the &lt;strong&gt;z-critical value&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;cdf()&lt;/code&gt; method from the scipy package and accompanying &lt;a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'&gt;stats module&lt;/a&gt; returns the proportion of values smaller than the observation inputted for a normal distribution. Let's see the area under the curve to the left of the z-score for the z-scores listed in the table above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;1.645&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.95
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;2.33&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.99
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;3.1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.999
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;For any sample mean, we can interpret if it's statistically &lt;em&gt;significant&lt;/em&gt; - essentially telling us how &lt;em&gt;likely&lt;/em&gt; or &lt;em&gt;unlikely&lt;/em&gt; this sample mean is within the sampling distribution. The table below only shows examples for a one-tailed hypothesis test.&lt;/p&gt;
-&lt;p&gt;If the probability of getting a particular sample mean is less than &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt;, it is "unlikely" to occur. &lt;/p&gt;
-&lt;p&gt;Note below, &lt;span class="math"&gt;\(p\)&lt;/span&gt; is equivalent to probability and &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is the sample mean.&lt;/p&gt;
-&lt;p&gt;The table below shows interpretations of popular significance levels. Square brackets such as &lt;span class="math"&gt;\([\)&lt;/span&gt; signify inclusivity of the value next to it while parentheses such as &lt;span class="math"&gt;\((\)&lt;/span&gt; signify exclusivity of the value next to it.  &lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;z-score range&lt;/th&gt;
-&lt;th&gt;statistical interpretation&lt;/th&gt;
-&lt;th&gt;layman's interpretation&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;[1.645, 2.33)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.05&lt;/td&gt;
-&lt;td&gt;probability of sampling &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; from the sampling distribution is less than 0.05&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[2.33, 3.1)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.01&lt;/td&gt;
-&lt;td&gt;probability of sampling &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; from the sampling distribution is less than 0.01&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[3.1, &lt;span class="math"&gt;\(\infty\)&lt;/span&gt;)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.001&lt;/td&gt;
-&lt;td&gt;probability of sampling &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; from the sampling distribution is less than 0.001&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Additionally, the z-score ranges in the table above could be all positive or negative for a one-sided test depending on the initial hypotheses.&lt;/p&gt;
-&lt;p&gt;When constructing a hypothesis test, it is best to choose a significant level such as the ones above &lt;em&gt;before&lt;/em&gt; you perform a test. You can later report the results as significant at a certain critical level after obtaining the result.&lt;/p&gt;
-&lt;p&gt;If you simply analyze the results for all statistical significance levels, you may be "fishing" for results that don't meet the original purpose of your hypothesis test.&lt;/p&gt;
-&lt;h3&gt;Two-Tailed Hypothesis Tests&lt;/h3&gt;
-&lt;p&gt;This visualization shades two equal areas on each tail of the normal distribution of sample means.&lt;/p&gt;
-&lt;p&gt;Each tail of the distribution has a shaded area of 0.025.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;alpha_05_positive&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.96&lt;/span&gt;
-&lt;span class="n"&gt;alpha_05_negative&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.96&lt;/span&gt;
-&lt;span class="n"&gt;kde&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gaussian_kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;pos&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;alpha_05_positive&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;alpha_05_negative&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Sample Means for Two-Tail Hypothesis Test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="hypothesis_testing_files/hypothesis_testing_25_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. &lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;probability of obtaining sample mean (&lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; level)&lt;/th&gt;
-&lt;th&gt;probability on each tail&lt;/th&gt;
-&lt;th&gt;z-score cutoff for each tail&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;0.05&lt;/td&gt;
-&lt;td&gt;0.025&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\pm1.96\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;0.01&lt;/td&gt;
-&lt;td&gt;0.005&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\pm2.575\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;0.001&lt;/td&gt;
-&lt;td&gt;0.0005&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\pm3.29\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Let's see the area under the curve to the left of the z-score for the z-scores listed in the table above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;1.96&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.025
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;2.575&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.005
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;3.29&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.001
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The table below shows interpretations of popular significance levels. Square brackets such as &lt;span class="math"&gt;\([\)&lt;/span&gt; signify inclusivity of the value next to it while parentheses such as &lt;span class="math"&gt;\((\)&lt;/span&gt; signify exclusivity of the value next to it.  &lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;z-score range&lt;/th&gt;
-&lt;th&gt;interpretation&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;[1.96, 2.575)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.05&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[2.575, 3.29)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.01&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[3.29, &lt;span class="math"&gt;\(\infty\)&lt;/span&gt;)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.001&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h3&gt;Hypotheses&lt;/h3&gt;
-&lt;p&gt;In the field of inferential statistics, we make &lt;strong&gt;hypotheses&lt;/strong&gt; - proposed explanations typically made on the basis of limited evidence that's used as a starting point for further investigation. &lt;/p&gt;
-&lt;p&gt;The steps for a simple hypothesis test are:&lt;/p&gt;
-&lt;p&gt;1) Make a hypothesis&lt;/p&gt;
-&lt;p&gt;2) Choose an alpha level&lt;/p&gt;
-&lt;p&gt;3) Collect evidence &lt;/p&gt;
-&lt;p&gt;4) Calculate the probability of obtaining that sample mean with treatment&lt;/p&gt;
-&lt;p&gt;5) Interpret results as statistically &lt;em&gt;significant&lt;/em&gt; or not&lt;/p&gt;
-&lt;p&gt;The null hypothesis commonly denoted as &lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt; assumes no significant difference between current population parameters and what will be the new population parameters after some intervention (otherwise called a treatment). This is expressed in math notation for comparisons of means as &lt;span class="math"&gt;\(\mu = \mu_{i}\)&lt;/span&gt; (with the &lt;span class="math"&gt;\(i\)&lt;/span&gt; representing an intervention). However the two sides don't have to be &lt;em&gt;exactly&lt;/em&gt; equal. Rather, they shouldn't be significantly different from one another. &lt;/p&gt;
-&lt;p&gt;The alternative hypothesis commonly denoted as &lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt; guesses there &lt;em&gt;will&lt;/em&gt; be a &lt;em&gt;significant&lt;/em&gt; difference between the current population parameters and the new population parameters after some intervention. &lt;/p&gt;
-&lt;p&gt;The three possible scenarios for one and two-tailed tests with explanations for each are as follows:&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;alternative hypothesis&lt;/th&gt;
-&lt;th&gt;interpretation&lt;/th&gt;
-&lt;th&gt;number of tails&lt;/th&gt;
-&lt;th&gt;tail(s) of distribution to reject the null&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\mu &amp;lt; \mu_{i}\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;current population parameter will be less than the new population parameter after an intervention&lt;/td&gt;
-&lt;td&gt;one&lt;/td&gt;
-&lt;td&gt;right&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\mu &amp;gt; \mu_{i}\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;current population parameter will be greater than the new population parameter after an intervention&lt;/td&gt;
-&lt;td&gt;one&lt;/td&gt;
-&lt;td&gt;left&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\mu \neq \mu_{i}\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;no prediction on a direction for the treatment&lt;/td&gt;
-&lt;td&gt;two&lt;/td&gt;
-&lt;td&gt;left or right&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Side note: the two-tailed test is most conservative because the probability on each tail is smaller than a tail on a one-sided test.&lt;/p&gt;
-&lt;h4&gt;Interpretation of Hypotheses&lt;/h4&gt;
-&lt;p&gt;Here's what it means to reject the null hypothesis:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The sample mean falls within the critical region.&lt;/li&gt;
-&lt;li&gt;The z-score of the sample mean is greater than the z-critical value.&lt;/li&gt;
-&lt;li&gt;The probability of obtaining the sample mean is less than the alpha level.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;In the scenario of the alternative hypothesis, the sample mean will lie in the critical region.&lt;/p&gt;
-&lt;p&gt;We can't prove the null hypothesis is true. We can only obtain evidence to &lt;em&gt;reject&lt;/em&gt; the null hypothesis. &lt;/p&gt;
-&lt;h3&gt;Example Hypotheses&lt;/h3&gt;
-&lt;h4&gt;Hypothesis Example #1: Tree Branches&lt;/h4&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: Most trees have more than 20 branches (most = more than 50%).&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: Most trees have less than 20 branches.&lt;/p&gt;
-&lt;p&gt;The 50% represents the criteria for our alpha level. This is an example of a one-sided test since there's a direction of &lt;em&gt;less&lt;/em&gt; than the current population parameters.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu = \mu_{i}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu &amp;gt; \mu_{i}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Let's say we sample 10 trees and find that all have &lt;em&gt;more&lt;/em&gt; than 20 branches. &lt;/p&gt;
-&lt;p&gt;This sample is evidence that most (greater than 50%) trees have more than 20 branches. We will &lt;em&gt;fail to reject&lt;/em&gt; the null hypothesis.&lt;/p&gt;
-&lt;h4&gt;Hypothesis Example #2: Tree Branches&lt;/h4&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: Most trees have more than 20 branches (most = more than 50%).&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: Most trees have less than 20 branches.&lt;/p&gt;
-&lt;p&gt;The 50% represents the criteria for our alpha level. This is an example of a one-sided test since there's a direction of &lt;em&gt;less&lt;/em&gt; than the current population parameters.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu = \mu_{i}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu &amp;gt; \mu_{i}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Let's say we sample 10 trees and find 6 trees have &lt;em&gt;less&lt;/em&gt; than 20 branches. &lt;/p&gt;
-&lt;p&gt;This sample is evidence that most (greater than 50%) trees have less than 20 branches. This is evidence to &lt;em&gt;reject&lt;/em&gt; the null hypothesis.&lt;/p&gt;
-&lt;h4&gt;Hypothesis Example #3: Personal Trainer at Gym Effect on Mass&lt;/h4&gt;
-&lt;p&gt;Null hypothesis: having Joe as a personal trainer for three weightlifting workouts per week over the course of a year has no effect on one's mass.&lt;/p&gt;
-&lt;p&gt;Alternative hypothesis: having Joe as a personal trainer for three weightlifting workouts per week over the course of a year has an effect on one's mass.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu = \mu_{joe}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu \neq \mu_{joe}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;To gather data for the sampling distribution, assume I visited the gym at 25 different times and each time sampled 20 people on their mass who weightlifted at the gym on average three times per week over the last year, but didn't have Joe as a personal trainer. &lt;/p&gt;
-&lt;p&gt;To gather data for the treatment group, assume I visited the gym one day and sampled 20 people on their mass who weightlifted at the gym on average three times per week over the past year with Joe's personal training guidance.&lt;/p&gt;
-&lt;p&gt;To reject the null hypothesis, the sample mean with treatment could be on either end of the sampling distribution. This is considered a two-tailed test.&lt;/p&gt;
-&lt;p&gt;Let's set an alpha level for this experiment of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;Below are our initial statistics of the population and treatment groups.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;population_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;160&lt;/span&gt;
-&lt;span class="n"&gt;N&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;500&lt;/span&gt;
-&lt;span class="n"&gt;population_std_dev_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;23&lt;/span&gt;
-
-&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;
-&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;171&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's compute the standard error which is the standard deviation of sample means. The equation is below:&lt;/p&gt;
-&lt;div class="math"&gt;$$SE=\frac{\sigma }{\sqrt{n}}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is population standard deviation&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is sample size&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;population_std_dev_pounds&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;5.142956348249516
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's calculate how many standard errors &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; is from &lt;code&gt;population_mean_pounds&lt;/code&gt; and express this as a z-score.&lt;/p&gt;
-&lt;p&gt;I can use the following z-score equation:&lt;/p&gt;
-&lt;div class="math"&gt;$$z=\frac{\bar{x}-\mu}{SE}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is the sample mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is the population mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(SE\)&lt;/span&gt; is the standard error calculated as &lt;span class="math"&gt;\(\frac{\sigma }{\sqrt{n}}\)&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;z_score&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;population_mean_pounds&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;
-&lt;span class="n"&gt;z_score&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;2.1388476306519726
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's visualize where &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; lies on the distribution of sample mean masses of groups collected at the gym that didn't have the treatment of Joe's personal training.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;population_gym_goers_mass&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;population_mean_pounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;population_std_dev_pounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;population_gym_goers_mass&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axvline&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linestyle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linewidth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean with Joe personal trainer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;purple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Sample Means of Gym Goers&amp;#39; Mass [Pounds]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean mass [pounds]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="hypothesis_testing_files/hypothesis_testing_48_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Our initial alpha level was &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. The equivalent z-score cutoff for each tail is &lt;span class="math"&gt;\(\pm1.96\)&lt;/span&gt;. Above, we calculated a z-score value of &lt;span class="math"&gt;\(2.14\)&lt;/span&gt; which is greater than &lt;span class="math"&gt;\(1.96\)&lt;/span&gt;. &lt;/p&gt;
-&lt;p&gt;&lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; is &lt;em&gt;significant&lt;/em&gt; at p&amp;lt;0.05 so we have obtained sufficient evidence to reject the null hypothesis. There's evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.&lt;/p&gt;
-&lt;h3&gt;Hypothesis Testing Caveats&lt;/h3&gt;
-&lt;p&gt;This type of statistical analysis is prone to misinterpretation. It's possible that those sampled and treated by Joe's personal training already had a history of major weight gain through lifting or had not hid a plateua yet with their potential to gain weight. So, they could have been ideal candidates for Joe to push them to gain muscle rapidly. If either of those scenarios are the case, it's possible that the new estimated population parameters with the treatment are slightly biased. &lt;/p&gt;
-&lt;p&gt;Given this misinterpretion or another issue, our hypothesis testing may result in an error. &lt;/p&gt;
-&lt;h3&gt;Decision Errors&lt;/h3&gt;
-&lt;p&gt;In the figure below, each quadrant has a meaning about correct or incorrect decisions in hypothesis testing.&lt;/p&gt;
-&lt;p&gt;Typically, in hypothesis testing, the "truth about the population" is unknown at first. For the example of Joe's personal training, the true population mean of people's weight would be if we could apply the treatment to a sufficiently large number of samples and calculate the mean of sample means with this treatment.&lt;/p&gt;
-&lt;p&gt;I provide explanations of each quadrant (&lt;a href='http://www.personal.ceu.hu/students/08/Olga_Etchevskaia/hypotheses.html'&gt;image source&lt;/a&gt;) below. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="hypothesis testing decision errors" src="images/errors.jpg"&gt;&lt;/p&gt;
-&lt;p&gt;The top left quadrant means the ground truth is that the null hypothesis is true, yet our research concluded to reject the null hypothesis (&lt;em&gt;significant&lt;/em&gt; effect from the treatment). We made an incorrect statistical decision. This is considered a Type 1 error.&lt;/p&gt;
-&lt;p&gt;The top right quadrant means the ground truth is that the alternative hypothesis is true and our research concluded to reject the null hypothesis (&lt;em&gt;significant&lt;/em&gt; effect from the treatment). This is an ideal situation.&lt;/p&gt;
-&lt;p&gt;The bottom left quadrant means the ground truth is that the null hypothesis is true and our research concluded that there's &lt;em&gt;no&lt;/em&gt; evidence to reject the null hypothesis. This is an ideal situation.&lt;/p&gt;
-&lt;p&gt;The bottom right quadrant means the ground truth is that the alternative hypothesis is true, yet our research concluded that there's &lt;em&gt;no&lt;/em&gt; evidence to reject the null hypothesis. We made an incorrect statistical decision. This is considered a Type 2 error. &lt;/p&gt;
-&lt;h4&gt;How to Reduce Decision Errors&lt;/h4&gt;
-&lt;p&gt;We minimize our chances of making the wrong decision when we have a large enough sample size, we randomize our sample and when we implmement proper experimental controls.&lt;/p&gt;
-&lt;h4&gt;Example: Statistical Decision Errors in Rain Scenario&lt;/h4&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: It's not going to rain later today (so I don't need an umbrella).&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: It's going to rain later today (so I should bring an umbrella).&lt;/p&gt;
-&lt;p&gt;Four possible scenarios:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;I think it's going to rain later so I bring an umbrella. However, later it doesn't rain. This is a Type 1 error. &lt;/li&gt;
-&lt;li&gt;I think it's going to rain later so I bring an umbrella. I'm correct - it rained later and I was right in bringing an umbrella. (This is equivalent to the top right quadrant.)&lt;/li&gt;
-&lt;li&gt;I think it's not going to rain later so I &lt;em&gt;don't&lt;/em&gt; bring an umbrella. I'm correct - it &lt;em&gt;doesn't&lt;/em&gt; rain later so I was correct in &lt;em&gt;not&lt;/em&gt; bringing an umbrella. (This is equivalent to the bottom left quadrant.)&lt;/li&gt;
-&lt;li&gt;I think it's not going to rain later so I &lt;em&gt;don't&lt;/em&gt; bring an umbrella. However, later it rains. This is a Type 2 error.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Continue Gym Personal Trainer Example with Hypothesis Test (of Known True Population Mean)&lt;/h3&gt;
-&lt;p&gt;Earlier, I concluded &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; was &lt;em&gt;significant&lt;/em&gt; at p&amp;lt;0.05 because I obtained sufficient evidence to reject the null hypothesis. There was evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.&lt;/p&gt;
-&lt;p&gt;Additionally, let's &lt;em&gt;assume&lt;/em&gt; we found the true population mean of people's mass sampled at the gym for &lt;em&gt;everyone&lt;/em&gt; after one year of 3x per week personal training sessions with Joe was 162 pounds. In real life, we wouldn't know this value of 162 because the treatment hasn't taken effect on the population in a study. However, in this example, let's &lt;em&gt;pretend&lt;/em&gt; we do.&lt;/p&gt;
-&lt;p&gt;Let's assign the variable &lt;code&gt;true_population_mean_pounds_with_joe_training&lt;/code&gt; to 162.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;true_population_mean_pounds_with_joe_training&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;162&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In the equation for the z-score, we can utilize this new value to see how many standard errors &lt;code&gt;sample_mean_pounds&lt;/code&gt; lies from &lt;code&gt;true_population_mean_pounds_with_joe_training&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;z_true&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;true_population_mean_pounds_with_joe_training&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;
-&lt;span class="n"&gt;z_true&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1.749966243260705
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Our initial alpha level was &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. The equivalent z-score cutoff for each tail is &lt;span class="math"&gt;\(\pm1.96\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;z_true&lt;/code&gt; value is less than the z-critical value of 1.96; the ground truth about the population &lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt; is true. Having Joe as a persoanl trainer for three weightlifting workouts per week over the course of the year has &lt;em&gt;no&lt;/em&gt; effect on one's mass. However, our earlier decision based on the sample with treatment was to reject the null hypothesis. In this instance, we committed a Type 1 error!&lt;/p&gt;
-&lt;h3&gt;Effect of Parameters on Treatment Effect&lt;/h3&gt;
-&lt;p&gt;For hypothesis testing, we typically use the following two equations to calculate the standard error (SE) and a z-score for a sample mean:&lt;/p&gt;
-&lt;div class="math"&gt;$$SE=\frac{\sigma }{\sqrt{n}}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is population standard deviation&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is sample size&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="math"&gt;$$z=\frac{\bar{x}-\mu}{SE}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is the sample mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is the population mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(SE\)&lt;/span&gt; is the standard error calculated as &lt;span class="math"&gt;\(\frac{\sigma }{\sqrt{n}}\)&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;An effect that exists is &lt;em&gt;more likely&lt;/em&gt; to be detected with a change in the following variables utilized in the equations above:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is larger (results in smaller SE and z-score closer to 0)&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is smaller (results in smaller SE and z-score closer to 0)&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; closer to &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; (results in z-score closer to 0)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "left",
-        indent = "1em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="p-values"></category><category term="sampling distribution"></category><category term="standard error"></category><category term="z-score"></category><category term="statistics"></category><category term="standard deviation"></category><category term="normal distribution"></category><category term="python"></category></entry></feed>
+&lt;/script&gt;</content><category term="mean"></category><category term="median"></category><category term="mode"></category><category term="python"></category><category term="pandas"></category></entry></feed>
