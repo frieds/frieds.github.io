@@ -172,6 +172,39 @@
 <p>There are three distinct types of t-tests: one sample t-tests, dependent sample t-tests and independent sample t-tests. Each type of test involves a comparison of <em>two</em> groups. </p>
 <p>Hypothesis tests for comparing <em>multiple</em> groups are called <a href='https://en.wikipedia.org/wiki/Analysis_of_variance'>analysis of variance</a> (ANOVA) and will be covered in another post.</p>
 <p>Each of the three types of tests involve the same variable tested in the two groups. For example, a t-test can compare scores on the <em>same</em> final exam for one teacher's students and another teacher's students. However, if one teacher provides an exam with different questions than another teacher, a simple hypothesis test can't adequately compare the students' performance against the other class because there are <strong>lurking variables</strong>. These are variables that are not explained in the single score of student's performance but would affect the interpretation of the t-tests results. Some examples of lurking variables are difficulty of questions, number of questions on the exam and time allotted to complete the exam.</p>
+<h3>Comparison: z-tests vs. t-tests</h3>
+<p>Both z-tests and t-tests are statistical hypothesis tests.</p>
+<table>
+<thead>
+<tr>
+<th>Comparison field</th>
+<th>z-test</th>
+<th>t-test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>compares if the means of two datasets are <em>significantly</em> different from each other when variance is given</td>
+<td>compares if the means of two sets of data are <em>significantly</em> different when variance is not given</td>
+</tr>
+<tr>
+<td>distribution used</td>
+<td>normal</td>
+<td>student's t</td>
+</tr>
+<tr>
+<td>population variance</td>
+<td>known</td>
+<td>unknown</td>
+</tr>
+<tr>
+<td>sample size</td>
+<td>large (<span class="math">\(n&gt;30\)</span>)</td>
+<td>small (typically <span class="math">\(n&lt;30\)</span>)</td>
+</tr>
+</tbody>
+</table>
 <h3>Overview of Three Types of t-tests</h3>
 <table>
 <thead>
@@ -187,7 +220,7 @@
 <td>one sample t-test</td>
 <td>population</td>
 <td>sample</td>
-<td>tests whether the mean of a population is <em>significantly</em> different than a sample mean that's not included in the population</td>
+<td>tests whether the mean of a population is <em>significantly</em> different than a sample mean that's included in the population</td>
 </tr>
 <tr>
 <td>dependent sample t-test</td>
@@ -205,16 +238,16 @@
 </table>
 <p>Each of these tests is considered a <a href='https://en.wikipedia.org/wiki/Parametric_statistics'><em>parametric test</em></a> because they assume that data comes from a population that meets specific probability distribution standards. These data requirements will be discussed individually for each test in separate posts.</p>
 <h3>One Sample t-test Descriptive Example</h3>
-<p>There was a private guitar teacher who taught students who have no previous guitar experience to play the song <em>Ziggy Stardust</em> over the course of 3 months. Similarly, there was a music academy that taught thousands of students who have no previous guitar experience to play the song <em>Ziggy Stardust</em> over the course of 3 months. At the end of 3 months, all students from each of these programs were graded on their final performance of <em>Ziggy Stardust</em>. An official proctor counted the number of errors in each student's performance. </p>
-<p>After all the data was collected, I calculated the mean number of errors by the private teacher's students and by the academy's students. Was there a <em>significant</em> difference in the average number of errors for students' performance between the private teacher and the academy?</p>
-<p>In this example, I consider the academy of students to be the <em>population</em> and the group of students from the private teacher to be a <em>sample</em>.</p>
-<p><span class="math">\(H_{o}: \mu_{academy}=\bar{x}_{\textrm{private teacher}}\)</span></p>
-<p><span class="math">\(H_{o}: \mu_{academy}\neq\bar{x}_{\textrm{private teacher}}\)</span></p>
+<p>There's an academy that teaches students new to music how to play the guitar in just three months. At the end of the three months, students are assessed on their performance of the song <em>Ziggy Stardust</em>. For their performance, a proctor counts the number of errors performed by each student. There have been tens of instructors at this academy over the year and they all utilized the same methods for teaching. However, last year a new teacher, Mr. Brown, utilized a new method to teach a random group of 15 students in that 3 month period.</p>
+<p>Each year, the academy updates their mean value for the number of errors on student's final performance. However, they don't record all the historical student scores for privacy purposes. Therefore, the population variance is unknown. </p>
+<p>A calculation was also made for the mean number of errors by Mr. Brown's students. Does Mr. Brown's teaching <em>significantly</em> decrease the number of errors in student's performance compared to the population of students taught at the academy?</p>
+<p><span class="math">\(H_{o}: \mu_{population}&lt;\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
+<p><span class="math">\(H_{a}: \mu_{population}&gt;=\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
 <h3>Dependent Sample t-test Descriptive Example</h3>
 <p>A sample of 19 people were told to lie in bed ready to fall asleep at 10pm every night and would be woken up by an alarm at 6:30am for 15 days in a row. In that period, they tried to sleep as much as possible. With each night's sleep, sensors and a computer helped record a measurement of that person's total hours slept. This same test was later performed for the same group of people under the same circumstances, but with one difference. Each night a person took a sleeping pill at 9:30pm. </p>
 <p>After all the data was collected, I calculated the mean number of hours slept for people without using the pill and with using the pill. Does the sleeping pill help <em>significantly</em> increase the average hours slept for the group than without the pill? </p>
 <p><span class="math">\(H_{o}: \mu_{\textrm{no pill}} &lt;= \mu_{pill}\)</span></p>
-<p><span class="math">\(H_{o}: \mu_{\textrm{no pill}} &gt; \mu_{pill}\)</span></p>
+<p><span class="math">\(H_{a}: \mu_{\textrm{no pill}} &gt; \mu_{pill}\)</span></p>
 <p>This is considered a pretest posttest type of t-test for dependent samples. The samples are considered <em>dependent</em> on one another because the <em>same</em> people who took the sleep test without the pills later the test again with sleeping pills.</p>
 <p>The data was collected from two different samples. However, in the hypotheses above, I use symbols of <span class="math">\(\mu\)</span> (a population mean) instead of <span class="math">\(\bar{x}\)</span> (a sample mean). This may seem confusing since we don't <em>exactly</em> know the values of <span class="math">\(\mu\)</span> for either sample from the start of the test.</p>
 <p>These hypotheses are not about the <em>exact</em> provided data. Rather, they're inferences about the <em>expected</em> population means from which the samples come from. A proper t-test analysis performs calculations to help <em>infer</em> what the <em>expected</em> population mean of each sample would be given just a sample mean. This description is part of the field of <strong>inferential statistics</strong>: use of a random sample of data taken from a population to describe and make inferences about the population. These inferences are important because they help to explain what <em>would likely</em> happen if this same sleeping test was performed on a larger population of people. </p>
@@ -223,7 +256,7 @@
 <p>There was a sample of professional basketball players in 1940 that attempted to jump as high as they could and measurements were taken on their reach by the top of their hande. The same test was performed on a sample of professional basketball players in 2019. After all this data was collected, I calculated the mean height in inches reached by the sample of players in 1940 and 2019. Do professional basketball players in 2019 jump <em>significantly</em> higher on average than basketball players in 1940?</p>
 <p>Similar to the example with dependent t-tests above, these hypotheses are an <em>inference</em> on the <em>expected</em> true population means from which each sample comes from.</p>
 <p><span class="math">\(H_{o}\)</span>: <span class="math">\(\mu_{1940} &gt;= \mu_{2019}\)</span></p>
-<p><span class="math">\(H_{A}\)</span>: <span class="math">\(\mu_{1940} &lt; \mu_{2019}\)</span></p>
+<p><span class="math">\(H_{a}\)</span>: <span class="math">\(\mu_{1940} &lt; \mu_{2019}\)</span></p>
 <h3>Setup Code</h3>
 <h4>Import Modules</h4>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span>
@@ -249,7 +282,7 @@
 <ul>
 <li><span class="math">\(\bar{x}\)</span> is sample mean and is a point estimate</li>
 <li><span class="math">\(\mu\)</span> is our <em>known</em> current population mean</li>
-<li><span class="math">\(\frac{s}{\sqrt{n}}\)</span> is our expected standard error for <span class="math">\(\mu_{0}\)</span> - the expected standard deviation of population that <span class="math">\(\bar{x}\)</span> comes from</li>
+<li><span class="math">\(\frac{s}{\sqrt{n}}\)</span> is our expected standard deviation from a sampling distribution of means (term also called standard error of the means)</li>
 <li><span class="math">\(s\)</span> is the sample standard deviation (remember to use bessel's correction with <span class="math">\(n-1\)</span> in the denominator)</li>
 <li><span class="math">\(n\)</span> is the sample size</li>
 </ul>
@@ -269,7 +302,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_17_0.png"></p>
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_19_0.png"></p>
 <p>The t distribution has the following characteristics:</p>
 <ul>
 <li>mean = 0 </li>
@@ -281,18 +314,20 @@
 <h4>Visualization of z-distribution and t-distribution</h4>
 <p>This visualization is based on certain parameters such as the size of samples and/or population. They won't always appear in the exact shapes below but I still think the comparisons are a good <em>general</em> point of reference.</p>
 <div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
-<span class="n">z_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
-<span class="n">t_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_t</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">z_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
+<span class="n">t_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_t</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">z_distribution</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;z-distribution&#39;</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">t_distribution</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;t-distribution&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t-statistic or z-score&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of z-distribution and t-distribution&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-.</span><span class="mo">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_21_0.png"></p>
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_23_0.png"></p>
 <h4>Degrees of Freedom</h4>
 <p>We utilize <strong>degrees of freedom</strong> in t-test calculations. Degrees of freedom is simply the freedom to vary. Imagine you had 10 students in your classroom who completed the final exam. If I picked out scores for 9 of the students, you must pick out the <em>one</em> remaining student's score. For any 9 student scores I pick, you have <span class="math">\(10-1 = 9\)</span> student's scores to choose from. In variable terms, this means if you have <span class="math">\(n\)</span> numbers to choose from, you have <span class="math">\(n-1\)</span> degrees of freedom.</p>
 <p>In statistics, the calculation for degrees of freedom is the count of observations in the sample that are free to vary when estimating statistical parameters.</p>
@@ -318,7 +353,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_26_0.png"></p>
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_28_0.png"></p>
 <h3>t-critical Value</h3>
 <p>For t-tests, we need to calculate a t-critical value which has some similarities to a z-score (critical) value. </p>
 <p>Similarities of t-critical value to a z-score:</p>
@@ -391,7 +426,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_38_0.png"></p>
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_40_0.png"></p>
 <h3>Conditions for Rejecting the Null Hypothesis</h3>
 <p>Similar to z-tests, with each t-test hypothesis, we want to determine if there is sufficient evidence to reject the null hypothesis. Below are details of hypothesis tests and means for evaluating the tests.</p>
 <p>Below, the symbols of <span class="math">\(\mu_{a}\)</span> and <span class="math">\(\mu_{b}\)</span> are relevant for <em>just</em> dependent and independent sample t-tests. </p>
