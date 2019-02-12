@@ -158,7 +158,7 @@
     <ul class ="row article_info">
       
       <li>
-        Jan 4&nbsp;&nbsp;&bull;&nbsp;&nbsp;11 min read
+        Jan 4&nbsp;&nbsp;&bull;&nbsp;&nbsp;12 min read
       </li>
       <li class="tagarticle">
         Key Terms:         z-score,
@@ -172,7 +172,7 @@
   </header>
 
   <div class='article_content'>
-    <p>The <strong>central limit theorem</strong> is a statistcal theory that means if we take a sufficient number of random samples of sufficient sizes from any type of distribution with some variance, the distribution of the sample means will be a normal distribution. The mean of sample means will also be equivalent to the population mean.</p>
+    <p>The <strong>central limit theorem</strong> is a statistcal theory that means if we take a sufficient number of random samples of sufficient size from any type of distribution with some variance, the distribution of the sample means will be a normal distribution. This new distribution is called a sampling distribution. The mean of the sampling distribution should be approximately equal to the population mean.</p>
 <h4>Import Modules</h4>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
@@ -198,7 +198,7 @@
 
 
 <h3>Generate Data of People's Mass in Pounds</h3>
-<p>Below, I generate two normal distributions using the numpy random module's <code>normal()</code> <a href='https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.random.normal.html'>method</a> of mass values for men and females. I concatenate these two arrays and assign them to the column <code>us_people_mass_pounds</code> in a DataFrame <code>df_ppl_mass</code>.</p>
+<p>Below, I generate two normal distributions using the numpy random module's <code>normal()</code> <a href='https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.random.normal.html'>method</a> of mass values for males and females. I concatenate these two arrays and assign them to the column <code>us_people_mass_pounds</code> in a DataFrame <code>df_ppl_mass</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">normal_distribution_us_male_mass_pounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">181</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
 <span class="n">normal_distribution_us_female_mass_pounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">132</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6500</span><span class="p">)</span>
@@ -268,7 +268,7 @@
 
 
 <p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_16_0.png"></p>
-<p>It's tough to characterize this distribution. It's got one large peak around 140 pounds, and it's not a normal distribution since there's no symmetry around a central value.</p>
+<p>It's tough to characterize this distribution. It's got one large peak around <span class="math">\(140\)</span> pounds, and it's not a normal distribution since there's asymmetry.</p>
 <h3>Calculate Population Summary Statistics</h3>
 <h4>Calculation Population Mean</h4>
 <div class="highlight"><pre><span></span><span class="n">pop_mean_mass</span> <span class="o">=</span> <span class="n">df_ppl_mass</span><span class="p">[</span><span class="s1">&#39;us_people_mass_pounds&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -291,14 +291,13 @@
 
 
 <h3>Problem Setup</h3>
-<p>I later sampled 25 people at the gym on their mass. Their mean mass value is 163 pounds. I'm curious how this compares to our current population of people's mass. In order to compare this new sample of people from the gym, I need to compare it to an equivalent distribution of sample means from our population.</p>
+<p>I later sampled <span class="math">\(25\)</span> people at the gym on their mass. Their mean mass value is <span class="math">\(163\)</span> pounds. I'm curious how this compares to our current population of people's mass. In order to compare this new sample of people from the gym, I need to compare it to an equivalent distribution of sample means from our population.</p>
 <h3>Create List of Sample Means with <span class="math">\(n=25\)</span></h3>
-<p>Hypothetically, if It's biased to simply select a single sample from our population </p>
-<p>Given our population mass values, I will take 300 samples each of 25 random values with replacement. For each sample, I will calculate the mean of the sample. I store all those sample means in the list <code>sample_means</code>.</p>
+<p>It's biased to select a single sample from our population and compare it the sample of <span class="math">\(25\)</span> people because I don't know if that sample from the population is random and representative of the whole population.</p>
+<p>Given our population mass values, I will take <span class="math">\(300\)</span> samples each of <span class="math">\(25\)</span> random values with replacement. For each sample, I will calculate the mean of the sample. I store all those sample mean values in the list <code>sample_means</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">sample_means</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">25</span>
 <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
-    <span class="c1"># random sampling done with replacement</span>
     <span class="n">sample_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">df_ppl_mass</span><span class="p">[</span><span class="s1">&#39;us_people_mass_pounds&#39;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>    
     <span class="n">sample_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_values</span><span class="p">)</span>
     <span class="n">sample_means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_mean</span><span class="p">)</span>
@@ -306,7 +305,7 @@
 
 
 <h3>View Distribution of Sample Means</h3>
-<p>Let's view the distribution of these <code>sample_means</code> values.</p>
+<p>Let's view the distribution of the <code>sample_means</code> values.</p>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Sample Means ($n=25$) of People&#39;s Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
@@ -315,7 +314,7 @@
 
 
 <p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_30_0.png"></p>
-<p>Wow! This distribution of sample means looks normal! The curve is fairly symmetrical around the central value and the median is roughly equivalent to the mean (see below). Based on the central limit theorem, sampling a sufficient number of times with a sufficient size will result in a normal distribution of sample means.</p>
+<p>Wow! This distribution of sample means looks normal! The curve is fairly symmetrical around the central value and the median is roughly equivalent to the mean (see below). Based on the central limit theorem, sampling a sufficient number of times with a sufficient size will result in a normal distribution of sample means. This distribution above is called a <strong>sampling distribution</strong> and I'll use that name moving forward.</p>
 <h3>Calculate Sampling Distribution (<span class="math">\(n=25\)</span>) Summary Statistics</h3>
 <h4>Calculate Median of Sample Means</h4>
 <div class="highlight"><pre><span></span><span class="n">median_of_sample_means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
@@ -357,7 +356,7 @@
 
 
 <h3>Equation for Standard Deviation of Sampling Distribution</h3>
-<p>The standard deviation of sample means is more commonly called the <strong>standard error (SE)</strong>. An interesting tidbit from the central limit theorem is that I can calculate this value off the population standard deviation and sample size. The equation for standard error is:</p>
+<p>The standard deviation of sample means is more commonly called the <strong>standard error (SE)</strong>. An interesting tidbit from the central limit theorem is that I can calculate the standard error by just using the population standard deviation and sample size. The equation for standard error is:</p>
 <div class="math">$$SE=\frac{\sigma }{\sqrt{n}}$$</div>
 <ul>
 <li><span class="math">\(\sigma\)</span> is population standard deviation</li>
@@ -380,10 +379,10 @@
 </pre></div>
 
 
-<p>This standard error value is the same as the value calculated above for <code>std_dev_of_sample_means</code>.</p>
+<p>This standard error value, <code>standard_error</code>, is the same as the value calculated above for <code>std_dev_of_sample_means</code>.</p>
 <h3>Compare New Sample Mean to our Sampling Distribution</h3>
-<p>Let's see how the sample of people from the gym compares to this sampling distribution. Remember, the sample mean of people from the gym was 163 pounds.</p>
-<p>This value of 163 is a <strong>point estimate</strong>. I'd naively estimate all samples from this gym would have a mean of 163 pounds. However, if I were to collect additional samples from the gym, I wouldn't expect the mean of the sample means to be <em>exactly</em> 163.</p>
+<p>Let's see how the sample of people from the gym compares to this sampling distribution. Remember, the sample mean of people from the gym was <span class="math">\(163\)</span> pounds.</p>
+<p>This value of <span class="math">\(163\)</span> is a <strong>point estimate</strong>. I'd naively estimate all samples from this gym would have a mean of <span class="math">\(163\)</span> pounds. However, if I were to collect additional samples from the gym, I wouldn't expect the mean of the sample means to be <em>exactly</em> <span class="math">\(163\)</span>, but perhaps they'd be close.</p>
 <div class="highlight"><pre><span></span><span class="n">gym_sample_mean</span> <span class="o">=</span> <span class="mi">163</span>
 </pre></div>
 
@@ -391,7 +390,7 @@
 <h4>Visualize Gym Sample Mean Compared to Sampling Distribution</h4>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Sample Means ($n=25$) of People&#39;s Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">gym_sample_mean</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean of ppl at gym&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">gym_sample_mean</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean of $n=25$&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
@@ -400,7 +399,7 @@
 
 <p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_50_0.png"></p>
 <h4>Calculate Proportion of Sample Means Less Than Gym Sample Mean</h4>
-<p>What's the probability of seeing a sample mean with a value less than 163?</p>
+<p>What's the probability of seeing a sample mean with a value less than <span class="math">\(163\)</span>?</p>
 <p>Given this new sample mean of people at the gym, I can calculate the number of standard errors this value is from the mean of the sampling distribution. Let's calculate the z-score for <code>gym_sample_mean</code>.</p>
 <p>I can use the following z-score equation:</p>
 <div class="math">$$z=\frac{\bar{x}-\mu}{SE}$$</div>
@@ -460,7 +459,7 @@
 <li><span class="math">\(n\)</span> is sample size</li>
 </ul>
 <h4>Create List of Sample Means with <span class="math">\(n=150\)</span></h4>
-<p>Given this equation, if our <span class="math">\(n\)</span> increases, the result is a smaller standard error. Below, from the population of mass values, I take 300 samples each of 150 (instead of previously 25) random values. For each sample, I calculate the mean of the sample and store all these samples means in the list <code>sample_means_n_150</code>.</p>
+<p>Given this equation, if <span class="math">\(n\)</span> increases, the result is a smaller standard error. Below, from the population of mass values, I take <span class="math">\(300\)</span> samples each of <span class="math">\(n=150\)</span> (instead of previously <span class="math">\(n=25\)</span>) random values. For each sample, I calculate the mean of the sample and store all these samples means in the list <code>sample_means_n_150</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">sample_means_n_150</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">150</span>
 <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
@@ -473,7 +472,7 @@
 <h4>View Distribution of Sample Means</h4>
 <p>In the histogram of <code>sample_means</code> below, the distribution is skinner because the standard error is much smaller than when <span class="math">\(n=25\)</span>.</p>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means_n_150</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Sample Means (n=150) of People&#39;s Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Sample Means ($n=150$) of People&#39;s Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
 </pre></div>
@@ -481,26 +480,27 @@
 
 <p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_66_0.png"></p>
 <h4>Calculate Mean of Sample Means (<span class="math">\(n=150\)</span>)</h4>
-<div class="highlight"><pre><span></span><span class="n">mean_of_sample_means_n_150</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">mean_of_sample_means_n_150</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_means_n_150</span><span class="p">)</span>
 <span class="n">mean_of_sample_means_n_150</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>155.12418330193915
+<div class="highlight"><pre><span></span>155.5807933987212
 </pre></div>
 
 
 <h4>Calculate Standard Deviation of Sample Means (<span class="math">\(n=150\)</span>)</h4>
-<div class="highlight"><pre><span></span><span class="n">std_dev_of_sample_means_n_150</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">std_dev_of_sample_means_n_150</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">sample_means_n_150</span><span class="p">)</span>
 <span class="n">std_dev_of_sample_means_n_150</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>6.734407481483423
+<div class="highlight"><pre><span></span>2.7366895648452765
 </pre></div>
 
 
-<p>This standard error for <span class="math">\(n=150\)</span> is much smaller than the standard error for <span class="math">\(n=25\)</span>.</p>
+<p>This value of <span class="math">\(2.74\)</span> is the same as the standard error for when <span class="math">\(n=150\)</span>.</p>
+<p>The standard error value for the sampling distribution for when <span class="math">\(n=150\)</span> is <span class="math">\(2.74\)</span> which is much smaller than the standard error value for the sampling distribution for when <span class="math">\(n=25\)</span> which is <span class="math">\(6.72\)</span>.</p>
 <h4>Visualize Distribution of Sample Means for <span class="math">\(n=25\)</span> vs. <span class="math">\(n=150\)</span></h4>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means_n_150</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample means for $n=150$&quot;</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample means for $n=25$&quot;</span><span class="p">)</span>
@@ -511,11 +511,12 @@
 </pre></div>
 
 
-<p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_73_0.png"></p>
+<p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_74_0.png"></p>
 <p>As the sample size increases, we have a more accurate representation of our population parameters. Ideally we want to take larger samples such as <span class="math">\(n=150\)</span> rather than small samples such as <span class="math">\(n=25\)</span>.</p>
 <h3>Create Distribution of Sample Means from Uniform Population Distribution</h3>
-<p>I want to provide an additional example here to further prove that if I take a sufficient number of samples of sufficient size from any type of distribution, even a uniform distribution, the mean of sample means will be a normal distribution.</p>
-<h4>Create Values in Uniform Distribution</h4>
+<p>I want to provide an additional example here to further prove that if I take a sufficient number of samples of sufficient size from any type of distribution with some variance, even a uniform distribution, the mean of sample means will form a normal distribution.</p>
+<h4>Create List of Uniform Values</h4>
+<p>I use the <code>uniform()</code> <a href='https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.uniform.html'>method</a> in <code>NumPy's</code> <code>random</code> module to create the list of values.</p>
 <div class="highlight"><pre><span></span><span class="n">uniform_distribution_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">50000</span><span class="p">))</span>
 </pre></div>
 
@@ -528,7 +529,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_80_0.png"></p>
+<p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_82_0.png"></p>
 <h4>Calculate Population Mean</h4>
 <div class="highlight"><pre><span></span><span class="n">population_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">uniform_distribution_values</span><span class="p">)</span>
 <span class="n">population_mean</span>
@@ -540,7 +541,7 @@
 
 
 <h4>Create List of Sample Means with <span class="math">\(n=25\)</span></h4>
-<p>Given our population values that resemble a uniform distribution, I will take 300 samples each of 25 random values. For each sample, I will calculate the mean of the sample. I store all those sample means in the list <code>sample_means</code>.</p>
+<p>Given our population values that resemble a uniform distribution, I will take <span class="math">\(300\)</span> samples each of <span class="math">\(n=25\)</span> random values. For each sample, I will calculate the mean of the sample. I store all those sample means in the list <code>sample_means</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">sample_means_from_uniform_distribution</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">25</span>
 <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
@@ -557,7 +558,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_86_0.png"></p>
+<p><img alt="png" src="central_limit_theorem_files/central_limit_theorem_88_0.png"></p>
 <p>Indeed this looks like a normal distribution!</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "left",

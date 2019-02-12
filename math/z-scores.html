@@ -158,7 +158,7 @@
     <ul class ="row article_info">
       
       <li>
-        Jan 4&nbsp;&nbsp;&bull;&nbsp;&nbsp;10 min read
+        Jan 4&nbsp;&nbsp;&bull;&nbsp;&nbsp;11 min read
       </li>
       <li class="tagarticle">
         Key Terms:         z-score,
@@ -172,7 +172,7 @@
   </header>
 
   <div class='article_content'>
-    <p>A <strong>z-score</strong> is the number of standard deviations away from a mean for a data point. A z-score helps point out how <em>unusual</em> or <em>usual</em> a data point is from the other values.</p>
+    <p>A <strong>z-score</strong> is the number of standard deviations away from a mean for a data point. A z-score helps point out how <em>unusual</em> or <em>usual</em> a data point is from the other values. A z-score must be used with a normal distribution curve.</p>
 <h4>Import Modules</h4>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
@@ -196,7 +196,7 @@
 </pre></div>
 
 
-<h3>Example: Z-scores of U.S. Heights</h3>
+<h3>Example: z-scores of U.S. Heights</h3>
 <p>I generate a pandas DataFrame to simulate heights of people in the U.S. from a normal distribution. Note: in order to calculate z-scores of values, you need a normal distribution.</p>
 <div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">population_size</span> <span class="o">=</span> <span class="mi">5000</span>
@@ -285,7 +285,12 @@
 
 
 <p>Given any person's height, I can calculate the number of standard deviations that height is from the mean by using the z-score equation:</p>
-<div class="math">$$ z-{score} = \frac{x - \mu}{\sigma } $$</div>
+<div class="math">$$z-{score}=\frac{x-\mu}{\sigma}$$</div>
+<ul>
+<li><span class="math">\(x\)</span> is a score</li>
+<li><span class="math">\(\sigma\)</span> is the population standard deviation</li>
+<li><span class="math">\(\mu\)</span> is the population mean</li>
+</ul>
 <p>Create a new column <code>z-score</code> that's the z-score for each person's height.</p>
 <div class="highlight"><pre><span></span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_z-score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_height_inches&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">pop_mean_us_height_inches</span><span class="p">)</span><span class="o">/</span><span class="n">pop_std_dev_us_height_inches</span>
 </pre></div>
@@ -359,19 +364,23 @@
     <span class="n">z_score</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">person</span><span class="p">[</span><span class="n">index_z_score</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This person at index {0} has an height in inches of {1} and is approximately {2} standard deviations from the U.S. population mean height in inches&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">z_score</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This person at index {0} has an height in inches of {1} and is approximately {2} standard deviations from the U.S. population mean height in inches.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">z_score</span><span class="p">))</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>This person at index 0 has an height in inches of 67.44 and is approximately 0.49 standard deviations from the U.S. population mean height in inches
-This person at index 1 has an height in inches of 65.6 and is approximately -0.14 standard deviations from the U.S. population mean height in inches
-This person at index 2 has an height in inches of 67.88 and is approximately 0.64 standard deviations from the U.S. population mean height in inches
-This person at index 3 has an height in inches of 70.42 and is approximately 1.52 standard deviations from the U.S. population mean height in inches
-This person at index 4 has an height in inches of 65.32 and is approximately -0.24 standard deviations from the U.S. population mean height in inches
+<div class="highlight"><pre><span></span>This person at index 0 has an height in inches of 67.44 and is approximately 0.49 standard deviations from the U.S. population mean height in inches.
+
+This person at index 1 has an height in inches of 65.6 and is approximately -0.14 standard deviations from the U.S. population mean height in inches.
+
+This person at index 2 has an height in inches of 67.88 and is approximately 0.64 standard deviations from the U.S. population mean height in inches.
+
+This person at index 3 has an height in inches of 70.42 and is approximately 1.52 standard deviations from the U.S. population mean height in inches.
+
+This person at index 4 has an height in inches of 65.32 and is approximately -0.24 standard deviations from the U.S. population mean height in inches.
 </pre></div>
 
 
-<p>In a normal distribution, there is a standard range of values that fall within a certain number of standard deviations from the mean:</p>
+<p>In a normal distribution, there is a standard range of values that <em>generally</em> fall within a certain number of standard deviations from the mean:</p>
 <table>
 <thead>
 <tr>
@@ -382,22 +391,34 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </thead>
 <tbody>
 <tr>
-<td>68</td>
+<td><span class="math">\(68\)</span></td>
 <td><span class="math">\(\mu\pm\sigma\)</span></td>
+<td><span class="math">\(\pm1\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(95\)</span></td>
+<td><span class="math">\(\mu\pm1.96\sigma\)</span></td>
 <td><span class="math">\(\pm1.96\)</span></td>
 </tr>
 <tr>
-<td>95</td>
-<td><span class="math">\(\mu\pm2\sigma\)</span></td>
-<td><span class="math">\(\pm2.33\)</span></td>
-</tr>
-<tr>
-<td>99</td>
-<td><span class="math">\(\mu\pm3\sigma\)</span></td>
-<td><span class="math">\(\pm2.575\)</span></td>
+<td><span class="math">\(99\)</span></td>
+<td><span class="math">\(\mu\pm2.58\sigma\)</span></td>
+<td><span class="math">\(\pm2.58\)</span></td>
 </tr>
 </tbody>
 </table>
+<p>There are <span class="math">\(5000\)</span> height values in this dataset. Therefore, it's likely approximately <span class="math">\(68\%\)</span> of values are within <span class="math">\(\pm1\)</span> z-scores from the mean. Let's verify this with our dataset.</p>
+<div class="highlight"><pre><span></span><span class="n">values_plus_minus_one_z_score</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_z-score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="bp">True</span><span class="p">])</span>
+<span class="n">percent_values_plus_minus_one_z_score</span> <span class="o">=</span> <span class="n">values_plus_minus_one_z_score</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">df_heights</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+<span class="n">percent_values_plus_minus_one_z_score</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>68.56
+</pre></div>
+
+
+<p><span class="math">\(68.56\%\)</span> of values fall within <span class="math">\(\pm1\)</span> z-scores from the mean which is very close to <span class="math">\(68\%\)</span></p>
 <p>Above, I standardized a distribution by getting every value's z-score. I can now visualize the distribution of z-scores below that correspond to specific height values. The histogram below looks like a normal distribution. The official term for it is a <strong>standard normal distribution</strong>.</p>
 <div class="highlight"><pre><span></span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_z-score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;slategray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Standard Normal Distribution&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
@@ -406,7 +427,7 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </pre></div>
 
 
-<p><img alt="png" src="z_scores_files/z_scores_28_0.png"></p>
+<p><img alt="png" src="z_scores_files/z_scores_31_0.png"></p>
 <p>Every point in our dataset is now illustrated as the number of standard deviations away from the mean - represented by its z-score.</p>
 <p>In the distribution above, the standard deviation is 1.</p>
 <div class="highlight"><pre><span></span><span class="n">z_score_distribution_std_dev</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_z-score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
@@ -425,13 +446,14 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </pre></div>
 
 
-<p>To the <em>relative</em> height for each population distribution, I'll calculate the z-score for each friend's height based on the country's population distribution using the z-score equation and round each value to two decimal places.</p>
+<p>To get the <em>relative</em> height for each population distribution, I'll calculate the z-score for each friend's height based on the country's population distribution using the z-score equation and round each value to two decimal places. For this example, I created normal distributions of heights for values in the Phillipines and United States.</p>
 <p>Using the z-score allows standardization among the two distributions of heights in the U.S. and Phillipines so we can easily compare where Leslie and Jamie reside on each distribution.</p>
 <p>The code below generates a normal distribution of heights for people in the Philippines.</p>
 <div class="highlight"><pre><span></span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;philippines_height_inches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">3.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">population_size</span><span class="p">)</span>
 </pre></div>
 
 
+<p>The visualization below illustrates the distribution of heights for people in the U.S., Phillippines as well as Leslie's and Jamie's height. </p>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_height_inches&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;maroon&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;U.S. heights&#39;</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;philippines_height_inches&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;palegoldenrod&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Philippines heights&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">height_leslie_inches</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Leslie&#39;s height&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;indigo&#39;</span><span class="p">)</span>
@@ -443,7 +465,7 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </pre></div>
 
 
-<p><img alt="png" src="z_scores_files/z_scores_36_0.png"></p>
+<p><img alt="png" src="z_scores_files/z_scores_40_0.png"></p>
 <p>Calculate the population mean height in the Philippines using the pandas series mean() <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.mean.html'>method</a>.</p>
 <div class="highlight"><pre><span></span><span class="n">pop_mean_philippines_height_inches</span> <span class="o">=</span> <span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;philippines_height_inches&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">pop_mean_philippines_height_inches</span>
@@ -467,7 +489,9 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 <p>Below is a function to calculate a value's z-score.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">z_score</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">population_mean</span><span class="p">,</span> <span class="n">population_std_dev</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to calculate z-score as observation&#39;s value minus population mean divided by population standard deviation; round value to 2 decimal places.</span>
+<span class="sd">    Function to calculate z-score as observation&#39;s value minus population mean divided by population standard deviation.</span>
+
+<span class="sd">    Round value to 2 decimal places.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">round</span><span class="p">((</span><span class="n">value</span> <span class="o">-</span> <span class="n">population_mean</span><span class="p">)</span><span class="o">/</span><span class="n">population_std_dev</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -476,7 +500,7 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 <div class="highlight"><pre><span></span><span class="n">z_score_leslie_us</span> <span class="o">=</span> <span class="n">z_score</span><span class="p">(</span><span class="n">height_leslie_inches</span><span class="p">,</span> <span class="n">pop_mean_us_height_inches</span><span class="p">,</span> <span class="n">pop_std_dev_us_height_inches</span><span class="p">)</span> 
 <span class="n">z_score_jamie_philippines</span> <span class="o">=</span> <span class="n">z_score</span><span class="p">(</span><span class="n">height_jamie_inches</span><span class="p">,</span> <span class="n">pop_mean_philippines_height_inches</span><span class="p">,</span> <span class="n">pop_std_dev_philippines_height_inches</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Leslie had a z-score of {0} for height relative to U.S. heights and Jamies has a z-score of {1} relative to Philippines heights&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_score_leslie_us</span><span class="p">,</span> <span class="n">z_score_jamie_philippines</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Leslie has a z-score of {0} for her height relative to U.S. heights and Jamie has a z-score of {1} relative to Philippines heights.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_score_leslie_us</span><span class="p">,</span> <span class="n">z_score_jamie_philippines</span><span class="p">))</span>
 </pre></div>
 
 
@@ -484,10 +508,10 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </pre></div>
 
 
-<p>Since Leslie's z-score is larger, she's <em>relatively</em> taller compared to people in her country than Jamie is.</p>
+<p>Since Leslie's z-score is larger (closer to <span class="math">\(0\)</span>), she's <em>relatively</em> taller compared to people in her country than Jamie is.</p>
 <p>There's also a method in the scipy stats module called the <code>zscore()</code> <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.zscore.html'>method</a> that can calculate z-scores given just a list of values.</p>
 <h3>Probability Density Function</h3>
-<p>Above, we visualized the distribution of heights and included bars to indicate the frequency or probability for certain height values. We can visualize the same distribution below with <code>probability of occurence</code> on the y-axis and just include the density curve. The total area under this curve represents the probability of all outcomes happening, equal to <span class="math">\(1\)</span>.</p>
+<p>Above, we visualized the distribution of heights and included bars to indicate the frequency or probability for certain height values. We can visualize the same distribution below with <code>probability of occurence</code> on the y-axis and just include the density curve. The total area under this curve represents the probability of all outcomes happening which is equal to <span class="math">\(1\)</span>.</p>
 <div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_height_inches&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;maroon&quot;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;height [inches]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
@@ -495,10 +519,10 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </pre></div>
 
 
-<p><img alt="png" src="z_scores_files/z_scores_47_0.png"></p>
+<p><img alt="png" src="z_scores_files/z_scores_51_0.png"></p>
 <p>For any person's height, we can find the proportion of values greater than or less than that height by finding the appropriate area under the curve.</p>
 <h3>Probability of Occurence Given Z-Scores</h3>
-<p>With a normal distribution, given an observation's value, I can determine the proportion of observations above or below that value. The steps to do so are to calculate the observation's z-score and then find the appropriate area under the curve.</p>
+<p>With a normal distribution, given an observation's value, I can determine the proportion of observations above or below that value. The steps to do so are to calculate the observation's z-score and then find the appropriate area under the curve on one side of the value.</p>
 <p>For example, Leslie's height is 63 inches. For what proportion of people is Leslie taller than in the U.S.?</p>
 <p>In the scipy stats module, there's a norm (meaning a normal distribution) class with a <code>cdf</code> <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'>method</a> that takes an argument of a z-score for an observation and returns the proportion of values less than that observation.</p>
 <div class="highlight"><pre><span></span><span class="n">proportion_of_us_ppl_leslie_taller_than</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_score_leslie_us</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
@@ -510,7 +534,7 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </pre></div>
 
 
-<p>Leslie is taller than just 14.9% of people in the U.S. and she ranks at the 14.9th percentile.</p>
+<p>This proportion value of <span class="math">\(0.149\)</span> is equivalent to <span class="math">\(14.9\%\)</span>. Leslie is taller than just 14.9% of people in the U.S. and she ranks at the 14.9th percentile.</p>
 <p>I can visualize her height on the normal distribution and shade the area of heights for which she's taller.</p>
 <div class="highlight"><pre><span></span><span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_height_inches&#39;</span><span class="p">])</span>
 <span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_height_inches&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df_heights</span><span class="p">[</span><span class="s1">&#39;us_height_inches&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">50000</span><span class="p">)</span>
@@ -526,7 +550,7 @@ This person at index 4 has an height in inches of 65.32 and is approximately -0.
 </pre></div>
 
 
-<p><img alt="png" src="z_scores_files/z_scores_54_0.png"></p>
+<p><img alt="png" src="z_scores_files/z_scores_58_0.png"></p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "left",
         indent = "1em",
