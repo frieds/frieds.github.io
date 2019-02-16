@@ -158,7 +158,7 @@
     <ul class ="row article_info">
       
       <li>
-        Feb 11&nbsp;&nbsp;&bull;&nbsp;&nbsp;21 min read
+        Feb 11&nbsp;&nbsp;&bull;&nbsp;&nbsp;36 min read
       </li>
       <li class="tagarticle">
         Key Terms:         t-tests,
@@ -241,8 +241,9 @@
 <p>There's an academy that teaches students new to music how to play the guitar in just three months. At the end of the three months, students are assessed on their performance of the song <em>Ziggy Stardust</em>. For their performance, a proctor counts the number of errors performed by each student. There have been tens of instructors at this academy over the year and they all utilized the same methods for teaching. However, last year a new teacher, Mr. Brown, utilized a new method to teach a random group of 15 students in that 3 month period.</p>
 <p>Each year, the academy updates their mean value for the number of errors on student's final performance. However, they don't record all the historical student scores for privacy purposes. Therefore, the population variance is unknown. </p>
 <p>A calculation was also made for the mean number of errors by Mr. Brown's students. Does Mr. Brown's teaching <em>significantly</em> decrease the number of errors in student's performance compared to the population of students taught at the academy?</p>
-<p><span class="math">\(H_{o}: \mu_{population}&lt;\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
-<p><span class="math">\(H_{a}: \mu_{population}&gt;=\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
+<p><span class="math">\(H_{o}: \mu_{population}&lt;=\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
+<p><span class="math">\(H_{a}: \mu_{population}&gt;\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
+<p>In a one sample t-test like this, you could perform it if Mr. Brown taught at the academy or outside of the academy. However, there's other factors to consider in proper experiment design to ensure the results have merit. For this example, I used the more logical t-test design and included Mr. Brown as one of the many teachers at the academy.</p>
 <h3>Dependent Sample t-test Descriptive Example</h3>
 <p>A sample of 19 people were told to lie in bed ready to fall asleep at 10pm every night and would be woken up by an alarm at 6:30am for 15 days in a row. In that period, they tried to sleep as much as possible. With each night's sleep, sensors and a computer helped record a measurement of that person's total hours slept. This same test was later performed for the same group of people under the same circumstances, but with one difference. Each night a person took a sleeping pill at 9:30pm. </p>
 <p>After all the data was collected, I calculated the mean number of hours slept for people without using the pill and with using the pill. Does the sleeping pill help <em>significantly</em> increase the average hours slept for the group than without the pill? </p>
@@ -274,10 +275,292 @@
 </pre></div>
 
 
+<h3>Steps to Execute One Sample T-Test</h3>
+<p>1) Setup the experiment to record measurements from a sample.</p>
+<p>2) Set an alpha level for the test, a null hypothesis and alternative hypothesis.</p>
+<p>3) Compute the sample mean, sample size and sample standard deviation.
+    - These calculations will be used later in step 6 and 7.</p>
+<p>4) Obtain the population mean for the same variable measured. </p>
+<p>5) Calculate the t-critical value.</p>
+<p>6) Determine if the data meets the proper requirements to perform a one-sample t-test</p>
+<p>7) Calculate the t-statistic.</p>
+<p>8) Compare the t-statistic to the t-critical value. Interpret results of the experiment based on the original hypotheses.</p>
+<h3>1) Setup Experiment</h3>
+<p>I'll continue with the descriptive example for the one-sample t-test mentioned above. The setup was designed so the count of errors for all student's performances of <em>Ziggy Stardust</em> by Mr. Brown's students were recorded.</p>
+<p>Assign a python list of errors of students in the sample to the variable <code>sample_student_errors</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_student_errors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+</pre></div>
+
+
+<h3>2) Set an Alpha Level and Original Hypotheses</h3>
+<p>The alpha level for this experiment will be <span class="math">\(0.05\)</span>.</p>
+<p>Does Mr. Brown's teaching <em>significantly</em> decrease the number of errors in student's performance compared to the population of students taught at the academy?</p>
+<p><span class="math">\(H_{o}: \mu_{population}&lt;=\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
+<p><span class="math">\(H_{a}: \mu_{population}&gt;\bar{x}_{\textrm{Mr. Brown}}\)</span></p>
+<p>This is a one-sided negative direction t-test.</p>
+<h3>3) Compute the Sample Mean, Sample Size and Sample Standard Deviation</h3>
+<p>Assign the variable <code>n</code> to be the size of the sample.</p>
+<div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_student_errors</span><span class="p">)</span>
+<span class="n">n</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>28
+</pre></div>
+
+
+<p>Assign the variable <code>sample_mean</code> to be the mean of the sample.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_student_errors</span><span class="p">)</span>
+<span class="n">sample_mean</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>5.035714285714286
+</pre></div>
+
+
+<p>Assign the variable <code>sample_std_dev</code> to be the standard deviation of the sample.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">sample_student_errors</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sample_std_dev</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>1.815206199023556
+</pre></div>
+
+
+<h3>4) Obtain the Population Mean</h3>
+<p>I use the <code>Numpy</code> package <code>normal()</code> method in the <code>random</code> class to create a Python list of floats to represent errors of students for the population. Assign this list to the variable <code>population_student_errors</code> since these are the values for the count of errors each student made performing <em>Ziggy Stardust</em>.</p>
+<p>I cast all the float values to integer errors since teachers only count singular errors.</p>
+<div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># sets the random number generator to return the same results each time</span>
+<span class="n">population_student_errors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">7.1</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">,</span> <span class="mi">1300</span><span class="p">))</span>
+<span class="n">population_student_errors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">population_student_errors</span><span class="p">]</span>
+</pre></div>
+
+
+<p>Assign the variable <code>population_mean</code> to the mean of <code>population_student_errors</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">population_mean</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">population_student_errors</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">population_mean</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>6.56
+</pre></div>
+
+
+<p>Assign the variable <code>population_mean</code> to be the historical . mean error for all students' performances of <em>Ziggy Stardust</em>. It's ok if Mr. Brown's recent sample of students are utilized in this population.</p>
+<div class="highlight"><pre><span></span><span class="n">population_mean</span> <span class="o">=</span> <span class="mf">6.53</span>
+</pre></div>
+
+
+<h3>5) Calculate the t-critical Value</h3>
+<p>Also, similar to the calculation of z-critical values for z-tests, a t-test requires calculation of a t-critical value which just uses the initial alpha level and <span class="math">\(n\)</span> - the sample size.</p>
+<p>The t-critical value provides a threshold of <em>statistical</em> unlikeliness on the t-distribution. The <strong>t-distribution</strong> is a probability distribution used to estimate population parameters in analysis for t-tests. </p>
+<p>The math and logic used to infer the t-distribution is long and complex. For now, I'll cover some basics of the t-distribution and chug forward with this t-test analysis.</p>
+<h4>Visualization of z-distribution and t-distribution</h4>
+<p>This visualization is based on certain parameters such as the size of samples and/or population. They won't always appear in the exact shapes below but I still think the comparisons are a good <em>general</em> point of reference.</p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">z_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
+<span class="n">t_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_t</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span> <span class="c1"># not a normal distribution</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">z_distribution</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;z-distribution&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">t_distribution</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;t-distribution&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t-statistic or z-score&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of z-distribution and t-distribution&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-.</span><span class="mo">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_42_0.png"></p>
+<p>The t-distribution has the following characteristics:</p>
+<ul>
+<li>mean = 0 </li>
+<li>symmetrical</li>
+<li>typically not exactly normal given small <span class="math">\(n\)</span> values; a very high <span class="math">\(n\)</span> value will lead to a closer to normal t-distribution</li>
+<li><span class="math">\(variance = v/(v-2)\)</span> in which <span class="math">\(v\)</span> is the degrees of freedom and <span class="math">\(v&gt;2\)</span> (degrees of freedom explained below)</li>
+</ul>
+<p>T-test errors are more prone to errors in results than a z-test. The reason for this is that compared to the z-distribution, the t-distribution has larger variance. Visually we see a wider curve and thicker tails.</p>
+<p>Later, I'll calculate a t-statistic value and explain how it's used in t-tests in comparison with the t-critical value.</p>
+<h3>6) Determine if Data Meets Requirements for One Sample t-test</h3>
+<h4>One Sample t-tests Data Requirements</h4>
+<ul>
+<li>
+<p>Each of the groups, the sample and population, have the <em>same</em> variable that is continous.</p>
+</li>
+<li>
+<p>Population and sample each have an approximate normal distribution.</p>
+<ul>
+<li>Non-normal distributions, especially those with large variance and/or skewness heavily reduce the power of the results of the t-test.</li>
+</ul>
+</li>
+<li>
+<p>The sample should be randomly selected from a population.</p>
+</li>
+<li>
+<p>The sample should be distinct (not included) from the population.</p>
+</li>
+<li>
+<p>Assume sample data is representative of the whole population and can therefore estimate population parameters.</p>
+</li>
+<li>
+<p>Approximately equal variances of the population and sample.</p>
+</li>
+</ul>
+<h3>Evaluate Data Requirements for Guitar Example</h3>
+<p>Two requirements we can test with the data are 1) population and sample each have an approximate normal distribution and 2) approximately equal variances of the population and sample.</p>
+<p>Let's examine the distribution of the values in the population with a histogram. I use the <code>Matplotlib</code> <code>hist()</code> <a href='https://matplotlib.org/api/_as_gen/matplotlib.pyplot.hist.html'>method</a>. </p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">population_student_errors</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Errors of Students Taught by the Academy&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;count of errors&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;count of occurences&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_50_0.png"></p>
+<p>This distribution looks symmetrical, has no notable skew, and is centered a central value.</p>
+<div class="highlight"><pre><span></span><span class="n">population_median_errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">population_student_errors</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Population mean of {0} and median of {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">population_mean_errors</span><span class="p">,</span> <span class="n">population_median_errors</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Population mean of 6.56 and median of 7.0
+</pre></div>
+
+
+<p>Above is the code that shows the population mean and population median are nearly the exact same too. Therefore, it's fairly safe to say that the population has a normal distribution.</p>
+<p>Let's do the same analysis for the sample of data.</p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">sample_student_errors</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;dodgerblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Errors of Students Taught by Private Instructor&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;count of errors&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;count of occurences&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_54_0.png"></p>
+<p>Similarly, this distribution looks symmetrical, has no notable skew, and is centered a central value.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_median_errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">sample_student_errors</span><span class="p">)</span>
+<span class="n">sample_mean_errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_student_errors</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sample mean of {0} and median of {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_mean_errors</span><span class="p">,</span> <span class="n">sample_median_errors</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Sample mean of 5.035714285714286 and median of 5.0
+</pre></div>
+
+
+<p>Above is the code that shows the sample mean and median are nearly the exact same too. Therefore, it's fairly safe to say that the sample has a normal distribution too.</p>
+<p>Let's check the second condition above to identify if the population and sample variances are approximately equal. There's a <code>var()</code> <a href='https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.var.html'>method</a> in NumPy.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_variance</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">sample_student_errors</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">population_variance</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">population_student_errors</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sample variance of {0} and population variance of {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_variance</span><span class="p">,</span> <span class="n">population_variance</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Sample variance of 3.18 and population variance of 4.65
+</pre></div>
+
+
+<p>This different in variances is tough to gauge. The absolute difference is just <span class="math">\(0.62\)</span> however, the relative difference seems a bit steep since the variance values are small. I'll conclude these variances are <em>approximately</em> equal.</p>
+<h3>Calculate the t-statistic</h3>
+<p>Similar to z-tests in the calculation of a z-score, a t-test requires calculation of a t-statistic. A one-sample t-test helps determine if the mean of a population is <em>significantly</em> different than a sample mean. Both the sample and population have the same variable measurement. The equation for the t-statistic for a one-sample t-test is:</p>
+<div class="math">$$t=\frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}}$$</div>
+<ul>
+<li><span class="math">\(\bar{x}\)</span> is sample mean and is a point estimate</li>
+<li><span class="math">\(\mu\)</span> is our <em>known</em> current population mean</li>
+<li><span class="math">\(\frac{s}{\sqrt{n}}\)</span> is our expected standard deviation from a sampling distribution of means (term also called standard error of the means)</li>
+<li><span class="math">\(s\)</span> is the sample standard deviation (remember to use bessel's correction with <span class="math">\(n-1\)</span> in the denominator)</li>
+<li><span class="math">\(n\)</span> is the sample size</li>
+</ul>
+<p><strong>WHAT IS THE T-STATISTIC and how does it relate to the t-distribution</strong></p>
+<p>The calculation of the t-statistic varies with types of tests. </p>
+<p>Also, similar to the calculation of z-critical values for z-tests, a t-test requires calculation of a t-critical value which just uses the initial alpha level and <span class="math">\(n\)</span> - the sample size. This calculation of the t-critical value utilizes the t-distribution and helps us determine the probability that the sample would come from the population its being compared to.</p>
+<p>For a t-test, we compare where the resulting t-statistic lies on the t-distribution. In the t-distribution, the x-axis consists of t-values and the y-axis consists of the probability of occurences.</p>
+<p>In the Python Scipy package, there's a <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_1samp.html'>method</a> called <code>ttest_1samp()</code> that calculates the t-statistic and p-value for a one sample <em>two-sided</em> t-test. However, the guitar errors example is a <em>one-sided</em> negative direction test. Let's use the returned p-value from this method and multiply it by <span class="math">\(2\)</span> to get the p-value for a one-sided test.</p>
+<div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_1samp</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">sample_student_errors</span><span class="p">,</span> <span class="n">popmean</span><span class="o">=</span><span class="n">population_mean_errors</span><span class="p">)</span>
+<span class="n">results</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Ttest_1sampResult(statistic=-4.443441113387382, pvalue=0.00013578924891219084)
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">two_sided_p_value</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">one_sided_p_value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">two_sided_p_value</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">one_sided_p_value</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>0.00027
+</pre></div>
+
+
+<p>This returned t-statistic of <span class="math">\(FILL IN THIS BLANK\)</span> is the same as the t-statistic returned from the <code>ttest_1samp()</code> method.</p>
+<h3>8) Interpret Results of Experiment</h3>
+<p>Both the <code>ttest_1samp()</code> and our manual calculation returned the same t-statistic value of <span class="math">\(-4.09\)</span></p>
+<p>This t-statistic is less than the t-critical value of <span class="math">\(-1.71\)</span></p>
+<p>Also, the p-value of <span class="math">\(0.0003\)</span> is less than the initial alpha level of <span class="math">\(0.05\)</span>. This p-value tells us the probability of getting this t-statistic if the null hypothesis is true.</p>
+<p>Therefore, there is sufficient evidence to reject the null hypothesis. The private instructor's students have <em>significantly</em> fewer errors in playing <em>Ziggy Stardust</em> than the general population of students who learned at the academy.</p>
+<h3>Calculate a 95% Confidence Interval</h3>
+<p>This step is not <em>needed</em> for a t-test, but it offers additioanl valuable insights to our interpretation of the results.</p>
+<p>A confidence interval provides a range of values in which there's a specified probability that the expected true population parameters lie.</p>
+<p>We performed a t-test with a sample of students from the private instructor's teaching and would like to <em>estimate</em> the population parameters for all students that would go through the same process of instruction by the private teacher.</p>
+<p>Essentially, if the private teacher were to continually teach groups of 25 beginner students under the same circumstances as in the initial context, we'd expect 95% of those sample means to lie within what range? </p>
+<p>We can express the formula for the confidence interval for the expected population of mean errors by students for their performance of <em>Ziggy Stardust</em> after a year of instruction as:</p>
+<div class="math">$$(\bar{x}_{private}+\textrm{t-critical value}*SE,\:\bar{x}_{private}-\textrm{t-critical value}*SE)$$</div>
+<p><span class="math">\(\textrm{t-critical value}*SE\)</span> is the <strong>margin of error</strong> and is 1/2 the width of our confidence interval. The margin of error is the number of standard errors away from the mean. </p>
+<p>Previously, we wanted a tail probability in the t-distribution of 0.05 but since we now want a 95% confidence interval, we'd like 0.025 probability in the tails. Therefore, we need a new t-critical value.</p>
+<div class="highlight"><pre><span></span><span class="c1"># retrieve value &lt;= probability</span>
+<span class="n">tail_probability</span> <span class="o">=</span> <span class="mf">0.025</span>
+<span class="n">t_critical_value_for_95_CI</span> <span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="n">tail_probability</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">degrees_of_freedom</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;t-critical value is {0} for tail probability of {1} and degrees of freedom of {2}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t_critical_value_for_95_CI</span><span class="p">,</span> <span class="n">tail_probability</span><span class="p">,</span> <span class="n">degrees_of_freedom</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>t-critical value is -2.05 for tail probability of 0.025 and degrees of freedom of 29
+</pre></div>
+
+
+<p>Let's calculate the 95% confidence interval using the equation above.</p>
+<div class="highlight"><pre><span></span><span class="n">mean_lower_95_CI_bound</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">sample_mean</span> <span class="o">+</span> <span class="n">t_critical_value_for_95_CI</span><span class="o">*</span><span class="n">standard_error</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">mean_upper_95_CI_bound</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">sample_mean</span> <span class="o">-</span> <span class="n">t_critical_value_for_95_CI</span><span class="o">*</span><span class="n">standard_error</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;95% CI: ({0}, {1})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mean_lower_95_CI_bound</span><span class="p">,</span> <span class="n">mean_upper_95_CI_bound</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>95% CI: (4.269, 5.798)
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">sampling_distribution_theoretical_values_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">mean_lower_95_CI_bound</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">standard_error</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">sampling_distribution_theoretical_values_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">mean_upper_95_CI_bound</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">standard_error</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sampling_distribution_theoretical_values_lower</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sampling_distribution_theoretical_values_upper</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">mean_lower_95_CI_bound</span><span class="p">,</span> <span class="n">mean_upper_95_CI_bound</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightsteelblue&#39;</span><span class="p">)</span>
+<span class="n">bbox_props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">sample_mean</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s2">&quot;Shaded area represents range</span><span class="se">\n</span><span class="s2">of expected population</span><span class="se">\n</span><span class="s2">mean ($\mu_{private}$) - equivalent</span><span class="se">\n</span><span class="s2">to interval estimate of 95% CI&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> 
+         <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">bbox_props</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">sample_mean</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean private instruction (point estimate)&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mean_lower_95_CI_bound</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;lower 95% CI bound&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mean_upper_95_CI_bound</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;upper 95% CI bound&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;average errors&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;95% CI for Bounds of Population for Errors of Students Playing Song Taught by Private Instructor&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_74_0.png"></p>
 <h3>t-distribution</h3>
+<h2>THIS IS A VERY RANDOM SECTION</h2>
 <p>The <strong>t-distribution</strong> is a probability distribution used to estimate population parameters in analysis for t-tests. </p>
 <p>The math and logic used to infer the t-distribution is long and complex. For now, I'll provide a concise high-level overview of some calculations needed for a t-test and how a t-distribution comes into play.</p>
-<p>Similar to z-tests in the calculation of a z-score, a t-test requires calculation of a t-statistic. A one-sample t-test helps determine if the mean of a population is <em>significantly</em> different than a sample mean that's not included in the population. Both the mean and population have the same variable measurement. The equation for the t-statistic for a one-sample t-test is:</p>
+<p>Similar to z-tests in the calculation of a z-score, a t-test requires calculation of a t-statistic. A one-sample t-test helps determine if the mean of a population is <em>significantly</em> different than a sample mean. Both the sample and population have the same variable measurement. The equation for the t-statistic for a one-sample t-test is:</p>
 <div class="math">$$t=\frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}}$$</div>
 <ul>
 <li><span class="math">\(\bar{x}\)</span> is sample mean and is a point estimate</li>
@@ -292,7 +575,7 @@
 <h4>Visualization of a t-distribution and a t-statistic</h4>
 <div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">t_distribution_df_30</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_t</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">t_distribution_df_28</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_t</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">t_distribution_df_30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;t-distribution of $n=31$&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkslateblue&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;t-statistic of $-1$&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t-values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
@@ -302,32 +585,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_19_0.png"></p>
-<p>The t distribution has the following characteristics:</p>
-<ul>
-<li>mean = 0 </li>
-<li>symmetrical</li>
-<li>typically not exactly normal given small <span class="math">\(n\)</span> values; a very high <span class="math">\(n\)</span> value will lead to a more normal t-distribution</li>
-<li><span class="math">\(variance = v/(v-2)\)</span> in which <span class="math">\(v\)</span> is the degrees of freedom and <span class="math">\(v&gt;2\)</span> (degrees of freedom explained below)</li>
-</ul>
-<p>T-test errors are more prone to errors in results than a z-test. The reason for this is that compared to the z-distribution, the t-distribution has larger variance. Visually we see a wider curve and thicker tails.</p>
-<h4>Visualization of z-distribution and t-distribution</h4>
-<p>This visualization is based on certain parameters such as the size of samples and/or population. They won't always appear in the exact shapes below but I still think the comparisons are a good <em>general</em> point of reference.</p>
-<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
-<span class="n">z_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
-<span class="n">t_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_t</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">z_distribution</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;z-distribution&#39;</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">t_distribution</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;t-distribution&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;t-statistic or z-score&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of z-distribution and t-distribution&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-.</span><span class="mo">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-</pre></div>
-
-
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_23_0.png"></p>
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_77_0.png"></p>
 <h4>Degrees of Freedom</h4>
 <p>We utilize <strong>degrees of freedom</strong> in t-test calculations. Degrees of freedom is simply the freedom to vary. Imagine you had 10 students in your classroom who completed the final exam. If I picked out scores for 9 of the students, you must pick out the <em>one</em> remaining student's score. For any 9 student scores I pick, you have <span class="math">\(10-1 = 9\)</span> student's scores to choose from. In variable terms, this means if you have <span class="math">\(n\)</span> numbers to choose from, you have <span class="math">\(n-1\)</span> degrees of freedom.</p>
 <p>In statistics, the calculation for degrees of freedom is the count of observations in the sample that are free to vary when estimating statistical parameters.</p>
@@ -353,7 +611,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_28_0.png"></p>
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_82_0.png"></p>
 <h3>t-critical Value</h3>
 <p>For t-tests, we need to calculate a t-critical value which has some similarities to a z-score (critical) value. </p>
 <p>Similarities of t-critical value to a z-score:</p>
@@ -426,7 +684,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_files/intro_t_tests_40_0.png"></p>
+<p><img alt="png" src="intro_t_tests_files/intro_t_tests_94_0.png"></p>
 <h3>Conditions for Rejecting the Null Hypothesis</h3>
 <p>Similar to z-tests, with each t-test hypothesis, we want to determine if there is sufficient evidence to reject the null hypothesis. Below are details of hypothesis tests and means for evaluating the tests.</p>
 <p>Below, the symbols of <span class="math">\(\mu_{a}\)</span> and <span class="math">\(\mu_{b}\)</span> are relevant for <em>just</em> dependent and independent sample t-tests. </p>

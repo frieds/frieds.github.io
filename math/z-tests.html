@@ -158,7 +158,7 @@
     <ul class ="row article_info">
       
       <li>
-        Jan 8&nbsp;&nbsp;&bull;&nbsp;&nbsp;23 min read
+        Jan 8&nbsp;&nbsp;&bull;&nbsp;&nbsp;22 min read
       </li>
       <li class="tagarticle">
         Key Terms:         p-values,
@@ -234,7 +234,8 @@
 <p>For a one-tail test, the <strong>critical region</strong> (an example is the one shaded above) can be on the left or right side of the distribution. The critical region defines statistically <em>unlikely</em> values.</p>
 <h4>Levels of Likelihood for One-Tail Test</h4>
 <p>Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. </p>
-<p>The probability values are called <strong><span class="math">\(\alpha\)</span> levels</strong> and all are <em>unlikely</em> occurences. I call it <em>unlikely</em> because this sample mean likely didn't occur by random chance. There may have been an effect on that sample mean.</p>
+<p>Additional context: a sampling distribution can have any mean and standard error value. Based on the central limit theorem, the sampling distribution should be approximately normal. A z-score on this sampling distribution tells us the number of standard deviations a sample mean is from the mean of the sampling distribution. Since the sampling distribution is normal, a z-score can always tell us what proportion of sample means are greater than or less than the z-score.</p>
+<p>The probability values initially decided upon in hypothesis tests are called <strong><span class="math">\(\alpha\)</span> levels</strong> and all are <em>unlikely</em> occurences. I call it <em>unlikely</em> because this sample mean likely didn't occur by random chance. There may have been an effect on that sample mean.</p>
 <table>
 <thead>
 <tr>
@@ -261,8 +262,8 @@
 </tr>
 </tbody>
 </table>
-<p>Under a normal distribution, a z-score of roughly <span class="math">\(1.645\)</span> has an area under the curve to the left of the z-value of <span class="math">\(0.95\)</span> (<span class="math">\(95\%\)</span> probability). Any z-score of <span class="math">\(1.65\)</span> or greater means you're <em>unlikely</em> to sample such a sample from the sampling distribution given an alpha of <span class="math">\(0.05\)</span>. The region to the right of that z-value is called the <strong>critical region</strong>. In this instance, the z-score is called the <strong>z-critical value</strong>.</p>
-<p>The <code>cdf()</code> method from the scipy package and accompanying <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'>stats module</a> returns the proportion of values smaller than the observation inputted for a normal distribution. Let's see the area under the curve to the left of the z-score for the z-scores listed in the table above.</p>
+<p>With a sampling distribution, a z-score of roughly <span class="math">\(1.645\)</span> has an area under the curve to the left of the z-value of <span class="math">\(0.95\)</span> (<span class="math">\(95\%\)</span> probability). Any z-score greater than <span class="math">\(1.645\)</span> means you're <em>unlikely</em> to sample such a sample from the sampling distribution given an alpha of <span class="math">\(0.05\)</span>. The region to the right of that z-value is called the <strong>critical region</strong>. In this instance, the z-score of <span class="math">\(1.645\)</span> is called the <strong>z-critical value</strong>.</p>
+<p>The <code>cdf()</code> method from the scipy package and accompanying <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'>stats module</a> returns the proportion of values smaller than the observation inputted for a standard normal distribution (a normal distribution with a mean of <span class="math">\(0\)</span> and standard deviation of <span class="math">\(1\)</span>. Let's see the area under the curve to the left of the z-score for the z-scores listed in the table above.</p>
 <div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">1.645</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
@@ -288,7 +289,7 @@
 
 
 <p>For any sample mean, we can interpret if it's statistically <em>significant</em> - essentially telling us how <em>likely</em> or <em>unlikely</em> this sample mean is within the sampling distribution. The table below only shows examples for a one-tailed hypothesis test.</p>
-<p>If the probability of getting a particular sample mean is less than <span class="math">\(\alpha\)</span>, it is <em>unlikely</em> to occur. </p>
+<p>If the probability of getting a particular sample mean is less than <span class="math">\(\alpha\)</span>, it is <em>unlikely</em> to occur. In a z-test, we often say that if the z-score computed is in the critical region, there's likely an <em>effect</em> with the treatment on the sample.</p>
 <p>Note below, <span class="math">\(p\)</span> is equivalent to probability and <span class="math">\(\bar{x}\)</span> is the sample mean.</p>
 <p>The table below shows interpretations of popular significance levels. Square brackets such as <span class="math">\([\)</span> signify inclusivity of the value next to it while parentheses such as <span class="math">\((\)</span> signify exclusivity of the value next to it.  </p>
 <table>
@@ -324,7 +325,7 @@
 <p>When constructing a hypothesis test, it is best to choose a significant level such as the ones above <em>before</em> you perform a test. You can later report the results as significant at a certain critical level after obtaining the result.</p>
 <p>If you simply analyze the results for all statistical significance levels, you may be "fishing" for results that don't meet the original purpose of your hypothesis test.</p>
 <h3>Two-Tailed Hypothesis Tests</h3>
-<p>This visualization shades two equal areas on each tail of the normal distribution of sample means.</p>
+<p>This visualization shades two equal areas on each tail of the normal distribution of sample means - also known as the sampling distribution.</p>
 <p>Each tail of the distribution has a shaded area of <span class="math">\(0.025\)</span>.</p>
 <div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
 <span class="n">alpha_05_positive</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">*</span><span class="mf">1.96</span>
@@ -559,33 +560,22 @@
 
 
 <p><img alt="png" src="z_tests_files/z_tests_52_0.png"></p>
-<p>Our initial alpha level was <span class="math">\(0.05\)</span>. The equivalent z-score cutoff for each tail is <span class="math">\(\pm1.96\)</span>. Above, we calculated a z-score value of <span class="math">\(2.24\)</span> which is greater than <span class="math">\(1.96\)</span>. </p>
-<p><code>treatment_sample_mean_pounds</code> is <em>significant</em> at <span class="math">\(p&lt;0.05\)</span> so we have obtained sufficient evidence to reject the null hypothesis. There's evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.</p>
-<h3>Hypothesis Testing Caveats</h3>
+<p>I can calculate the probability of randomly selecting a sample mean greater than <code>treatment_sample_mean_pounds</code> by identifying the area under the curve to the right of the sample mean's z-score on a standard normal distribution. its z-score on a standard normal distribution. </p>
+<div class="highlight"><pre><span></span><span class="n">p_value</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_score</span><span class="p">)</span>
+<span class="n">p_value</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>0.012523301875689619
+</pre></div>
+
+
+<p>The returned p-value is <span class="math">\(0.013\)</span>. The initial alpha level was <span class="math">\(0.05\)</span>. The p-value is less than the alpha level.</p>
+<p>The equivalent z-score cutoff for each tail is <span class="math">\(\pm1.96\)</span>. Above, we calculated a z-score value of <span class="math">\(2.24\)</span> which is greater than <span class="math">\(1.96\)</span>. </p>
+<p>Therefore, <code>treatment_sample_mean_pounds</code> is <em>significant</em> at <span class="math">\(p&lt;0.05\)</span> so we have obtained sufficient evidence to reject the null hypothesis. There's evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.</p>
+<h3>Continue Gym Personal Trainer Example with Hypothesis Test (of Known True Population Mean)</h3>
 <p>This type of statistical analysis is prone to misinterpretation. It's possible that those sampled and treated by Joe's personal training already had a history of major weight gain through lifting or had not hit a plateua yet with their potential to gain weight. So, they could have been ideal candidates for Joe to push them to gain muscle rapidly. If either of those scenarios are the case, it's possible that the new estimated population parameters with the treatment are slightly biased. </p>
 <p>Given this misinterpretion or another issue, our hypothesis testing may result in an error. </p>
-<h3>Decision Errors</h3>
-<p>In the figure below, each quadrant has a meaning about correct or incorrect decisions in hypothesis testing.</p>
-<p>Typically, in hypothesis testing, the "truth about the population" is unknown at first. For the example of Joe's personal training, the true population mean of people's weight would be if we could apply the treatment to a sufficiently large number of samples (perhaps hundreds of people) and calculate the mean of sample means with this treatment.</p>
-<p>I provide explanations of each quadrant (<a href='http://www.personal.ceu.hu/students/08/Olga_Etchevskaia/hypotheses.html'>image source</a>) below. </p>
-<p><img alt="hypothesis testing decision errors" src="images/errors.jpg"></p>
-<p>The top left quadrant means the ground truth is that the null hypothesis is true, yet our research concluded to <em>reject</em> the null hypothesis (<em>significant</em> effect from the treatment). We made an incorrect statistical decision. This is considered a Type 1 error.</p>
-<p>The top right quadrant means the ground truth is that the alternative hypothesis is true and our research concluded to reject the null hypothesis (<em>significant</em> effect from the treatment). This is an ideal situation.</p>
-<p>The bottom left quadrant means the ground truth is that the null hypothesis is <em>true</em> and our research concluded that there's <em>no</em> evidence to reject the null hypothesis. This is an ideal situation.</p>
-<p>The bottom right quadrant means the ground truth is that the alternative hypothesis is true, yet our research concluded that there's <em>no</em> evidence to reject the null hypothesis. We made an incorrect statistical decision. This is considered a Type 2 error. </p>
-<h4>How to Reduce Decision Errors</h4>
-<p>We minimize our chances of making the wrong decision when we have a large enough sample size, we randomize our sample and when we implmement proper experimental controls.</p>
-<h4>Example: Statistical Decision Errors in Rain Scenario</h4>
-<p><span class="math">\(H_{o}\)</span>: It's not going to rain later today (so I don't need an umbrella).</p>
-<p><span class="math">\(H_{a}\)</span>: It's going to rain later today (so I should bring an umbrella).</p>
-<p>Four possible scenarios:</p>
-<ul>
-<li>I think it's going to rain later so I bring an umbrella. However, later it doesn't rain. This is a Type 1 error. </li>
-<li>I think it's going to rain later so I bring an umbrella. I'm correct - it rained later and I was right in bringing an umbrella. (This is equivalent to the top right quadrant.)</li>
-<li>I think it's not going to rain later so I <em>don't</em> bring an umbrella. I'm correct - it <em>doesn't</em> rain later so I was correct in <em>not</em> bringing an umbrella. (This is equivalent to the bottom left quadrant.)</li>
-<li>I think it's not going to rain later so I <em>don't</em> bring an umbrella. However, later it rains. This is a Type 2 error.</li>
-</ul>
-<h3>Continue Gym Personal Trainer Example with Hypothesis Test (of Known True Population Mean)</h3>
 <p>Earlier, I concluded <code>treatment_sample_mean_pounds</code> was <em>significant</em> at <span class="math">\(p&lt;0.05\)</span> because I obtained sufficient evidence to reject the null hypothesis. There was evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.</p>
 <p>Additionally, let's <em>assume</em> we found the true population mean of people's mass sampled at the gym for <em>everyone</em> after one year of 3x per week personal training sessions with Joe was <span class="math">\(162\)</span> pounds. In real life, we wouldn't know this value of <span class="math">\(162\)</span> because the treatment hasn't taken effect on the population in a study. However, in this example, let's <em>pretend</em> we do.</p>
 <p>Let's assign the variable <code>true_population_mean_pounds_with_joe_training</code> to 162.</p>
@@ -596,10 +586,6 @@
 <p>In the equation for the z-score, we can utilize this new value to see how many standard errors <code>treatment_sample_mean_pounds</code> lies from <code>true_population_mean_pounds_with_joe_training</code>.</p>
 <div class="highlight"><pre><span></span><span class="n">z_true</span> <span class="o">=</span> <span class="p">(</span><span class="n">treatment_sample_mean_pounds</span> <span class="o">-</span> <span class="n">true_population_mean_pounds_with_joe_training</span><span class="p">)</span><span class="o">/</span><span class="n">standard_error_pounds</span>
 <span class="n">z_true</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>1.7427535920618922
 </pre></div>
 
 
