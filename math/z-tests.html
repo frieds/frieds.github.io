@@ -158,7 +158,7 @@
     <ul class ="row article_info">
       
       <li>
-        Jan 8&nbsp;&nbsp;&bull;&nbsp;&nbsp;22 min read
+        Jan 8&nbsp;&nbsp;&bull;&nbsp;&nbsp;26 min read
       </li>
       <li class="tagarticle">
         Key Terms:         p-values,
@@ -201,7 +201,15 @@
 </pre></div>
 
 
-<h3>Hypothesis Tests Order of Steps</h3>
+<h3>Data Requirements for z-tests</h3>
+<p>Certain conditions must hold true in the data in order to properly utilize z-tests.</p>
+<p>1) Population mean and population standard deviation must be known.</p>
+<p>2) Sample mean is known.</p>
+<p>3) Assumption or test that the sample of data offers some variation and therefore would form a normal distribution by resampling - consistent with the Central Limit Theorem.</p>
+<p>4) Sample observations were <em>randomly</em> drawn from a population.</p>
+<p>5) Sample size is known and sufficiently large - often <span class="math">\(n&gt;=30\)</span>.</p>
+<p>6) Assumption that the population from which the sample is drawn from is approximately normal.</p>
+<h3>Hypothesis Tests Order of Steps for z-tests</h3>
 <p>Below are the steps used for performing a hypothesis test to compare a single sample group with treatment to a population and determine the statistical significance. This article will mainly detail steps 2 - 4 and 6 - 8. </p>
 <p>1) Take measurements from a large control group we'll call the population.</p>
 <p>2) Declare a null and alternative hypothesis.
@@ -211,9 +219,10 @@
     - We want to compare this treatment group to our population to see if this treatment had an effect.</p>
 <p>5) Take a sufficient number of samples of size <span class="math">\(n\)</span> from the population values and record a single statistic of each sample such as the mean or median. This is called the <strong>sampling distribution</strong>.
     - A distribution of these sample means (or medians) would be a normal distribution based on the Central Limit Theorem.</p>
-<p>6) Calculate the standard deviation of the sampling distribution - called the <strong>standard error</strong>.</p>
-<p>7) Compute how many standard errors the statistic (such as the mean) of the sample group with treatment is from the statistic (such as the mean) of the sampling distribution. This is called the z-score.</p>
-<p>8) Determine if this sample group with treatment is <em>significantly</em> different from the population based on the pre-decided alpha level.</p>
+<p>6) Verify data collected meets the requirements needed to run a z-test (see section above).</p>
+<p>7) Calculate the standard deviation of the sampling distribution - called the <strong>standard error</strong>.</p>
+<p>8) Compute how many standard errors the statistic (such as the mean) of the sample group with treatment is from the statistic (such as the mean) of the sampling distribution. This is called the z-score.</p>
+<p>9) Determine if this sample group with treatment is <em>significantly</em> different from the population based on the pre-decided alpha level.</p>
 <h3>One-Tail Hypothesis Tests</h3>
 <h4>Visualization of One-Tail</h4>
 <p>Below, this normal distribution has an area under the curve of <span class="math">\(1\)</span>. This visualization shades just the right-tail of the distribution that has an area under the curve of just <span class="math">\(0.05\)</span> equivalent to <span class="math">\(5\%\)</span>.</p>
@@ -230,61 +239,91 @@
 </pre></div>
 
 
-<p><img alt="png" src="z_tests_files/z_tests_14_0.png"></p>
+<p><img alt="png" src="z_tests_files/z_tests_16_0.png"></p>
 <p>For a one-tail test, the <strong>critical region</strong> (an example is the one shaded above) can be on the left or right side of the distribution. The critical region defines statistically <em>unlikely</em> values.</p>
 <h4>Levels of Likelihood for One-Tail Test</h4>
 <p>Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. </p>
 <p>Additional context: a sampling distribution can have any mean and standard error value. Based on the central limit theorem, the sampling distribution should be approximately normal. A z-score on this sampling distribution tells us the number of standard deviations a sample mean is from the mean of the sampling distribution. Since the sampling distribution is normal, a z-score can always tell us what proportion of sample means are greater than or less than the z-score.</p>
 <p>The probability values initially decided upon in hypothesis tests are called <strong><span class="math">\(\alpha\)</span> levels</strong> and all are <em>unlikely</em> occurences. I call it <em>unlikely</em> because this sample mean likely didn't occur by random chance. There may have been an effect on that sample mean.</p>
+<h4>Unlikely Values in Positive Direction One-Tail Tests</h4>
+<p>Positive direction one-tail tests have the critical region on the right / positive direction of the sampling distribution.</p>
 <table>
 <thead>
 <tr>
-<th>probability of obtaining sample mean (<span class="math">\(\alpha\)</span> level)</th>
+<th>z-score cutoff for critical region</th>
+<th>probability of obtaining sample mean (<span class="math">\(\alpha\)</span> level) <em>greater</em> than corresponding z-score</th>
 <th>equivalent percentage likelihood</th>
-<th>z-score cutoff for one tail</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td><span class="math">\(1.645\)</span></td>
 <td><span class="math">\(0.05\)</span></td>
 <td><span class="math">\(5\%\)</span></td>
-<td><span class="math">\(\pm1.645\)</span></td>
 </tr>
 <tr>
+<td><span class="math">\(2.33\)</span></td>
 <td><span class="math">\(0.01\)</span></td>
 <td><span class="math">\(1\%\)</span></td>
-<td><span class="math">\(\pm2.33\)</span></td>
 </tr>
 <tr>
+<td><span class="math">\(3.1\)</span></td>
 <td><span class="math">\(0.001\)</span></td>
 <td><span class="math">\(0.1\%\)</span></td>
-<td><span class="math">\(\pm3.1\)</span></td>
+</tr>
+</tbody>
+</table>
+<h4>Unlikely Values in Negative Direction One-Tail Tests</h4>
+<p>Negative direction one-tail tests have the critical region on the left / negative direction of the sampling distribution.</p>
+<table>
+<thead>
+<tr>
+<th>z-score cutoff for critical region</th>
+<th>probability of obtaining sample mean (<span class="math">\(\alpha\)</span> level) <em>less</em> than corresponding z-score</th>
+<th>equivalent percentage likelihood</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math">\(-1.645\)</span></td>
+<td><span class="math">\(0.05\)</span></td>
+<td><span class="math">\(5\%\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(-2.33\)</span></td>
+<td><span class="math">\(0.01\)</span></td>
+<td><span class="math">\(1\%\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(-3.1\)</span></td>
+<td><span class="math">\(0.001\)</span></td>
+<td><span class="math">\(0.1\%\)</span></td>
 </tr>
 </tbody>
 </table>
 <p>With a sampling distribution, a z-score of roughly <span class="math">\(1.645\)</span> has an area under the curve to the left of the z-value of <span class="math">\(0.95\)</span> (<span class="math">\(95\%\)</span> probability). Any z-score greater than <span class="math">\(1.645\)</span> means you're <em>unlikely</em> to sample such a sample from the sampling distribution given an alpha of <span class="math">\(0.05\)</span>. The region to the right of that z-value is called the <strong>critical region</strong>. In this instance, the z-score of <span class="math">\(1.645\)</span> is called the <strong>z-critical value</strong>.</p>
-<p>The <code>cdf()</code> method from the scipy package and accompanying <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'>stats module</a> returns the proportion of values smaller than the observation inputted for a standard normal distribution (a normal distribution with a mean of <span class="math">\(0\)</span> and standard deviation of <span class="math">\(1\)</span>. Let's see the area under the curve to the left of the z-score for the z-scores listed in the table above.</p>
-<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">1.645</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<p>The <code>cdf()</code> method from the scipy package and accompanying <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'>stats module</a> returns the proportion of values smaller than the observation inputted for a standard normal distribution (a normal distribution with a mean of <span class="math">\(0\)</span> and standard deviation of <span class="math">\(1\)</span>). Let's see the area under the curve to the right of these critical z-scores that are the same ones mentioned in the table under <em>Unlikely Values in Positive Direction One-Tail Tests</em>. The probability values returned below are the same as the ones in the table.</p>
+<div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">-</span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">1.645</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>0.95
+<div class="highlight"><pre><span></span>0.050000000000000044
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">2.33</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">-</span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">2.33</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>0.99
+<div class="highlight"><pre><span></span>0.010000000000000009
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">3.1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">-</span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">3.1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>0.999
+<div class="highlight"><pre><span></span>0.0010000000000000009
 </pre></div>
 
 
@@ -295,8 +334,8 @@
 <table>
 <thead>
 <tr>
-<th>z-score range for positive one-sided test</th>
-<th>z-score range for negative one-sided test</th>
+<th>z-score range for positive one-tail test</th>
+<th>z-score range for negative one-tail test</th>
 <th>statistical interpretation</th>
 <th>layman's interpretation</th>
 </tr>
@@ -343,13 +382,14 @@
 </pre></div>
 
 
-<p><img alt="png" src="z_tests_files/z_tests_25_0.png"></p>
+<p><img alt="png" src="z_tests_files/z_tests_31_0.png"></p>
 <p>Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. </p>
 <table>
 <thead>
 <tr>
 <th>probability of obtaining sample mean (<span class="math">\(\alpha\)</span> level)</th>
-<th>probability on each tail</th>
+<th>probability of obtaining sample mean on each tail</th>
+<th>percentage of obtaining a sample mean on each tail</th>
 <th>z-score cutoff for each tail</th>
 </tr>
 </thead>
@@ -357,16 +397,19 @@
 <tr>
 <td>0.05</td>
 <td>0.025</td>
+<td>2.5%</td>
 <td><span class="math">\(\pm1.96\)</span></td>
 </tr>
 <tr>
 <td>0.01</td>
 <td>0.005</td>
+<td>0.5%</td>
 <td><span class="math">\(\pm2.575\)</span></td>
 </tr>
 <tr>
 <td>0.001</td>
 <td>0.0005</td>
+<td>0.05%</td>
 <td><span class="math">\(\pm3.29\)</span></td>
 </tr>
 </tbody>
@@ -421,16 +464,17 @@
 </table>
 <h3>Hypotheses</h3>
 <p>Earlier I mentioned <strong>hypotheses</strong> as proposed explanations typically made on the basis of limited evidence that's used as a starting point for further investigation. </p>
-<p>The null hypothesis commonly denoted as <span class="math">\(H_{o}\)</span> assumes no significant difference between current population parameters and what will be the new population parameters after some intervention (otherwise called a treatment). This is expressed in math notation for comparisons of means as <span class="math">\(\mu = \mu_{i}\)</span> (with the <span class="math">\(i\)</span> representing an intervention). However the two sides don't have to be <em>exactly</em> equal. Rather, they shouldn't be <em>significantly</em> different from one another. </p>
+<p>The null hypothesis commonly denoted as <span class="math">\(H_{o}\)</span> assumes a default position of the relationship among two groups. This typically means there is no <em>significant</em> difference in the means of the groups. For z-tests, the two groups are the current population parameters and the new population parameters after some intervention (otherwise called a treatment).</p>
 <p>The alternative hypothesis commonly denoted as <span class="math">\(H_{a}\)</span> guesses there <em>will</em> be a <em>significant</em> difference between the current population parameters and the new population parameters after some intervention. </p>
-<p>The three possible scenarios for one and two-tailed tests with explanations for each are as follows:</p>
+<p><span class="math">\(\mu_{i}\)</span> represents the new population parameters after some intervention.</p>
+<p>The three possible scenarios for a one-tailed and two-tailed tests with explanations for each are as follows:</p>
 <table>
 <thead>
 <tr>
 <th>alternative hypothesis</th>
 <th>interpretation</th>
 <th>number of tails</th>
-<th>critical region of tail(s) of distribution to reject the null</th>
+<th>critical region location of tail(s) on sampling distribution to reject the null</th>
 </tr>
 </thead>
 <tbody>
@@ -454,7 +498,9 @@
 </tr>
 </tbody>
 </table>
-<p>Side note: the two-tailed test is most conservative because the probability on each tail is smaller than a tail on a one-sided test.</p>
+<p>The two-tailed test is most conservative because the probability on each tail is smaller than a tail on a one-sided test. Therefore, we are less likely to reject the null hypothesis.</p>
+<p>Note how all scenarios above use <span class="math">\(\mu\)</span> despite the fact we compare the means of a sample (denoted as <span class="math">\(\bar{x}\)</span>) and a population (denoted as <span class="math">\(\mu\)</span>). Why is this? With the treatment on the sample, we try to <em>infer</em> the new population mean if everyone in the population would receive similar treatment.  </p>
+<p>In a statistical hypothesis test, we often want to provide treatment to just a small sample because that takes less effort and minimizes risk as to not affect the population.</p>
 <h4>Interpretation of Hypotheses</h4>
 <p>Here's what it means to reject the null hypothesis:</p>
 <ul>
@@ -501,7 +547,7 @@
 <p>Create the sampling distribution from the population in order to be able to compare with <code>treatment_sample_mean_pounds</code>.  I take <span class="math">\(330\)</span> of each <span class="math">\(30\)</span> random values with replacement from the population.</p>
 <div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">sample_means</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">330</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">):</span>
     <span class="n">sample_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">population_gym_goers_mass</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>    
     <span class="n">sample_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_values</span><span class="p">)</span>
     <span class="n">sample_means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_mean</span><span class="p">)</span>
@@ -516,7 +562,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="z_tests_files/z_tests_46_0.png"></p>
+<p><img alt="png" src="z_tests_files/z_tests_52_0.png"></p>
 <p>Let's compute the standard error which is the standard deviation of the sampling distribution. The equation is below:</p>
 <div class="math">$$SE=\frac{\sigma }{\sqrt{n}}$$</div>
 <ul>
@@ -549,24 +595,53 @@
 </pre></div>
 
 
+<p>The initial alpha level is <span class="math">\(0.05\)</span> and this is a two-tailed test. Let's shade both areas of the critical region on the positive and negative side of the sampling distribution. The corresponding z-critical value is <span class="math">\(1.96\)</span>. Let's find the mean mass value associated with this z-score on the positive side. We can model this calculation by the equation below:</p>
+<p>1.96 = (sample_mean_at_positive_z_critical - population_mean_pounds)/standard_error_pounds</p>
+<p>The equation above simplifies to the code below.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_mean_at_positive_z_critical</span> <span class="o">=</span> <span class="mf">1.96</span><span class="o">*</span><span class="n">standard_error_pounds</span><span class="o">+</span><span class="n">population_mean_pounds</span>
+<span class="n">sample_mean_at_positive_z_critical</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>167.8725988932076
+</pre></div>
+
+
+<p>Let's find the mean mass value associated with this z-score on the positive side.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_mean_at_negative_z_critical</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.96</span><span class="o">*</span><span class="n">standard_error_pounds</span><span class="o">+</span><span class="n">population_mean_pounds</span>
+<span class="n">sample_mean_at_negative_z_critical</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>152.1274011067924
+</pre></div>
+
+
 <p>Let's visualize where <code>treatment_sample_mean_pounds</code> lies on the distribution of sample mean masses of groups collected at the gym that didn't have the treatment of Joe's personal training.</p>
-<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">sample_means</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">sample_means</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_positive_z_critical</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_negative_z_critical</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade2</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade2</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">treatment_sample_mean_pounds</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean with Joe personal trainer&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sampling Distribution ($n=30$) of Gym Goers&#39; Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 
 
-<p><img alt="png" src="z_tests_files/z_tests_52_0.png"></p>
+<p><img alt="png" src="z_tests_files/z_tests_62_0.png"></p>
+<p>The visualization shows <code>treatment_sample_mean_pounds</code> lies in the positive critical region.</p>
 <p>I can calculate the probability of randomly selecting a sample mean greater than <code>treatment_sample_mean_pounds</code> by identifying the area under the curve to the right of the sample mean's z-score on a standard normal distribution. its z-score on a standard normal distribution. </p>
-<div class="highlight"><pre><span></span><span class="n">p_value</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_score</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">p_value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_score</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">p_value</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>0.012523301875689619
+<div class="highlight"><pre><span></span>0.013
 </pre></div>
 
 
@@ -589,8 +664,27 @@
 </pre></div>
 
 
+<div class="highlight"><pre><span></span>1.7427535920618922
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_positive_z_critical</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_negative_z_critical</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade2</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade2</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">treatment_sample_mean_pounds</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean with Joe personal trainer&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">true_population_mean_pounds_with_joe_training</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true population mean with Joe&#39;s training&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="z_tests_files/z_tests_71_0.png"></p>
+<p>The visualization shows <code>true_population_mean_pounds_with_joe_training</code> is <em>not</em> in a critical region. </p>
 <p>Our initial alpha level was <span class="math">\(0.05\)</span>. The equivalent z-score cutoff for each tail is <span class="math">\(\pm1.96\)</span>.</p>
-<p>The <code>z_true</code> value is less than the z-critical value of <span class="math">\(1.96\)</span>; the ground truth about the population <span class="math">\(H_{o}\)</span> is true. Having Joe as a persoanl trainer for three weightlifting workouts per week over the course of the year has <em>no</em> effect on one's mass. However, our earlier decision based on the sample with treatment was to reject the null hypothesis. In this instance, we committed a Type 1 error!</p>
+<p>The <code>z_true</code> value (for the true population mean) is less than the z-critical value of <span class="math">\(1.96\)</span>; the ground truth about the population <span class="math">\(H_{o}\)</span> is true. Having Joe as a persoanl trainer for three weightlifting workouts per week over the course of the year has <em>no</em> effect on one's mass. However, our earlier decision based on the sample with treatment was to reject the null hypothesis. In this instance, we committed a Type 1 error!</p>
 <h3>Effect of Parameters on Treatment Effect</h3>
 <p>For hypothesis testing, we typically use the following two equations to calculate the standard error (SE) and a z-score for a sample mean:</p>
 <div class="math">$$SE=\frac{\sigma }{\sqrt{n}}$$</div>
