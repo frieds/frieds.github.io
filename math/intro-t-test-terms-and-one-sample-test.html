@@ -158,11 +158,13 @@
     <ul class ="row article_info">
       
       <li>
-        Feb 20&nbsp;&nbsp;&bull;&nbsp;&nbsp;30 min read
+        Feb 20&nbsp;&nbsp;&bull;&nbsp;&nbsp;32 min read
       </li>
       <li class="tagarticle">
         Key Terms:         t-tests,
-        python
+        python,
+        scipy,
+        numpy
       </li>
     </ul>
   </header>
@@ -241,18 +243,18 @@
 <p>There's an academy that teaches students new to music how to play the guitar in just three months. At the end of the three months, students are assessed on their performance of the song <em>Ziggy Stardust</em>. For their performance, a proctor counts the number of errors performed by each student. There have been hundreds of instructors at this academy over the year and they all utilized the same methods for teaching. However, last year a new teacher, Mr. Brown, utilized a new method to teach a random group of 28 students in that 3 month period.</p>
 <p>Each year, the academy updates their mean value for the number of errors on student's final performance. However, they don't record all the individual historical student scores for privacy purposes. Therefore, the population variance is unknown. </p>
 <p>A calculation was also made for the mean number of errors by Mr. Brown's students. Does Mr. Brown's teaching <em>significantly</em> decrease the number of errors in student's performance compared to the population of students taught at the academy?</p>
-<p><span class="math">\(H_{o}: \bar{x}_{\textrm{Mr. Brown}}&gt;=\mu_{population}\)</span></p>
-<p><span class="math">\(H_{a}: \bar{x}_{\textrm{Mr. Brown}}&lt;\mu_{population}\)</span></p>
+<p><span class="math">\(H_{o}: \mu_{\textrm{Mr. Brown}}&gt;=\mu_{academy}\)</span></p>
+<p><span class="math">\(H_{a}: \mu_{\textrm{Mr. Brown}}&lt;\mu_{academy}\)</span></p>
+<p>In the hypotheses above, I use the symbol of <span class="math">\(\mu\)</span> (a population mean) instead of <span class="math">\(\bar{x}\)</span> (a sample mean) for Mr. Brown's students. This may seem confusing since we just have a sample of Mr. Brown's students. </p>
+<p>These hypotheses are not about the <em>exact</em> provided data. Rather, they're inferences about the <em>expected</em> population means from which the sample comes from compared to the known population mean. A proper t-test analysis performs calculations to help <em>infer</em> what the <em>expected</em> population mean (that contains the sample) given just a sample mean. This description is part of the field of <strong>inferential statistics</strong>: use of a random sample of data taken from a population to describe and make inferences about the population. These inferences are important because they help to explain what <em>would likely</em> happen if we had access to a sufficiently large population of Mr. Brown's students. </p>
 <p>In a one sample t-test like this, you could perform it if Mr. Brown taught at the academy or outside of the academy. However, there's other factors to consider in proper experiment design to ensure the results have merit. For this example, I used the more logical t-test design and included Mr. Brown as one of the many teachers at the academy.</p>
 <h3>Dependent Sample t-test Descriptive Example</h3>
 <p>A sample of 19 people were told to lie in bed ready to fall asleep at 10pm every night and would be woken up by an alarm at 6:30am for 15 days in a row. In that period, they tried to sleep as much as possible. With each night's sleep, sensors and a computer helped record a measurement of that person's total hours slept. This same test was later performed for the same group of people under the same circumstances, but with one difference: each night a person took a sleeping pill at 9:30pm. </p>
 <p>After all the data was collected, I calculated the mean number of hours slept for people without using the pill and with using the pill. Does the sleeping pill help <em>significantly</em> increase the average hours slept for the group than without the pill? </p>
 <p><span class="math">\(H_{o}:\mu_{pill}&gt;= \mu_{\textrm{no pill}}\)</span></p>
 <p><span class="math">\(H_{a}:\mu_{pill}&gt;\mu_{\textrm{no pill}}\)</span></p>
-<p>This is considered a pretest posttest type of t-test for dependent samples. The samples are considered <em>dependent</em> on one another because the <em>same</em> people who took the sleep test without the pills later took the test again with sleeping pills.</p>
-<p>The data was collected from two different samples. However, in the hypotheses above, I use symbols of <span class="math">\(\mu\)</span> (a population mean) instead of <span class="math">\(\bar{x}\)</span> (a sample mean). This may seem confusing since we don't <em>exactly</em> know the values of <span class="math">\(\mu\)</span> for either sample from the start of the test.</p>
-<p>These hypotheses are not about the <em>exact</em> provided data. Rather, they're inferences about the <em>expected</em> population means from which the samples come from. A proper t-test analysis performs calculations to help <em>infer</em> what the <em>expected</em> population mean of each sample would be given just a sample mean. This description is part of the field of <strong>inferential statistics</strong>: use of a random sample of data taken from a population to describe and make inferences about the population. These inferences are important because they help to explain what <em>would likely</em> happen if this same sleeping test was performed on a larger population of people. </p>
-<p>Typically, in a dependent t-test example such as this, the exact populations data with individual observations is uknown or one is unable to access the population data.</p>
+<p>This is considered a pretest posttest type of t-test for dependent samples. The samples are considered <em>dependent</em> on one another because the <em>same</em> people who took the sleep test without the pills later took the test again with sleeping pills. </p>
+<p>Typically, in a dependent t-test example such as this, the exact populations data with individual observations is unknown or one is unable to access the population data.</p>
 <h3>Independent Sample t-test Descriptive Example</h3>
 <p>There was a sample of 20 professional basketball players in 1940 that attempted to jump as high as they could and measurements were taken on their reach by the top of their hand. The same test was performed on a sample of 20 professional basketball players in 2019. After all this data was collected, I calculated the mean height in inches reached by the sample of players in 1940 and 2019. Do professional basketball players in 2019 jump <em>significantly</em> higher on average than basketball players in 1940?</p>
 <p>Similar to the example with dependent t-tests above, these hypotheses are an <em>inference</em> on the <em>expected</em> true population means from which each sample comes from.</p>
@@ -275,7 +277,7 @@
 </pre></div>
 
 
-<h3>Steps to Perform One Sample T-Test</h3>
+<h3>Steps to Perform One Sample t-test</h3>
 <p>1) Setup the experiment to record measurements from a sample.</p>
 <p>2) Set an alpha level for the test, a null hypothesis and alternative hypothesis.</p>
 <p>3) Compute the sample mean, sample size and sample standard deviation.
@@ -299,8 +301,8 @@
 
 
 <p>Does Mr. Brown's teaching <em>significantly</em> decrease the number of errors in student's performance compared to the population of students taught at the academy?</p>
-<p><span class="math">\(H_{o}: \bar{x}_{\textrm{Mr. Brown}}&gt;=\mu_{population}\)</span></p>
-<p><span class="math">\(H_{a}: \bar{x}_{\textrm{Mr. Brown}}&lt;\mu_{population}\)</span></p>
+<p><span class="math">\(H_{o}: \mu_{\textrm{Mr. Brown}}&gt;=\mu_{academy}\)</span></p>
+<p><span class="math">\(H_{a}: \mu_{\textrm{Mr. Brown}}&lt;\mu_{academy}\)</span></p>
 <p>This is a one-sided negative direction t-test.</p>
 <h3>3) Compute the Sample Mean, Sample Size and Sample Standard Deviation</h3>
 <p>Assign the variable <code>n</code> to be the size of the sample.</p>
@@ -477,8 +479,9 @@
 <li><span class="math">\(\mu\)</span> is our <em>known</em> current population mean</li>
 <li><span class="math">\(s\)</span> is the sample standard deviation (remember to use bessel's correction with <span class="math">\(n-1\)</span> in the denominator)</li>
 <li><span class="math">\(n\)</span> is the sample size</li>
-<li><span class="math">\(\frac{s}{\sqrt{n}}\)</span> is our expected standard deviation from a sampling distribution of means (term also called standard error of the means)</li>
+<li><span class="math">\(\frac{s}{\sqrt{n}}\)</span> is our expected standard deviation from a sampling distribution of means (term also called <a href='https://en.wikipedia.org/wiki/Standard_error'>standard error of the means</a>)</li>
 </ul>
+<p>The t-statistic tells us how far our sample mean lies from the population mean in terms of standard error units on a sampling distribution of sample means. This sampling distribution comes from taking a sufficiently large number of size <span class="math">\(n\)</span> samples from the population data. On the sampling distribution, both <span class="math">\(\bar{x}\)</span> and <span class="math">\(\mu\)</span> are on the same "scale" of <span class="math">\(n\)</span> so it's OK to compare them. An anology that makes sense to me for this t-statistic is compared the quality of two apples of the <em>same size</em> from two different farms. This is an <em>easy</em> comparison because we're <em>just</em> comparing the quality. If we simply just looked at the difference between <span class="math">\(\bar{x}\)</span> and <span class="math">\(\mu\)</span> that would be comparing the quality of two apples of <em>different sizes</em> and <em>different qualities</em> from two different farms - a tough comparison to make sense of because we can't simply isolate <em>just</em> the quality in a bite of each. </p>
 <p>The t-statstic equation above has a numerator and denominator that can each be made sense of.</p>
 <p>Remember the t-critical value is <span class="math">\(-1.703\)</span>. The <em>smaller</em> the t-statistic, the more evidence we obtain to reject the null hypothesis and conclude Mr. Brown's students have <em>significantly fewer</em> errors than the general population.</p>
 <p>The numerator measures the "strength" of the signal: the difference between the sample mean and population mean. In the guitar example, if Mr. Brown's students have far <em>fewer</em> errors than the general population, we'd expect a <em>smaller</em> numerator value and therefore more "strength". The difference:</p>
