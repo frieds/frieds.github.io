@@ -1,5 +1,320 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base - Math</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/math.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-03-05T17:20:00-08:00</updated><entry><title>Correlation Does Not Imply Causation</title><link href="https://dfrieds.com/math/correlation-does-not-imply-causation" rel="alternate"></link><published>2019-03-05T17:20:00-08:00</published><updated>2019-03-05T17:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-03-05:/math/correlation-does-not-imply-causation</id><summary type="html">&lt;p&gt;Understand what is correlation in statistics and how to interpet this statistic&lt;/p&gt;</summary><content type="html">&lt;p&gt;The statement &lt;em&gt;correlation does not imply causation&lt;/em&gt; is one of the most famous in the field of statistics. It's incredibly important to understand so we properly understand the relation between two variables of numeric data.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base - Math</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/math.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-03-05T20:20:00-08:00</updated><entry><title>Correlation</title><link href="https://dfrieds.com/math/pearsons-correlation-coefficient" rel="alternate"></link><published>2019-03-05T20:20:00-08:00</published><updated>2019-03-05T20:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-03-05:/math/pearsons-correlation-coefficient</id><summary type="html">&lt;p&gt;Learn the pearson's correlation  what is correlation in statistics and how to interpet this statistic&lt;/p&gt;</summary><content type="html">&lt;p&gt;In statistics, the &lt;a href='https://en.wikipedia.org/wiki/Pearson_correlation_coefficient'&gt;&lt;strong&gt;Pearson correlation coefficient&lt;/strong&gt;&lt;/a&gt; is a measure of the linear relationship between two continuous numerical variables of data. &lt;/p&gt;
+&lt;p&gt;In business context, the term &lt;em&gt;correlation&lt;/em&gt; is used to to describe a relationship between two or more variables. However, this article will just cover the Pearson correlation coefficient. This tutorial will illustrate the concept through simple examples and many visualizations.&lt;/p&gt;
+&lt;h3&gt;Intro to Pearson Correlation Coefficient&lt;/h3&gt;
+&lt;p&gt;The greek letter &lt;span class="math"&gt;\(\rho\)&lt;/span&gt; stands for the &lt;strong&gt;Pearson's r&lt;/strong&gt;, otherwise known as the **correlation coefficient (&lt;span class="math"&gt;\(\rho\)&lt;/span&gt;).&lt;/p&gt;
+&lt;p&gt;The equation for &lt;code&gt;r&lt;/code&gt; is below. The numerator is the covariance of &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; - essentially how much they vary together. The denominator is the standard deviation of &lt;code&gt;x&lt;/code&gt; multipled by the standard deviation of &lt;code&gt;y&lt;/code&gt; which explains how the two variables vary apart from each other rather than with each other.&lt;/p&gt;
+&lt;div class="math"&gt;$$r=\frac{cov(x, y)}{s_{x} \times s_{y}}$$&lt;/div&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(\rho\)&lt;/span&gt; is a proportion. &lt;span class="math"&gt;\(\rho\)&lt;/span&gt; measures the strength of a relationship by looking at how closely the observations fall along a straight line. If the data points resemble a perfectly straight line with a positive slope, then &lt;span class="math"&gt;\(\rho\)&lt;/span&gt; is &lt;span class="math"&gt;\(1\)&lt;/span&gt;. If the data resembles a perfectly negatively sloped line, then then &lt;span class="math"&gt;\(\rho\)&lt;/span&gt; is &lt;span class="math"&gt;\(-1\)&lt;/span&gt;. If the data points are randomly scattered with no resemblence of a perfect line, then &lt;span class="math"&gt;\(\rho\)&lt;/span&gt; is close to &lt;span class="math"&gt;\(0\)&lt;/span&gt;. In this instace, there's no linear relationship between the two variables.&lt;/p&gt;
+&lt;p&gt;Any &lt;span class="math"&gt;\(\rho\)&lt;/span&gt; value closer to the absolute value of &lt;span class="math"&gt;\(1\)&lt;/span&gt; indicates a &lt;em&gt;strong&lt;/em&gt; linear relationship between the two variables.&lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;talk&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figure.figsize&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="mf"&gt;10.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.5&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;darkgrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example to Illustrate Strength of Pearson's &lt;span class="math"&gt;\(\rho\)&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;Below are two visualizations, labeled &lt;em&gt;Graph 1&lt;/em&gt; and &lt;em&gt;Graph 2&lt;/em&gt;. Each shows a scatter plot of the relation of &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; values.&lt;/p&gt;
+&lt;p&gt;I'm curious - which two variables have a stronger &lt;em&gt;positive&lt;/em&gt; linear relationship - &lt;em&gt;Graph 1&lt;/em&gt; or &lt;em&gt;Graph 2&lt;/em&gt;?&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;3.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;5.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;3.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;4.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;3.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;5.5&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;red&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;x-values&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;y-values&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Graph 1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="pearson_correlation_coefficient_files/pearson_correlation_coefficient_9_0.png"&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;y2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;4.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;1.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;2.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;4.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;x-values&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;y-values&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Graph 2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="pearson_correlation_coefficient_files/pearson_correlation_coefficient_10_0.png"&gt;&lt;/p&gt;
+&lt;p&gt;The scatter points in &lt;em&gt;Graph 2&lt;/em&gt; seem to have a stronger positive linear relationship because the scatter points look to resemble a near-perfect line with a positive slope of &lt;span class="math"&gt;\(1\)&lt;/span&gt;. In fact, we can figure out the exact Pearson's r of each graph and &lt;em&gt;Graph 1&lt;/em&gt; indicates a larger value of &lt;span class="math"&gt;\(0.999\)&lt;/span&gt; while &lt;em&gt;Graph 2&lt;/em&gt; indicates &lt;span class="math"&gt;\(0.909\)&lt;/span&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;correlation_x_y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;p_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pearsonr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;correlation_x_y&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.9087195765173497
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;correlation_x_y2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;p_value2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pearsonr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;correlation_x_y2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.9994608748837965
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Explanation of Coefficient Values&lt;/h3&gt;
+&lt;p&gt;If the Pearson's r is &lt;em&gt;positive&lt;/em&gt;, as values from one variable increase, so does the other. &lt;/p&gt;
+&lt;p&gt;If the coefficient is &lt;em&gt;negative&lt;/em&gt;, as values from one variable decrease, the values from the other variable increase. &lt;/p&gt;
+&lt;p&gt;The table below provides some examples of coefficient values and explanations.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Pearson's correlation coefficient&lt;/th&gt;
+&lt;th&gt;Interpretation&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;There's &lt;em&gt;no&lt;/em&gt; correlation between the two variables&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-0.25&lt;/td&gt;
+&lt;td&gt;There's a small &lt;em&gt;negative&lt;/em&gt; correlation between the two variables&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-0.75&lt;/td&gt;
+&lt;td&gt;There's a large &lt;em&gt;negative&lt;/em&gt; correlation between the two variables&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;-1.0&lt;/td&gt;
+&lt;td&gt;There's a perfect &lt;em&gt;negative&lt;/em&gt; correlation between the two variables&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0.25&lt;/td&gt;
+&lt;td&gt;There's a small &lt;em&gt;positive&lt;/em&gt; correlation between the two variables&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0.75&lt;/td&gt;
+&lt;td&gt;There's a large &lt;em&gt;positive&lt;/em&gt; correlation between the two variables&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1.0&lt;/td&gt;
+&lt;td&gt;There's a perfect &lt;em&gt;positive&lt;/em&gt; correlation between the two variables&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;Assumption to Prove Correlation&lt;/h3&gt;
+&lt;p&gt;Generally, for both variables compared, we want them to both be approximately normal. The reason for this is that it's unfair to interpret a correlation pattern if we're just looking at extremes of values. &lt;/p&gt;
+&lt;p&gt;For example, let's say we want to understand the relationship between income and net worth. We'd initially &lt;em&gt;assume&lt;/em&gt; there's a positive linear relationship between the two variables: as income increases, net worth increases. However, hypothetically, let's say our dataset just had net income values around 0-20,00 U.S. dollars and 150,000-500,000 U.S. dollars. In this instance, our income values wouldn't represent a normal distribution. We're missing lots of income values between 20,000 and 150,000 U.S. dollars - which I think is a fairly common range for U.S. workers. &lt;/p&gt;
+&lt;p&gt;We could still compare income and net worth and we'd likely see the people in that small income range have low net worth values while the people in that much higher net income range have larger net worth values. Yet, it's unfair to interpret correlation between these two variables since we're neglecting a huge portion of people with a certain income and it's biased to connect a relationship between &lt;em&gt;just&lt;/em&gt; the extremes of income data.&lt;/p&gt;
+&lt;p&gt;Let's move onto some visual examples now to explain correlation.&lt;/p&gt;
+&lt;h3&gt;Example 1: Tips Dataset - Total Bill and Tip&lt;/h3&gt;
+&lt;h4&gt;Get the Data&lt;/h4&gt;
+&lt;p&gt;Let's get the &lt;code&gt;tips&lt;/code&gt; dataset from the &lt;code&gt;seaborn&lt;/code&gt; library and assign it to the DataFrame &lt;code&gt;df_tips&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_dataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tips&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Each row represents a unique meal at a restaurant for a party of people; the dataset contains the following fields:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;column name&lt;/th&gt;
+&lt;th&gt;column description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;total_bill&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;financial amount of meal in U.S. dollars&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tip&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;financial amount of the meal's tip in U.S. dollars&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sex&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;gender of server&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;smoker&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;boolean to represent if server smokes or not&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;day&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;day of week&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;time&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;meal name (Lunch or Dinner)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;size&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;count of people eating meal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Preview the first 5 rows of &lt;code&gt;df_tips&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Plot the Relationship Between Total Bill and Tip Amounts&lt;/h4&gt;
+&lt;p&gt;The plot below has total bill values on the x-axis and tips on the y-axis. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;28&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkgreen&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;total bill [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tip [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Total Bill vs. Tips&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There seems to be a large positive correlation between the two variables. As total bill sizes increase, tip values increase too. This is what we'd expect since tips given at restaurants are typically 20% of total bill size, so there's mutual dependence between these two variables.&lt;/p&gt;
+&lt;h4&gt;Evaluate the Pearson's Correlation Coefficient Between Tips and Bill Amounts&lt;/h4&gt;
+&lt;p&gt;We can use the &lt;code&gt;scipy&lt;/code&gt; packages's &lt;code&gt;stats&lt;/code&gt; module and &lt;a href='https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.pearsonr.html'&gt;&lt;code&gt;pearsonr()&lt;/code&gt; method&lt;/a&gt; to compute the Pearson correlation coefficient.&lt;/p&gt;
+&lt;p&gt;This method returns a list in which the first value is the correlation coefficient. &lt;/p&gt;
+&lt;p&gt;Our returned value is 0.68 which confirms our belief that there's a large positive correlation between the two variables.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pearsonr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can also the use DataFrame method &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.corr.html'&gt;&lt;code&gt;corr()&lt;/code&gt;&lt;/a&gt; from the pandas package to  compute a pairwise correlation of columns. &lt;/p&gt;
+&lt;p&gt;There'll always be a perfect positive correlation, a coefficient of 1, for each variable with itself. The 0.68 value below is the same as the one from our calculation with scipy above.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_tips&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;total_bill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;corr&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example 2: Diamonds Dataset - Carat and Price&lt;/h3&gt;
+&lt;h4&gt;Get Diamonds Dataset&lt;/h4&gt;
+&lt;p&gt;Import &lt;code&gt;diamonds&lt;/code&gt; dataset from Seaborn library and assign to DataFrame &lt;code&gt;df_diamonds&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Each row of &lt;code&gt;df_diamonds&lt;/code&gt; contains details about a specific diamond purchased. We'll just utilize the &lt;code&gt;price&lt;/code&gt; and &lt;code&gt;carat&lt;/code&gt; columns below.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_diamonds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_dataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;diamonds&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Preview the first few rows of &lt;code&gt;df_diamonds&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_diamonds&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Explanation of carats&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;carat&lt;/code&gt; is a unit of measurement in diamonds to characterize its mass. Typically, bigger/heavier diamonds are known to be more expensive.&lt;/p&gt;
+&lt;p&gt;Here's a helpful image from &lt;a href='https://www.womangettingmarried.com/guide-diamond-carats-prices/'&gt;womengettingmaried.com&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Image of different carat sizes rings with labels" src="images/caratguide-500x500.jpg"&gt;&lt;/p&gt;
+&lt;h4&gt;View Distribution of Carats versus Diamond Prices&lt;/h4&gt;
+&lt;p&gt;The plot below has carats on the x-axis and price on the y-axis. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_diamonds&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;carat&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.25&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;plum&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;carats&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;price [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Carats versus Price of Diamonds&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There seems to be a large positive correlation between the two variables. As carats increases, price increases too. This is expected since we assume larger/heavier diamonds are priced higher than smaller ones. &lt;/p&gt;
+&lt;h4&gt;Evaluate the Pearson's Correlation Coefficient Between Tips and Bill Amounts&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pearsonr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_diamonds&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;carat&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;df_diamonds&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;price&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Our returned value is 0.92 means there's a very strong (nearly perfect) correlation between the two variables.&lt;/p&gt;
+&lt;h3&gt;Example 3: Titanic Dataset - Age and Fare Price&lt;/h3&gt;
+&lt;h4&gt;Get Titanic Dataset&lt;/h4&gt;
+&lt;p&gt;Import &lt;code&gt;titanic&lt;/code&gt; dataset from Seaborn library and assign to DataFrame &lt;code&gt;df_titanic&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Each row of &lt;code&gt;df_titanic&lt;/code&gt; represents details of a passenger of the ship. We'll just utilize the &lt;code&gt;age&lt;/code&gt; and &lt;code&gt;fare&lt;/code&gt; columns below. The &lt;code&gt;fare&lt;/code&gt; column represents the price a passenger paid to board the ship.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_titanic&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_dataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;titanic&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Preview the first few rows of &lt;code&gt;df_titanic&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_titanic&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's create a new DataFrame assigned to the variable &lt;code&gt;df_titanic_non_nulls&lt;/code&gt; that filters out the rows in the &lt;code&gt;age&lt;/code&gt; column that were nulls.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_titanic_non_nulls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_titanic&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df_titanic&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;notnull&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;View Distribution of Age vs. Fare Prices&lt;/h4&gt;
+&lt;p&gt;The plot below has age in years on the x-axis and price in U.S. dollars on the y-axis.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_titanic_non_nulls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fare&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkcyan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;age [years]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fare price [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Titanic Passengers Age [Years] vs. Fare Price [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There seems to be no clear correlation between the two variables. The visualization just illustrates just a bunch of random dots.&lt;/p&gt;
+&lt;h4&gt;Evaluate the Pearson's Correlation Coefficient Between Age and Fare Price&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pearsonr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_titanic_non_nulls&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;df_titanic_non_nulls&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fare&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Our returned value is 0.1 means there's essentially no correlation between the two variables. A change in the value of one variable has no expected change in the value of the other variable.&lt;/p&gt;
+&lt;h3&gt;Correlation Does Not Imply Causation&lt;/h3&gt;
+&lt;p&gt;One of the most popular terms in the field of statistics is "correlation does not imply causation". A correlation means there's a linear relationship between two variables. A causation connects one process, the &lt;em&gt;cause&lt;/em&gt;, with another process or state, the &lt;em&gt;effect&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;However, this does not mean a change in one variable &lt;em&gt;causes&lt;/em&gt; a change in the value of the other variable. &lt;/p&gt;
+&lt;p&gt;For example, there are studies that have likely proved that increased exercise correlates with a decrease in a person's mass. This is considered to be a strong &lt;em&gt;negative&lt;/em&gt; correlation between the two variables. This relationship has also likely been proven to be cause-and-effect in which once the activity of exercising takes place, this &lt;em&gt;causes&lt;/em&gt; the decrease in a person's mass. &lt;/p&gt;
+&lt;p&gt;On the other hand, here's a different example mentioned in this &lt;a href='https://en.wikipedia.org/wiki/Correlation_does_not_imply_causation'&gt;Wikipedia article&lt;/a&gt;: as ice cream sales increase, the rate of drowning deaths increases sharply. These two variables can be correlated. So as ice cream sales have increased over time, so have drowning deaths so there's a positive linear relationship between the two variables. Yet, it's incredibly unlikely there there's &lt;em&gt;any causuality relationship&lt;/em&gt; between those two variables since they're so distinct from one another. Rather, people eat more ice cream in warm-weather months and also likely swim more in these months. If more people are swimming, there's likely a greater chance of drowning deaths. The fact is: ice cream consumption &lt;em&gt;does not cause&lt;/em&gt; drowning. There's lots of other factors to consider in this relationship such as weather.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "left",
+        indent = "1em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="correlation"></category><category term="scatter"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Correlation Does Not Imply Causation</title><link href="https://dfrieds.com/math/correlation-does-not-imply-causation" rel="alternate"></link><published>2019-03-05T17:20:00-08:00</published><updated>2019-03-05T17:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-03-05:/math/correlation-does-not-imply-causation</id><summary type="html">&lt;p&gt;Understand what is correlation in statistics and how to interpet this statistic&lt;/p&gt;</summary><content type="html">&lt;p&gt;The statement &lt;em&gt;correlation does not imply causation&lt;/em&gt; is one of the most famous in the field of statistics. It's incredibly important to understand so we properly understand the relation between two variables of numeric data.&lt;/p&gt;
 &lt;h3&gt;Correlation&lt;/h3&gt;
 &lt;p&gt;&lt;a href='https://en.wikipedia.org/wiki/Correlation_and_dependence'&gt;&lt;strong&gt;Correlation&lt;/strong&gt;&lt;/a&gt; is a measure of the relation of two numeric variables. For example, we'd expect a positive correlation between the temperature outside and ice cream sales at a shop. If it's hotter outside, we'd expect more people to buy ice cream. Ice cream sales likely &lt;em&gt;positively correlate&lt;/em&gt; with increased temperature. There are exact numerical measures of correlation such as the &lt;a href='https://en.wikipedia.org/wiki/Pearson_correlation_coefficient'&gt;Pearson correlation coefficient&lt;/a&gt; and the &lt;a href='https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient'&gt;Spearman's rank correlation coefficient&lt;/a&gt;.&lt;/p&gt;
 &lt;h3&gt;Causation&lt;/h3&gt;
@@ -2827,146 +3142,4 @@ Class B has outliers: [63, 95, 94]
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="outliers"></category><category term="box plot"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Introduction to Math Symbols Through Simple Examples</title><link href="https://dfrieds.com/math/intro-math-symbols" rel="alternate"></link><published>2018-12-26T17:00:00-08:00</published><updated>2018-12-26T17:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-12-26:/math/intro-math-symbols</id><summary type="html">&lt;p&gt;Understand the basics of math symbols through simple equations of mean, standard deviation and more.&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Variable Definition&lt;/h3&gt;
-&lt;p&gt;A variable is a quantity typically assigned to a math letter within the context of a specific problem. For example, &lt;em&gt;x&lt;/em&gt; is a common variable names in mathematic notation.&lt;/p&gt;
-&lt;p&gt;Below is a list of four numbers assigned to the variable &lt;em&gt;x&lt;/em&gt;.&lt;/p&gt;
-&lt;div class="math"&gt;$$ x = 30, 21, 59, 45 $$&lt;/div&gt;
-&lt;p&gt;We want to be able to identify any value in &lt;em&gt;x&lt;/em&gt;. We can use subscript notatation to specify an index in that list. For example, the first number is &lt;span class="math"&gt;\(x_1\)&lt;/span&gt; and the second number is &lt;span class="math"&gt;\(x_2\)&lt;/span&gt; and so forth. We can specify the exact value using the notation below:&lt;/p&gt;
-&lt;div class="math"&gt;$$ x_3 = 59 $$&lt;/div&gt;
-&lt;h3&gt;Expression vs. Equation&lt;/h3&gt;
-&lt;p&gt;An &lt;strong&gt;expression&lt;/strong&gt; is a math statement that does not contain an equal sign. An example is:&lt;/p&gt;
-&lt;div class="math"&gt;$$7 + 4$$&lt;/div&gt;
-&lt;p&gt;An expression can contain a variable too:&lt;/p&gt;
-&lt;div class="math"&gt;$$7x + 4$$&lt;/div&gt;
-&lt;p&gt;An &lt;strong&gt;equation&lt;/strong&gt; is a math statement comprised of two equalities or expressions joined with an equal sign. An example is:&lt;/p&gt;
-&lt;div class="math"&gt;$$x = 7 + 4$$&lt;/div&gt;
-&lt;h3&gt;Order of Operations&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Operations&lt;/strong&gt; means things like add, subtract, multiply, divide and more. A math expression involves operations. You may see the following equation:&lt;/p&gt;
-&lt;div class="math"&gt;$$7 + (6\times4 + 5^{2})$$&lt;/div&gt;
-&lt;p&gt;Which part do you calculate first? In math, there's a specifc order of operations to calculate expressions and equations. If you don't follow the proper rules for order of operations, you will get a wrong answer! &lt;/p&gt;
-&lt;p&gt;A popular acronym to help remember the order of operations is &lt;strong&gt;PEMDAS&lt;/strong&gt;. This stands for parentheses, exponents, multiplication, division, addition and subtraction. We want to calculate any math expression or equation in the order of items listed in the PEMDAS acronym. So, you perform any operation in parentheses first, exponents second, and so forth.&lt;/p&gt;
-&lt;p&gt;To calculate the expression above, first start with the things in parentheses. However, while in the parentheses, we need to apply PEMDAS again and move onto the next thing, exponents. &lt;span class="math"&gt;\(5^{2}\)&lt;/span&gt; equals &lt;span class="math"&gt;\(25\)&lt;/span&gt;. We're left with the expression:&lt;/p&gt;
-&lt;div class="math"&gt;$$7 + (6\times4 + 25)$$&lt;/div&gt;
-&lt;p&gt;Then, we're left with a multiplication and addition operation inside the parentheses. We perform multiplication before addition; therefore, next calculate &lt;span class="math"&gt;\(6\times4\)&lt;/span&gt; which equals &lt;span class="math"&gt;\(24\)&lt;/span&gt;. Our expression now is:&lt;/p&gt;
-&lt;div class="math"&gt;$$7 + (24 + 25)$$&lt;/div&gt;
-&lt;p&gt;We perform the remaining operation in parentheses next which is &lt;span class="math"&gt;\(24+25\)&lt;/span&gt;. The result of that operation is &lt;span class="math"&gt;\(49\)&lt;/span&gt;. Our expression is now:&lt;/p&gt;
-&lt;div class="math"&gt;$$7 + (49)$$&lt;/div&gt;
-&lt;p&gt;We can calculate this final operation and our result is &lt;span class="math"&gt;\(56\)&lt;/span&gt;.&lt;/p&gt;
-&lt;h3&gt;Sigma and Order of Operations&lt;/h3&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(\sum\)&lt;/span&gt; means to add up whatever comes after it. Usually there's math symbols that come afterwards surrounded by parentheses. &lt;/p&gt;
-&lt;h4&gt;&lt;span class="math"&gt;\(\sum(x)\)&lt;/span&gt; Calculation&lt;/h4&gt;
-&lt;p&gt;Given our value of &lt;span class="math"&gt;\(x\)&lt;/span&gt; above, we can calculate &lt;span class="math"&gt;\(\sum(x)\)&lt;/span&gt; given our value of &lt;span class="math"&gt;\(x\)&lt;/span&gt; above:&lt;/p&gt;
-&lt;div class="math"&gt;$$\sum(x) = 30 + 21 + 59 + 45 = 155$$&lt;/div&gt;
-&lt;h4&gt;&lt;span class="math"&gt;\(\sum(x-1)\)&lt;/span&gt; Calculation&lt;/h4&gt;
-&lt;p&gt;With math notation in the parentheses after the &lt;span class="math"&gt;\(\sum\)&lt;/span&gt; symbol, we want to use order of operations. So the equation &lt;span class="math"&gt;\(\sum(x-1)\)&lt;/span&gt; means to subtract &lt;span class="math"&gt;\(1\)&lt;/span&gt; from every value in &lt;span class="math"&gt;\(x\)&lt;/span&gt;. We can represent this operation with the equation below:&lt;/p&gt;
-&lt;div class="math"&gt;$$\sum(x-1) = (30-1) + (21-1) + (59-1) + (45-1)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(x-1) = (29) + (20) + (58) + (44)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(x-1) = 151$$&lt;/div&gt;
-&lt;h4&gt;&lt;span class="math"&gt;\(\sum(2x-1)\)&lt;/span&gt; Calculation&lt;/h4&gt;
-&lt;p&gt;In our order of operations, we perform multiplication before subtraction. We can calculate &lt;span class="math"&gt;\(\sum(2x-1)\)&lt;/span&gt; with the following steps:&lt;/p&gt;
-&lt;div class="math"&gt;$$\sum(2x-1) = (2\times30-1) + (2\times21-1) + (2\times59-1) + (2\times45-1)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(2x-1) = (60-1) + (42-1) + (118-1) + (90-1)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(2x-1) = (59) + (41) + (117) + (89)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(2x-1) = 306$$&lt;/div&gt;
-&lt;h4&gt;&lt;span class="math"&gt;\(\sum(2x^{2})\)&lt;/span&gt; Calculation&lt;/h4&gt;
-&lt;p&gt;In math order of operations, we perform calculations with exponents before multiplication. Given that rule, we can calculate &lt;span class="math"&gt;\(\sum(2x^{2})\)&lt;/span&gt; with the following steps:&lt;/p&gt;
-&lt;div class="math"&gt;$$\sum(2x^{2}) = (2\times30^2) + (2\times21^2) + (2\times59^2) + (2\times45^2)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(2x^{2}) = (2\times900) + (2\times441) + (2\times3481) + (2\times2025)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(2x^{2}) = (1800) + (882) + (6962) + (4050)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum(2x^{2}) = 13694$$&lt;/div&gt;
-&lt;h4&gt;&lt;span class="math"&gt;\(\sum((2x)^{2})\)&lt;/span&gt; Calculation&lt;/h4&gt;
-&lt;p&gt;This equation may seem a bit strange at first. We want to calculate the inner-most nested parentheses first of &lt;span class="math"&gt;\(2x\)&lt;/span&gt; and then perform the next possible operation inside parentheses.&lt;/p&gt;
-&lt;div class="math"&gt;$$\sum((2x)^{2}) = ((2\times30)^2) + ((2\times21)^2) + ((2\times59)^2) + ((2\times45)^2)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum((2x)^{2}) = ((60)^2) + ((42)^2) + ((118)^2) + ((90)^2)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum((2x)^{2}) = (3600) + (1764) + (13924) + (8100)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum((2x)^{2}) = (3600) + (1764) + (13924) + (8100)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sum((2x)^{2}) = 14856$$&lt;/div&gt;
-&lt;h3&gt;Mean&lt;/h3&gt;
-&lt;p&gt;In math, we call the average of a set of numbers the &lt;strong&gt;mean&lt;/strong&gt;. We represent the (sample) mean as the symbol &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; often called &lt;em&gt;x bar&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;The simple equation for the mean of a set of numbers written in plain text is the sum of numbers in a set divided the the count of numbers in the set.&lt;/p&gt;
-&lt;p&gt;The formal math equation is:&lt;/p&gt;
-&lt;div class="math"&gt;$$\bar{x} = \frac{1}{n} \times \sum_{i=1}^{n}{x}_i$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; = average (or arithmetic mean)&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; = count of observations associated with a variable&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(x_i\)&lt;/span&gt; = value of each individual item in the list of numbers being averaged&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Earlier, we defined &lt;span class="math"&gt;\(x = 30, 21, 59, 45\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;The mean of &lt;span class="math"&gt;\(x\)&lt;/span&gt; can be calculated as follows:&lt;/p&gt;
-&lt;div class="math"&gt;$$\bar{x} = \frac{1}{4} \times \sum{x}$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\bar{x} = \frac{1}{4} \times (30 + 21 + 59 + 45)$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\bar{x} = \frac{1}{4} \times 155$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\bar{x} = 38.75$$&lt;/div&gt;
-&lt;h3&gt;Standard Deviation&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Standard deviation&lt;/strong&gt; of a set of values is a measure of how spread out those values are from the mean.&lt;/p&gt;
-&lt;p&gt;Below is the formula for the population standard deviation:&lt;/p&gt;
-&lt;div class="math"&gt;$$\sigma = \sqrt \frac{\sum({x}_i - \mu)^2}{N}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; = population standard deviation&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; = population mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(N\)&lt;/span&gt; = count of numbers in the population&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(x_i\)&lt;/span&gt; = value of each number in the population&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;We can calculate the population standard deviation of &lt;span class="math"&gt;\(x\)&lt;/span&gt; as:&lt;/p&gt;
-&lt;p&gt;We already calculated the arithmetic mean of &lt;span class="math"&gt;\(x\)&lt;/span&gt; above as &lt;span class="math"&gt;\(38.75\)&lt;/span&gt; which we can represent in place of &lt;span class="math"&gt;\(\mu\)&lt;/span&gt;. &lt;/p&gt;
-&lt;p&gt;The count of numbers in our population of &lt;span class="math"&gt;\(x\)&lt;/span&gt; is &lt;span class="math"&gt;\(4\)&lt;/span&gt; which we can represent in place of &lt;span class="math"&gt;\(N\)&lt;/span&gt;.&lt;/p&gt;
-&lt;div class="math"&gt;$$\sigma = \sqrt \frac{(30-38.75)^2 + (21-38.75)^2 + (59-38.75)^2 + (45-38.75)^2}{4}$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sigma = \sqrt \frac{(-8.75)^2 + (-17.75)^2 + (20.25)^2 + (6.25)^2}{4}$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sigma = \sqrt \frac{76.5625 + 315.0625 + 410.0625 + 39.0625}{4}$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sigma = \sqrt \frac{840.75}{4}$$&lt;/div&gt;
-&lt;div class="math"&gt;$$\sigma = 210.1875$$&lt;/div&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "left",
-        indent = "1em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="equations"></category><category term="mean"></category><category term="standard deviation"></category><category term="math symbols"></category></entry></feed>
+&lt;/script&gt;</content><category term="outliers"></category><category term="box plot"></category><category term="python"></category><category term="pandas"></category></entry></feed>

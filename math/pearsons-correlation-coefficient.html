@@ -36,14 +36,14 @@
 
   <meta name="keywords" content="correlation pandas python">
 
-  <meta name="description" content="Understand what is correlation in statistics and how to interpet this statistic">
-  <meta property="og:description"  content="Understand what is correlation in statistics and how to interpet this statistic">
-  <meta name="twitter:description" content="Understand what is correlation in statistics and how to interpet this statistic">
+  <meta name="description" content="Learn the pearson's correlation what is correlation in statistics and how to interpet this statistic">
+  <meta property="og:description"  content="Learn the pearson's correlation what is correlation in statistics and how to interpet this statistic">
+  <meta name="twitter:description" content="Learn the pearson's correlation what is correlation in statistics and how to interpet this statistic">
 
   <meta property="og:title" content="Correlation">
   <meta name="twitter:title" content="Correlation">
 
-  <link rel="canonical" href="https://dfrieds.com/math/correlation"/>
+  <link rel="canonical" href="https://dfrieds.com/math/pearsons-correlation-coefficient"/>
 
   <title>Correlation - Math</title>
 
@@ -154,7 +154,7 @@
     <ul class ="row article_info">
       
       <li>
-        Dec 5&nbsp;&nbsp;&bull;&nbsp;&nbsp;13 min read
+        Mar 5&nbsp;&nbsp;&bull;&nbsp;&nbsp;14 min read
       </li>
       <li class="tagarticle">
         Key Terms:         correlation,
@@ -166,13 +166,77 @@
   </header>
 
   <div class='article_content'>
-    <p>In statistics, the <strong>Pearson correlation coefficient</strong> is a measure of linear correlation between two variables of data. </p>
-<p>In business context, the term <em>correlation</em> is used to to describe a relationship between two or more things. This is an alternative use case than what we'll cover in this article which is just the pearson correlation coefficient.</p>
-<p>This tutorial will illustrate the pearson correlation through scatter plots and analysis of the exact correlation coefficient values.</p>
+    <p>In statistics, the <a href='https://en.wikipedia.org/wiki/Pearson_correlation_coefficient'><strong>Pearson correlation coefficient</strong></a> is a measure of the linear relationship between two continuous numerical variables of data. </p>
+<p>In business context, the term <em>correlation</em> is used to to describe a relationship between two or more variables. However, this article will just cover the Pearson correlation coefficient. This tutorial will illustrate the concept through simple examples and many visualizations.</p>
+<h3>Intro to Pearson Correlation Coefficient</h3>
+<p>The greek letter <span class="math">\(\rho\)</span> stands for the <strong>Pearson's r</strong>, otherwise known as the **correlation coefficient (<span class="math">\(\rho\)</span>).</p>
+<p>The equation for <code>r</code> is below. The numerator is the covariance of <code>x</code> and <code>y</code> - essentially how much they vary together. The denominator is the standard deviation of <code>x</code> multipled by the standard deviation of <code>y</code> which explains how the two variables vary apart from each other rather than with each other.</p>
+<div class="math">$$r=\frac{cov(x, y)}{s_{x} \times s_{y}}$$</div>
+<p><span class="math">\(\rho\)</span> is a proportion. <span class="math">\(\rho\)</span> measures the strength of a relationship by looking at how closely the observations fall along a straight line. If the data points resemble a perfectly straight line with a positive slope, then <span class="math">\(\rho\)</span> is <span class="math">\(1\)</span>. If the data resembles a perfectly negatively sloped line, then then <span class="math">\(\rho\)</span> is <span class="math">\(-1\)</span>. If the data points are randomly scattered with no resemblence of a perfect line, then <span class="math">\(\rho\)</span> is close to <span class="math">\(0\)</span>. In this instace, there's no linear relationship between the two variables.</p>
+<p>Any <span class="math">\(\rho\)</span> value closer to the absolute value of <span class="math">\(1\)</span> indicates a <em>strong</em> linear relationship between the two variables.</p>
+<h3>Import Modules</h3>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">)})</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Example to Illustrate Strength of Pearson's <span class="math">\(\rho\)</span></h3>
+<p>Below are two visualizations, labeled <em>Graph 1</em> and <em>Graph 2</em>. Each shows a scatter plot of the relation of <code>x</code> and <code>y</code> values.</p>
+<p>I'm curious - which two variables have a stronger <em>positive</em> linear relationship - <em>Graph 1</em> or <em>Graph 2</em>?</p>
+<div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x-values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y-values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Graph 1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="pearson_correlation_coefficient_files/pearson_correlation_coefficient_9_0.png"></p>
+<div class="highlight"><pre><span></span><span class="n">y2</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;dodgerblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x-values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y-values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Graph 2&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="pearson_correlation_coefficient_files/pearson_correlation_coefficient_10_0.png"></p>
+<p>The scatter points in <em>Graph 2</em> seem to have a stronger positive linear relationship because the scatter points look to resemble a near-perfect line with a positive slope of <span class="math">\(1\)</span>. In fact, we can figure out the exact Pearson's r of each graph and <em>Graph 1</em> indicates a larger value of <span class="math">\(0.999\)</span> while <em>Graph 2</em> indicates <span class="math">\(0.909\)</span>.</p>
+<div class="highlight"><pre><span></span><span class="n">correlation_x_y</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">correlation_x_y</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>0.9087195765173497
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">correlation_x_y2</span><span class="p">,</span> <span class="n">p_value2</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+<span class="n">correlation_x_y2</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>0.9994608748837965
+</pre></div>
+
+
 <h3>Explanation of Coefficient Values</h3>
-<p>If the correlation coefficient is <em>positive</em>, as values from one variable increase, so does the other. </p>
-<p>If the correlation coefficient is <em>negative</em>, as values from one variable decrease, the values from other variable increase. </p>
-<p>The table below provides some examples of Pearson's correlation coefficient values and explanations.</p>
+<p>If the Pearson's r is <em>positive</em>, as values from one variable increase, so does the other. </p>
+<p>If the coefficient is <em>negative</em>, as values from one variable decrease, the values from the other variable increase. </p>
+<p>The table below provides some examples of coefficient values and explanations.</p>
 <table>
 <thead>
 <tr>
@@ -212,25 +276,10 @@
 </tbody>
 </table>
 <h3>Assumption to Prove Correlation</h3>
-<p>Generally, for both variables compared, we want them to be roughly normally distributed. The reason for this is that it's unfair to interpret a correlation pattern if we're just looking at extremes of values. </p>
+<p>Generally, for both variables compared, we want them to both be approximately normal. The reason for this is that it's unfair to interpret a correlation pattern if we're just looking at extremes of values. </p>
 <p>For example, let's say we want to understand the relationship between income and net worth. We'd initially <em>assume</em> there's a positive linear relationship between the two variables: as income increases, net worth increases. However, hypothetically, let's say our dataset just had net income values around 0-20,00 U.S. dollars and 150,000-500,000 U.S. dollars. In this instance, our income values wouldn't represent a normal distribution. We're missing lots of income values between 20,000 and 150,000 U.S. dollars - which I think is a fairly common range for U.S. workers. </p>
 <p>We could still compare income and net worth and we'd likely see the people in that small income range have low net worth values while the people in that much higher net income range have larger net worth values. Yet, it's unfair to interpret correlation between these two variables since we're neglecting a huge portion of people with a certain income and it's biased to connect a relationship between <em>just</em> the extremes of income data.</p>
 <p>Let's move onto some visual examples now to explain correlation.</p>
-<h3>Import Modules</h3>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="kn">as</span> <span class="nn">stats</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
-</pre></div>
-
-
-<p>Visualization styling code</p>
-<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">)})</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
-</pre></div>
-
-
 <h3>Example 1: Tips Dataset - Total Bill and Tip</h3>
 <h4>Get the Data</h4>
 <p>Let's get the <code>tips</code> dataset from the <code>seaborn</code> library and assign it to the DataFrame <code>df_tips</code>.</p>
@@ -282,88 +331,6 @@
 </pre></div>
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>total_bill</th>
-      <th>tip</th>
-      <th>sex</th>
-      <th>smoker</th>
-      <th>day</th>
-      <th>time</th>
-      <th>size</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>16.99</td>
-      <td>1.01</td>
-      <td>Female</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>10.34</td>
-      <td>1.66</td>
-      <td>Male</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>21.01</td>
-      <td>3.50</td>
-      <td>Male</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>23.68</td>
-      <td>3.31</td>
-      <td>Male</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>24.59</td>
-      <td>3.61</td>
-      <td>Female</td>
-      <td>No</td>
-      <td>Sun</td>
-      <td>Dinner</td>
-      <td>4</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
 <h4>Plot the Relationship Between Total Bill and Tip Amounts</h4>
 <p>The plot below has total bill values on the x-axis and tips on the y-axis. </p>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;total_bill&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;tip&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">28</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;darkgreen&#39;</span><span class="p">)</span>
@@ -373,7 +340,6 @@
 </pre></div>
 
 
-<p><img alt="png" src="correlation_files/correlation_18_0.png"></p>
 <p>There seems to be a large positive correlation between the two variables. As total bill sizes increase, tip values increase too. This is what we'd expect since tips given at restaurants are typically 20% of total bill size, so there's mutual dependence between these two variables.</p>
 <h4>Evaluate the Pearson's Correlation Coefficient Between Tips and Bill Amounts</h4>
 <p>We can use the <code>scipy</code> packages's <code>stats</code> module and <a href='https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.pearsonr.html'><code>pearsonr()</code> method</a> to compute the Pearson correlation coefficient.</p>
@@ -383,52 +349,11 @@
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>0.68
-</pre></div>
-
-
 <p>We can also the use DataFrame method <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.corr.html'><code>corr()</code></a> from the pandas package to  compute a pairwise correlation of columns. </p>
 <p>There'll always be a perfect positive correlation, a coefficient of 1, for each variable with itself. The 0.68 value below is the same as the one from our calculation with scipy above.</p>
 <div class="highlight"><pre><span></span><span class="n">df_tips</span><span class="p">[[</span><span class="s1">&#39;tip&#39;</span><span class="p">,</span> <span class="s1">&#39;total_bill&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
 </pre></div>
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>tip</th>
-      <th>total_bill</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>tip</th>
-      <td>1.000000</td>
-      <td>0.675734</td>
-    </tr>
-    <tr>
-      <th>total_bill</th>
-      <td>0.675734</td>
-      <td>1.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
 
 <h3>Example 2: Diamonds Dataset - Carat and Price</h3>
 <h4>Get Diamonds Dataset</h4>
@@ -443,106 +368,6 @@
 </pre></div>
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>carat</th>
-      <th>cut</th>
-      <th>color</th>
-      <th>clarity</th>
-      <th>depth</th>
-      <th>table</th>
-      <th>price</th>
-      <th>x</th>
-      <th>y</th>
-      <th>z</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.23</td>
-      <td>Ideal</td>
-      <td>E</td>
-      <td>SI2</td>
-      <td>61.5</td>
-      <td>55.0</td>
-      <td>326</td>
-      <td>3.95</td>
-      <td>3.98</td>
-      <td>2.43</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.21</td>
-      <td>Premium</td>
-      <td>E</td>
-      <td>SI1</td>
-      <td>59.8</td>
-      <td>61.0</td>
-      <td>326</td>
-      <td>3.89</td>
-      <td>3.84</td>
-      <td>2.31</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.23</td>
-      <td>Good</td>
-      <td>E</td>
-      <td>VS1</td>
-      <td>56.9</td>
-      <td>65.0</td>
-      <td>327</td>
-      <td>4.05</td>
-      <td>4.07</td>
-      <td>2.31</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.29</td>
-      <td>Premium</td>
-      <td>I</td>
-      <td>VS2</td>
-      <td>62.4</td>
-      <td>58.0</td>
-      <td>334</td>
-      <td>4.20</td>
-      <td>4.23</td>
-      <td>2.63</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.31</td>
-      <td>Good</td>
-      <td>J</td>
-      <td>SI2</td>
-      <td>63.3</td>
-      <td>58.0</td>
-      <td>335</td>
-      <td>4.34</td>
-      <td>4.35</td>
-      <td>2.75</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
 <h4>Explanation of carats</h4>
 <p><code>carat</code> is a unit of measurement in diamonds to characterize its mass. Typically, bigger/heavier diamonds are known to be more expensive.</p>
 <p>Here's a helpful image from <a href='https://www.womangettingmarried.com/guide-diamond-carats-prices/'>womengettingmaried.com</a>.</p>
@@ -556,14 +381,9 @@
 </pre></div>
 
 
-<p><img alt="png" src="correlation_files/correlation_36_0.png"></p>
 <p>There seems to be a large positive correlation between the two variables. As carats increases, price increases too. This is expected since we assume larger/heavier diamonds are priced higher than smaller ones. </p>
 <h4>Evaluate the Pearson's Correlation Coefficient Between Tips and Bill Amounts</h4>
 <div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">df_diamonds</span><span class="p">[</span><span class="s1">&#39;carat&#39;</span><span class="p">],</span> <span class="n">df_diamonds</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>0.92
 </pre></div>
 
 
@@ -581,136 +401,6 @@
 </pre></div>
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>survived</th>
-      <th>pclass</th>
-      <th>sex</th>
-      <th>age</th>
-      <th>sibsp</th>
-      <th>parch</th>
-      <th>fare</th>
-      <th>embarked</th>
-      <th>class</th>
-      <th>who</th>
-      <th>adult_male</th>
-      <th>deck</th>
-      <th>embark_town</th>
-      <th>alive</th>
-      <th>alone</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>3</td>
-      <td>male</td>
-      <td>22.0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>7.2500</td>
-      <td>S</td>
-      <td>Third</td>
-      <td>man</td>
-      <td>True</td>
-      <td>NaN</td>
-      <td>Southampton</td>
-      <td>no</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>1</td>
-      <td>female</td>
-      <td>38.0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>71.2833</td>
-      <td>C</td>
-      <td>First</td>
-      <td>woman</td>
-      <td>False</td>
-      <td>C</td>
-      <td>Cherbourg</td>
-      <td>yes</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1</td>
-      <td>3</td>
-      <td>female</td>
-      <td>26.0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>7.9250</td>
-      <td>S</td>
-      <td>Third</td>
-      <td>woman</td>
-      <td>False</td>
-      <td>NaN</td>
-      <td>Southampton</td>
-      <td>yes</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1</td>
-      <td>1</td>
-      <td>female</td>
-      <td>35.0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>53.1000</td>
-      <td>S</td>
-      <td>First</td>
-      <td>woman</td>
-      <td>False</td>
-      <td>C</td>
-      <td>Southampton</td>
-      <td>yes</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>3</td>
-      <td>male</td>
-      <td>35.0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>8.0500</td>
-      <td>S</td>
-      <td>Third</td>
-      <td>man</td>
-      <td>True</td>
-      <td>NaN</td>
-      <td>Southampton</td>
-      <td>no</td>
-      <td>True</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
 <p>Let's create a new DataFrame assigned to the variable <code>df_titanic_non_nulls</code> that filters out the rows in the <code>age</code> column that were nulls.</p>
 <div class="highlight"><pre><span></span><span class="n">df_titanic_non_nulls</span> <span class="o">=</span> <span class="n">df_titanic</span><span class="p">[</span><span class="n">df_titanic</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">==</span><span class="bp">True</span><span class="p">]</span>
 </pre></div>
@@ -725,14 +415,9 @@
 </pre></div>
 
 
-<p><img alt="png" src="correlation_files/correlation_51_0.png"></p>
 <p>There seems to be no clear correlation between the two variables. The visualization just illustrates just a bunch of random dots.</p>
 <h4>Evaluate the Pearson's Correlation Coefficient Between Age and Fare Price</h4>
 <div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">df_titanic_non_nulls</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">df_titanic_non_nulls</span><span class="p">[</span><span class="s1">&#39;fare&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>0.1
 </pre></div>
 
 
@@ -741,7 +426,62 @@
 <p>One of the most popular terms in the field of statistics is "correlation does not imply causation". A correlation means there's a linear relationship between two variables. A causation connects one process, the <em>cause</em>, with another process or state, the <em>effect</em>. </p>
 <p>However, this does not mean a change in one variable <em>causes</em> a change in the value of the other variable. </p>
 <p>For example, there are studies that have likely proved that increased exercise correlates with a decrease in a person's mass. This is considered to be a strong <em>negative</em> correlation between the two variables. This relationship has also likely been proven to be cause-and-effect in which once the activity of exercising takes place, this <em>causes</em> the decrease in a person's mass. </p>
-<p>On the other hand, here's a different example mentioned in this <a href='https://en.wikipedia.org/wiki/Correlation_does_not_imply_causation'>Wikediia article</a>: as ice cream sales increase, the rate of drowning deaths increases sharply. These two variables can be correlated. So as ice cream sales have increased over time, so have drowning deaths so there's a positive linear relationship between the two variables. Yet, it's incredibly unlikely there there's <em>any causuality relationship</em> between those two variables since they're so distinct from one another. Rather, people eat more ice cream in warm-weather months and also likely swim more in these months. If more people are swimming, there's likely a greater chance of drowning deaths. The fact is: ice cream consumption <em>does not cause</em> drowning. There's lots of other factors to consider in this relationship such as weather.</p>
+<p>On the other hand, here's a different example mentioned in this <a href='https://en.wikipedia.org/wiki/Correlation_does_not_imply_causation'>Wikipedia article</a>: as ice cream sales increase, the rate of drowning deaths increases sharply. These two variables can be correlated. So as ice cream sales have increased over time, so have drowning deaths so there's a positive linear relationship between the two variables. Yet, it's incredibly unlikely there there's <em>any causuality relationship</em> between those two variables since they're so distinct from one another. Rather, people eat more ice cream in warm-weather months and also likely swim more in these months. If more people are swimming, there's likely a greater chance of drowning deaths. The fact is: ice cream consumption <em>does not cause</em> drowning. There's lots of other factors to consider in this relationship such as weather.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "left",
+        indent = "1em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
   </div>
 </section>
 
