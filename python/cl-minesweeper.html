@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data Science Knowledge Base">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="minesweeper command line python">
+
+  <meta name="description" content="Medium Python algorithm prototype of a basic version of Minesweeper as a command line game">
+  <meta property="og:description"  content="Medium Python algorithm prototype of a basic version of Minesweeper as a command line game">
+  <meta name="twitter:description" content="Medium Python algorithm prototype of a basic version of Minesweeper as a command line game">
+
+  <meta property="og:title" content="Command Line Basic Minesweeper">
+  <meta name="twitter:title" content="Command Line Basic Minesweeper">
+
+  <link rel="canonical" href="https://dfrieds.com/python/cl-minesweeper"/>
+
+  <title>Command Line Basic Minesweeper - Python</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+  <!-- <link rel="stylesheet" href="https://dfrieds.com/theme/static/css/style.css" /> -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Knowledge Base Full Atom Feed" />    <link href="https://dfrieds.com/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Knowledge Base Full RSS Feed" />      <link href="https://dfrieds.com/feeds/python.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data Science Knowledge Base Categories Atom Feed" />    <link href="https://dfrieds.com/feeds/python.rss.xml" type="application/rss+xml" rel="alternate" title="Dan Friedman's Data Science Knowledge Base Categories RSS Feed" />    
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="python"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles
+              </a>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials
+              </a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#math">Math</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#data-analysis">Data Analysis with pandas</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+              </div>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/about">About
+              </a>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> Python Intermediate Algorithms Tutorial</div>
+    <h1 class="articleh1">
+      Command Line Basic Minesweeper
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        Mar 29&nbsp;&nbsp;&bull;&nbsp;&nbsp;10 min read
+      </li>
+      <li class="tagarticle">
+        Key Terms:         functions,
+        loops,
+        lists,
+        itertools,
+        logger,
+        command line
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <p>In this implementation, the minefield grid is always 4x4 and there's just one mine on the field. </p>
+<p>Additional work could be done on this Minesweeper implementation to allow for more adjustable field sizes, additional mines on the field and automatic reveal of coordinates that don't contain any adjacent mines. </p>
+<p>For a more robust code solution, I'd recommend more modularity with functions and the use of object-oriented programming to easily allow for reuse of code with inheritance, extensability to various platforms and additional benefits.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+                    <span class="n">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)-16s</span><span class="s1"> </span><span class="si">%(levelname)-12s</span><span class="s1"> </span><span class="si">%(lineno)-6s</span><span class="s1"> </span><span class="si">%(funcName)-28s</span><span class="s1"> </span><span class="si">%(message)-8s</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%H:%M:%SS&#39;</span>
+                    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">play_minesweeper</span><span class="p">():</span>
+    <span class="n">minefield_rows</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">minefield_columns</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;set random mine row and column index given minefield size&quot;</span><span class="p">)</span>
+    <span class="n">mine_row_index</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">minefield_rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">mine_column_index</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">minefield_columns</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;mine is at: ({0}, {1})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mine_row_index</span><span class="p">,</span> <span class="n">mine_column_index</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">find_ones_possible_indices</span><span class="p">(</span><span class="n">mine_index</span><span class="p">,</span> <span class="n">minefield_length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds all possible indices of 1s that surround mine</span>
+<span class="sd">        Function only works under assumption that minefield is square (all sides equal)</span>
+<span class="sd">        :param mine_index: index of the mine for its corresponding row or column</span>
+<span class="sd">        :param minefield_length: count of squares along one edge of minefield</span>
+<span class="sd">        :return: one_indices</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">one_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">mine_index</span> <span class="o">==</span> <span class="n">minefield_length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;mine is located in the bottom row of hidden_minefield&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;1s can only be in 2nd to bottom row and bottom row of hidden_minefield&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">one_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mine_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mine_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">one_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_index</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mine_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;mine is in the first aka top row of hidden_minefield&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;1s can only be in the top and 2nd to the top row of hidden_minefield&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">one_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mine_index</span><span class="p">,</span> <span class="n">mine_index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">one_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_index</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;mine is located in one of the middle rows&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;1s can be above, on same and below the row of the mine in hidden_minefield&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">one_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mine_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mine_index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">one_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_index</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">one_indices</span>
+
+    <span class="n">row_ones_indices</span> <span class="o">=</span> <span class="n">find_ones_possible_indices</span><span class="p">(</span><span class="n">mine_row_index</span><span class="p">,</span> <span class="n">minefield_rows</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;row_ones_indices: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row_ones_indices</span><span class="p">))</span>
+    <span class="n">column_ones_indices</span> <span class="o">=</span> <span class="n">find_ones_possible_indices</span><span class="p">(</span><span class="n">mine_column_index</span><span class="p">,</span> <span class="n">minefield_columns</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;column_ones_indices: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column_ones_indices</span><span class="p">))</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;create list with list items of potential row indices and column indices of 1s&quot;</span><span class="p">)</span>
+    <span class="n">coordinate_indices_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">row_ones_indices</span><span class="p">,</span> <span class="n">column_ones_indices</span><span class="p">]</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;coordinate_indices_lists: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coordinate_indices_lists</span><span class="p">))</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;create empty list to store all possible coordinates of positions of 1s; not all coord. on field&quot;</span><span class="p">)</span>
+    <span class="n">ones_coordinates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;find cartesian product of values in coordinate_indices_lists&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">coordinate</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">coordinate_indices_lists</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;append coordinate of 1 to ones_coordinates&quot;</span><span class="p">)</span>
+        <span class="n">ones_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coordinate</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ones_coordinates: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ones_coordinates</span><span class="p">))</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;generate hidden_minefield variable as a list of lists&quot;</span><span class="p">)</span>
+    <span class="n">hidden_minefield</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">minefield_rows</span><span class="p">)]</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;create counter for all 1s and 0s&quot;</span><span class="p">)</span>
+    <span class="n">count_ones_and_zeros</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;loop over all values in hidden_minefield; fill in with appropriate values&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">minefield_rows</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">column_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">minefield_columns</span><span class="p">):</span>
+
+            <span class="c1"># check if this value on the hidden_minefield is the value of the mine</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">row_index</span><span class="p">,</span> <span class="n">column_index</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">mine_row_index</span><span class="p">,</span> <span class="n">mine_column_index</span><span class="p">):</span>
+                <span class="n">hidden_minefield</span><span class="p">[</span><span class="n">row_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+
+            <span class="c1"># check if this value on the hidden_minefield is in the ones_coordinates list</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">row_index</span><span class="p">,</span> <span class="n">column_index</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ones_coordinates</span><span class="p">:</span>
+                <span class="n">hidden_minefield</span><span class="p">[</span><span class="n">row_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">count_ones_and_zeros</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># the value is not the mine or adjacent to the mine</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">hidden_minefield</span><span class="p">[</span><span class="n">row_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">count_ones_and_zeros</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;output hidden_minefield with each row on a newline&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">hidden_minefield</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;create the user interface minefield of all ? values&quot;</span><span class="p">)</span>
+    <span class="n">user_interface_minefield</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">minefield_rows</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">empty_list</span> <span class="ow">in</span> <span class="n">user_interface_minefield</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">minefield_columns</span><span class="p">):</span>
+            <span class="n">empty_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sleep so print messages appear after logging messages&quot;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Time for the user to play! Try to avoid the mines!&quot;</span><span class="p">)</span>
+    <span class="c1"># only enough guesses for user to guess all 1s and 0s; otherwise, user guesses mine and game ends</span>
+    <span class="k">for</span> <span class="n">guess_counter</span><span class="p">,</span> <span class="n">guess</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">count_ones_and_zeros</span><span class="p">)):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">In minefield, row values start at 1 and go to {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">minefield_rows</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;In minefield, column values start at 1 and go to {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">minefield_columns</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">This is the user_interface_minefield:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">user_interface_minefield</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="c1"># prompt user to guess row and column</span>
+        <span class="k">def</span> <span class="nf">get_player_input</span><span class="p">():</span>
+            <span class="n">guess_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Guess row: &quot;</span><span class="p">))</span>
+            <span class="n">guess_column</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Guess column: &quot;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">guess_row</span><span class="p">,</span> <span class="n">guess_column</span>
+
+        <span class="n">guess_row</span><span class="p">,</span> <span class="n">guess_column</span> <span class="o">=</span> <span class="n">get_player_input</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">check_condition_guess</span><span class="p">(</span><span class="n">guess_index</span><span class="p">,</span> <span class="n">minefield_edge_size</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">guess_row</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;You didn&#39;t guess an integer&quot;</span><span class="p">)</span>
+                <span class="n">bad_guess_status</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">guess_index</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">guess_index</span> <span class="o">&gt;</span> <span class="n">minefield_edge_size</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Your guess integer is out of range of 1-4&quot;</span><span class="p">)</span>
+                <span class="n">bad_guess_status</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bad_guess_status</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="n">bad_guess_status</span>
+
+        <span class="n">bad_guess_status</span> <span class="o">=</span> <span class="n">check_condition_guess</span><span class="p">(</span><span class="n">guess_row</span><span class="p">,</span> <span class="n">minefield_rows</span><span class="p">)</span>
+        <span class="n">bad_guess_status</span> <span class="o">=</span> <span class="n">check_condition_guess</span><span class="p">(</span><span class="n">guess_column</span><span class="p">,</span> <span class="n">minefield_columns</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bad_guess_status</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Please make a more appropriate guess&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Your guessed coordinate: ({0}, {1})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">guess_row</span><span class="p">,</span> <span class="n">guess_column</span><span class="p">))</span>
+
+        <span class="c1"># create new variables for offsets of 1 less than guesses because we use zero-based numbering in Python</span>
+        <span class="n">user_guess_row_offset</span> <span class="o">=</span> <span class="n">guess_row</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">user_guess_column_offset</span> <span class="o">=</span> <span class="n">guess_column</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># make reveal of board and notify user with text change</span>
+        <span class="k">if</span> <span class="n">hidden_minefield</span><span class="p">[</span><span class="n">user_guess_row_offset</span><span class="p">][</span><span class="n">user_guess_column_offset</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;You guessed a 1 so you&#39;re nearby a mine.&quot;</span><span class="p">)</span>
+            <span class="n">user_interface_minefield</span><span class="p">[</span><span class="n">user_guess_row_offset</span><span class="p">][</span><span class="n">user_guess_column_offset</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+
+        <span class="k">elif</span> <span class="n">hidden_minefield</span><span class="p">[</span><span class="n">user_guess_row_offset</span><span class="p">][</span><span class="n">user_guess_column_offset</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;You guessed far from a mine. You&#39;re ok!&quot;</span><span class="p">)</span>
+            <span class="n">user_interface_minefield</span><span class="p">[</span><span class="n">user_guess_row_offset</span><span class="p">][</span><span class="n">user_guess_column_offset</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;You guessed the mine! You lose!</span><span class="se">\n</span><span class="s2">Here&#39;s what the minefield looks like:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">hidden_minefield</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">guess_counter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;You have made {0} guess&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">guess_counter</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;You have made {0} guesses&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">guess_counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">play_minesweeper</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">16</span>     <span class="n">play_minesweeper</span>             <span class="kd">set</span> <span class="n">random</span> <span class="n">mine</span> <span class="n">row</span> <span class="n">and</span> <span class="n">column</span> <span class="n">index</span> <span class="n">given</span> <span class="n">minefield</span> <span class="n">size</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">19</span>     <span class="n">play_minesweeper</span>             <span class="n">mine</span> <span class="k">is</span> <span class="n">at</span><span class="o">:</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">41</span>     <span class="n">find_ones_possible_indices</span>   <span class="n">mine</span> <span class="k">is</span> <span class="n">located</span> <span class="k">in</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">middle</span> <span class="n">rows</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">42</span>     <span class="n">find_ones_possible_indices</span>   <span class="mi">1</span><span class="n">s</span> <span class="n">can</span> <span class="n">be</span> <span class="n">above</span><span class="o">,</span> <span class="n">on</span> <span class="n">same</span> <span class="n">and</span> <span class="n">below</span> <span class="n">the</span> <span class="n">row</span> <span class="n">of</span> <span class="n">the</span> <span class="n">mine</span> <span class="k">in</span> <span class="n">hidden_minefield</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">48</span>     <span class="n">play_minesweeper</span>             <span class="n">row_ones_indices</span><span class="o">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">41</span>     <span class="n">find_ones_possible_indices</span>   <span class="n">mine</span> <span class="k">is</span> <span class="n">located</span> <span class="k">in</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">middle</span> <span class="n">rows</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">42</span>     <span class="n">find_ones_possible_indices</span>   <span class="mi">1</span><span class="n">s</span> <span class="n">can</span> <span class="n">be</span> <span class="n">above</span><span class="o">,</span> <span class="n">on</span> <span class="n">same</span> <span class="n">and</span> <span class="n">below</span> <span class="n">the</span> <span class="n">row</span> <span class="n">of</span> <span class="n">the</span> <span class="n">mine</span> <span class="k">in</span> <span class="n">hidden_minefield</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">50</span>     <span class="n">play_minesweeper</span>             <span class="n">column_ones_indices</span><span class="o">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">52</span>     <span class="n">play_minesweeper</span>             <span class="n">create</span> <span class="n">list</span> <span class="k">with</span> <span class="n">list</span> <span class="n">items</span> <span class="n">of</span> <span class="n">potential</span> <span class="n">row</span> <span class="n">indices</span> <span class="n">and</span> <span class="n">column</span> <span class="n">indices</span> <span class="n">of</span> <span class="mi">1</span><span class="n">s</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">54</span>     <span class="n">play_minesweeper</span>             <span class="n">coordinate_indices_lists</span><span class="o">:</span> <span class="o">[[</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">],</span> <span class="o">[</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">]]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">56</span>     <span class="n">play_minesweeper</span>             <span class="n">create</span> <span class="n">empty</span> <span class="n">list</span> <span class="n">to</span> <span class="n">store</span> <span class="n">all</span> <span class="n">possible</span> <span class="n">coordinates</span> <span class="n">of</span> <span class="n">positions</span> <span class="n">of</span> <span class="mi">1</span><span class="n">s</span><span class="o">;</span> <span class="n">not</span> <span class="n">all</span> <span class="n">coord</span><span class="o">.</span> <span class="n">on</span> <span class="n">field</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">58</span>     <span class="n">play_minesweeper</span>             <span class="n">find</span> <span class="n">cartesian</span> <span class="n">product</span> <span class="n">of</span> <span class="n">values</span> <span class="k">in</span> <span class="n">coordinate_indices_lists</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">60</span>     <span class="n">play_minesweeper</span>             <span class="n">append</span> <span class="n">coordinate</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">ones_coordinates</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">62</span>     <span class="n">play_minesweeper</span>             <span class="n">ones_coordinates</span><span class="o">:</span> <span class="o">[(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">2</span><span class="o">),</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">),</span> <span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">2</span><span class="o">)]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">64</span>     <span class="n">play_minesweeper</span>             <span class="n">generate</span> <span class="n">hidden_minefield</span> <span class="n">variable</span> <span class="k">as</span> <span class="n">a</span> <span class="n">list</span> <span class="n">of</span> <span class="n">lists</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">67</span>     <span class="n">play_minesweeper</span>             <span class="n">create</span> <span class="n">counter</span> <span class="k">for</span> <span class="n">all</span> <span class="mi">1</span><span class="n">s</span> <span class="n">and</span> <span class="mi">0</span><span class="n">s</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">70</span>     <span class="n">play_minesweeper</span>             <span class="n">loop</span> <span class="n">over</span> <span class="n">all</span> <span class="n">values</span> <span class="k">in</span> <span class="n">hidden_minefield</span><span class="o">;</span> <span class="n">fill</span> <span class="k">in</span> <span class="k">with</span> <span class="n">appropriate</span> <span class="n">values</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">88</span>     <span class="n">play_minesweeper</span>             <span class="n">output</span> <span class="n">hidden_minefield</span> <span class="k">with</span> <span class="k">each</span> <span class="n">row</span> <span class="n">on</span> <span class="n">a</span> <span class="n">newline</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">90</span>     <span class="n">play_minesweeper</span>             <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">90</span>     <span class="n">play_minesweeper</span>             <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">90</span>     <span class="n">play_minesweeper</span>             <span class="o">[</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">90</span>     <span class="n">play_minesweeper</span>             <span class="o">[</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">]</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">92</span>     <span class="n">play_minesweeper</span>             <span class="n">create</span> <span class="n">the</span> <span class="n">user</span> <span class="kd">interface</span> <span class="n">minefield</span> <span class="n">of</span> <span class="n">all</span> <span class="o">?</span> <span class="n">values</span>
+<span class="mi">19</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">35</span><span class="n">S</span>        <span class="n">DEBUG</span>        <span class="mi">98</span>     <span class="n">play_minesweeper</span>             <span class="n">sleep</span> <span class="n">so</span> <span class="n">print</span> <span class="n">messages</span> <span class="n">appear</span> <span class="n">after</span> <span class="n">logging</span> <span class="n">messages</span>
+
+
+<span class="n">Time</span> <span class="k">for</span> <span class="n">the</span> <span class="n">user</span> <span class="n">to</span> <span class="n">play</span><span class="o">!</span> <span class="n">Try</span> <span class="n">to</span> <span class="n">avoid</span> <span class="n">the</span> <span class="n">mines</span><span class="o">!</span>
+
+<span class="n">In</span> <span class="n">minefield</span><span class="o">,</span> <span class="n">row</span> <span class="n">values</span> <span class="n">start</span> <span class="n">at</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">go</span> <span class="n">to</span> <span class="mi">4</span><span class="o">.</span>
+<span class="n">In</span> <span class="n">minefield</span><span class="o">,</span> <span class="n">column</span> <span class="n">values</span> <span class="n">start</span> <span class="n">at</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">go</span> <span class="n">to</span> <span class="mi">4</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="k">is</span> <span class="n">the</span> <span class="n">user_interface_minefield</span><span class="o">:</span>
+<span class="o">[</span><span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">]</span>
+<span class="o">[</span><span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">]</span>
+<span class="o">[</span><span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">]</span>
+<span class="o">[</span><span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">]</span>
+
+
+<span class="n">Guess</span> <span class="n">row</span><span class="o">:</span>  <span class="mi">1</span>
+<span class="n">Guess</span> <span class="n">column</span><span class="o">:</span>  <span class="mi">1</span>
+
+
+<span class="n">Your</span> <span class="n">guessed</span> <span class="n">coordinate</span><span class="o">:</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
+<span class="n">You</span> <span class="n">guessed</span> <span class="n">a</span> <span class="mi">1</span> <span class="n">so</span> <span class="n">you</span><span class="s1">&#39;re nearby a mine.</span>
+<span class="s1">You have made 1 guess</span>
+
+<span class="s1">In minefield, row values start at 1 and go to 4.</span>
+<span class="s1">In minefield, column values start at 1 and go to 4.</span>
+
+<span class="s1">This is the user_interface_minefield:</span>
+<span class="s1">[&#39;</span><span class="mi">1</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;]</span>
+<span class="s1">[&#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;]</span>
+<span class="s1">[&#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;]</span>
+<span class="s1">[&#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;, &#39;</span><span class="o">?</span><span class="s1">&#39;]</span>
+
+
+<span class="s1">Guess row:  4</span>
+<span class="s1">Guess column:  4</span>
+
+
+<span class="s1">Your guessed coordinate: (4, 4)</span>
+<span class="s1">You guessed far from a mine. You&#39;</span><span class="n">re</span> <span class="n">ok</span><span class="o">!</span>
+<span class="n">You</span> <span class="n">have</span> <span class="n">made</span> <span class="mi">2</span> <span class="n">guesses</span>
+
+<span class="n">In</span> <span class="n">minefield</span><span class="o">,</span> <span class="n">row</span> <span class="n">values</span> <span class="n">start</span> <span class="n">at</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">go</span> <span class="n">to</span> <span class="mi">4</span><span class="o">.</span>
+<span class="n">In</span> <span class="n">minefield</span><span class="o">,</span> <span class="n">column</span> <span class="n">values</span> <span class="n">start</span> <span class="n">at</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">go</span> <span class="n">to</span> <span class="mi">4</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="k">is</span> <span class="n">the</span> <span class="n">user_interface_minefield</span><span class="o">:</span>
+<span class="o">[</span><span class="s1">&#39;1&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">]</span>
+<span class="o">[</span><span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">]</span>
+<span class="o">[</span><span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">]</span>
+<span class="o">[</span><span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;?&#39;</span><span class="o">,</span> <span class="s1">&#39;0&#39;</span><span class="o">]</span>
+</pre></div>
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+        <center>Thank you for reading my content! This project is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+          <br/>
+          Copyright &copy; Dan Friedman,
+          <time datetime="2019">2019</time>.
+        </center>
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #038f6d" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#d6eed9" );
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+  <!-- <script type="text/javascript">
+    $(document).on('click', 'a[href^="#"]', function (event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 500);
+    });
+  </script> -->
+
+</body>
+
+</html>
