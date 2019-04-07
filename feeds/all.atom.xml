@@ -1,5 +1,538 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-03-29T19:58:00-07:00</updated><entry><title>Command Line Basic Minesweeper</title><link href="https://dfrieds.com/python/cl-minesweeper" rel="alternate"></link><published>2019-03-29T19:58:00-07:00</published><updated>2019-03-29T19:58:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-03-29:/python/cl-minesweeper</id><summary type="html">&lt;p&gt;Medium Python algorithm prototype of a basic version of Minesweeper as a command line game&lt;/p&gt;</summary><content type="html">&lt;p&gt;In this implementation, the minefield grid is always 4x4 and there's just one mine on the field. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-04-07T10:01:00-07:00</updated><entry><title>Find Three Consecutive Numbers via Leetcode</title><link href="https://dfrieds.com/sql/three-consec-numbers" rel="alternate"></link><published>2019-04-07T10:01:00-07:00</published><updated>2019-04-07T10:01:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-04-07:/sql/three-consec-numbers</id><summary type="html">&lt;p&gt;Medium level Leetcode SQL problem and step-by-step explanation of identifying a unique number that is repeated three times consecutively in a table through using window functions&lt;/p&gt;</summary><content type="html">&lt;p&gt;In &lt;em&gt;extreme detail&lt;/em&gt;, in this tutorial I'll walk through a &lt;a href="https://leetcode.com/problems/consecutive-numbers" target="_blank"&gt;Leetcode medium level SQL problem&lt;/a&gt; to arrive to the solution.&lt;/p&gt;
+&lt;h3&gt;Problem Statement&lt;/h3&gt;
+&lt;p&gt;Write a SQL query to find all numbers that appear at least three times consecutively.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Id&lt;/th&gt;
+&lt;th&gt;Num&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For example, given the above &lt;code&gt;Logs&lt;/code&gt; table, &lt;code&gt;1&lt;/code&gt; is the only number that appears consecutively for at least three times.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ConsecutiveNums&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;Dan's Step by Step Solution&lt;/h3&gt;
+&lt;h4&gt;Create New Columns for Lag and Lead Numbers From &lt;code&gt;Num&lt;/code&gt; Column&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Explanation of SQL Query Below:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Given the &lt;code&gt;Logs&lt;/code&gt; table above, I'm curious for each record, what's the following row number and previous row number. If I return an output in which the original number in the row, following row number and previous row number are all the same, then I know that number appears consecutively &lt;em&gt;at least&lt;/em&gt; three times.&lt;/p&gt;
+&lt;p&gt;We can use window functions to compare previous and following rows in a table.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;LEAD()&lt;/code&gt; function creates a new column of the following row's &lt;code&gt;Num&lt;/code&gt; from the original table - exactly how it's ordered with &lt;code&gt;Id&lt;/code&gt; values in descending order. We alias this column as &lt;code&gt;following row number&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;LAG()&lt;/code&gt; function creates a new column of the following row's &lt;code&gt;Num&lt;/code&gt; from the original table - exactly how it's ordered with &lt;code&gt;Id&lt;/code&gt; values in descending order. We alias this column as &lt;code&gt;previous row number&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Learn more about &lt;code&gt;LEAD()&lt;/code&gt; and &lt;code&gt;LAG()&lt;/code&gt; functions in &lt;a href='https://mode.com/resources/sql-tutorial/sql-window-functions/' target='_blank'&gt;Mode's great tutorial on window functions&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SQL Query:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;Num&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;number&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;LEAD&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Num&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;following row number&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;LAG&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Num&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;previous row number&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;Logs&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Returned Output:&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;number&lt;/th&gt;
+&lt;th&gt;following row number&lt;/th&gt;
+&lt;th&gt;previous row number&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;null&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;null&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4&gt;Return Rows with Same Number in All Three Columns&lt;/h4&gt;
+&lt;p&gt;Given the output above, we can see one row in which &lt;code&gt;number&lt;/code&gt; is equal to &lt;code&gt;following row number&lt;/code&gt; which is equal to &lt;code&gt;previous row number&lt;/code&gt;. That number, &lt;code&gt;1&lt;/code&gt;, is the solution of a number that appears consecutively for at least three times.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Explanation of SQL Query Below:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Given the previous query's output, we can use a subquery to just return one row in which &lt;code&gt;number&lt;/code&gt; is equal to &lt;code&gt;following row number&lt;/code&gt; which is equal to &lt;code&gt;previous row number&lt;/code&gt;. We filter our underlying table, &lt;code&gt;sub&lt;/code&gt;, with the &lt;code&gt;WHERE&lt;/code&gt; clauses in the last two lines of the query.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SQL Query:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;Num&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;number&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;LEAD&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Num&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;following row number&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;LAG&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Num&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;previous row number&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;Logs&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;
+&lt;span class="k"&gt;WHERE&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;number&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;following row number&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;following row number&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;previous row number&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Returned Output:&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;number&lt;/th&gt;
+&lt;th&gt;following row number&lt;/th&gt;
+&lt;th&gt;previous row number&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4&gt;Return Distinct &lt;code&gt;number&lt;/code&gt; From Previous Query&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Explanation of SQL Query Below:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Given our output above, we want to filter this output to just return the distinct values that appear in the &lt;code&gt;number&lt;/code&gt; column which should just be 1 for this example.&lt;/p&gt;
+&lt;p&gt;Use the &lt;a href='https://mode.com/resources/sql-tutorial/sql-distinct/' target="_blank"&gt;&lt;code&gt;DISTINCT&lt;/code&gt; statement&lt;/a&gt; to select only distinct values in the &lt;code&gt;number&lt;/code&gt; column in our &lt;code&gt;sub&lt;/code&gt; table and alias this column as &lt;code&gt;ConsecutiveNums&lt;/code&gt; to match Leetcode's desired solution.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SQL Query:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="k"&gt;DISTINCT&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;number&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;ConsecutiveNums&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;Num&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;number&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;LEAD&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Num&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;following row number&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;LAG&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Num&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;previous row number&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;Logs&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;
+&lt;span class="k"&gt;WHERE&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;number&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;following row number&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;following row number&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;previous row number&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Returned Output:&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ConsecutiveNums&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</content><category term="window function"></category><category term="LAG() function"></category><category term="LEAD() function"></category><category term="WHERE clause"></category><category term="subquery"></category></entry><entry><title>Department Top Three Salaries via Leetcode</title><link href="https://dfrieds.com/sql/dept-top-salaries" rel="alternate"></link><published>2019-04-07T10:00:00-07:00</published><updated>2019-04-07T10:00:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-04-07:/sql/dept-top-salaries</id><summary type="html">&lt;p&gt;Advanced Leetcode SQL problem and step-by-step explanation of identifying top employees in departments by salary through using window functions&lt;/p&gt;</summary><content type="html">&lt;p&gt;In &lt;em&gt;extreme detail&lt;/em&gt;, in this tutorial I'll walk through a &lt;a href="https://leetcode.com/problems/department-top-three-salaries/" target="_blank"&gt;Leetcode Advanced SQL problem&lt;/a&gt; to arrive to the solution.&lt;/p&gt;
+&lt;h3&gt;Problem Statement&lt;/h3&gt;
+&lt;p&gt;The Employee table holds all employees. Every employee has an Id, and there is also a column for the department Id.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Id&lt;/th&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Salary&lt;/th&gt;
+&lt;th&gt;DepartmentId&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;Joe&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;Henry&lt;/td&gt;
+&lt;td&gt;80000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;Sam&lt;/td&gt;
+&lt;td&gt;60000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Max&lt;/td&gt;
+&lt;td&gt;90000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;Janet&lt;/td&gt;
+&lt;td&gt;69000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;Randy&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;Will&lt;/td&gt;
+&lt;td&gt;70000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The Department table holds all departments of the company.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Id&lt;/th&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Write a SQL query to find employees who earn the top three salaries in each of the department. For the above tables, your SQL query should return the following rows (order of rows does not matter).&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Department&lt;/th&gt;
+&lt;th&gt;Employee&lt;/th&gt;
+&lt;th&gt;Salary&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Max&lt;/td&gt;
+&lt;td&gt;90000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Randy&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Joe&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Will&lt;/td&gt;
+&lt;td&gt;70000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Henry&lt;/td&gt;
+&lt;td&gt;80000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Sam&lt;/td&gt;
+&lt;td&gt;60000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;Explanation&lt;/h3&gt;
+&lt;p&gt;In IT department, Max earns the highest salary, both Randy and Joe earn the second highest salary, and Will earns the third highest salary. There are only two employees in the Sales department, Henry earns the highest salary while Sam earns the second highest salary.&lt;/p&gt;
+&lt;h3&gt;Dan's Step by Step Solution&lt;/h3&gt;
+&lt;h4&gt;Join Tables to Get Relevant Columns&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Explanation of SQL Query Below:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;We are provided two tables: &lt;code&gt;Employee&lt;/code&gt; and &lt;code&gt;Department&lt;/code&gt;. In our final result, we need three fields: the department name, the employee's name and the employee's salary. Since these three columns are in two different tables, we need to join the two tables.&lt;/p&gt;
+&lt;p&gt;We know this is a relational database in that the two tables "relate" to one another with common identifiers from each.&lt;/p&gt;
+&lt;p&gt;The term “relational database” refers to the fact that the tables within it “relate” to one another—they contain common identifiers that allow information from multiple tables to be combined easily.&lt;/p&gt;
+&lt;p&gt;The column &lt;code&gt;Id&lt;/code&gt; in the &lt;code&gt;Department&lt;/code&gt; table is a primary key. This key uniquely identifies each department in the company. We cannot have two &lt;code&gt;Id&lt;/code&gt; values that are the exact same number in this table!&lt;/p&gt;
+&lt;p&gt;Similarly, the &lt;code&gt;Employee&lt;/code&gt; table has a foreign key of &lt;code&gt;DepartmentId&lt;/code&gt; that "relates" to the &lt;code&gt;Id&lt;/code&gt; field in the &lt;code&gt;Department&lt;/code&gt; table. Therefore, we can join the two tables together and retrieve the necessary columns to solve this problem.&lt;/p&gt;
+&lt;p&gt;We choose a &lt;code&gt;INNER JOIN&lt;/code&gt; because we want to return all records from the &lt;code&gt;Employee&lt;/code&gt; table in which there is a corresponding match for the department name that the employee works in via the &lt;code&gt;Department&lt;/code&gt; table.&lt;/p&gt;
+&lt;p&gt;To succinctly write out the elements of the SQL query below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Select the &lt;code&gt;Name&lt;/code&gt; column from the &lt;code&gt;Department&lt;/code&gt; table and alias it as &lt;code&gt;"Department"&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select the &lt;code&gt;name&lt;/code&gt; column from the &lt;code&gt;Employee&lt;/code&gt; table and alias it as &lt;code&gt;"Employee"&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select the &lt;code&gt;Salary&lt;/code&gt; column from the &lt;code&gt;Salary&lt;/code&gt; table and alias it as &lt;code&gt;"Salary"&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select the columns from the &lt;code&gt;Employee&lt;/code&gt; table&lt;/li&gt;
+&lt;li&gt;Inner join the &lt;code&gt;Department&lt;/code&gt; table on records in which the &lt;code&gt;Id&lt;/code&gt; field from the &lt;code&gt;Department&lt;/code&gt; table is equal to the &lt;code&gt;DepartmentId&lt;/code&gt; field from the &lt;code&gt;Employee&lt;/code&gt; table&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;SQL Query:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Department&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Employee&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Salary&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Salary&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;
+&lt;span class="k"&gt;INNER&lt;/span&gt; &lt;span class="k"&gt;JOIN&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;
+&lt;span class="k"&gt;ON&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DepartmentId&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Returned Output:&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Department&lt;/th&gt;
+&lt;th&gt;Employee&lt;/th&gt;
+&lt;th&gt;Salary&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Will&lt;/td&gt;
+&lt;td&gt;70000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Randy&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Janet&lt;/td&gt;
+&lt;td&gt;69000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Max&lt;/td&gt;
+&lt;td&gt;90000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Joe&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Sam&lt;/td&gt;
+&lt;td&gt;60000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Henry&lt;/td&gt;
+&lt;td&gt;80000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4&gt;Create a New Column for Salary Rank In Descending Order of Employees by Department&lt;/h4&gt;
+&lt;p&gt;The output above provides all relevant columns needed for the final solution. However, we need to rank employee salaries in descending order by their apartment. To do this, we'll use a window function.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Explanation of SQL Query Below:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Compared to the query above, there is just one new statement that starts with &lt;code&gt;DENSE_RANK()&lt;/code&gt; and is a window function. You can learn more about window functions in detail from Mode's great &lt;a href='https://mode.com/resources/sql-tutorial/sql-window-functions/' target="_blank"&gt;tutorial&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In the window function statement, there's 3 major elements. &lt;/p&gt;
+&lt;p&gt;We use the function &lt;code&gt;DENSE_RANK()&lt;/code&gt; to provide a numerical ranking value based on the following conditions. We don't want to skip any numerical rank values so we use &lt;code&gt;DENSE_RANK()&lt;/code&gt; instead of &lt;code&gt;RANK()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We want a rank of salaries by department; therefore, the window will consider the group &lt;code&gt;Department.Id&lt;/code&gt;. So salaries can be ranked from greatest to least, starting at &lt;code&gt;1&lt;/code&gt;, in the &lt;code&gt;IT&lt;/code&gt; department and separately from greatest to least, starting at &lt;code&gt;1&lt;/code&gt;, in the &lt;code&gt;Sales&lt;/code&gt; department.&lt;/p&gt;
+&lt;p&gt;We want the the &lt;code&gt;DENSE_RANK&lt;/code&gt; function applied to rank the salaries from greatest to least. &lt;code&gt;ORDER BY Employee.Salary DESC&lt;/code&gt; helps sort the salaries of employees from greatest to least - called descending order in SQL.&lt;/p&gt;
+&lt;p&gt;To succinctly write out the elements of the SQL query below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Select the &lt;code&gt;Name&lt;/code&gt; column from the &lt;code&gt;Department&lt;/code&gt; table and alias it as &lt;code&gt;"Department"&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select the &lt;code&gt;name&lt;/code&gt; column from the &lt;code&gt;Employee&lt;/code&gt; table and alias it as &lt;code&gt;"Employee"&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select the &lt;code&gt;Salary&lt;/code&gt; column from the &lt;code&gt;Salary&lt;/code&gt; table and alias it as &lt;code&gt;"Salary"&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Create new column called &lt;code&gt;salary_rank&lt;/code&gt; that provides a numerical value of the rank of each person's salary from greatest salary to smallest salary for each department.&lt;/li&gt;
+&lt;li&gt;Select the columns from the &lt;code&gt;Employee&lt;/code&gt; table&lt;/li&gt;
+&lt;li&gt;Inner join the &lt;code&gt;Department&lt;/code&gt; table on records in which the &lt;code&gt;Id&lt;/code&gt; field from the &lt;code&gt;Department&lt;/code&gt; table is equal to the &lt;code&gt;DepartmentId&lt;/code&gt; field from the &lt;code&gt;Employee&lt;/code&gt; table&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;SQL Query:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Department&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Employee&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Salary&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Salary&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;DENSE_RANK&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PARTITION&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Salary&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;salary_rank&lt;/span&gt; 
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;
+&lt;span class="k"&gt;INNER&lt;/span&gt; &lt;span class="k"&gt;JOIN&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;
+&lt;span class="k"&gt;ON&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DepartmentId&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Returned Output:&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Department&lt;/th&gt;
+&lt;th&gt;Employee&lt;/th&gt;
+&lt;th&gt;Salary&lt;/th&gt;
+&lt;th&gt;salary_rank&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Max&lt;/td&gt;
+&lt;td&gt;90000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Randy&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Joe&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Will&lt;/td&gt;
+&lt;td&gt;70000&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Janet&lt;/td&gt;
+&lt;td&gt;69000&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Henry&lt;/td&gt;
+&lt;td&gt;80000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Sam&lt;/td&gt;
+&lt;td&gt;60000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4&gt;Return 3 Necessary Colums and Top 3 Ranked Salaries by Department&lt;/h4&gt;
+&lt;p&gt;The above query isn't our final solution yet. We have an extra unecessary column to show in the final output, &lt;code&gt;salary_rank&lt;/code&gt;, and a &lt;code&gt;salary_rank&lt;/code&gt; value of &lt;code&gt;4&lt;/code&gt; for &lt;code&gt;Janet&lt;/code&gt;, who isn't a top three salary in the &lt;code&gt;IT&lt;/code&gt; department.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Explanation of SQL Query Below:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Subquery and where clause explanation...&lt;/p&gt;
+&lt;p&gt;From the returned output above, we need to exclude the &lt;code&gt;salary_rank&lt;/code&gt; column and the record for &lt;code&gt;Janet&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To exclude the &lt;code&gt;salary_rank&lt;/code&gt; colum, we'll use the subquery functionality in SQL. Learn more about subqueries via Mode's excellent &lt;a href='https://mode.com/resources/sql-tutorial/sql-subqueries/' target="_blank"&gt;article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the execution of the query below, first, the inner query (our query in the previous step) is executed and is the underlying table used for the subquery. &lt;/p&gt;
+&lt;p&gt;With the subquery, we have the first three new lines at the top of our query to just select the columns we want in the final output. Notice we're selecting these columns from a new table called &lt;code&gt;sub&lt;/code&gt;. The underlying table (our query in the previous step) has an alias of &lt;code&gt;sub&lt;/code&gt; that's short for subquery. &lt;/p&gt;
+&lt;p&gt;This would output a table with the same number of rows as the query in the previous step except it would &lt;em&gt;not&lt;/em&gt; include the &lt;code&gt;salary_column&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Initially, the question asked to return the people's records who are in the top three salaries of their department. We can use the &lt;code&gt;WHERE&lt;/code&gt; clause in the final line to only select records from the underlying table in which the &lt;code&gt;salary_rank&lt;/code&gt; value is less than or equal to &lt;code&gt;3&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SQL Query:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Department&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Employee&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; 
+       &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Salary&amp;quot;&lt;/span&gt; 
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Department&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Employee&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Salary&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;Salary&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+       &lt;span class="n"&gt;DENSE_RANK&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="n"&gt;OVER&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PARTITION&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="k"&gt;ORDER&lt;/span&gt; &lt;span class="k"&gt;BY&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Salary&lt;/span&gt; &lt;span class="k"&gt;DESC&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;salary_rank&lt;/span&gt; 
+&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;
+&lt;span class="k"&gt;INNER&lt;/span&gt; &lt;span class="k"&gt;JOIN&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;
+&lt;span class="k"&gt;ON&lt;/span&gt; &lt;span class="n"&gt;Department&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Employee&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DepartmentId&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;
+&lt;span class="k"&gt;WHERE&lt;/span&gt; &lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;salary_rank&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Returned Output:&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Department&lt;/th&gt;
+&lt;th&gt;Employee&lt;/th&gt;
+&lt;th&gt;Salary&lt;/th&gt;
+&lt;th&gt;salary_rank&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Max&lt;/td&gt;
+&lt;td&gt;90000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Randy&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Joe&lt;/td&gt;
+&lt;td&gt;85000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IT&lt;/td&gt;
+&lt;td&gt;Will&lt;/td&gt;
+&lt;td&gt;70000&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Henry&lt;/td&gt;
+&lt;td&gt;80000&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sales&lt;/td&gt;
+&lt;td&gt;Sam&lt;/td&gt;
+&lt;td&gt;60000&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;We are done!!&lt;/p&gt;</content><category term="window function"></category><category term="DENSE_RANK()"></category><category term="WHERE clause"></category><category term="subquery"></category><category term="INNER JOIN"></category></entry><entry><title>Command Line Basic Minesweeper</title><link href="https://dfrieds.com/python/cl-minesweeper" rel="alternate"></link><published>2019-03-29T19:58:00-07:00</published><updated>2019-03-29T19:58:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-03-29:/python/cl-minesweeper</id><summary type="html">&lt;p&gt;Medium Python algorithm prototype of a basic version of Minesweeper as a command line game&lt;/p&gt;</summary><content type="html">&lt;p&gt;In this implementation, the minefield grid is always 4x4 and there's just one mine on the field. &lt;/p&gt;
 &lt;p&gt;Additional work could be done on this Minesweeper implementation to allow for more adjustable field sizes, additional mines on the field and automatic reveal of coordinates that don't contain any adjacent mines. &lt;/p&gt;
 &lt;p&gt;For a more robust code solution, I'd recommend more modularity with functions and the use of object-oriented programming to easily allow for reuse of code with inheritance, extensability to various platforms and additional benefits.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;randint&lt;/span&gt;
@@ -2834,666 +3367,4 @@
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="t-tests"></category><category term="python"></category><category term="scipy"></category><category term="numpy"></category></entry><entry><title>Type I and Type II Errors in Hypothesis Testing</title><link href="https://dfrieds.com/math/errors-hypothesis-testing" rel="alternate"></link><published>2019-02-15T16:00:00-08:00</published><updated>2019-02-15T16:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-02-15:/math/errors-hypothesis-testing</id><summary type="html">&lt;p&gt;Learn about decision errors in statistical hypothesis testing and how to interpret them through several simple examples&lt;/p&gt;</summary><content type="html">&lt;p&gt;There are potential caveats to hypothesis testing with z-tests, t-tests or other similar tests. &lt;/p&gt;
-&lt;p&gt;Initially, we may apply a treatment to a sample and compare how a parameter of that sample differs from the same parameter from the popoulation without the treatment. However, it's possible to have &lt;strong&gt;sampling error&lt;/strong&gt;. This is likely since we're unsure of the characteristics of the observations in the sample and they may not be representative of the whole population. We're unable to measure the exact sampling error since the ture population with the treatment is unkown at the beginning of a statistical hypothesis test. &lt;/p&gt;
-&lt;p&gt;Later, if we are able to capture data on the true population with the treatment, we can determine if a stastical error was made in our initial analysis.&lt;/p&gt;
-&lt;h3&gt;Decision Errors&lt;/h3&gt;
-&lt;p&gt;In the figure below, each quadrant has a meaning about correct or incorrect decisions in hypothesis testing.&lt;/p&gt;
-&lt;p&gt;Typically, in hypothesis testing, the "truth about the population" is unknown at first. For the example of Joe's personal training, the true population mean of people's weight would be if we could apply the treatment to a sufficiently large number of samples (perhaps hundreds of people) and calculate the mean of sample means with this treatment.&lt;/p&gt;
-&lt;p&gt;I provide explanations of each quadrant (&lt;a href='http://www.personal.ceu.hu/students/08/Olga_Etchevskaia/hypotheses.html'&gt;image source&lt;/a&gt;) below. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="hypothesis testing decision errors" src="images/errors.jpg"&gt;&lt;/p&gt;
-&lt;p&gt;The top left quadrant means the ground truth is that the null hypothesis is true, yet our research concluded to &lt;em&gt;reject&lt;/em&gt; the null hypothesis (&lt;em&gt;significant&lt;/em&gt; effect from the treatment). We made an incorrect statistical decision. This is considered a Type 1 error.&lt;/p&gt;
-&lt;p&gt;The top right quadrant means the ground truth is that the alternative hypothesis is true and our research concluded to reject the null hypothesis (&lt;em&gt;significant&lt;/em&gt; effect from the treatment). This is an ideal situation.&lt;/p&gt;
-&lt;p&gt;The bottom left quadrant means the ground truth is that the null hypothesis is &lt;em&gt;true&lt;/em&gt; and our research concluded that there's &lt;em&gt;no&lt;/em&gt; evidence to reject the null hypothesis. This is an ideal situation.&lt;/p&gt;
-&lt;p&gt;The bottom right quadrant means the ground truth is that the alternative hypothesis is true, yet our research concluded that there's &lt;em&gt;no&lt;/em&gt; evidence to reject the null hypothesis. We made an incorrect statistical decision. This is considered a Type 2 error. &lt;/p&gt;
-&lt;h4&gt;How to Reduce Decision Errors&lt;/h4&gt;
-&lt;p&gt;We minimize our chances of making the wrong decision when we have a large enough sample size, we randomize our sample and when we implmement proper experimental controls.&lt;/p&gt;
-&lt;h4&gt;Example: Statistical Decision Errors in Rain Scenario&lt;/h4&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: It's not going to rain later today (so I don't need an umbrella).&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: It's going to rain later today (so I should bring an umbrella).&lt;/p&gt;
-&lt;p&gt;Four possible scenarios:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;I think it's going to rain later so I bring an umbrella. However, later it doesn't rain. This is a Type 1 error. &lt;/li&gt;
-&lt;li&gt;I think it's going to rain later so I bring an umbrella. I'm correct - it rained later and I was right in bringing an umbrella. (This is equivalent to the top right quadrant.)&lt;/li&gt;
-&lt;li&gt;I think it's not going to rain later so I &lt;em&gt;don't&lt;/em&gt; bring an umbrella. I'm correct - it &lt;em&gt;doesn't&lt;/em&gt; rain later so I was correct in &lt;em&gt;not&lt;/em&gt; bringing an umbrella. (This is equivalent to the bottom left quadrant.)&lt;/li&gt;
-&lt;li&gt;I think it's not going to rain later so I &lt;em&gt;don't&lt;/em&gt; bring an umbrella. However, later it rains. This is a Type 2 error.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "left",
-        indent = "1em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="hypothesis testing"></category></entry><entry><title>Intro to Hypothesis Testing and z-tests</title><link href="https://dfrieds.com/math/z-tests" rel="alternate"></link><published>2019-01-08T11:42:00-08:00</published><updated>2019-01-08T11:42:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-01-08:/math/z-tests</id><summary type="html">&lt;p&gt;Learn how to setup hypothesis tests and validate if a single sample parameter is significantly different than the population parameter and the hypothetical true parameter for z-tests&lt;/p&gt;</summary><content type="html">&lt;p&gt;In the field of inferential statistics, we make &lt;strong&gt;hypotheses&lt;/strong&gt; - proposed explanations typically made on the basis of limited evidence that's used as a starting point for further investigation. Statistical hypothesis testing helps determine the probability that a given hypothesis is true using a dataset.&lt;/p&gt;
-&lt;p&gt;A &lt;strong&gt;z-test&lt;/strong&gt; is validating if a sample parameter (such as the mean) is &lt;em&gt;significantly&lt;/em&gt; different than a population parameter when the sample mean has a treatment effect. I'll explain how hypothesis testing works through many examples of z-tests below.&lt;/p&gt;
-&lt;p&gt;I'll explain why the word &lt;em&gt;significantly&lt;/em&gt; is in italics later on too. &lt;/p&gt;
-&lt;p&gt;Before reading this post, I'd recommend familiarity with the following terms: z-scores, normal distribution, standard deviation, standard error and the central limit theorem.&lt;/p&gt;
-&lt;h4&gt;Import Modules&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;stats&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;warnings&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Visualization styling code&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figure.figsize&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.5&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;talk&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Turn Off Warnings&lt;/h4&gt;
-&lt;p&gt;I turn warnings off in this post because of an &lt;a href='https://stackoverflow.com/a/52817582'&gt;issue in Scipy&lt;/a&gt; that will be fixed in a later version.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;warnings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filterwarnings&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ignore&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Data Requirements for z-tests&lt;/h3&gt;
-&lt;p&gt;Certain conditions must hold true in the data in order to properly utilize z-tests.&lt;/p&gt;
-&lt;p&gt;1) Population mean and population standard deviation must be known.&lt;/p&gt;
-&lt;p&gt;2) Sample mean is known.&lt;/p&gt;
-&lt;p&gt;3) Assumption or test that the sample of data offers some variation and therefore would form a normal distribution by resampling - consistent with the Central Limit Theorem.&lt;/p&gt;
-&lt;p&gt;4) Sample observations were &lt;em&gt;randomly&lt;/em&gt; drawn from a population.&lt;/p&gt;
-&lt;p&gt;5) Sample size is known and sufficiently large - often &lt;span class="math"&gt;\(n&amp;gt;=30\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;6) Assumption that the population from which the sample is drawn from is approximately normal.&lt;/p&gt;
-&lt;h3&gt;Hypothesis Tests Order of Steps for z-tests&lt;/h3&gt;
-&lt;p&gt;Below are the steps used for performing a hypothesis test to compare a single sample group with treatment to a population and determine the statistical significance. This article will mainly detail steps 2 - 4 and 6 - 8. &lt;/p&gt;
-&lt;p&gt;1) Take measurements from a large control group we'll call the population.&lt;/p&gt;
-&lt;p&gt;2) Declare a null and alternative hypothesis.
-    - This information provides background for a one-tail or two-tail test.&lt;/p&gt;
-&lt;p&gt;3) Decide on an alpa level - the probability of obtaining a sample mean with treatment from the population.&lt;/p&gt;
-&lt;p&gt;4) Apply a treatment to a new sample group of size &lt;span class="math"&gt;\(n\)&lt;/span&gt; and record measurements.
-    - We want to compare this treatment group to our population to see if this treatment had an effect.&lt;/p&gt;
-&lt;p&gt;5) Take a sufficient number of samples of size &lt;span class="math"&gt;\(n\)&lt;/span&gt; from the population values and record a single statistic of each sample such as the mean or median. This is called the &lt;strong&gt;sampling distribution&lt;/strong&gt;.
-    - A distribution of these sample means (or medians) would be a normal distribution based on the Central Limit Theorem.&lt;/p&gt;
-&lt;p&gt;6) Verify data collected meets the requirements needed to run a z-test (see section above).&lt;/p&gt;
-&lt;p&gt;7) Calculate the standard deviation of the sampling distribution - called the &lt;strong&gt;standard error&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;8) Compute how many standard errors the statistic (such as the mean) of the sample group with treatment is from the statistic (such as the mean) of the sampling distribution. This is called the z-score.&lt;/p&gt;
-&lt;p&gt;9) Determine if this sample group with treatment is &lt;em&gt;significantly&lt;/em&gt; different from the population based on the pre-decided alpha level.&lt;/p&gt;
-&lt;h3&gt;One-Tail Hypothesis Tests&lt;/h3&gt;
-&lt;h4&gt;Visualization of One-Tail&lt;/h4&gt;
-&lt;p&gt;Below, this normal distribution has an area under the curve of &lt;span class="math"&gt;\(1\)&lt;/span&gt;. This visualization shades just the right-tail of the distribution that has an area under the curve of just &lt;span class="math"&gt;\(0.05\)&lt;/span&gt; equivalent to &lt;span class="math"&gt;\(5\%\)&lt;/span&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;two_std_from_mean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.645&lt;/span&gt;
-&lt;span class="n"&gt;kde&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gaussian_kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;pos&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;teal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;two_std_from_mean&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;teal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Sampling Distribution for One-Tail Hypothesis Test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="z_tests_files/z_tests_16_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;For a one-tail test, the &lt;strong&gt;critical region&lt;/strong&gt; (an example is the one shaded above) can be on the left or right side of the distribution. The critical region defines statistically &lt;em&gt;unlikely&lt;/em&gt; values.&lt;/p&gt;
-&lt;h4&gt;Levels of Likelihood for One-Tail Test&lt;/h4&gt;
-&lt;p&gt;Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. &lt;/p&gt;
-&lt;p&gt;Additional context: a sampling distribution can have any mean and standard error value. Based on the central limit theorem, the sampling distribution should be approximately normal. A z-score on this sampling distribution tells us the number of standard deviations a sample mean is from the mean of the sampling distribution. Since the sampling distribution is normal, a z-score can always tell us what proportion of sample means are greater than or less than the z-score.&lt;/p&gt;
-&lt;p&gt;The probability values initially decided upon in hypothesis tests are called &lt;strong&gt;&lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; levels&lt;/strong&gt; and all are &lt;em&gt;unlikely&lt;/em&gt; occurences. I call it &lt;em&gt;unlikely&lt;/em&gt; because this sample mean likely didn't occur by random chance. There may have been an effect on that sample mean.&lt;/p&gt;
-&lt;h4&gt;Unlikely Values in Positive Direction One-Tail Tests&lt;/h4&gt;
-&lt;p&gt;Positive direction one-tail tests have the critical region on the right / positive direction of the sampling distribution.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;z-score cutoff for critical region&lt;/th&gt;
-&lt;th&gt;probability of obtaining sample mean (&lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; level) &lt;em&gt;greater&lt;/em&gt; than corresponding z-score&lt;/th&gt;
-&lt;th&gt;equivalent percentage likelihood&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(1.645\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.05\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(5\%\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(2.33\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.01\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(1\%\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(3.1\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.001\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.1\%\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h4&gt;Unlikely Values in Negative Direction One-Tail Tests&lt;/h4&gt;
-&lt;p&gt;Negative direction one-tail tests have the critical region on the left / negative direction of the sampling distribution.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;z-score cutoff for critical region&lt;/th&gt;
-&lt;th&gt;probability of obtaining sample mean (&lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; level) &lt;em&gt;less&lt;/em&gt; than corresponding z-score&lt;/th&gt;
-&lt;th&gt;equivalent percentage likelihood&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(-1.645\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.05\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(5\%\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(-2.33\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.01\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(1\%\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(-3.1\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.001\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(0.1\%\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;With a sampling distribution, a z-score of roughly &lt;span class="math"&gt;\(1.645\)&lt;/span&gt; has an area under the curve to the left of the z-value of &lt;span class="math"&gt;\(0.95\)&lt;/span&gt; (&lt;span class="math"&gt;\(95\%\)&lt;/span&gt; probability). Any z-score greater than &lt;span class="math"&gt;\(1.645\)&lt;/span&gt; means you're &lt;em&gt;unlikely&lt;/em&gt; to sample such a sample from the sampling distribution given an alpha of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. The region to the right of that z-value is called the &lt;strong&gt;critical region&lt;/strong&gt;. In this instance, the z-score of &lt;span class="math"&gt;\(1.645\)&lt;/span&gt; is called the &lt;strong&gt;z-critical value&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;cdf()&lt;/code&gt; method from the scipy package and accompanying &lt;a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'&gt;stats module&lt;/a&gt; returns the proportion of values smaller than the observation inputted for a standard normal distribution (a normal distribution with a mean of &lt;span class="math"&gt;\(0\)&lt;/span&gt; and standard deviation of &lt;span class="math"&gt;\(1\)&lt;/span&gt;). Let's see the area under the curve to the right of these critical z-scores that are the same ones mentioned in the table under &lt;em&gt;Unlikely Values in Positive Direction One-Tail Tests&lt;/em&gt;. The probability values returned below are the same as the ones in the table.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;1.645&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.050000000000000044
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;2.33&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.010000000000000009
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;3.1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.0010000000000000009
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;For any sample mean, we can interpret if it's statistically &lt;em&gt;significant&lt;/em&gt; - essentially telling us how &lt;em&gt;likely&lt;/em&gt; or &lt;em&gt;unlikely&lt;/em&gt; this sample mean is within the sampling distribution. The table below only shows examples for a one-tailed hypothesis test.&lt;/p&gt;
-&lt;p&gt;If the probability of getting a particular sample mean is less than &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt;, it is &lt;em&gt;unlikely&lt;/em&gt; to occur. In a z-test, we often say that if the z-score computed is in the critical region, there's likely an &lt;em&gt;effect&lt;/em&gt; with the treatment on the sample.&lt;/p&gt;
-&lt;p&gt;Note below, &lt;span class="math"&gt;\(p\)&lt;/span&gt; is equivalent to probability and &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is the sample mean.&lt;/p&gt;
-&lt;p&gt;The table below shows interpretations of popular significance levels. Square brackets such as &lt;span class="math"&gt;\([\)&lt;/span&gt; signify inclusivity of the value next to it while parentheses such as &lt;span class="math"&gt;\((\)&lt;/span&gt; signify exclusivity of the value next to it.  &lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;z-score range for positive one-tail test&lt;/th&gt;
-&lt;th&gt;z-score range for negative one-tail test&lt;/th&gt;
-&lt;th&gt;statistical interpretation&lt;/th&gt;
-&lt;th&gt;layman's interpretation&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;[1.645, 2.33)&lt;/td&gt;
-&lt;td&gt;[-1.645, -2.33)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.05&lt;/td&gt;
-&lt;td&gt;probability of sampling &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; from the sampling distribution is less than 0.05&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[2.33, 3.1)&lt;/td&gt;
-&lt;td&gt;[-2.33, -3.1)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.01&lt;/td&gt;
-&lt;td&gt;probability of sampling &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; from the sampling distribution is less than 0.01&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[3.1, &lt;span class="math"&gt;\(\infty\)&lt;/span&gt;)&lt;/td&gt;
-&lt;td&gt;[-3.1, &lt;span class="math"&gt;\(-\infty\)&lt;/span&gt;)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.001&lt;/td&gt;
-&lt;td&gt;probability of sampling &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; from the sampling distribution is less than 0.001&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;When constructing a hypothesis test, it is best to choose a significant level such as the ones above &lt;em&gt;before&lt;/em&gt; you perform a test. You can later report the results as significant at a certain critical level after obtaining the result.&lt;/p&gt;
-&lt;p&gt;If you simply analyze the results for all statistical significance levels, you may be "fishing" for results that don't meet the original purpose of your hypothesis test.&lt;/p&gt;
-&lt;h3&gt;Two-Tailed Hypothesis Tests&lt;/h3&gt;
-&lt;p&gt;This visualization shades two equal areas on each tail of the normal distribution of sample means - also known as the sampling distribution.&lt;/p&gt;
-&lt;p&gt;Each tail of the distribution has a shaded area of &lt;span class="math"&gt;\(0.025\)&lt;/span&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;alpha_05_positive&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.96&lt;/span&gt;
-&lt;span class="n"&gt;alpha_05_negative&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.96&lt;/span&gt;
-&lt;span class="n"&gt;kde&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gaussian_kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;pos&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;alpha_05_positive&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;alpha_05_negative&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dodgerblue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Sampling Distribution for Two-Tail Hypothesis Test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="z_tests_files/z_tests_31_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. &lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;probability of obtaining sample mean (&lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; level)&lt;/th&gt;
-&lt;th&gt;probability of obtaining sample mean on each tail&lt;/th&gt;
-&lt;th&gt;percentage of obtaining a sample mean on each tail&lt;/th&gt;
-&lt;th&gt;z-score cutoff for each tail&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;0.05&lt;/td&gt;
-&lt;td&gt;0.025&lt;/td&gt;
-&lt;td&gt;2.5%&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\pm1.96\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;0.01&lt;/td&gt;
-&lt;td&gt;0.005&lt;/td&gt;
-&lt;td&gt;0.5%&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\pm2.575\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;0.001&lt;/td&gt;
-&lt;td&gt;0.0005&lt;/td&gt;
-&lt;td&gt;0.05%&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\pm3.29\)&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Let's see the area under the curve to the left of the z-score for the z-scores listed in the table above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;1.96&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.025
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;2.575&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.005
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;3.29&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.001
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The table below shows interpretations of popular significance levels. Square brackets such as &lt;span class="math"&gt;\([\)&lt;/span&gt; signify inclusivity of the value next to it while parentheses such as &lt;span class="math"&gt;\((\)&lt;/span&gt; signify exclusivity of the value next to it.  &lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;z-score range for two-tailed test&lt;/th&gt;
-&lt;th&gt;interpretation&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;[1.96, 2.575) or [-1.96, -2.575)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.05&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[2.575, 3.29) or [-2.575, -3.29)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.01&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;[3.29, &lt;span class="math"&gt;\(\infty\)&lt;/span&gt;) or [-3.29, &lt;span class="math"&gt;\(-\infty\)&lt;/span&gt;)&lt;/td&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is significant at p&amp;lt;0.001&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h3&gt;Hypotheses&lt;/h3&gt;
-&lt;p&gt;Earlier I mentioned &lt;strong&gt;hypotheses&lt;/strong&gt; as proposed explanations typically made on the basis of limited evidence that's used as a starting point for further investigation. &lt;/p&gt;
-&lt;p&gt;The null hypothesis commonly denoted as &lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt; assumes a default position of the relationship among two groups. This typically means there is no &lt;em&gt;significant&lt;/em&gt; difference in the means of the groups. For z-tests, the two groups are the current population parameters and the new population parameters after some intervention (otherwise called a treatment).&lt;/p&gt;
-&lt;p&gt;The alternative hypothesis commonly denoted as &lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt; guesses there &lt;em&gt;will&lt;/em&gt; be a &lt;em&gt;significant&lt;/em&gt; difference between the current population parameters and the new population parameters after some intervention. &lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(\mu_{i}\)&lt;/span&gt; represents the new population parameters after some intervention.&lt;/p&gt;
-&lt;p&gt;The three possible scenarios for a one-tailed and two-tailed tests with explanations for each are as follows:&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;alternative hypothesis&lt;/th&gt;
-&lt;th&gt;interpretation&lt;/th&gt;
-&lt;th&gt;number of tails&lt;/th&gt;
-&lt;th&gt;critical region location of tail(s) on sampling distribution to reject the null&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\mu&amp;lt;\mu_{i}\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;current population parameter will be less than the new population parameter after an intervention&lt;/td&gt;
-&lt;td&gt;one&lt;/td&gt;
-&lt;td&gt;positive&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\mu&amp;gt;\mu_{i}\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;current population parameter will be greater than the new population parameter after an intervention&lt;/td&gt;
-&lt;td&gt;one&lt;/td&gt;
-&lt;td&gt;negative&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;span class="math"&gt;\(\mu\neq\mu_{i}\)&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;no prediction on a direction for the treatment&lt;/td&gt;
-&lt;td&gt;two&lt;/td&gt;
-&lt;td&gt;positive or negative&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;The two-tailed test is most conservative because the probability on each tail is smaller than a tail on a one-sided test. Therefore, we are less likely to reject the null hypothesis.&lt;/p&gt;
-&lt;p&gt;Note how all scenarios above use &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; despite the fact we compare the means of a sample (denoted as &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt;) and a population (denoted as &lt;span class="math"&gt;\(\mu\)&lt;/span&gt;). Why is this? With the treatment on the sample, we try to &lt;em&gt;infer&lt;/em&gt; the new population mean if everyone in the population would receive similar treatment.  &lt;/p&gt;
-&lt;p&gt;In a statistical hypothesis test, we often want to provide treatment to just a small sample because that takes less effort and minimizes risk as to not affect the population.&lt;/p&gt;
-&lt;h4&gt;Interpretation of Hypotheses&lt;/h4&gt;
-&lt;p&gt;Here's what it means to reject the null hypothesis:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The sample mean falls within the critical region.&lt;/li&gt;
-&lt;li&gt;The z-score of the sample mean is greater than the z-critical value.&lt;/li&gt;
-&lt;li&gt;The probability of obtaining the sample mean is less than the alpha level.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;We can't prove the null hypothesis is true. We can only obtain evidence to &lt;em&gt;reject&lt;/em&gt; the null hypothesis. &lt;/p&gt;
-&lt;h3&gt;Example Hypotheses&lt;/h3&gt;
-&lt;h4&gt;Hypothesis Example #1: Tree Branches&lt;/h4&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: Most trees have more than 20 branches (most = more than 50%).&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: Most trees have less than 20 branches.&lt;/p&gt;
-&lt;p&gt;The 50% represents the criteria for our alpha level. This is an example of a one-sided test.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(\mu_{i}\)&lt;/span&gt; represents the mean number of branches for trees that each have less than 20 branches.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu &amp;lt;= \mu_{i}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu &amp;gt; \mu_{i}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Let's say we sample 10 trees and find that all have &lt;em&gt;more&lt;/em&gt; than 20 branches. &lt;/p&gt;
-&lt;p&gt;This sample is evidence that most (greater than 50%) trees have more than 20 branches. We will &lt;em&gt;fail to reject&lt;/em&gt; the null hypothesis.&lt;/p&gt;
-&lt;h4&gt;Hypothesis Example #2: Personal Trainer at Gym Effect on Mass&lt;/h4&gt;
-&lt;p&gt;Null hypothesis: having Joe as a personal trainer for three weightlifting workouts per week over the course of a year has no effect on one's mass.&lt;/p&gt;
-&lt;p&gt;Alternative hypothesis: having Joe as a personal trainer for three weightlifting workouts per week over the course of a year has a &lt;em&gt;significant&lt;/em&gt; effect on the client's mass.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu = \mu_{joe}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu \neq \mu_{joe}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;To reject the null hypothesis, the sample mean with treatment could be on either end of the sampling distribution. This is considered a two-tailed test.&lt;/p&gt;
-&lt;p&gt;To gather data for the sampling distribution, assume I visited the gym 24/7 for a month and collected data on &lt;span class="math"&gt;\(5,500\)&lt;/span&gt; people's mass who claimed to exercise on average three times per week over the last year but didn't have joe as a personal trainer.&lt;/p&gt;
-&lt;p&gt;To gather data for the treatment group, assume I visited the gym one day and sampled 30 people on their mass who weightlifted at the gym on average three times per week over the past year with Joe's personal training guidance.&lt;/p&gt;
-&lt;p&gt;Let's set an alpha level for this experiment of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;Below, I create the fictional population data.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;population_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;160&lt;/span&gt;
-&lt;span class="n"&gt;population_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5500&lt;/span&gt;
-&lt;span class="n"&gt;population_std_dev_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;22&lt;/span&gt;
-
-&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;population_gym_goers_mass&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;population_mean_pounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;population_std_dev_pounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5500&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Below, I create the fictional sample data.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;30&lt;/span&gt;
-&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;169&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Create the sampling distribution from the population in order to be able to compare with &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt;.  I take &lt;span class="math"&gt;\(330\)&lt;/span&gt; of each &lt;span class="math"&gt;\(30\)&lt;/span&gt; random values with replacement from the population.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sample_means&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;sample&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;500&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="n"&gt;sample_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;choice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;population_gym_goers_mass&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;    
-    &lt;span class="n"&gt;sample_mean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;sample_means&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_mean&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's visualize the sampling distribution.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Sampling Distribution ($n=30$) of Gym Goers&amp;#39; Mass in Pounds&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean mass [pounds]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="z_tests_files/z_tests_52_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Let's compute the standard error which is the standard deviation of the sampling distribution. The equation is below:&lt;/p&gt;
-&lt;div class="math"&gt;$$SE=\frac{\sigma }{\sqrt{n}}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is population standard deviation&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is sample size&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;population_std_dev_pounds&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;4.016632088371218
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's calculate how many standard errors &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; is from &lt;code&gt;population_mean_pounds&lt;/code&gt; and express this as a z-score.&lt;/p&gt;
-&lt;p&gt;I can use the following z-score equation:&lt;/p&gt;
-&lt;div class="math"&gt;$$z=\frac{\bar{x}-\mu}{SE}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is the sample mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is the population mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(SE\)&lt;/span&gt; is the standard error calculated as &lt;span class="math"&gt;\(\frac{\sigma }{\sqrt{n}}\)&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;z_score&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;population_mean_pounds&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;
-&lt;span class="n"&gt;z_score&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;2.2406831897938613
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The initial alpha level is &lt;span class="math"&gt;\(0.05\)&lt;/span&gt; and this is a two-tailed test. Let's shade both areas of the critical region on the positive and negative side of the sampling distribution. The corresponding z-critical value is &lt;span class="math"&gt;\(1.96\)&lt;/span&gt;. Let's find the mean mass value associated with this z-score on the positive side. We can model this calculation by the equation below:&lt;/p&gt;
-&lt;p&gt;1.96 = (sample_mean_at_positive_z_critical - population_mean_pounds)/standard_error_pounds&lt;/p&gt;
-&lt;p&gt;The equation above simplifies to the code below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sample_mean_at_positive_z_critical&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.96&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;population_mean_pounds&lt;/span&gt;
-&lt;span class="n"&gt;sample_mean_at_positive_z_critical&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;167.8725988932076
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's find the mean mass value associated with this z-score on the positive side.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sample_mean_at_negative_z_critical&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;1.96&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;population_mean_pounds&lt;/span&gt;
-&lt;span class="n"&gt;sample_mean_at_negative_z_critical&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;152.1274011067924
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's visualize where &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; lies on the distribution of sample mean masses of groups collected at the gym that didn't have the treatment of Joe's personal training.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;kde&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gaussian_kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_means&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;pos&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_means&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_means&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_mean_at_positive_z_critical&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;175&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_mean_at_negative_z_critical&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;145&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axvline&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linestyle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linewidth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean with Joe personal trainer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;purple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Sampling Distribution ($n=30$) of Gym Goers&amp;#39; Mass in Pounds&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean mass [pounds]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;probability of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="z_tests_files/z_tests_62_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;The visualization shows &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; lies in the positive critical region.&lt;/p&gt;
-&lt;p&gt;I can calculate the probability of randomly selecting a sample mean greater than &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; by identifying the area under the curve to the right of the sample mean's z-score on a standard normal distribution. its z-score on a standard normal distribution. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;p_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cdf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;z_score&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;p_value&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.013
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The returned p-value is &lt;span class="math"&gt;\(0.013\)&lt;/span&gt;. The initial alpha level was &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. The p-value is less than the alpha level.&lt;/p&gt;
-&lt;p&gt;The equivalent z-score cutoff for each tail is &lt;span class="math"&gt;\(\pm1.96\)&lt;/span&gt;. Above, we calculated a z-score value of &lt;span class="math"&gt;\(2.24\)&lt;/span&gt; which is greater than &lt;span class="math"&gt;\(1.96\)&lt;/span&gt;. &lt;/p&gt;
-&lt;p&gt;Therefore, &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; is &lt;em&gt;significant&lt;/em&gt; at &lt;span class="math"&gt;\(p&amp;lt;0.05\)&lt;/span&gt; so we have obtained sufficient evidence to reject the null hypothesis. There's evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.&lt;/p&gt;
-&lt;h3&gt;Continue Gym Personal Trainer Example with Hypothesis Test (of Known True Population Mean)&lt;/h3&gt;
-&lt;p&gt;This type of statistical analysis is prone to misinterpretation. It's possible that those sampled and treated by Joe's personal training already had a history of major weight gain through lifting or had not hit a plateua yet with their potential to gain weight. So, they could have been ideal candidates for Joe to push them to gain muscle rapidly. If either of those scenarios are the case, it's possible that the new estimated population parameters with the treatment are slightly biased. &lt;/p&gt;
-&lt;p&gt;Given this misinterpretion or another issue, our hypothesis testing may result in an error. &lt;/p&gt;
-&lt;p&gt;Earlier, I concluded &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; was &lt;em&gt;significant&lt;/em&gt; at &lt;span class="math"&gt;\(p&amp;lt;0.05\)&lt;/span&gt; because I obtained sufficient evidence to reject the null hypothesis. There was evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.&lt;/p&gt;
-&lt;p&gt;Additionally, let's &lt;em&gt;assume&lt;/em&gt; we found the true population mean of people's mass sampled at the gym for &lt;em&gt;everyone&lt;/em&gt; after one year of 3x per week personal training sessions with Joe was &lt;span class="math"&gt;\(162\)&lt;/span&gt; pounds. In real life, we wouldn't know this value of &lt;span class="math"&gt;\(162\)&lt;/span&gt; because the treatment hasn't taken effect on the population in a study. However, in this example, let's &lt;em&gt;pretend&lt;/em&gt; we do.&lt;/p&gt;
-&lt;p&gt;Let's assign the variable &lt;code&gt;true_population_mean_pounds_with_joe_training&lt;/code&gt; to 162.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;true_population_mean_pounds_with_joe_training&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;162&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In the equation for the z-score, we can utilize this new value to see how many standard errors &lt;code&gt;treatment_sample_mean_pounds&lt;/code&gt; lies from &lt;code&gt;true_population_mean_pounds_with_joe_training&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;z_true&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;true_population_mean_pounds_with_joe_training&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;standard_error_pounds&lt;/span&gt;
-&lt;span class="n"&gt;z_true&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1.7427535920618922
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pos&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_mean_at_positive_z_critical&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;175&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;shade2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sample_mean_at_negative_z_critical&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;145&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;300&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill_between&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shade2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.45&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkviolet&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axvline&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;treatment_sample_mean_pounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linestyle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linewidth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean with Joe personal trainer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;purple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;axvline&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;true_population_mean_pounds_with_joe_training&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linestyle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;--&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;linewidth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;true population mean with Joe&amp;#39;s training&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sample mean mass [pounds]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;probability of occurence&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="z_tests_files/z_tests_71_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;The visualization shows &lt;code&gt;true_population_mean_pounds_with_joe_training&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; in a critical region. &lt;/p&gt;
-&lt;p&gt;Our initial alpha level was &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. The equivalent z-score cutoff for each tail is &lt;span class="math"&gt;\(\pm1.96\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;z_true&lt;/code&gt; value (for the true population mean) is less than the z-critical value of &lt;span class="math"&gt;\(1.96\)&lt;/span&gt;; the ground truth about the population &lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt; is true. Having Joe as a persoanl trainer for three weightlifting workouts per week over the course of the year has &lt;em&gt;no&lt;/em&gt; effect on one's mass. However, our earlier decision based on the sample with treatment was to reject the null hypothesis. In this instance, we committed a Type 1 error!&lt;/p&gt;
-&lt;h3&gt;Effect of Parameters on Treatment Effect&lt;/h3&gt;
-&lt;p&gt;For hypothesis testing, we typically use the following two equations to calculate the standard error (SE) and a z-score for a sample mean:&lt;/p&gt;
-&lt;div class="math"&gt;$$SE=\frac{\sigma }{\sqrt{n}}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is population standard deviation&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is sample size&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="math"&gt;$$z=\frac{\bar{x}-\mu}{SE}$$&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; is the sample mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is the population mean&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(SE\)&lt;/span&gt; is the standard error calculated as &lt;span class="math"&gt;\(\frac{\sigma }{\sqrt{n}}\)&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;An effect that exists is &lt;em&gt;more likely&lt;/em&gt; to be detected with a change in the following variables utilized in the equations above:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is larger (results in smaller SE and z-score farther from 0)&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is smaller (results in smaller SE and z-score farther from 0)&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; farther from &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt; (results in z-score farther from 0)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "left",
-        indent = "1em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="p-values"></category><category term="sampling distribution"></category><category term="standard error"></category><category term="z-score"></category><category term="statistics"></category><category term="standard deviation"></category><category term="normal distribution"></category><category term="python"></category></entry></feed>
+&lt;/script&gt;</content><category term="t-tests"></category><category term="python"></category><category term="scipy"></category><category term="numpy"></category></entry></feed>
