@@ -1,5 +1,323 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base - Data Analysis</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/data-analysis.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2018-12-24T16:49:00-08:00</updated><entry><title>Create New Columns Based on Operations</title><link href="https://dfrieds.com/data-analysis/create-new-column-python-pandas" rel="alternate"></link><published>2018-12-24T16:49:00-08:00</published><updated>2018-12-24T16:49:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-12-24:/data-analysis/create-new-column-python-pandas</id><summary type="html">&lt;p&gt;Learn how to create new columns in a pandas DataFrame through math operations and conditionals among various columns&lt;/p&gt;</summary><content type="html">&lt;p&gt;A pivotal part of data analysis is to create new columns based on some operation. This tutorial will cover multiple ways to do that.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base - Data Analysis</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/data-analysis.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-04-14T06:20:00-07:00</updated><entry><title>Self Join</title><link href="https://dfrieds.com/data-analysis/self-join-python-pandas" rel="alternate"></link><published>2019-04-14T06:20:00-07:00</published><updated>2019-04-14T06:20:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-04-14:/data-analysis/self-join-python-pandas</id><summary type="html">&lt;p&gt;Self join a table in python and pandas&lt;/p&gt;</summary><content type="html">&lt;p&gt;In SQL, a popular type of join is a self join which joins a table to itself. This is helpful for comparing rows to one another, based on their values in columns, in a &lt;em&gt;single&lt;/em&gt; table. &lt;/p&gt;
+&lt;p&gt;In this tutorial, I'll walk through several dataset
+, we can query the columns of DataFrames with boolean expressions using the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html'&gt;&lt;code&gt;query()&lt;/code&gt;&lt;/a&gt; method. I'll walk through lots of simple examples.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example 1: Basic Real Estate Transactions&lt;/h3&gt;
+&lt;h4&gt;Create Dataset&lt;/h4&gt;
+&lt;p&gt;I'll create a small dataset of 5 real estate transactions that include a unique transaction id for each purchase, a close date for each sale, the buyer's name and seller's name.&lt;/p&gt;
+&lt;p&gt;Notice how Julia was the buyer for transaction id &lt;code&gt;1&lt;/code&gt; and later a seller for transaction id &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;transaction_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; 
+        &lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;2012-08-01&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-02&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-03&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-04&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-04&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; 
+        &lt;span class="s1"&gt;&amp;#39;buyer_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Joe&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jake&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jamie&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jackie&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+       &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Lara&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Barbara&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Emily&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Mason&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+       &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View entire &lt;code&gt;df&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;transaction_id&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;buyer_name&lt;/th&gt;
+      &lt;th&gt;seller_name&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2012-08-03&lt;/td&gt;
+      &lt;td&gt;Jake&lt;/td&gt;
+      &lt;td&gt;Barbara&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2012-08-04&lt;/td&gt;
+      &lt;td&gt;Jamie&lt;/td&gt;
+      &lt;td&gt;Emily&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2012-08-04&lt;/td&gt;
+      &lt;td&gt;Jackie&lt;/td&gt;
+      &lt;td&gt;Mason&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Find People Who Were Both Buyers and Sellers&lt;/h4&gt;
+&lt;p&gt;Often times, people buy homes and then later sell that homes. In this dataset, I'm curious, which people both bought and sold a home? We noticed earlier Julia bought a home and later sold one so Julia's name should be the only result.&lt;/p&gt;
+&lt;p&gt;One method of finding a solution is to do a self join. In pandas, the DataFrame object has a &lt;code&gt;merge()&lt;/code&gt; method. Below, for &lt;code&gt;df&lt;/code&gt;, for the &lt;code&gt;merge&lt;/code&gt; method, I'll set the following arguments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;right=df&lt;/code&gt; so that the first &lt;code&gt;df&lt;/code&gt; listed in the statement merges with another DataFrame, &lt;code&gt;df&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;left_on='buyer_name'&lt;/code&gt; is the column to join from the left &lt;code&gt;df&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;right_on='seller_name&lt;/code&gt; is the column to join from the right &lt;code&gt;df&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By default, these arguments are also set in the &lt;code&gt;merge&lt;/code&gt; method:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;how='inner'&lt;/code&gt; so returned results only show records in which the left &lt;code&gt;df&lt;/code&gt; has a value in &lt;code&gt;buyer_name&lt;/code&gt; equivalent to the right &lt;code&gt;df&lt;/code&gt; with a value of &lt;code&gt;seller_name&lt;/code&gt;. &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;suffixes=(‘_x’, ‘_y’)&lt;/code&gt; so &lt;code&gt;_x&lt;/code&gt; is appended to the end of column names from our left &lt;code&gt;df&lt;/code&gt; if those column names originally match the right &lt;code&gt;df&lt;/code&gt;. &lt;code&gt;_y&lt;/code&gt; is appended to the end of column names from our right &lt;code&gt;df&lt;/code&gt; if those column names originally match the left &lt;code&gt;df&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;left_on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;buyer_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;right_on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df2df2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;left_on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;buyer_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;right_on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;transaction_id_x&lt;/th&gt;
+      &lt;th&gt;close_date_x&lt;/th&gt;
+      &lt;th&gt;buyer_name_x&lt;/th&gt;
+      &lt;th&gt;seller_name_x&lt;/th&gt;
+      &lt;th&gt;transaction_id_y&lt;/th&gt;
+      &lt;th&gt;close_date_y&lt;/th&gt;
+      &lt;th&gt;buyer_name_y&lt;/th&gt;
+      &lt;th&gt;seller_name_y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Our output of &lt;code&gt;df2&lt;/code&gt; shows in a single record, the details of Julia who bought a home and sold a home.&lt;/p&gt;
+&lt;p&gt;We can find all unique values in the &lt;code&gt;buyer_name_x&lt;/code&gt; field to programmatically arrive at our result.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;buyer_name_x&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;array([&amp;#39;Julia&amp;#39;], dtype=object)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example 2: Intermediate Real Estate Transactions&lt;/h3&gt;
+&lt;h4&gt;Append New Row to Dataset&lt;/h4&gt;
+&lt;p&gt;Below, I create a new row for another real estate transaction in which Julia buys a 2nd home.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-05&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Mary&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View new &lt;code&gt;df&lt;/code&gt; with additional row.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;transaction_id&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;buyer_name&lt;/th&gt;
+      &lt;th&gt;seller_name&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2012-08-03&lt;/td&gt;
+      &lt;td&gt;Jake&lt;/td&gt;
+      &lt;td&gt;Barbara&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2012-08-04&lt;/td&gt;
+      &lt;td&gt;Jamie&lt;/td&gt;
+      &lt;td&gt;Emily&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2012-08-04&lt;/td&gt;
+      &lt;td&gt;Jackie&lt;/td&gt;
+      &lt;td&gt;Mason&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;2012-08-05&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;Mary&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Find People Who Are Both Buyers and Sellers&lt;/h4&gt;
+&lt;p&gt;This is the same ask as with Example 1. However, our dataset is slightly different so a self join will return different results.&lt;/p&gt;
+&lt;p&gt;I'll use the same code to perform a self join but assign the output to &lt;code&gt;df&lt;/code&gt; instead.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;right&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;left_on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;buyer_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;right_on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df3&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;transaction_id_x&lt;/th&gt;
+      &lt;th&gt;close_date_x&lt;/th&gt;
+      &lt;th&gt;buyer_name_x&lt;/th&gt;
+      &lt;th&gt;seller_name_x&lt;/th&gt;
+      &lt;th&gt;transaction_id_y&lt;/th&gt;
+      &lt;th&gt;close_date_y&lt;/th&gt;
+      &lt;th&gt;buyer_name_y&lt;/th&gt;
+      &lt;th&gt;seller_name_y&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;2012-08-05&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;Mary&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There are &lt;em&gt;two&lt;/em&gt; records! &lt;/p&gt;
+&lt;p&gt;The first record indicates Julia's purchase for &lt;code&gt;transaction_id&lt;/code&gt; of &lt;code&gt;1&lt;/code&gt; and later a sale with &lt;code&gt;transaction_id&lt;/code&gt; of &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The second record indicates Julia's purchase for &lt;code&gt;transaction_id&lt;/code&gt; of &lt;code&gt;6&lt;/code&gt; and later a sale with &lt;code&gt;transaction_id&lt;/code&gt; of &lt;code&gt;2&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;This is the correct output as I wanted all rows of &lt;code&gt;df&lt;/code&gt; to be joined with &lt;code&gt;df&lt;/code&gt; in which a &lt;code&gt;buyer_name&lt;/code&gt; from the left &lt;code&gt;df&lt;/code&gt; is equivalent to a &lt;code&gt;seller_name&lt;/code&gt; from the right &lt;code&gt;df&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I can find all unique values of the &lt;code&gt;buyer_name_x&lt;/code&gt; field to programmatically arrive at our result.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df3&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;buyer_name_x&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;array([&amp;#39;Julia&amp;#39;], dtype=object)
+&lt;/pre&gt;&lt;/div&gt;</content><category term="self join"></category><category term="pandas merge"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Create New Columns Based on Operations</title><link href="https://dfrieds.com/data-analysis/create-new-column-python-pandas" rel="alternate"></link><published>2018-12-24T16:49:00-08:00</published><updated>2018-12-24T16:49:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-12-24:/data-analysis/create-new-column-python-pandas</id><summary type="html">&lt;p&gt;Learn how to create new columns in a pandas DataFrame through math operations and conditionals among various columns&lt;/p&gt;</summary><content type="html">&lt;p&gt;A pivotal part of data analysis is to create new columns based on some operation. This tutorial will cover multiple ways to do that.&lt;/p&gt;
 &lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
@@ -5527,236 +5845,4 @@ Name: response, dtype: int64
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;You can learn more about the differences in working with categorical data in Pandas from the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/categorical.html'&gt;official documentation page&lt;/a&gt;. &lt;/p&gt;</content><category term="categorical data"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>cut() Method: Bin Values into Discrete Intervals</title><link href="https://dfrieds.com/data-analysis/bin-values-python-pandas" rel="alternate"></link><published>2018-11-20T14:00:00-08:00</published><updated>2018-11-20T14:00:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2018-11-20:/data-analysis/bin-values-python-pandas</id><summary type="html">&lt;p&gt;Learn how to bin values in Python with pandas using the cut() method and through simple examples&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Why Bin Data&lt;/h3&gt;
-&lt;p&gt;Often times you have numerical data on very large scales. Sometimes, it can be easier to bin the values into groups. This is helpful to more easily perform descriptive statistics by groups as a generalization of patterns in the data.&lt;/p&gt;
-&lt;p&gt;We'll cover an example below of binning age values into groups. &lt;/p&gt;
-&lt;h3&gt;Binning in pandas with Age Example&lt;/h3&gt;
-&lt;p&gt;First, let's create a simple pandas DataFrame assigned to the variable &lt;code&gt;df_ages&lt;/code&gt; with just one colum for &lt;code&gt;age&lt;/code&gt;. This column will contain 40 random age values between 20 and 100 (inclusive on each end).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's preview the first 5 rows of &lt;code&gt;df_ages&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th&gt;age&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;0&lt;/th&gt;
-      &lt;td&gt;37&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;1&lt;/th&gt;
-      &lt;td&gt;37&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;2&lt;/th&gt;
-      &lt;td&gt;84&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;3&lt;/th&gt;
-      &lt;td&gt;99&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;4&lt;/th&gt;
-      &lt;td&gt;93&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Ages are often denoted by decade - saying people are in their 20s or 30s. To get to that denotion, it helps to understand that someone in their 20s is between the age of 20-29. Let's create a new column called &lt;code&gt;age_range&lt;/code&gt; that provides that nearly 10-year window of ages.&lt;/p&gt;
-&lt;p&gt;First, let's create a list assigned to the variable &lt;code&gt;age_ranges&lt;/code&gt; that creates list items in a list comprehension. Each list item created is a value of &lt;code&gt;age - age+9&lt;/code&gt; for ages in the range of 20 to 100 with a step value of 10. I also printed the output of &lt;code&gt;age_ranges&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;If the syntax below still seems daunting, you can learn more about string formatting from &lt;a href='https://dfrieds.com/python/string-formatting'&gt;this tutorial&lt;/a&gt; on my website and the &lt;code&gt;range()&lt;/code&gt; function via &lt;a href='https://realpython.com/python-range/'&gt;this article&lt;/a&gt; on Real Python.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;age_ranges&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{0} - {1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-&lt;span class="n"&gt;age_ranges&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;20 - 29&amp;#39;,
- &amp;#39;30 - 39&amp;#39;,
- &amp;#39;40 - 49&amp;#39;,
- &amp;#39;50 - 59&amp;#39;,
- &amp;#39;60 - 69&amp;#39;,
- &amp;#39;70 - 79&amp;#39;,
- &amp;#39;80 - 89&amp;#39;,
- &amp;#39;90 - 99&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Create a variable &lt;code&gt;count_unique_age_ranges&lt;/code&gt; that's the count of items in the &lt;code&gt;age_ranges&lt;/code&gt; list above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_ranges&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age_ranges&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;count_unique_age_ranges&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;8
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;In order to bin our ages, we want to use the pandas &lt;code&gt;cut()&lt;/code&gt; method. &lt;/p&gt;
-&lt;p&gt;For the argument &lt;code&gt;x&lt;/code&gt;, we pass in the values in the &lt;code&gt;age&lt;/code&gt; column from our &lt;code&gt;df_ages&lt;/code&gt; DataFrame.&lt;/p&gt;
-&lt;p&gt;For the argument &lt;code&gt;bins&lt;/code&gt;, we pass in the number of bins we want to create designated by the variable &lt;code&gt;count_unique_age_ranges&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;For the argument &lt;code&gt;labels&lt;/code&gt;, we specify the labels for our returned binned column which is the list we created above assigned to the variable &lt;code&gt;age_ranges&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;With the returned output of the &lt;code&gt;cut()&lt;/code&gt; method, we'll create a new column in &lt;code&gt;df_ages&lt;/code&gt; called &lt;code&gt;age_range&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Since we want 8 bins originally from the &lt;code&gt;age&lt;/code&gt; column, this &lt;code&gt;cut()&lt;/code&gt; method knows to make bins with ages between 20-29, 30-39 and so forth. It just so happens that we designate the values in &lt;code&gt;age_range&lt;/code&gt; to be a similar looking string value. &lt;/p&gt;
-&lt;p&gt;The order of values we specify in the labels &lt;code&gt;age_ranges&lt;/code&gt; matter too! The first item, &lt;code&gt;20-29&lt;/code&gt;, corresponds to the first bin created that will contain age values in the range of 20-29, and so forth.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_range&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cut&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;bins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_ranges&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;age_ranges&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's preview the first few rows of &lt;code&gt;df_ages&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th&gt;age&lt;/th&gt;
-      &lt;th&gt;age_range&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;0&lt;/th&gt;
-      &lt;td&gt;37&lt;/td&gt;
-      &lt;td&gt;30 - 39&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;1&lt;/th&gt;
-      &lt;td&gt;37&lt;/td&gt;
-      &lt;td&gt;30 - 39&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;2&lt;/th&gt;
-      &lt;td&gt;84&lt;/td&gt;
-      &lt;td&gt;80 - 89&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;3&lt;/th&gt;
-      &lt;td&gt;99&lt;/td&gt;
-      &lt;td&gt;90 - 99&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;4&lt;/th&gt;
-      &lt;td&gt;93&lt;/td&gt;
-      &lt;td&gt;90 - 99&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;p&gt;We can apply the &lt;code&gt;info()&lt;/code&gt; method to our DataFrame. Notice next to our new column called &lt;code&gt;age_range&lt;/code&gt; that the data type is a &lt;code&gt;category&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;class &amp;#39;pandas.core.frame.DataFrame&amp;#39;&amp;gt;
-RangeIndex: 40 entries, 0 to 39
-Data columns (total 2 columns):
-age          40 non-null int64
-age_range    40 non-null category
-dtypes: category(1), int64(1)
-memory usage: 504.0 bytes
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's create another new column to define someone's age denoted by decade. So, if you're 28, you're in your 20s and if you're 54, you're in your 50s. We'll later call this column &lt;code&gt;age_by_decade&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;First, let's create a list assigned to the variable &lt;code&gt;age_by_decade&lt;/code&gt; that creates list items by the decade names. We'll simply take each age from 20 to 100 with a step of 10 and simply append an &lt;em&gt;s&lt;/em&gt; to the end of each &lt;code&gt;age&lt;/code&gt; value. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;age_by_decade&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{0}s&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;age&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
-&lt;span class="n"&gt;age_by_decade&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[&amp;#39;20s&amp;#39;, &amp;#39;30s&amp;#39;, &amp;#39;40s&amp;#39;, &amp;#39;50s&amp;#39;, &amp;#39;60s&amp;#39;, &amp;#39;70s&amp;#39;, &amp;#39;80s&amp;#39;, &amp;#39;90s&amp;#39;]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Create a variable &lt;code&gt;count_unique_age_decades&lt;/code&gt; that's the count of items in the &lt;code&gt;age_by_decade&lt;/code&gt; list above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_decades&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;age_by_decade&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;count_unique_age_decades&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;8
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Let's create a new column called &lt;code&gt;age_by_decade&lt;/code&gt; that's made using the pandas &lt;code&gt;cut()&lt;/code&gt; method. &lt;/p&gt;
-&lt;p&gt;For the argument &lt;code&gt;x&lt;/code&gt;, we pass in the values in the &lt;code&gt;age&lt;/code&gt; column from our &lt;code&gt;df_ages&lt;/code&gt; DataFrame.&lt;/p&gt;
-&lt;p&gt;For the argument &lt;code&gt;bins&lt;/code&gt;, we pass in the number of bins we want to create designated by the variable &lt;code&gt;count_unique_age_decades&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;For the argument &lt;code&gt;labels&lt;/code&gt;, we specify the labels for our returned binned column which is the list we created above assigned to the variable &lt;code&gt;age_by_decade&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;With the returned output of the &lt;code&gt;cut()&lt;/code&gt; method, we'll create a new column in &lt;code&gt;df_ages&lt;/code&gt; called &lt;code&gt;age_by_decade&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age_by_decade&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cut&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;age&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;bins&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;count_unique_age_decades&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labels&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;age_by_decade&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Preview the first 5 rows of &lt;code&gt;df_ages&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div&gt;
-&lt;table border="1" class="dataframe"&gt;
-  &lt;thead&gt;
-    &lt;tr style="text-align: right;"&gt;
-      &lt;th&gt;&lt;/th&gt;
-      &lt;th&gt;age&lt;/th&gt;
-      &lt;th&gt;age_range&lt;/th&gt;
-      &lt;th&gt;age_by_decade&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;th&gt;0&lt;/th&gt;
-      &lt;td&gt;37&lt;/td&gt;
-      &lt;td&gt;30 - 39&lt;/td&gt;
-      &lt;td&gt;30s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;1&lt;/th&gt;
-      &lt;td&gt;37&lt;/td&gt;
-      &lt;td&gt;30 - 39&lt;/td&gt;
-      &lt;td&gt;30s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;2&lt;/th&gt;
-      &lt;td&gt;84&lt;/td&gt;
-      &lt;td&gt;80 - 89&lt;/td&gt;
-      &lt;td&gt;80s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;3&lt;/th&gt;
-      &lt;td&gt;99&lt;/td&gt;
-      &lt;td&gt;90 - 99&lt;/td&gt;
-      &lt;td&gt;90s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;4&lt;/th&gt;
-      &lt;td&gt;93&lt;/td&gt;
-      &lt;td&gt;90 - 99&lt;/td&gt;
-      &lt;td&gt;90s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-
-&lt;p&gt;You can learn more about the intricate details of the Pandas &lt;code&gt;cut()&lt;/code&gt; method on the &lt;a href='https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.cut.html'&gt;official documentation page&lt;/a&gt;.&lt;/p&gt;</content><category term="categorical data"></category><category term="python"></category><category term="pandas"></category><category term="bin"></category></entry></feed>
+&lt;p&gt;You can learn more about the differences in working with categorical data in Pandas from the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/categorical.html'&gt;official documentation page&lt;/a&gt;. &lt;/p&gt;</content><category term="categorical data"></category><category term="python"></category><category term="pandas"></category></entry></feed>

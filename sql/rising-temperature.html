@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="leetcode rank scores">
+  <meta name="keywords" content="rising temperature sql">
 
-  <meta name="description" content="Medium level Leetcode SQL problem and explanation of ranking scores using a window function">
-  <meta property="og:description"  content="Medium level Leetcode SQL problem and explanation of ranking scores using a window function">
-  <meta name="twitter:description" content="Medium level Leetcode SQL problem and explanation of ranking scores using a window function">
+  <meta name="description" content="SQL problem and step-by-step explanation of identifying days with higher temperature than previous day">
+  <meta property="og:description"  content="SQL problem and step-by-step explanation of identifying days with higher temperature than previous day">
+  <meta name="twitter:description" content="SQL problem and step-by-step explanation of identifying days with higher temperature than previous day">
 
-  <meta property="og:title" content="Rank Scores via Leetcode">
-  <meta name="twitter:title" content="Rank Scores via Leetcode">
+  <meta property="og:title" content="Rising Temperature">
+  <meta name="twitter:title" content="Rising Temperature">
 
-  <link rel="canonical" href="https://dfrieds.com/sql/rank-scores"/>
+  <link rel="canonical" href="https://dfrieds.com/sql/rising-temperature"/>
 
-  <title>Rank Scores via Leetcode - SQL</title>
+  <title>Rising Temperature - SQL</title>
 
   
 
@@ -144,105 +144,122 @@
 
 <section id="content" class="body">
   <header>
-    <div class="posttype"> SQL Window Functions Problem Solution</div>
+    <div class="posttype"> SQL Joins Problem Solution</div>
     <h1 class="articleh1">
-      Rank Scores via Leetcode
+      Rising Temperature
     </h1>
 
     <ul class ="row article_info">
       
       <li>
-        Apr 14&nbsp;&nbsp;&bull;&nbsp;&nbsp;2 min read
+        Apr 9&nbsp;&nbsp;&bull;&nbsp;&nbsp;2 min read
       </li>
       <li class="tagarticle">
-        Key Terms:         window function,
-        DENSE_RANK()
+        Key Terms:         window functions,
+        subquery,
+        LAG()
       </li>
     </ul>
   </header>
 
   <div class='article_content'>
-    <p>In <em>extreme detail</em>, in this tutorial I'll walk through a <a href="https://leetcode.com/problems/rank-scores/description/" target="_blank">Leetcode medium level SQL problem</a> to arrive to the solution.</p>
-<h3>Problem Statement via Leetcode</h3>
-<p>Write a SQL query to rank scores. If there is a tie between two scores, both should have the same ranking. Note that after a tie, the next ranking number should be the next consecutive integer value. In other words, there should be no "holes" between ranks.</p>
+    <p>In <em>extreme detail</em>, I'll walk through a solution to the problem below. It's based off this <a href="https://leetcode.com/problems/rising-temperature/" target="_blank">Leetcode problem</a> however I use a different example that's more similar to the "dirty" data you'll utilize on the job. </p>
+<h3>Problem Statement</h3>
+<p>Given a <code>weater</code> table, write a SQL query to find all dates with higher temperature compared to its previous day.</p>
 <table>
 <thead>
 <tr>
 <th>Id</th>
-<th>Score</th>
+<th>RecordDate</th>
+<th>Temperature</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
-<td>3.50</td>
+<td>2018-02-01</td>
+<td>33</td>
 </tr>
 <tr>
 <td>2</td>
-<td>3.65</td>
+<td>2018-02-02</td>
+<td>34</td>
 </tr>
 <tr>
 <td>3</td>
-<td>4.00</td>
+<td>2018-02-03</td>
+<td>22</td>
 </tr>
 <tr>
 <td>4</td>
-<td>3.85</td>
+<td>2018-02-05</td>
+<td>38</td>
 </tr>
 <tr>
 <td>5</td>
-<td>4.00</td>
-</tr>
-<tr>
-<td>6</td>
-<td>3.65</td>
+<td>2018-02-06</td>
+<td>39</td>
 </tr>
 </tbody>
 </table>
-<p>For example, given the above Scores table, your query should generate the following report (order by highest score):</p>
+<p>You should return the following table.</p>
+<p>Id | RecordDate | Temperature | previous_day_temperature
+--- | --- | ---
+1 | 2018-02-01 | 33
+2 | 2018-02-02 | 34
+3 | 2018-02-03 | 22
+4 | 2018-02-05 | 38
+5 | 2018-02-06 | 39</p>
+<h3>Solution</h3>
+<h4>Self Join <code>Weather</code> Table</h4>
+<p><strong>Explanation of SQL Query Below:</strong></p>
+<p>In the <code>Weather</code> table, each row has a unique <code>Id</code> value and should also be a unique day. </p>
 <table>
 <thead>
 <tr>
-<th>Score</th>
-<th>Rank</th>
+<th>Id</th>
+<th>RecordDate</th>
+<th>Temperature</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>4.00</td>
 <td>1</td>
+<td>2018-02-01</td>
+<td>33</td>
 </tr>
 <tr>
-<td>4.00</td>
-<td>1</td>
-</tr>
-<tr>
-<td>3.85</td>
 <td>2</td>
+<td>2018-02-02</td>
+<td>34</td>
 </tr>
 <tr>
-<td>3.65</td>
 <td>3</td>
+<td>2018-02-03</td>
+<td>22</td>
 </tr>
 <tr>
-<td>3.65</td>
-<td>3</td>
-</tr>
-<tr>
-<td>3.50</td>
 <td>4</td>
+<td>2018-02-05</td>
+<td>38</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2018-02-06</td>
+<td>39</td>
 </tr>
 </tbody>
 </table>
-<h3>Dan's Step by Step Solution</h3>
-<h4>Use DENSE_RANK() to Get Ranking of Scores in Descending Order</h4>
-<p><strong>Explanation of SQL Query Below:</strong></p>
-<p>I create a new column using the <code>DENSE_RANK()</code> method that is applied over all rows and <code>Score</code> values and the rows are ordered by <code>Score</code> from greatest to least.</p>
-<p>The <code>DENSE_RANK()</code> method doesn't skip any rank numeric values. Any numeric values of the same size will get the same rank value. </p>
+<p>Note how the <code>RecordDate</code> changes from <code>2018-02-02</code> to <code>2018-02-04</code>. In this table, we're unsure how the <code>Temperature</code> on <code>2018-02-04</code> compares to the previous day, the third, because there is no value of the previous days' temperature.</p>
+<p>In the final solution SQL query, I need two conditions:</p>
+<p>1) Previous day's date plus one day is equal to the current day's date
+2) </p>
+<p>The <code>SELF JOIN</code> below joins the <code>weather</code> table to itself on the <code>Id</code> field. So, the result is </p>
 <p><strong>SQL Query:</strong></p>
-<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">Score</span> <span class="k">AS</span> <span class="ss">&quot;Score&quot;</span><span class="p">,</span>
-       <span class="n">DENSE_RANK</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">Score</span> <span class="k">DESC</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;Rank&quot;</span>
-<span class="k">FROM</span> <span class="n">Scores</span>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span><span class="p">,</span> 
+       <span class="n">LAG</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">record_date</span> <span class="k">ASC</span><span class="p">)</span> <span class="k">AS</span> <span class="n">previous_day_temperature</span><span class="p">,</span>
+       <span class="n">LAG</span><span class="p">(</span><span class="n">record_date</span><span class="p">)</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">record_date</span> <span class="k">ASC</span><span class="p">)</span> <span class="k">AS</span> <span class="n">previous_record_date</span>
+<span class="k">FROM</span> <span class="n">frieds</span><span class="p">.</span><span class="n">weather</span> <span class="n">weather</span>
 </pre></div>
 
 
@@ -250,37 +267,55 @@
 <table>
 <thead>
 <tr>
-<th>Score</th>
-<th>Rank</th>
+<th>Id</th>
+<th>RecordDate</th>
+<th>Temperature</th>
+<th>Id</th>
+<th>RecordDate</th>
+<th>Temperature</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>4.00</td>
 <td>1</td>
+<td>2015-01-01</td>
+<td>10</td>
+<td>1</td>
+<td>2015-01-01</td>
+<td>10</td>
 </tr>
 <tr>
-<td>4.00</td>
-<td>1</td>
-</tr>
-<tr>
-<td>3.85</td>
 <td>2</td>
+<td>2015-01-02</td>
+<td>25</td>
+<td>2</td>
+<td>2015-01-02</td>
+<td>25</td>
 </tr>
 <tr>
-<td>3.65</td>
 <td>3</td>
-</tr>
-<tr>
-<td>3.65</td>
+<td>2015-01-03</td>
+<td>20</td>
 <td>3</td>
+<td>2015-01-03</td>
+<td>20</td>
 </tr>
 <tr>
-<td>3.50</td>
 <td>4</td>
+<td>2015-01-04</td>
+<td>30</td>
+<td>4</td>
+<td>2015-01-04</td>
+<td>30</td>
 </tr>
 </tbody>
 </table>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">weather</span><span class="p">.</span><span class="n">Id</span> <span class="k">AS</span> <span class="ss">&quot;Id&quot;</span>
+<span class="k">FROM</span> <span class="n">weather</span>
+<span class="k">JOIN</span> <span class="n">weather</span> <span class="n">w</span>
+<span class="k">ON</span> <span class="n">DATEDIFF</span><span class="p">(</span><span class="n">weather</span><span class="p">.</span><span class="n">RecordDate</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">RecordDate</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">AND</span> <span class="n">weather</span><span class="p">.</span><span class="n">Temperature</span> <span class="o">&gt;</span> <span class="n">w</span><span class="p">.</span><span class="n">Temperature</span>
+</pre></div>
   </div>
 </section>
 
