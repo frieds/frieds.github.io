@@ -1,5 +1,1368 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-04-14T06:20:00-07:00</updated><entry><title>Rank Scores via Leetcode</title><link href="https://dfrieds.com/sql/rank-scores" rel="alternate"></link><published>2019-04-14T06:20:00-07:00</published><updated>2019-04-14T06:20:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-04-14:/sql/rank-scores</id><summary type="html">&lt;p&gt;Medium level Leetcode SQL problem and explanation of ranking scores using a window function&lt;/p&gt;</summary><content type="html">&lt;p&gt;In &lt;em&gt;extreme detail&lt;/em&gt;, in this tutorial I'll walk through a &lt;a href="https://leetcode.com/problems/rank-scores/description/" target="_blank"&gt;Leetcode medium level SQL problem&lt;/a&gt; to arrive to the solution.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-04-15T09:30:00-07:00</updated><entry><title>Pandas rank() Method: Equivalent to ROW_NUMBER(), RANK(), DENSE_RANK() and NTILE() SQL Window Functions</title><link href="https://dfrieds.com/data-analysis/rank-method-python-pandas" rel="alternate"></link><published>2019-04-15T09:30:00-07:00</published><updated>2019-04-15T09:30:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-04-15:/data-analysis/rank-method-python-pandas</id><summary type="html">&lt;p&gt;Utilize the rank() method for pandas series - equivalent to ROW_NUMBER(), RANK(), DENSE_RANK() and NTILE() SQL window functions&lt;/p&gt;</summary><content type="html">&lt;p&gt;In SQL, popular window functions include: &lt;code&gt;ROW_NUMBER()&lt;/code&gt;, &lt;code&gt;RANK()&lt;/code&gt;, and &lt;code&gt;DENSE_RANK()&lt;/code&gt;. These are helpful for creating a new column that's a rank of some other values in a column, perhaps partitioned by one or multiple groups. You can learn about these SQL window functions via &lt;a href='https://mode.com/resources/sql-tutorial/sql-window-functions/' target='_blank'&gt;Mode's SQL tutorial&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Similarly, using pandas in Python, the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.rank.html' target="_blank"&gt;&lt;code&gt;rank()&lt;/code&gt; method&lt;/a&gt; for a series provides similar utility to the SQL window functions listed above.&lt;/p&gt;
+&lt;p&gt;In this tutorial, I'll cover the &lt;code&gt;rank()&lt;/code&gt; method with an example of real estate transactions data.&lt;/p&gt;
+&lt;h3&gt;Setup Code&lt;/h3&gt;
+&lt;h4&gt;Import Module&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Gradient Used to Highlight Table Outputs&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;cm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;light_palette&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;lightgreen&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;as_cmap&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Example 1: Count of New Sellers Per Day&lt;/h3&gt;
+&lt;h4&gt;Create Real Estate Transaction Dataset&lt;/h4&gt;
+&lt;p&gt;I'll create a small dataset of 8 real estate transactions that include a close date and seller name for each house sale.&lt;/p&gt;
+&lt;p&gt;Take note that Julia sold 5 homes with some transactions on separate days. Lara also sold 2 homes on different days.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;2012-08-01&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-01&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-01&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-02&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-03&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-04&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-05&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2012-08-07&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Lara&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Emily&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Lara&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Julia&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+       &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View entire &lt;code&gt;df&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;seller_name&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Emily&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;2012-08-03&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;2012-08-04&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;2012-08-05&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;2012-08-07&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Convert &lt;code&gt;close_date&lt;/code&gt; column to datetime type in Python.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Find Rank of Homes Sold for Each Seller by Close Date&lt;/h4&gt;
+&lt;p&gt;I want to know the rank of each house sale &lt;em&gt;by person ordered by time&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;Based on looking at the table above, Julia sold her first, second and third house on August 1st. On August 3rd, Julia sold her fourth house. &lt;/p&gt;
+&lt;p&gt;For the &lt;code&gt;df&lt;/code&gt; dataframe, I want to create a new column that shows the numerical rank values for each person's home sales by day. To do this, I group by the &lt;code&gt;seller_name&lt;/code&gt; column, and apply the &lt;code&gt;rank()&lt;/code&gt; method to the &lt;code&gt;close_date&lt;/code&gt; colummn. I set the &lt;code&gt;rank()&lt;/code&gt; argument &lt;code&gt;methond='first'&lt;/code&gt; to rank the sales of houses per person, ordered by date, in the order they appear. The new column with rank values is called &lt;code&gt;rank_seller_by_close_date&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;method='first'&lt;/code&gt; for the &lt;code&gt;rank()&lt;/code&gt; method for pandas series is equivalent to the &lt;code&gt;ROW_NUMBER()&lt;/code&gt; window function in SQL.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rank_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Below I output &lt;code&gt;df&lt;/code&gt; and highlight the &lt;code&gt;rank_seller_by_close_date&lt;/code&gt; with shades of green designated by numerical value. The higher the rank value, the darker the green highlighted background. &lt;code&gt;df&lt;/code&gt; is ordered by &lt;code&gt;close_date&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;background_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmap&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;cm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IndexSlice&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rank_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;style  type="text/css" &gt;
+    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col2 {
+            background-color:  #e9fce9;
+        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col2 {
+            background-color:  #e9fce9;
+        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col2 {
+            background-color:  #d3f8d3;
+        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col2 {
+            background-color:  #e9fce9;
+        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col2 {
+            background-color:  #bcf5bc;
+        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col2 {
+            background-color:  #d3f8d3;
+        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col2 {
+            background-color:  #a6f1a6;
+        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col2 {
+            background-color:  #90ee90;
+        }&lt;/style&gt;
+
+&lt;p&gt;&lt;table id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5f" &gt; 
+&lt;thead&gt;    &lt;tr&gt; 
+        &lt;th class="blank level0" &gt;&lt;/th&gt; 
+        &lt;th class="col_heading level0 col0" &gt;close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col1" &gt;seller_name&lt;/th&gt; 
+        &lt;th class="col_heading level0 col2" &gt;rank_seller_by_close_date&lt;/th&gt; 
+    &lt;/tr&gt;&lt;/thead&gt; 
+&lt;tbody&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row0" class="row_heading level0 row0" &gt;0&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col0" class="data row0 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col1" class="data row0 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col2" class="data row0 col2" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row1" class="row_heading level0 row1" &gt;1&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col0" class="data row1 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col1" class="data row1 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col2" class="data row1 col2" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row2" class="row_heading level0 row2" &gt;2&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col0" class="data row2 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col1" class="data row2 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col2" class="data row2 col2" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row3" class="row_heading level0 row3" &gt;3&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col0" class="data row3 col0" &gt;2012-08-02 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col1" class="data row3 col1" &gt;Emily&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col2" class="data row3 col2" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row4" class="row_heading level0 row4" &gt;4&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col0" class="data row4 col0" &gt;2012-08-03 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col1" class="data row4 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col2" class="data row4 col2" &gt;3&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row5" class="row_heading level0 row5" &gt;5&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col0" class="data row5 col0" &gt;2012-08-04 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col1" class="data row5 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col2" class="data row5 col2" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row6" class="row_heading level0 row6" &gt;6&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col0" class="data row6 col0" &gt;2012-08-05 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col1" class="data row6 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col2" class="data row6 col2" &gt;4&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row7" class="row_heading level0 row7" &gt;7&lt;/th&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col0" class="data row7 col0" &gt;2012-08-07 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col1" class="data row7 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col2" class="data row7 col2" &gt;5&lt;/td&gt; 
+    &lt;/tr&gt;&lt;/tbody&gt; 
+&lt;/table&gt; &lt;/p&gt;
+&lt;p&gt;It's difficult to easily see the order of ranks for each seller by date. Below, I output &lt;code&gt;df&lt;/code&gt; sorted by &lt;code&gt;seller_name&lt;/code&gt; and then &lt;code&gt;rank_seller_by_close_date&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Much better! It's clear Julia's home sales are ranked by from oldest to newest. Even though she made two homes sales on August 1st, one is given a rank value of &lt;code&gt;1&lt;/code&gt; and then next &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;rank_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;background_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmap&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;cm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IndexSlice&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rank_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;style  type="text/css" &gt;
+    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col2 {
+            background-color:  #e9fce9;
+        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col2 {
+            background-color:  #e9fce9;
+        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col2 {
+            background-color:  #d3f8d3;
+        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col2 {
+            background-color:  #bcf5bc;
+        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col2 {
+            background-color:  #a6f1a6;
+        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col2 {
+            background-color:  #90ee90;
+        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col2 {
+            background-color:  #e9fce9;
+        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col2 {
+            background-color:  #d3f8d3;
+        }&lt;/style&gt;
+
+&lt;p&gt;&lt;table id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5f" &gt; 
+&lt;thead&gt;    &lt;tr&gt; 
+        &lt;th class="blank level0" &gt;&lt;/th&gt; 
+        &lt;th class="col_heading level0 col0" &gt;close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col1" &gt;seller_name&lt;/th&gt; 
+        &lt;th class="col_heading level0 col2" &gt;rank_seller_by_close_date&lt;/th&gt; 
+    &lt;/tr&gt;&lt;/thead&gt; 
+&lt;tbody&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row0" class="row_heading level0 row0" &gt;3&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col0" class="data row0 col0" &gt;2012-08-02 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col1" class="data row0 col1" &gt;Emily&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col2" class="data row0 col2" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row1" class="row_heading level0 row1" &gt;1&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col0" class="data row1 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col1" class="data row1 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col2" class="data row1 col2" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row2" class="row_heading level0 row2" &gt;2&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col0" class="data row2 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col1" class="data row2 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col2" class="data row2 col2" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row3" class="row_heading level0 row3" &gt;4&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col0" class="data row3 col0" &gt;2012-08-03 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col1" class="data row3 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col2" class="data row3 col2" &gt;3&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row4" class="row_heading level0 row4" &gt;6&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col0" class="data row4 col0" &gt;2012-08-05 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col1" class="data row4 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col2" class="data row4 col2" &gt;4&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row5" class="row_heading level0 row5" &gt;7&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col0" class="data row5 col0" &gt;2012-08-07 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col1" class="data row5 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col2" class="data row5 col2" &gt;5&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row6" class="row_heading level0 row6" &gt;0&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col0" class="data row6 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col1" class="data row6 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col2" class="data row6 col2" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row7" class="row_heading level0 row7" &gt;5&lt;/th&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col0" class="data row7 col0" &gt;2012-08-04 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col1" class="data row7 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col2" class="data row7 col2" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;&lt;/tbody&gt; 
+&lt;/table&gt; &lt;/p&gt;
+&lt;h4&gt;Find Count of New Sellers Per Seller Per Day&lt;/h4&gt;
+&lt;p&gt;I can utilize the rankings above to find the count of new sellers by day. &lt;/p&gt;
+&lt;p&gt;For example, Julia is a &lt;em&gt;new&lt;/em&gt; home seller on August 1st because she has a rank of &lt;code&gt;1&lt;/code&gt; that day. Julia would &lt;em&gt;not&lt;/em&gt; be counted as a &lt;em&gt;new&lt;/em&gt; home seller on August 3rd because she has a rank of &lt;code&gt;3&lt;/code&gt; that day. &lt;/p&gt;
+&lt;p&gt;I can filter &lt;code&gt;df&lt;/code&gt; by record in which &lt;code&gt;rank_seller_by_close_date&lt;/code&gt; is equal to &lt;code&gt;1&lt;/code&gt;. The three records for Lara, Julia and Emily show the &lt;code&gt;close_date&lt;/code&gt; for each in which they sold their first home.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rank_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;seller_name&lt;/th&gt;
+      &lt;th&gt;rank_seller_by_close_date&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Emily&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Let's take the table above and group by &lt;code&gt;close_date&lt;/code&gt; to find the count of &lt;code&gt;close_date&lt;/code&gt; observations. Below is the output.&lt;/p&gt;
+&lt;p&gt;Similar to above, on &lt;code&gt;2012-08-01&lt;/code&gt;, we can see &lt;code&gt;2&lt;/code&gt; new sellers representing Lara and Julia. On &lt;code&gt;2012-08-02&lt;/code&gt;, we can see &lt;code&gt;1&lt;/code&gt; new seller representing Emily.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rank_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;count_new_sellers_of_homes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;count_new_sellers_of_homes&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;Example 2: Count of New Sellers By Agency Per Day&lt;/h3&gt;
+&lt;p&gt;In example 1, I wanted the count of new sellers by day. In this example 2, I want the count of sellers by agency per day.&lt;/p&gt;
+&lt;p&gt;Below, I add a new column called &lt;code&gt;agency&lt;/code&gt; that goes for each home sale.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Fifer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Fifer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Fifer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;HomeSales&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;HomeSales&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Fifer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Fifer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Fifer&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Below I print the output of &lt;code&gt;df&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;seller_name&lt;/th&gt;
+      &lt;th&gt;rank_seller_by_close_date&lt;/th&gt;
+      &lt;th&gt;agency&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Emily&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;HomeSales&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;2012-08-03&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;3.0&lt;/td&gt;
+      &lt;td&gt;HomeSales&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;2012-08-04&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;2012-08-05&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;4.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;2012-08-07&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;5.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I want to create the rank value of home sales by agency per seller ordered by close date. This is valuable so each agency can understand the count of new sellers per day. &lt;/p&gt;
+&lt;p&gt;Below, I group by two fields, &lt;code&gt;agency&lt;/code&gt; and then &lt;code&gt;seller_name&lt;/code&gt; and find a rank value ordered by &lt;code&gt;close_date&lt;/code&gt;. I store these rank values in a new column called &lt;code&gt;first_rank_agency_seller_by_close_date&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Below I output &lt;code&gt;df&lt;/code&gt; and highlight the important column &lt;code&gt;first_rank_agency_seller_by_close_date&lt;/code&gt;. The order of ranks below is a bit confusing. I'll re-order records after below's output.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;background_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmap&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;cm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IndexSlice&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;style  type="text/css" &gt;
+    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col4 {
+            background-color:  #e9fce9;
+        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col4 {
+            background-color:  #e9fce9;
+        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col4 {
+            background-color:  #cbf7cb;
+        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col4 {
+            background-color:  #e9fce9;
+        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col4 {
+            background-color:  #e9fce9;
+        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col4 {
+            background-color:  #cbf7cb;
+        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col4 {
+            background-color:  #aef3ae;
+        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col4 {
+            background-color:  #90ee90;
+        }&lt;/style&gt;
+
+&lt;p&gt;&lt;table id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5f" &gt; 
+&lt;thead&gt;    &lt;tr&gt; 
+        &lt;th class="blank level0" &gt;&lt;/th&gt; 
+        &lt;th class="col_heading level0 col0" &gt;close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col1" &gt;seller_name&lt;/th&gt; 
+        &lt;th class="col_heading level0 col2" &gt;rank_seller_by_close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col3" &gt;agency&lt;/th&gt; 
+        &lt;th class="col_heading level0 col4" &gt;first_rank_agency_seller_by_close_date&lt;/th&gt; 
+    &lt;/tr&gt;&lt;/thead&gt; 
+&lt;tbody&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row0" class="row_heading level0 row0" &gt;0&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col0" class="data row0 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col1" class="data row0 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col2" class="data row0 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col3" class="data row0 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col4" class="data row0 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row1" class="row_heading level0 row1" &gt;1&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col0" class="data row1 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col1" class="data row1 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col2" class="data row1 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col3" class="data row1 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col4" class="data row1 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row2" class="row_heading level0 row2" &gt;2&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col0" class="data row2 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col1" class="data row2 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col2" class="data row2 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col3" class="data row2 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col4" class="data row2 col4" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row3" class="row_heading level0 row3" &gt;3&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col0" class="data row3 col0" &gt;2012-08-02 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col1" class="data row3 col1" &gt;Emily&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col2" class="data row3 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col3" class="data row3 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col4" class="data row3 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row4" class="row_heading level0 row4" &gt;4&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col0" class="data row4 col0" &gt;2012-08-03 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col1" class="data row4 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col2" class="data row4 col2" &gt;3&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col3" class="data row4 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col4" class="data row4 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row5" class="row_heading level0 row5" &gt;5&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col0" class="data row5 col0" &gt;2012-08-04 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col1" class="data row5 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col2" class="data row5 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col3" class="data row5 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col4" class="data row5 col4" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row6" class="row_heading level0 row6" &gt;6&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col0" class="data row6 col0" &gt;2012-08-05 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col1" class="data row6 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col2" class="data row6 col2" &gt;4&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col3" class="data row6 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col4" class="data row6 col4" &gt;3&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row7" class="row_heading level0 row7" &gt;7&lt;/th&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col0" class="data row7 col0" &gt;2012-08-07 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col1" class="data row7 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col2" class="data row7 col2" &gt;5&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col3" class="data row7 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col4" class="data row7 col4" &gt;4&lt;/td&gt; 
+    &lt;/tr&gt;&lt;/tbody&gt; 
+&lt;/table&gt; &lt;/p&gt;
+&lt;p&gt;The output below is easier to understand because I sort &lt;code&gt;df&lt;/code&gt; by &lt;code&gt;agency&lt;/code&gt; and then &lt;code&gt;seller_name&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Below, notice how &lt;code&gt;Fifer&lt;/code&gt; &lt;em&gt;first&lt;/em&gt; helped Julia sell a home on &lt;code&gt;2012-08-01&lt;/code&gt; and first helped Lara sell a home on &lt;code&gt;2012-08-01&lt;/code&gt;. Both of these rows have a &lt;code&gt;first_rank_agency_seller_by_close_date&lt;/code&gt; value of &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Then, when Julia sold a home with &lt;code&gt;HomeSales&lt;/code&gt; on &lt;code&gt;2012-08-03&lt;/code&gt;, that also has a &lt;code&gt;first_rank_agency_seller_by_close_date&lt;/code&gt; value of &lt;code&gt;1&lt;/code&gt; because that was her &lt;em&gt;first&lt;/em&gt; home sold by date with that agency, &lt;code&gt;HomeSales&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;background_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmap&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;cm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IndexSlice&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;style  type="text/css" &gt;
+    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col4 {
+            background-color:  #e9fce9;
+        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col4 {
+            background-color:  #cbf7cb;
+        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col4 {
+            background-color:  #aef3ae;
+        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col4 {
+            background-color:  #90ee90;
+        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col4 {
+            background-color:  #e9fce9;
+        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col4 {
+            background-color:  #cbf7cb;
+        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col4 {
+            background-color:  #e9fce9;
+        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col4 {
+            background-color:  #e9fce9;
+        }&lt;/style&gt;
+
+&lt;p&gt;&lt;table id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5f" &gt; 
+&lt;thead&gt;    &lt;tr&gt; 
+        &lt;th class="blank level0" &gt;&lt;/th&gt; 
+        &lt;th class="col_heading level0 col0" &gt;close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col1" &gt;seller_name&lt;/th&gt; 
+        &lt;th class="col_heading level0 col2" &gt;rank_seller_by_close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col3" &gt;agency&lt;/th&gt; 
+        &lt;th class="col_heading level0 col4" &gt;first_rank_agency_seller_by_close_date&lt;/th&gt; 
+    &lt;/tr&gt;&lt;/thead&gt; 
+&lt;tbody&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row0" class="row_heading level0 row0" &gt;1&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col0" class="data row0 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col1" class="data row0 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col2" class="data row0 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col3" class="data row0 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col4" class="data row0 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row1" class="row_heading level0 row1" &gt;2&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col0" class="data row1 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col1" class="data row1 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col2" class="data row1 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col3" class="data row1 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col4" class="data row1 col4" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row2" class="row_heading level0 row2" &gt;6&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col0" class="data row2 col0" &gt;2012-08-05 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col1" class="data row2 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col2" class="data row2 col2" &gt;4&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col3" class="data row2 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col4" class="data row2 col4" &gt;3&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row3" class="row_heading level0 row3" &gt;7&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col0" class="data row3 col0" &gt;2012-08-07 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col1" class="data row3 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col2" class="data row3 col2" &gt;5&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col3" class="data row3 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col4" class="data row3 col4" &gt;4&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row4" class="row_heading level0 row4" &gt;0&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col0" class="data row4 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col1" class="data row4 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col2" class="data row4 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col3" class="data row4 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col4" class="data row4 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row5" class="row_heading level0 row5" &gt;5&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col0" class="data row5 col0" &gt;2012-08-04 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col1" class="data row5 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col2" class="data row5 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col3" class="data row5 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col4" class="data row5 col4" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row6" class="row_heading level0 row6" &gt;3&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col0" class="data row6 col0" &gt;2012-08-02 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col1" class="data row6 col1" &gt;Emily&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col2" class="data row6 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col3" class="data row6 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col4" class="data row6 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row7" class="row_heading level0 row7" &gt;4&lt;/th&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col0" class="data row7 col0" &gt;2012-08-03 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col1" class="data row7 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col2" class="data row7 col2" &gt;3&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col3" class="data row7 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col4" class="data row7 col4" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;&lt;/tbody&gt; 
+&lt;/table&gt; &lt;/p&gt;
+&lt;p&gt;I still want the count of &lt;em&gt;new&lt;/em&gt; sellers with each agency per day. Below is a filter of &lt;code&gt;df&lt;/code&gt; for records in which &lt;code&gt;first_rank_agency_seller_by_close_date&lt;/code&gt; equals &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;seller_name&lt;/th&gt;
+      &lt;th&gt;rank_seller_by_close_date&lt;/th&gt;
+      &lt;th&gt;agency&lt;/th&gt;
+      &lt;th&gt;first_rank_agency_seller_by_close_date&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Lara&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;Emily&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;HomeSales&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;2012-08-03&lt;/td&gt;
+      &lt;td&gt;Julia&lt;/td&gt;
+      &lt;td&gt;3.0&lt;/td&gt;
+      &lt;td&gt;HomeSales&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To get the final final output a count of new sellers with each agency per day, I take the filtered dataframe from above, group by &lt;code&gt;agency&lt;/code&gt; and then &lt;code&gt;close_date&lt;/code&gt;, and then compute the group size. &lt;/p&gt;
+&lt;p&gt;Above I see two records of homes sold on &lt;code&gt;2012-08-01&lt;/code&gt; by Lara and Julia with the agency &lt;code&gt;Fifer&lt;/code&gt;. In the output from the group by operation below, I see an equivalent first record for &lt;code&gt;Fifer&lt;/code&gt; on &lt;code&gt;2012-08-01&lt;/code&gt; with &lt;code&gt;count_new_sellers_of_homes&lt;/code&gt; equal to &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_index&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;count_new_sellers_of_homes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;agency&lt;/th&gt;
+      &lt;th&gt;close_date&lt;/th&gt;
+      &lt;th&gt;count_new_sellers_of_homes&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Fifer&lt;/td&gt;
+      &lt;td&gt;2012-08-01&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;HomeSales&lt;/td&gt;
+      &lt;td&gt;2012-08-02&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;HomeSales&lt;/td&gt;
+      &lt;td&gt;2012-08-03&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;Example 3: Pandas Rank &lt;code&gt;method='min'&lt;/code&gt; Comparison&lt;/h3&gt;
+&lt;p&gt;The pandas &lt;code&gt;rank()&lt;/code&gt; method has an argument &lt;code&gt;method&lt;/code&gt; that can be set to &lt;code&gt;min&lt;/code&gt;. This is different than the method used above with &lt;code&gt;method&lt;/code&gt; set to &lt;code&gt;first&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;method='min'&lt;/code&gt; argument for the &lt;code&gt;rank()&lt;/code&gt; method for pandas series is equivalent to the &lt;code&gt;RANK()&lt;/code&gt; window function in SQL.&lt;/p&gt;
+&lt;p&gt;Notice how with &lt;code&gt;method='min'&lt;/code&gt;, in the column &lt;code&gt;min_rank_agency_seller_by_close_date&lt;/code&gt;, Julia's two home sales on August 1, 2012 are both given a tied rank of 1. &lt;/p&gt;
+&lt;p&gt;Then, the min rank value &lt;em&gt;skips&lt;/em&gt; a value of &lt;code&gt;2&lt;/code&gt; and Julia's next sale on August 5, 2012 has a value of &lt;code&gt;3&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;min_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;min&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;background_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmap&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;cm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IndexSlice&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;min_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;style  type="text/css" &gt;
+    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col5 {
+            background-color:  #e9fce9;
+        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col5 {
+            background-color:  #e9fce9;
+        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col5 {
+            background-color:  #aef3ae;
+        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col5 {
+            background-color:  #90ee90;
+        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col5 {
+            background-color:  #e9fce9;
+        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col5 {
+            background-color:  #cbf7cb;
+        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col5 {
+            background-color:  #e9fce9;
+        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col5 {
+            background-color:  #e9fce9;
+        }&lt;/style&gt;
+
+&lt;p&gt;&lt;table id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5f" &gt; 
+&lt;thead&gt;    &lt;tr&gt; 
+        &lt;th class="blank level0" &gt;&lt;/th&gt; 
+        &lt;th class="col_heading level0 col0" &gt;close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col1" &gt;seller_name&lt;/th&gt; 
+        &lt;th class="col_heading level0 col2" &gt;rank_seller_by_close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col3" &gt;agency&lt;/th&gt; 
+        &lt;th class="col_heading level0 col4" &gt;first_rank_agency_seller_by_close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col5" &gt;min_rank_agency_seller_by_close_date&lt;/th&gt; 
+    &lt;/tr&gt;&lt;/thead&gt; 
+&lt;tbody&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row0" class="row_heading level0 row0" &gt;1&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col0" class="data row0 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col1" class="data row0 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col2" class="data row0 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col3" class="data row0 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col4" class="data row0 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col5" class="data row0 col5" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row1" class="row_heading level0 row1" &gt;2&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col0" class="data row1 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col1" class="data row1 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col2" class="data row1 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col3" class="data row1 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col4" class="data row1 col4" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col5" class="data row1 col5" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row2" class="row_heading level0 row2" &gt;6&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col0" class="data row2 col0" &gt;2012-08-05 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col1" class="data row2 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col2" class="data row2 col2" &gt;4&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col3" class="data row2 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col4" class="data row2 col4" &gt;3&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col5" class="data row2 col5" &gt;3&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row3" class="row_heading level0 row3" &gt;7&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col0" class="data row3 col0" &gt;2012-08-07 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col1" class="data row3 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col2" class="data row3 col2" &gt;5&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col3" class="data row3 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col4" class="data row3 col4" &gt;4&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col5" class="data row3 col5" &gt;4&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row4" class="row_heading level0 row4" &gt;0&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col0" class="data row4 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col1" class="data row4 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col2" class="data row4 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col3" class="data row4 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col4" class="data row4 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col5" class="data row4 col5" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row5" class="row_heading level0 row5" &gt;5&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col0" class="data row5 col0" &gt;2012-08-04 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col1" class="data row5 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col2" class="data row5 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col3" class="data row5 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col4" class="data row5 col4" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col5" class="data row5 col5" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row6" class="row_heading level0 row6" &gt;3&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col0" class="data row6 col0" &gt;2012-08-02 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col1" class="data row6 col1" &gt;Emily&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col2" class="data row6 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col3" class="data row6 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col4" class="data row6 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col5" class="data row6 col5" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row7" class="row_heading level0 row7" &gt;4&lt;/th&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col0" class="data row7 col0" &gt;2012-08-03 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col1" class="data row7 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col2" class="data row7 col2" &gt;3&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col3" class="data row7 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col4" class="data row7 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col5" class="data row7 col5" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;&lt;/tbody&gt; 
+&lt;/table&gt; &lt;/p&gt;
+&lt;p&gt;The use case for &lt;code&gt;method='first'&lt;/code&gt; versus &lt;code&gt;method='min'&lt;/code&gt; varies on a case by case basis. It's important to understand your data well to make sure you utilize the correct one, though you can of course easily swap the argument's value.&lt;/p&gt;
+&lt;h3&gt;Example 4: Pandas Rank &lt;code&gt;method='dense'&lt;/code&gt; Comparison&lt;/h3&gt;
+&lt;p&gt;The pandas &lt;code&gt;rank()&lt;/code&gt; method has an argument &lt;code&gt;method&lt;/code&gt; that can be set to &lt;code&gt;'dense'&lt;/code&gt;. This is different than &lt;code&gt;method&lt;/code&gt; set to either &lt;code&gt;'first'&lt;/code&gt; or &lt;code&gt;'min'&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;Notice how with &lt;code&gt;method='dense'&lt;/code&gt;, in the column &lt;code&gt;dense_rank_agency_seller_by_close_date&lt;/code&gt;, Julia's two home sales on August 1, 2012 are both given a tied rank of &lt;code&gt;1&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;Then, the dense rank value &lt;em&gt;does not skip&lt;/em&gt; a value of &lt;code&gt;2&lt;/code&gt; and Julia's next sale on August 5, 2012 has a value of &lt;code&gt;2&lt;/code&gt;. &lt;code&gt;'dense'&lt;/code&gt; is different than &lt;code&gt;min&lt;/code&gt;! &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dense_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dense&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;agency&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;seller_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;background_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmap&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;cm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IndexSlice&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dense_rank_agency_seller_by_close_date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;style  type="text/css" &gt;
+    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col6 {
+            background-color:  #e9fce9;
+        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col6 {
+            background-color:  #e9fce9;
+        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col6 {
+            background-color:  #bcf5bc;
+        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col6 {
+            background-color:  #90ee90;
+        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col6 {
+            background-color:  #e9fce9;
+        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col6 {
+            background-color:  #bcf5bc;
+        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col6 {
+            background-color:  #e9fce9;
+        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col6 {
+            background-color:  #e9fce9;
+        }&lt;/style&gt;
+
+&lt;p&gt;&lt;table id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5f" &gt; 
+&lt;thead&gt;    &lt;tr&gt; 
+        &lt;th class="blank level0" &gt;&lt;/th&gt; 
+        &lt;th class="col_heading level0 col0" &gt;close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col1" &gt;seller_name&lt;/th&gt; 
+        &lt;th class="col_heading level0 col2" &gt;rank_seller_by_close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col3" &gt;agency&lt;/th&gt; 
+        &lt;th class="col_heading level0 col4" &gt;first_rank_agency_seller_by_close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col5" &gt;min_rank_agency_seller_by_close_date&lt;/th&gt; 
+        &lt;th class="col_heading level0 col6" &gt;dense_rank_agency_seller_by_close_date&lt;/th&gt; 
+    &lt;/tr&gt;&lt;/thead&gt; 
+&lt;tbody&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row0" class="row_heading level0 row0" &gt;1&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col0" class="data row0 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col1" class="data row0 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col2" class="data row0 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col3" class="data row0 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col4" class="data row0 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col5" class="data row0 col5" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col6" class="data row0 col6" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row1" class="row_heading level0 row1" &gt;2&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col0" class="data row1 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col1" class="data row1 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col2" class="data row1 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col3" class="data row1 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col4" class="data row1 col4" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col5" class="data row1 col5" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col6" class="data row1 col6" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row2" class="row_heading level0 row2" &gt;6&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col0" class="data row2 col0" &gt;2012-08-05 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col1" class="data row2 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col2" class="data row2 col2" &gt;4&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col3" class="data row2 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col4" class="data row2 col4" &gt;3&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col5" class="data row2 col5" &gt;3&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col6" class="data row2 col6" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row3" class="row_heading level0 row3" &gt;7&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col0" class="data row3 col0" &gt;2012-08-07 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col1" class="data row3 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col2" class="data row3 col2" &gt;5&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col3" class="data row3 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col4" class="data row3 col4" &gt;4&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col5" class="data row3 col5" &gt;4&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col6" class="data row3 col6" &gt;3&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row4" class="row_heading level0 row4" &gt;0&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col0" class="data row4 col0" &gt;2012-08-01 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col1" class="data row4 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col2" class="data row4 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col3" class="data row4 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col4" class="data row4 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col5" class="data row4 col5" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col6" class="data row4 col6" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row5" class="row_heading level0 row5" &gt;5&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col0" class="data row5 col0" &gt;2012-08-04 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col1" class="data row5 col1" &gt;Lara&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col2" class="data row5 col2" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col3" class="data row5 col3" &gt;Fifer&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col4" class="data row5 col4" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col5" class="data row5 col5" &gt;2&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col6" class="data row5 col6" &gt;2&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row6" class="row_heading level0 row6" &gt;3&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col0" class="data row6 col0" &gt;2012-08-02 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col1" class="data row6 col1" &gt;Emily&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col2" class="data row6 col2" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col3" class="data row6 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col4" class="data row6 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col5" class="data row6 col5" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col6" class="data row6 col6" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;    &lt;tr&gt; 
+        &lt;th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row7" class="row_heading level0 row7" &gt;4&lt;/th&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col0" class="data row7 col0" &gt;2012-08-03 00:00:00&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col1" class="data row7 col1" &gt;Julia&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col2" class="data row7 col2" &gt;3&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col3" class="data row7 col3" &gt;HomeSales&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col4" class="data row7 col4" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col5" class="data row7 col5" &gt;1&lt;/td&gt; 
+        &lt;td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col6" class="data row7 col6" &gt;1&lt;/td&gt; 
+    &lt;/tr&gt;&lt;/tbody&gt; 
+&lt;/table&gt; &lt;/p&gt;
+&lt;p&gt;The use case for &lt;code&gt;'dense'&lt;/code&gt; varies on a case by case basis. A second reminder - please understand your data well and why you'd choose &lt;code&gt;'dense'&lt;/code&gt; over other options.&lt;/p&gt;
+&lt;h3&gt;Example 5: Pandas Rank &lt;code&gt;pct=True&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;The pandas series &lt;code&gt;rank()&lt;/code&gt; method has another argument called &lt;code&gt;pct&lt;/code&gt; that can be set to &lt;code&gt;True&lt;/code&gt; or &lt;code&gt;False&lt;/code&gt;. By default, it's &lt;code&gt;False&lt;/code&gt;. This &lt;code&gt;pct&lt;/code&gt; argument computes the percentage rank of data.&lt;/p&gt;
+&lt;p&gt;To set the argument &lt;code&gt;pct=True&lt;/code&gt; is similar to the &lt;code&gt;NTILE(100)&lt;/code&gt; window function in SQL.&lt;/p&gt;
+&lt;h4&gt;Create Class Quiz Score Data&lt;/h4&gt;
+&lt;p&gt;Below I create fictional data for 11 students in a class that took the same quiz. The max possible score is &lt;code&gt;100&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I remember in school, teachers told me I was in a certain percentile based on my GPA or score on a quiz. Therefore, I created a dataset I'll remember in relation to percentile rankings!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;class_quiz_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Jamie&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Joe&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jake&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jill&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;James&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Dan&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Joy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jared&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jill&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jaime&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Jay&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                   &lt;span class="s1"&gt;&amp;#39;score&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;85&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;74&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;98&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;91&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;90&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;65&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;84&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;85&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+                  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;df_quiz_scores&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;class_quiz_data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View &lt;code&gt;df_quiz_scores&lt;/code&gt; as a dataframe.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_quiz_scores&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;name&lt;/th&gt;
+      &lt;th&gt;score&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Jamie&lt;/td&gt;
+      &lt;td&gt;80&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;85&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Jake&lt;/td&gt;
+      &lt;td&gt;74&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Jill&lt;/td&gt;
+      &lt;td&gt;100&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;James&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Dan&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Joy&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Jared&lt;/td&gt;
+      &lt;td&gt;90&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;Jill&lt;/td&gt;
+      &lt;td&gt;65&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;9&lt;/th&gt;
+      &lt;td&gt;Jaime&lt;/td&gt;
+      &lt;td&gt;84&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;10&lt;/th&gt;
+      &lt;td&gt;Jay&lt;/td&gt;
+      &lt;td&gt;85&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;Find the Percent Rank of Each Score in the Class&lt;/h4&gt;
+&lt;p&gt;Below I create a new column called &lt;code&gt;score_percent_rank&lt;/code&gt; that's a ranking of scores in the &lt;code&gt;score&lt;/code&gt; column.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_quiz_scores&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;score_percent_rank&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_quiz_scores&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;score&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pct&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View &lt;code&gt;df_quiz_scores&lt;/code&gt; as a dataframe below. Notice how a high quiz score by Dan of &lt;code&gt;91&lt;/code&gt; has a rank value of &lt;code&gt;0.81&lt;/code&gt;. I think of this as the 81st percentile. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_quiz_scores&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;name&lt;/th&gt;
+      &lt;th&gt;score&lt;/th&gt;
+      &lt;th&gt;score_percent_rank&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Jamie&lt;/td&gt;
+      &lt;td&gt;80&lt;/td&gt;
+      &lt;td&gt;0.272727&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;85&lt;/td&gt;
+      &lt;td&gt;0.500000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Jake&lt;/td&gt;
+      &lt;td&gt;74&lt;/td&gt;
+      &lt;td&gt;0.181818&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Jill&lt;/td&gt;
+      &lt;td&gt;100&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;James&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;0.909091&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Dan&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;0.818182&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Joy&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+      &lt;td&gt;0.636364&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Jared&lt;/td&gt;
+      &lt;td&gt;90&lt;/td&gt;
+      &lt;td&gt;0.727273&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;Jill&lt;/td&gt;
+      &lt;td&gt;65&lt;/td&gt;
+      &lt;td&gt;0.090909&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;9&lt;/th&gt;
+      &lt;td&gt;Jaime&lt;/td&gt;
+      &lt;td&gt;84&lt;/td&gt;
+      &lt;td&gt;0.363636&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;10&lt;/th&gt;
+      &lt;td&gt;Jay&lt;/td&gt;
+      &lt;td&gt;85&lt;/td&gt;
+      &lt;td&gt;0.500000&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To make this rank easier to understand, I will multiply all these values by &lt;span class="math"&gt;\(100\)&lt;/span&gt; and round to the nearest integer value.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_quiz_scores&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;score_percentile_rank&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_quiz_scores&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;score_percent_rank&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;round&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View &lt;code&gt;df_quiz_scores&lt;/code&gt; as a dataframe below. Now, Dan's &lt;code&gt;score&lt;/code&gt; of &lt;code&gt;91&lt;/code&gt; has a score &lt;code&gt;score_percentile_rank&lt;/code&gt; of &lt;code&gt;82&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_quiz_scores&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;name&lt;/th&gt;
+      &lt;th&gt;score&lt;/th&gt;
+      &lt;th&gt;score_percent_rank&lt;/th&gt;
+      &lt;th&gt;score_percentile_rank&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;Jamie&lt;/td&gt;
+      &lt;td&gt;80&lt;/td&gt;
+      &lt;td&gt;0.272727&lt;/td&gt;
+      &lt;td&gt;27.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;Joe&lt;/td&gt;
+      &lt;td&gt;85&lt;/td&gt;
+      &lt;td&gt;0.500000&lt;/td&gt;
+      &lt;td&gt;50.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;Jake&lt;/td&gt;
+      &lt;td&gt;74&lt;/td&gt;
+      &lt;td&gt;0.181818&lt;/td&gt;
+      &lt;td&gt;18.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;Jill&lt;/td&gt;
+      &lt;td&gt;100&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;100.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;James&lt;/td&gt;
+      &lt;td&gt;98&lt;/td&gt;
+      &lt;td&gt;0.909091&lt;/td&gt;
+      &lt;td&gt;91.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;Dan&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+      &lt;td&gt;0.818182&lt;/td&gt;
+      &lt;td&gt;82.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;Joy&lt;/td&gt;
+      &lt;td&gt;89&lt;/td&gt;
+      &lt;td&gt;0.636364&lt;/td&gt;
+      &lt;td&gt;64.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;Jared&lt;/td&gt;
+      &lt;td&gt;90&lt;/td&gt;
+      &lt;td&gt;0.727273&lt;/td&gt;
+      &lt;td&gt;73.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;Jill&lt;/td&gt;
+      &lt;td&gt;65&lt;/td&gt;
+      &lt;td&gt;0.090909&lt;/td&gt;
+      &lt;td&gt;9.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;9&lt;/th&gt;
+      &lt;td&gt;Jaime&lt;/td&gt;
+      &lt;td&gt;84&lt;/td&gt;
+      &lt;td&gt;0.363636&lt;/td&gt;
+      &lt;td&gt;36.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;10&lt;/th&gt;
+      &lt;td&gt;Jay&lt;/td&gt;
+      &lt;td&gt;85&lt;/td&gt;
+      &lt;td&gt;0.500000&lt;/td&gt;
+      &lt;td&gt;50.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "left",
+        indent = "1em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="rank"></category><category term="pandas"></category><category term="python"></category></entry><entry><title>Rank Scores via Leetcode</title><link href="https://dfrieds.com/sql/rank-scores" rel="alternate"></link><published>2019-04-14T06:20:00-07:00</published><updated>2019-04-14T06:20:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-04-14:/sql/rank-scores</id><summary type="html">&lt;p&gt;Medium level Leetcode SQL problem and explanation of ranking scores using a window function&lt;/p&gt;</summary><content type="html">&lt;p&gt;In &lt;em&gt;extreme detail&lt;/em&gt;, in this tutorial I'll walk through a &lt;a href="https://leetcode.com/problems/rank-scores/description/" target="_blank"&gt;Leetcode medium level SQL problem&lt;/a&gt; to arrive to the solution.&lt;/p&gt;
 &lt;h3&gt;Problem Statement via Leetcode&lt;/h3&gt;
 &lt;p&gt;Write a SQL query to rank scores. If there is a tie between two scores, both should have the same ranking. Note that after a tie, the next ranking number should be the next consecutive integer value. In other words, there should be no "holes" between ranks.&lt;/p&gt;
 &lt;table&gt;
@@ -118,8 +1481,8 @@
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;</content><category term="window function"></category><category term="DENSE_RANK()"></category></entry><entry><title>Self Join</title><link href="https://dfrieds.com/data-analysis/self-join-python-pandas" rel="alternate"></link><published>2019-04-14T06:20:00-07:00</published><updated>2019-04-14T06:20:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-04-14:/data-analysis/self-join-python-pandas</id><summary type="html">&lt;p&gt;Self join a table in python and pandas&lt;/p&gt;</summary><content type="html">&lt;p&gt;In SQL, a popular type of join is a self join which joins a table to itself. This is helpful for comparing rows to one another, based on their values in columns, in a &lt;em&gt;single&lt;/em&gt; table. &lt;/p&gt;
-&lt;p&gt;In this tutorial, I'll walk through several dataset
-, we can query the columns of DataFrames with boolean expressions using the &lt;a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html'&gt;&lt;code&gt;query()&lt;/code&gt;&lt;/a&gt; method. I'll walk through lots of simple examples.&lt;/p&gt;
+&lt;p&gt;In this article, I'll walk through two examples in which self joins can be helpful.&lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -2422,23 +3785,4 @@
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="correlation"></category><category term="scatter plot"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Correlation Does Not Imply Causation</title><link href="https://dfrieds.com/math/correlation-does-not-imply-causation" rel="alternate"></link><published>2019-03-05T17:20:00-08:00</published><updated>2019-03-05T17:20:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-03-05:/math/correlation-does-not-imply-causation</id><summary type="html">&lt;p&gt;Understand what is correlation in statistics and how to interpet this statistic&lt;/p&gt;</summary><content type="html">&lt;p&gt;The statement &lt;em&gt;correlation does not imply causation&lt;/em&gt; is one of the most famous in the field of statistics. It's incredibly important to understand so we properly understand the relation between two variables of numeric data.&lt;/p&gt;
-&lt;h3&gt;Correlation&lt;/h3&gt;
-&lt;p&gt;&lt;a href='https://en.wikipedia.org/wiki/Correlation_and_dependence'&gt;&lt;strong&gt;Correlation&lt;/strong&gt;&lt;/a&gt; is a measure of the relation of two numeric variables. For example, we'd expect a positive correlation between the temperature outside and ice cream sales at a shop. If it's hotter outside, we'd expect more people to buy ice cream. Ice cream sales likely &lt;em&gt;positively correlate&lt;/em&gt; with increased temperature. There are exact numerical measures of correlation such as the &lt;a href='https://en.wikipedia.org/wiki/Pearson_correlation_coefficient'&gt;Pearson correlation coefficient&lt;/a&gt; and the &lt;a href='https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient'&gt;Spearman's rank correlation coefficient&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Causation&lt;/h3&gt;
-&lt;p&gt;&lt;a href='https://en.wikipedia.org/wiki/Causality'&gt;&lt;strong&gt;Causation&lt;/strong&gt;&lt;/a&gt; indicates a relation between two variables in which one variable if &lt;em&gt;affected&lt;/em&gt; by another. For example, there have been numerous studies that provide evidence that smoking &lt;em&gt;causes&lt;/em&gt; lung cancer. A &lt;strong&gt;study&lt;/strong&gt;, in statistical terms, is a detailed investigation and analysis of a situation. This post won't go into additional details of studies as they require lots of careful planning and implementation to perform successfully.&lt;/p&gt;
-&lt;h3&gt;Correlation vs. Causation&lt;/h3&gt;
-&lt;p&gt;Often times, people naively state a change in one variable &lt;em&gt;causes&lt;/em&gt; a change in another variable. They may have evidence from real-world experiences that indicate a correlation between the two variables, but correlation does not imply causation! For example, more sleep will &lt;em&gt;cause&lt;/em&gt; you to perform better at work. Or, more cardio will &lt;em&gt;cause&lt;/em&gt; you to lose your belly fat. These statements could be factually correct. However, with these statements, we need evidence from a properly completed study to factually state there is a &lt;em&gt;causaul&lt;/em&gt; relation between the two variables. &lt;/p&gt;
-&lt;p&gt;If someone states a potentially spurious casual statement like this, I'd encourage them to perform research on independent studies to gather official evidence. Studies are often done by research-driven institutions and universities. Here is a &lt;a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2991639/'&gt;paper&lt;/a&gt; published by the Journal of Obesity that cites several studies that provide evidence that high-intensity intermittent exercise may be effective to cause people to lose abdominal body fat. &lt;/p&gt;
-&lt;p&gt;Tyler Vigen has an &lt;a href='http://www.tylervigen.com/spurious-correlations'&gt;interesting page&lt;/a&gt; on his website that visualizes spurious correlations. Below is an example that shows a strong positive linear correlation with U.S. spending on science, space and technology with suicides by hanging, strangulation and suffocation.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="images/correlation of suicides with science spending" src="images/hanging_suicides_science_spending_correlation.jpeg"&gt;&lt;/p&gt;
-&lt;p&gt;However, do you think U.S. spending in this field &lt;em&gt;causes&lt;/em&gt; hanging suicides? My hypothesis is that there's &lt;em&gt;no evidence&lt;/em&gt; to support a &lt;em&gt;causal&lt;/em&gt; relationship between these two variables. &lt;/p&gt;
-&lt;p&gt;While this example from Tyler's website seems extreme, it's poking fun at how people can immediately visualize a relationship between two numerical variables and naively jump to the conclusion that there's a causal relationship. &lt;/p&gt;
-&lt;p&gt;Lastly, I want to show a funny comic from the comic website &lt;a href='https://xkcd.com/552/'&gt;XKCD&lt;/a&gt; about correlation and causation. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="XKCD correlation comic" src="images/correlation_comic.png"&gt;&lt;/p&gt;
-&lt;p&gt;The joke is that the guy on the right feels he doesn't have strong evidence (such as through a study) to prove his statistics class &lt;em&gt;caused&lt;/em&gt; him to believe that fact is true.&lt;/p&gt;
-&lt;h3&gt;Additional Misconceptions on Correlation vs. Causation&lt;/h3&gt;
-&lt;p&gt;A &lt;strong&gt;mediator variable&lt;/strong&gt; is a variable that explains the relationship between independent and dependent variables. For example, we may notice a positive correlation with increased ice cream shop sales with increased heat. However, a potential mediator variable could be the count of people sweating. It's possible an increase in the count of people sweating in the local area influences ice cream sales. &lt;em&gt;If&lt;/em&gt; this were true, you may want to open an ice cream store near a sauna rather than simply in a hot weather area.&lt;/p&gt;
-&lt;p&gt;To make a causal relationship, we need to rule out &lt;strong&gt;lurking variables&lt;/strong&gt;. These are variables that are not included in the independent or dependent variable but can affect the relationship between the two. The definition of the mediator variable above is considered a lurking variable too. This idea of a &lt;strong&gt;third variable&lt;/strong&gt; is another name for a potential third variable that affects the causal relationship between the independent and dependent variables.&lt;/p&gt;
-&lt;p&gt;Another example is that a soccer coach (naively) noticed that players who practiced additionally after games &lt;em&gt;caused&lt;/em&gt; them to love soccer more. However, we don't know if the players playing more came before their love of soccer. Perhaps those players loved the game of soccer before the season started and that could have caused them to want to practice more after games. In this situation, there's &lt;strong&gt;ambiguous temporal precedence&lt;/strong&gt; - the unknown of which variable came first for inferring causality.&lt;/p&gt;
-&lt;p&gt;Another example is a supplements company claimed that people who drink their pre-workout shake directly before their workout complete approximately 2 more reps for each exercise and therefore have a better workout. The company claimed their pre-workout shake &lt;em&gt;caused&lt;/em&gt; increased workout reps. This is considered a &lt;strong&gt;post hoc fallacy&lt;/strong&gt; - an action taken &lt;em&gt;before&lt;/em&gt; another action doesn't mean it directly &lt;em&gt;caused&lt;/em&gt; the next action. &lt;/p&gt;</content><category term="correlation"></category><category term="causation"></category><category term="scatter"></category><category term="python"></category><category term="pandas"></category></entry></feed>
+&lt;/script&gt;</content><category term="correlation"></category><category term="scatter plot"></category><category term="python"></category><category term="pandas"></category></entry></feed>
