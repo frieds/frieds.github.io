@@ -152,7 +152,7 @@
     <ul class ="row article_info">
       
       <li>
-        Nov 20&nbsp;&nbsp;&bull;&nbsp;&nbsp;8 min read
+        Jul 16&nbsp;&nbsp;&bull;&nbsp;&nbsp;4 min read
       </li>
       <li class="tagarticle">
         Key Terms:         categorical data,
@@ -172,82 +172,15 @@
 
 <h3>Why Bin Data</h3>
 <p>Often times you have numerical data on very large scales. Sometimes, it can be easier to bin the values into groups. This is helpful to more easily perform descriptive statistics by groups as a generalization of patterns in the data.</p>
-<p>We'll cover an example below of binning age values into groups. We'll take a dataframe of ages, with the <em>preview</em> like:</p>
-<table>
-<thead>
-<tr>
-<th>index</th>
-<th>age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>0</strong></td>
-<td>94</td>
-</tr>
-<tr>
-<td><strong>1</strong></td>
-<td>75</td>
-</tr>
-<tr>
-<td><strong>2</strong></td>
-<td>89</td>
-</tr>
-<tr>
-<td><strong>3</strong></td>
-<td>67</td>
-</tr>
-<tr>
-<td><strong>4</strong></td>
-<td>61</td>
-</tr>
-</tbody>
-</table>
-<p>And make a new column for a dataframe with a preview like:</p>
-<table>
-<thead>
-<tr>
-<th>index</th>
-<th>age</th>
-<th>age_range</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>0</strong></td>
-<td>94</td>
-<td>[90 - 100)</td>
-</tr>
-<tr>
-<td><strong>1</strong></td>
-<td>75</td>
-<td>[70 - 80)</td>
-</tr>
-<tr>
-<td><strong>2</strong></td>
-<td>89</td>
-<td>[90 - 100)</td>
-</tr>
-<tr>
-<td><strong>3</strong></td>
-<td>67</td>
-<td>[60 - 70)</td>
-</tr>
-<tr>
-<td><strong>4</strong></td>
-<td>61</td>
-<td>[60 - 70)</td>
-</tr>
-</tbody>
-</table>
 <h3>Binning in Pandas with Age Example</h3>
-<p>First, let's create a simple pandas DataFrame assigned to the variable <code>df_ages</code> with just one colum for <code>age</code>. This column will contain <code>40</code> random age values between <code>20</code> inclusive and <code>100</code> exclusive,</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">40</span><span class="p">)})</span>
+<h4>Create Random Age Data</h4>
+<p>First, let's create a simple pandas DataFrame assigned to the variable <code>df_ages</code> with just one colum for <code>age</code>. This column will contain <code>8</code> random age values between <code>21</code> inclusive and <code>51</code> exclusive,</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">8</span><span class="p">)})</span>
 </pre></div>
 
 
-<p>Let's preview the first 5 rows of <code>df_ages</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<p>Print out<code>df_ages</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span>
 </pre></div>
 
 
@@ -275,71 +208,49 @@
   <tbody>
     <tr>
       <th>0</th>
-      <td>94</td>
+      <td>45</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>75</td>
+      <td>47</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>89</td>
+      <td>37</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>67</td>
+      <td>41</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>61</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>49</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-<h4>Create <code>age_range</code> Column</h4>
-<p>Ages are often denoted by decade - saying people are in their 20s or 30s. To get to that denotion, it helps to understand that someone in their 20s is between the age of 20 (inclusive) and 30 (exclusive). Let's create a new column called <code>age_range</code> that provides that nearly 10-year window of ages.</p>
-<p>First, let's create a list assigned to the variable <code>age_ranges</code> that creates list items in a list comprehension. Each list item created is a value of <code>age - age+9</code> for ages in the range of 20 (inclusive) to 100 (exclusive) with a step value of 10. I also printed the output of <code>age_ranges</code>.</p>
-<p>If the syntax below still seems daunting, you can learn more about string formatting from <a href='https://dfrieds.com/python/string-formatting'>this tutorial</a> on my website and the <code>range()</code> function via <a href='https://realpython.com/python-range/'>this article</a> on Real Python.</p>
-<div class="highlight"><pre><span></span><span class="n">age_ranges</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;[{0} - {1})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">age</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span>
-<span class="n">age_ranges</span>
+<h3>Create New Column of <code>age_bins</code> Via Defining Bin Edges</h3>
+<p>This code creates a new column called <code>age_bins</code> that sets the <code>x</code> argument to the <code>age</code> column in <code>df_ages</code> and sets the <code>bins</code> argument to a list of bin edge values. The left bin edge will be exclusive and the right bin edge will be inclusive.</p>
+<p>The bins will be for ages: <code>(20, 29]</code> (someone in their 20s), <code>(30, 39]</code>, and <code>(40, 49]</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">49</span><span class="p">])</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[&#39;[20 - 30)&#39;,
- &#39;[30 - 40)&#39;,
- &#39;[40 - 50)&#39;,
- &#39;[50 - 60)&#39;,
- &#39;[60 - 70)&#39;,
- &#39;[70 - 80)&#39;,
- &#39;[80 - 90)&#39;,
- &#39;[90 - 100)&#39;]
-</pre></div>
-
-
-<p>Create a variable <code>count_unique_age_ranges</code> that's the count of items in the <code>age_ranges</code> list above.</p>
-<div class="highlight"><pre><span></span><span class="n">count_unique_age_ranges</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_ranges</span><span class="p">)</span>
-<span class="n">count_unique_age_ranges</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>8
-</pre></div>
-
-
-<p>In order to bin our ages, we want to use the pandas <code>cut()</code> method. </p>
-<p>For the argument <code>x</code>, we pass in the values in the <code>age</code> column from our <code>df_ages</code> DataFrame.</p>
-<p>For the argument <code>bins</code>, we pass in the number of bins we want to create designated by the variable <code>count_unique_age_ranges</code>.</p>
-<p>For the argument <code>labels</code>, we specify the labels for our returned binned column which is the list we created above assigned to the variable <code>age_ranges</code>.</p>
-<p>With the returned output of the <code>cut()</code> method, we'll create a new column in <code>df_ages</code> called <code>age_range</code>.</p>
-<p>Since we want 8 bins originally from the <code>age</code> column, this <code>cut()</code> method knows to make bins with ages between [20-30), [30-40), [40-50), [50-60), [60-70), [70-80), [80-90) and [90-100]. It just so happens that we designate the values in <code>age_range</code> to be a similar looking string value. </p>
-<p>The order of values we specify in the labels <code>age_ranges</code> matters too! The first item, <code>[20-30)</code>, corresponds to the first bin created that will contain age values in the smallest range of [20-30).</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_range&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">count_unique_age_ranges</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">age_ranges</span><span class="p">)</span>
-</pre></div>
-
-
-<p>Let's preview the first few rows of <code>df_ages</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<p>Print out<code>df_ages</code>. We can see <code>age</code> values are assigned to a proper bin.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span>
 </pre></div>
 
 
@@ -362,104 +273,72 @@
     <tr style="text-align: right;">
       <th></th>
       <th>age</th>
-      <th>age_range</th>
+      <th>age_bins</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>94</td>
-      <td>[90 - 100)</td>
+      <td>45</td>
+      <td>(39, 49]</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>75</td>
-      <td>[70 - 80)</td>
+      <td>47</td>
+      <td>(39, 49]</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>89</td>
-      <td>[90 - 100)</td>
+      <td>37</td>
+      <td>(29, 39]</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>67</td>
-      <td>[60 - 70)</td>
+      <td>41</td>
+      <td>(39, 49]</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>61</td>
-      <td>[60 - 70)</td>
+      <td>29</td>
+      <td>(20, 29]</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>30</td>
+      <td>(29, 39]</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>30</td>
+      <td>(29, 39]</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>49</td>
+      <td>(39, 49]</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-<p>I can use pandas <a href='https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.value_counts.html' target='_blank'>`value_counts()</a> method to count the occurrences of ages in the bins. There's an uneven count among bins.</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_range&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<p>Let's verify the unique <code>age_bins</code> values.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_bins&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>[80 - 90)     6
-[70 - 80)     6
-[60 - 70)     6
-[50 - 60)     6
-[30 - 40)     6
-[90 - 100)    5
-[20 - 30)     4
-[40 - 50)     1
-Name: age_range, dtype: int64
+<div class="highlight"><pre><span></span><span class="k">[(39, 49], (29, 39], (20, 29]]</span>
+<span class="na">Categories (3, interval[int64]): [(20, 29] &lt; (29, 39] &lt; (39, 49]]</span>
 </pre></div>
 
 
-<p>We can apply the <code>info()</code> method to our DataFrame. Notice next to our new column called <code>age_range</code> that the data type is a <code>category</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<h3>Create New Column of of <code>age_by_decade</code> With Labels <code>20s</code>, <code>30s</code>, and <code>40s</code></h3>
+<p>This code creates a new column called <code>age_by_decade</code> with the same first 2 arguments as above, and a third argument of <code>labels</code> set to a list of values that correspond to how the age values will be put in bins by decades.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_by_decade&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">49</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;20s&#39;</span><span class="p">,</span> <span class="s1">&#39;30s&#39;</span><span class="p">,</span> <span class="s1">&#39;40s&#39;</span><span class="p">])</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 40 entries, 0 to 39
-Data columns (total 2 columns):
-age          40 non-null int64
-age_range    40 non-null category
-dtypes: category(1), int64(1)
-memory usage: 824.0 bytes
-</pre></div>
-
-
-<h4>Create <code>age_by_decade</code> Column</h4>
-<p>Let's create a new column to define someone's age denoted by decade. So, if you're 28, you're in your 20s and if you're 54, you're in your 50s. We'll later call this column <code>age_by_decade</code>.</p>
-<p>First, let's create a list assigned to the variable <code>age_by_decade</code> that creates list items by the decade names. We'll simply take each age from 20 (inclusive) to 100 (exclusive) with a step of 10 and simply append an <em>s</em> to the end of each <code>age</code> value. </p>
-<div class="highlight"><pre><span></span><span class="n">age_by_decade</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;{0}s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span>
-<span class="n">age_by_decade</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>[&#39;20s&#39;, &#39;30s&#39;, &#39;40s&#39;, &#39;50s&#39;, &#39;60s&#39;, &#39;70s&#39;, &#39;80s&#39;, &#39;90s&#39;]
-</pre></div>
-
-
-<p>Create a variable <code>count_unique_age_decades</code> that's the count of items in the <code>age_by_decade</code> list above.</p>
-<div class="highlight"><pre><span></span><span class="n">count_unique_age_decades</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_by_decade</span><span class="p">)</span>
-<span class="n">count_unique_age_decades</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>8
-</pre></div>
-
-
-<p>Let's create a new column called <code>age_by_decade</code> that's made using the pandas <code>cut()</code> method. </p>
-<p>For the argument <code>x</code>, we pass in the values in the <code>age</code> column from our <code>df_ages</code> DataFrame.</p>
-<p>For the argument <code>bins</code>, we pass in the number of bins we want to create designated by the variable <code>count_unique_age_decades</code>.</p>
-<p>For the argument <code>labels</code>, we specify the labels for our returned binned column which is the list we created above assigned to the variable <code>age_by_decade</code>.</p>
-<p>With the returned output of the <code>cut()</code> method, we'll create a new column in <code>df_ages</code> called <code>age_by_decade</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_by_decade&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">count_unique_age_decades</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">age_by_decade</span><span class="p">)</span>
-</pre></div>
-
-
-<p>Preview the first 5 rows of <code>df_ages</code>.</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<p>Print out<code>df_ages</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df_ages</span>
 </pre></div>
 
 
@@ -482,61 +361,64 @@ memory usage: 824.0 bytes
     <tr style="text-align: right;">
       <th></th>
       <th>age</th>
-      <th>age_range</th>
+      <th>age_bins</th>
       <th>age_by_decade</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>94</td>
-      <td>[90 - 100)</td>
-      <td>90s</td>
+      <td>45</td>
+      <td>(39, 49]</td>
+      <td>40s</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>75</td>
-      <td>[70 - 80)</td>
-      <td>70s</td>
+      <td>47</td>
+      <td>(39, 49]</td>
+      <td>40s</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>89</td>
-      <td>[90 - 100)</td>
-      <td>90s</td>
+      <td>37</td>
+      <td>(29, 39]</td>
+      <td>30s</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>67</td>
-      <td>[60 - 70)</td>
-      <td>60s</td>
+      <td>41</td>
+      <td>(39, 49]</td>
+      <td>40s</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>61</td>
-      <td>[60 - 70)</td>
-      <td>60s</td>
+      <td>29</td>
+      <td>(20, 29]</td>
+      <td>20s</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>30</td>
+      <td>(29, 39]</td>
+      <td>30s</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>30</td>
+      <td>(29, 39]</td>
+      <td>30s</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>49</td>
+      <td>(39, 49]</td>
+      <td>40s</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-<p>You can learn more about the intricate details of the Pandas <code>cut()</code> method on the <a href='https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.cut.html'>official documentation page</a>.</p>
-<p>I can use pandas <a href='https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.value_counts.html' target='_blank'>`value_counts()</a> method to count the occurrences of ages in the bins. There's an uneven count among bins.</p>
-<div class="highlight"><pre><span></span><span class="n">df_ages</span><span class="p">[</span><span class="s1">&#39;age_by_decade&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>80s    6
-70s    6
-60s    6
-50s    6
-30s    6
-90s    5
-20s    4
-40s    1
-Name: age_by_decade, dtype: int64
-</pre></div>
+<p>Learn more about the Pandas <code>cut()</code> method from the <a href='https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html' target="_blank">official documentation page</a>.</p>
   </div>
 </section>
 
