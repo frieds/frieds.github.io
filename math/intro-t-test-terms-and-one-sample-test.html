@@ -262,7 +262,7 @@
 <span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="kn">as</span> <span class="nn">stats</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 
 
@@ -290,7 +290,8 @@
 
 
 <h3>2) Set an Alpha Level and Original Hypotheses</h3>
-<p>The alpha level for this experiment will be <span class="math">\(0.05\)</span>.</p>
+<p>The alpha level is the probability threshold to determine if the two groups are <em>significantly</em> different from one another. This value will come in handy later as a comparison against the experiment's output p-value.</p>
+<p>The alpha level for this experiment will be <span class="math">\(0.05\)</span>. This is a common industry threshold.</p>
 <div class="highlight"><pre><span></span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.05</span>
 </pre></div>
 
@@ -511,18 +512,20 @@
 
 
 <p>In the Python Scipy package, there's a <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_1samp.html'>method</a> called <code>ttest_1samp()</code> that calculates the t-statistic and p-value for a one sample <em>two-sided</em> t-test. However, the guitar errors example is a <em>one-sided</em> negative direction test. Let's use the returned p-value from this method and multiply it by <span class="math">\(2\)</span> to get the p-value for a one-sided test.</p>
-<div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_1samp</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">sample_student_errors</span><span class="p">,</span> <span class="n">popmean</span><span class="o">=</span><span class="n">population_mean_errors</span><span class="p">)</span>
-<span class="n">results</span>
+<div class="highlight"><pre><span></span><span class="n">t_statistic</span><span class="p">,</span> <span class="n">two_tailed_p_value</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_1samp</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">sample_student_errors</span><span class="p">,</span> <span class="n">popmean</span><span class="o">=</span><span class="n">population_mean_errors</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>Ttest_1sampResult(statistic=-4.443441113387382, pvalue=0.00013578924891219084)
+<div class="highlight"><pre><span></span><span class="n">t_statistic</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="n">two_sided_p_value</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">one_sided_p_value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">two_sided_p_value</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">one_sided_p_value</span>
+<div class="highlight"><pre><span></span>-4.443441113387382
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">one_tail_p_value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">two_tailed_p_value</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">one_tail_p_value</span>
 </pre></div>
 
 
@@ -546,7 +549,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_and_one_sample_files/intro_t_tests_and_one_sample_72_0.png"></p>
+<p><img alt="png" src="intro_t_tests_and_one_sample_files/intro_t_tests_and_one_sample_73_0.png"></p>
 <h3>8) Interpret Results of Experiment</h3>
 <h4>Conditions for Rejecting the Null Hypothesis</h4>
 <p>Similar to z-tests, with each t-test hypothesis, we want to determine if there is sufficient evidence to reject the null hypothesis. Below are details of hypothesis tests and means for evaluating one-sample t-tests.</p>
@@ -650,7 +653,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_and_one_sample_files/intro_t_tests_and_one_sample_85_0.png"></p>
+<p><img alt="png" src="intro_t_tests_and_one_sample_files/intro_t_tests_and_one_sample_86_0.png"></p>
 <h3>Visualization of Change in t-critical Value with Change in Degrees of Freedom</h3>
 <p>For an alpha level, as the degrees of freedom increases past <span class="math">\(22\)</span>, there is little change in the corresponding t-critical value.</p>
 <p>Thus, if I wanted to run a one sample t-test, I would likely just get a sample of roughly size <span class="math">\(23\)</span> which equates to a degree of freedom of <span class="math">\(22\)</span>. I'd only opt to retrive a larger sample if retrieving that data was easy. </p>
@@ -677,7 +680,7 @@
 </pre></div>
 
 
-<p><img alt="png" src="intro_t_tests_and_one_sample_files/intro_t_tests_and_one_sample_89_0.png"></p>
+<p><img alt="png" src="intro_t_tests_and_one_sample_files/intro_t_tests_and_one_sample_90_0.png"></p>
 <p>The t-critical value barely decreases with increasing degrees of freedom past <span class="math">\(22\)</span>.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "left",
