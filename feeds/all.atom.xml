@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-07-16T19:10:00-07:00</updated><entry><title>cut() Method: Bin Values into Discrete Intervals</title><link href="https://dfrieds.com/data-analysis/bin-values-python-pandas" rel="alternate"></link><published>2019-07-16T19:10:00-07:00</published><updated>2019-07-16T19:10:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-07-16:/data-analysis/bin-values-python-pandas</id><summary type="html">&lt;p&gt;Learn how to bin values in Python with pandas using the cut() method and through simple examples&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-08-25T10:50:00-07:00</updated><entry><title>Exponential Distribution</title><link href="https://dfrieds.com/math/exponential-distribution" rel="alternate"></link><published>2019-08-25T10:50:00-07:00</published><updated>2019-08-25T10:50:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-08-25:/math/exponential-distribution</id><summary type="html">&lt;p&gt;Understand an exponential distribution through a simple example and interpretation&lt;/p&gt;</summary><content type="html">&lt;p&gt;A &lt;strong&gt;exponential distribution&lt;/strong&gt; often represents the amount of time until a specific event occurs. &lt;/p&gt;
+&lt;p&gt;One popular example is the duration of time people spend on a website. I'd expect most people to stay on site for 1-4 seconds, fewer people to stay for 4-8 seconds and even fewer to stay for 9+ seconds. To describe this clearly as an exponential distribution, I'd expect exponentially fewer people to stay on site for every increase in time in seconds. &lt;/p&gt;
+&lt;p&gt;Another example is the duration of time people spend on line waiting to checkout at a convenience store any given day. I'd expect most people can checkout immediately -  essentially no line. I'd expect exponentially fewer people to wait each successive time increase in seconds. &lt;/p&gt;
+&lt;h3&gt;Import Modules&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Visualization styling code.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figure.figsize&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="mf"&gt;12.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;9.5&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
+&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;talk&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Build an Exponential Distribution&lt;/h3&gt;
+&lt;p&gt;Using the &lt;code&gt;numpy&lt;/code&gt; package's &lt;code&gt;random&lt;/code&gt; module, we can call the &lt;a href='https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.random.exponential.html' target="_blank"&gt;&lt;code&gt;exponential()&lt;/code&gt; method&lt;/a&gt; to sample from a list of values that would resemble an exponential distribution. We set the following arguments: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;scale&lt;/code&gt; as the scale parameter; the higher the value, the less "steep" your exponential distribution&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;size&lt;/code&gt; as the number of values drawn from an exponential distribution&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# seed random number generator with fixed value so we always get same values below&lt;/span&gt;
+&lt;span class="n"&gt;exponential_distribution_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exponential&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;800&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Plot a histogram of the values in &lt;code&gt;exponential_distribution_values&lt;/code&gt; using &lt;a href="https://seaborn.pydata.org/generated/seaborn.distplot.html" target="_blank"&gt;Seaborn's &lt;code&gt;distplot()&lt;/code&gt;&lt;/a&gt; method.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;exponential_distribution_values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;kde&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkgreen&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Time Spent (in Seconds) on Checkout Line at Convenience Store&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.012&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;amount of time spent on checkout line at convenience store (seconds)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;count of occurences&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="exponential_distribution_files/exponential_distribution_10_0.png"&gt;&lt;/p&gt;
+&lt;p&gt;This visualization shows most people spent less than 10 seconds waiting on line. With each increase in time, exponentially fewer people had waited that time amount.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="exponential distribution"></category><category term="python"></category><category term="numpy"></category></entry><entry><title>cut() Method: Bin Values into Discrete Intervals</title><link href="https://dfrieds.com/data-analysis/bin-values-python-pandas" rel="alternate"></link><published>2019-07-16T19:10:00-07:00</published><updated>2019-07-16T19:10:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-07-16:/data-analysis/bin-values-python-pandas</id><summary type="html">&lt;p&gt;Learn how to bin values in Python with pandas using the cut() method and through simple examples&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Import Modules&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -4602,257 +4641,6 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "left",
-        indent = "1em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="t-tests"></category><category term="python"></category><category term="scipy"></category><category term="numpy"></category></entry><entry><title>Dependent Samples t-tests</title><link href="https://dfrieds.com/math/dependent-samples-t-test" rel="alternate"></link><published>2019-02-21T18:05:00-08:00</published><updated>2019-02-21T18:05:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-02-21:/math/dependent-samples-t-test</id><summary type="html">&lt;p&gt;Simple example in Python using NumPy and SciPy to walk through steps of dependent samples t-tests&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dependent t-tests are considered within subject designs. This means the same subject may take a test twice. They are also called &lt;strong&gt;paired samples t-tests&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In order to fully grasp the concepts in this post, it'll help to have familiarity with the following concepts: z-tests, hypothesis testing, p-values, normal distribution, standard deviation, standard error and the central limit theorem.&lt;/p&gt;
-&lt;p&gt;The purpose of this test is typically to determine if the difference between sample means is &lt;em&gt;significantly&lt;/em&gt; different from zero or another value.&lt;/p&gt;
-&lt;p&gt;Categories of this include:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Repeated measures design&lt;ul&gt;
-&lt;li&gt;Example: measure same people's errors on typing on laptop keyboard and then mobile keyboard for a specified blob of text in a specified time duration&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Pre-test and post-test: measure variable at one point in time, then provide a treatment and the measure that same variable&lt;ul&gt;
-&lt;li&gt;Example: measure average hours of sleeps for patients normally, then have them use a sleeping pill and measure average hours of sleep &lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Longitudinal: repeated observations of a sample over a period of time&lt;ul&gt;
-&lt;li&gt;Example: measure growth or decline of count of rides in bike share service over time&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Data Requirements for Dependent Sample t-tests&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Each of the samples have a dependent variable that is continuous.&lt;/li&gt;
-&lt;li&gt;The subjects in each sample are the same (example - same people tested in both samples).&lt;/li&gt;
-&lt;li&gt;Randomly chosen test subjects from each sample of a greater population.&lt;/li&gt;
-&lt;li&gt;Approximate normal distribution of the differences between the paired values.&lt;/li&gt;
-&lt;li&gt;No outliers in the difference between the two samples observations.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Setup Code&lt;/h3&gt;
-&lt;h4&gt;Import Modules&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;stats&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Set Visualization Style&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;talk&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;darkgrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Steps to Perform Dependent Sample t-test&lt;/h3&gt;
-&lt;p&gt;1) Setup the experiment to record measurements from two samples.&lt;/p&gt;
-&lt;p&gt;2) Set an alpha level for the test, a null hypothesis and alternative hypothesis.&lt;/p&gt;
-&lt;p&gt;3) Run the experiment and collect the data.&lt;/p&gt;
-&lt;p&gt;4) Determine if data meets requirements to perform a dependent sample t-test.&lt;/p&gt;
-&lt;p&gt;5) Calculate the t-critical value.&lt;/p&gt;
-&lt;p&gt;6) Calculate the t-statistic.&lt;/p&gt;
-&lt;p&gt;7) Compare the t-statistic to the t-critical value. Interpret results of the experiment based on the original hypotheses.&lt;/p&gt;
-&lt;h3&gt;1) Setup Experiment to Follow Initial Data Requirements&lt;/h3&gt;
-&lt;p&gt;Let's assume the participants of this study were randomly chosen from the general population of people. &lt;/p&gt;
-&lt;p&gt;This is the same example mentioned earlier.&lt;/p&gt;
-&lt;p&gt;A sample of 19 people were told to lie in bed ready to fall asleep at 10pm every night and would be woken up by an alarm at 6:30am. They'd perform this test for 15 days days in a row. A calculation of the average number of hours slept by each person was recorded. That same test was performed for the same 19 people at a later point in time with the only difference being that each participant took a sleeping pill at 9:30pm. This is considered a pretest posttest type of t-test for dependent samples.&lt;/p&gt;
-&lt;p&gt;The variable being measured, hours of sleep, is a continuous variable.&lt;/p&gt;
-&lt;h3&gt;2) Set an Alpha Level and Original Hypotheses&lt;/h3&gt;
-&lt;p&gt;The alpha level will be &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.05&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Does the sleeping pill help &lt;em&gt;significantly&lt;/em&gt; increase the average hours slept compared to without the sleeping pill for the subjects? &lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(H_{o}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu_{pill}&amp;lt;=\mu_{no\:pill}\)&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(H_{A}\)&lt;/span&gt;: &lt;span class="math"&gt;\(\mu_{pill}&amp;gt;\mu_{no\:pill}\)&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;This is a positive one-directional sided test.&lt;/p&gt;
-&lt;p&gt;Note how the symbols above use &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; instead of &lt;span class="math"&gt;\(\bar{x}\)&lt;/span&gt;. The dependent samples t-test is utilized to infer the relevant population parameters based on the sample data. &lt;/p&gt;
-&lt;h3&gt;3) Collect the Data&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;avg_sleep_no_pill&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="mf"&gt;6.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;6.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.02&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;6.9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;6.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;5.95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;6.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;6.95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.05&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;span class="n"&gt;avg_sleep_pill&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="mf"&gt;6.55&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.18&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.16&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.64&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.21&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.51&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.54&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.04&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.74&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.28&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;6.51&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;7.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;6.95&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;8.14&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;4) Determine if Data Meets Requirements to Perform a Dependent Sample t-test&lt;/h3&gt;
-&lt;p&gt;Below, I subtract the values from &lt;code&gt;avg_sleep_no_pill&lt;/code&gt; from &lt;code&gt;avg_sleep_pill&lt;/code&gt; to get a numpy array of the difference values.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sleep_difference_patient_averages_from_treatment&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subtract&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;avg_sleep_pill&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;avg_sleep_no_pill&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sleep_difference_patient_averages_from_treatment&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;array([0.05, 0.21, 0.08, 0.14, 0.2 , 0.04, 0.15, 0.31, 0.31, 0.14, 0.3 ,
-       0.44, 0.44, 0.38, 0.41, 0.05, 0.21, 0.  , 0.09])
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Below is a box plot to visualize the distribution of values in &lt;code&gt;sleep_difference_patient_averages_from_treatment&lt;/code&gt;. This visualization indicates there are no outliers.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;boxplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sleep_difference_patient_averages_from_treatment&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mediumseagreen&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;saturation&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.9&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Differences in Avg Hours Slept for Patients with Treatment&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;average hours slept&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="dependent_samples_t_tests_files/dependent_samples_t_tests_23_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Below is a histogram to illustrate the distribution of values in &lt;code&gt;sleep_difference_patient_averages_from_treatment&lt;/code&gt;. This distribution resembles an approximate normal distribution. The values are centered around a central value around &lt;span class="math"&gt;\(0.18\)&lt;/span&gt; hours and there is approximately symmetry around this center.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sleep_difference_patient_averages_from_treatment&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkgoldenrod&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Differences in Avg. Hours Slept for Patients with Treatment&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;differences in average hours slept by patients&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;frequency of occurences&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="dependent_samples_t_tests_files/dependent_samples_t_tests_25_0.png"&gt;&lt;/p&gt;
-&lt;h3&gt;5) Calculate t-critical Value&lt;/h3&gt;
-&lt;p&gt;This is a positive one-directional t-test and we want to determine if the differences in hours slept by patients after the treatment compared to before the treatment is &lt;em&gt;significantly&lt;/em&gt; greater. The t-critical value should be positive. With an alpha level of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;, there should be &lt;span class="math"&gt;\(0.95\)&lt;/span&gt; area under the curve to the left of the t-critical value for the t-distribution. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;avg_sleep_no_pill&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;probability_auc_left_tail&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;
-&lt;span class="n"&gt;probability_auc_left_tail&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.95
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;For the sample size of &lt;span class="math"&gt;\(n=19\)&lt;/span&gt;, the degrees of freedom is &lt;span class="math"&gt;\(19-1 = 18\)&lt;/span&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;degrees of freedom: {0}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;degrees of freedom: 18
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Use the &lt;code&gt;ppf()&lt;/code&gt; method to calculate the t-critical value. Set the argument:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;q&lt;/code&gt; to be the area under the curve of &lt;span class="math"&gt;\(0.95\)&lt;/span&gt; that's to the left of the t-critical value&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;df&lt;/code&gt; to be our &lt;code&gt;degrees_of_freedom&lt;/code&gt; value of &lt;span class="math"&gt;\(18\)&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;t_critical_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ppf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;probability_auc_left_tail&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;t-critical value of {0}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_critical_value&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;t-critical value of 1.73
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;6) Calculate the t-statistic&lt;/h3&gt;
-&lt;p&gt;Scipy stat's &lt;code&gt;ttest_rel()&lt;/code&gt; &lt;a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html'&gt;method&lt;/a&gt; is used for t-tests on two &lt;em&gt;related&lt;/em&gt; samples of scores. &lt;/p&gt;
-&lt;p&gt;This method returns the probability for a two-sided test. The returned t-statistic is the same for a one-tail or two-tail dependent sample t-test.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sleep_t_test_results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ttest_rel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;avg_sleep_pill&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;avg_sleep_no_pill&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sleep_t_test_results&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Ttest_relResult(statistic=6.3059575538645145, pvalue=6.059618861726903e-06)
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Also, I can calculate the t-statistic for a dependent t-test using the formula below:&lt;/p&gt;
-&lt;div class="math"&gt;$$t=\frac{\bar{x}_{D}-0}{\frac{s}{\sqrt{n}}}$$&lt;/div&gt;
-&lt;p&gt;We're looking to see if the differences in sample means is different than &lt;span class="math"&gt;\(0\)&lt;/span&gt;. We could replace that value &lt;span class="math"&gt;\(0\)&lt;/span&gt; for any other numerical value.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\bar{x}_{D}\)&lt;/span&gt; is the difference in sample means for the two groups and is considered our point estimate&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\frac{s}{\sqrt{n}}\)&lt;/span&gt; is our estimated standard error from a sampling distribution (that consists of sample means based on taking repeated samples from a greater population, calculating the differences in observations and then the sample mean of the differences) &lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(s\)&lt;/span&gt; is the sample standard deviation of the differences (remember to use bessel's correction with &lt;span class="math"&gt;\(n-1\)&lt;/span&gt; in the denominator)&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is sample size&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Our point estimate is &lt;span class="math"&gt;\(\bar{x}_{pill} - \bar{x}_{no\:pill}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;We're trying to determine if this point estimate is significantly different from &lt;span class="math"&gt;\(0\)&lt;/span&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;mean_point_estimate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;avg_sleep_pill&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;avg_sleep_no_pill&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;mean_point_estimate&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.20789473684210424
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Use the &lt;code&gt;std()&lt;/code&gt; &lt;a href='https://docs.scipy.org/doc/numpy/reference/generated/numpy.std.html'&gt;method&lt;/a&gt; in NumPy and set the argument &lt;code&gt;ddof&lt;/code&gt; to be &lt;span class="math"&gt;\(1\)&lt;/span&gt; since this is a calculation for the &lt;em&gt;sample&lt;/em&gt; standard deviation.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;std_dev_sleep_difference_patient_averages_from_treatment&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sleep_difference_patient_averages_from_treatment&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ddof&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;std_dev_sleep_difference_patient_averages_from_treatment&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.14370413074432642
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;t_statistic&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mean_point_estimate&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std_dev_sleep_difference_patient_averages_from_treatment&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;t_statistic&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;6.305957553864484
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The t-statistic returned from &lt;code&gt;ttest_rel()&lt;/code&gt; is the same as the t-statstic from utilizing the equation above.&lt;/p&gt;
-&lt;h3&gt;7) Interpret Results&lt;/h3&gt;
-&lt;p&gt;The returned t-statistic of &lt;span class="math"&gt;\(6.31\)&lt;/span&gt; is greater than the t-critical value of &lt;span class="math"&gt;\(1.73\)&lt;/span&gt;. Additionally, the p-value of &lt;span class="math"&gt;\(6.06e^{-6}\)&lt;/span&gt; is much smaller than the alpha level of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;Therefore, it is statistically unlikely we'd see such large differences in average hours of sleep with the sleeping pill treatment compared to no pill due to chance. We have sufficient evidence to reject the null hypothesis. Study participants had &lt;em&gt;significantly&lt;/em&gt; more sleep when using the sleeping pill.&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "left",
         indent = "1em",
