@@ -1,5 +1,452 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-08-25T10:50:00-07:00</updated><entry><title>Exponential Distribution</title><link href="https://dfrieds.com/math/exponential-distribution" rel="alternate"></link><published>2019-08-25T10:50:00-07:00</published><updated>2019-08-25T10:50:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-08-25:/math/exponential-distribution</id><summary type="html">&lt;p&gt;Understand an exponential distribution through a simple example and interpretation&lt;/p&gt;</summary><content type="html">&lt;p&gt;A &lt;strong&gt;exponential distribution&lt;/strong&gt; often represents the amount of time until a specific event occurs. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dan Friedman's Data Science Knowledge Base</title><link href="https://dfrieds.com/" rel="alternate"></link><link href="https://dfrieds.com/feeds/all.atom.xml" rel="self"></link><id>https://dfrieds.com/</id><updated>2019-08-26T06:55:00-07:00</updated><entry><title>Calculations for Popular Business Metrics</title><link href="https://dfrieds.com/data-analysis/calculations-popular-business-metrics" rel="alternate"></link><published>2019-08-26T06:55:00-07:00</published><updated>2019-08-26T06:55:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-08-26:/data-analysis/calculations-popular-business-metrics</id><summary type="html">&lt;p&gt;Understand calculations for common business metrics such as a sum, count, percentile, ratio and probability&lt;/p&gt;</summary><content type="html">&lt;p&gt;On the job, I'm often asked to setup a measurement plan for a new app feature or quantify something that's happend in the past. There's several common calculations for metrics including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sum: result of adding numbers&lt;/li&gt;
+&lt;li&gt;Count: total number of occurences of something&lt;/li&gt;
+&lt;li&gt;Average: a number to regard the central tendancy of a set of values calculated as the sum of a condition divided by the count of occurences of that condition&lt;/li&gt;
+&lt;li&gt;Percentile: a value that represents a threshold for the percentage of data points less than the value&lt;/li&gt;
+&lt;li&gt;Ratio: comparison of two numbers into a value&lt;/li&gt;
+&lt;li&gt;Probability: how likely something is to happen&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In this post, I'll walk through a scenario in which I am asked to calculate the &lt;em&gt;success&lt;/em&gt; of a website homepage that's for a note-taking app. &lt;em&gt;Success&lt;/em&gt; is a vague word and there's lots of ways we can characterize it. With each metric using a calculation from the list above, I'll align that metric to be relevant to overall business goal: get as many weekly active users as possible.&lt;/p&gt;
+&lt;p&gt;The homepage is just meant to educate people about the note-taking app and encourage them to sign up. There's a lot of content on the homepage about the features of the app and there's a single signup button to create an account and use the note-taking app. &lt;/p&gt;
+&lt;p&gt;A caveat: this is a very simple business example and this post is meant to introduce popular calculations for metrics. For a real-world project, I'd encourage you to understand your business problems, business goals and the pros and cons of each potential metric you choose.&lt;/p&gt;
+&lt;h3&gt;Setup Code and Data&lt;/h3&gt;
+&lt;h4&gt;Import Modules&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;randint&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;choice&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;seed&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;timedelta&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Generate Data&lt;/h4&gt;
+&lt;p&gt;I'll generate relevant session data we can use to compute all metrics above.&lt;/p&gt;
+&lt;p&gt;Below I create 17 sessions in which each session is simplified to a visitor landing on the homepage only and then either clicking the signup button or leaving the site.&lt;/p&gt;
+&lt;p&gt;For each session, there's a:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;cookie id to represent a unique value for a visitor based on the visitor's browser&lt;/li&gt;
+&lt;li&gt;timestamp for when the visitor lands on the homepage&lt;/li&gt;
+&lt;li&gt;a value to represent the timestamp for when a user clicked the signup button or an &lt;code&gt;NaT&lt;/code&gt; value to represent not a timestamp meaning the visitor never clicked the signup button&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;session_start_time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;today&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;microsecond&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;minute&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;signup_button_time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;session_start_time&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;timedelta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;random_seconds&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;session_start_times&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="n"&gt;click_signup_button_times&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="n"&gt;count_of_sessions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+
+&lt;span class="n"&gt;cookie_ids_list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;session&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;cookie_ids_list&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+
+    &lt;span class="n"&gt;random_seconds_between_session_start_times&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;session_start_time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;session_start_time&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;timedelta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;random_seconds_between_session_start_times&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;random_seconds_to_signup&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;click_signup_button_time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;session_start_time&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;timedelta&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;random_seconds_to_signup&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# randomly choose either the signup button time or np.NaN to be no button click&lt;/span&gt;
+    &lt;span class="n"&gt;click_signup_button_time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;choice&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;click_signup_button_time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NaN&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+    &lt;span class="n"&gt;session_start_times&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;session_start_time&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;click_signup_button_times&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;click_signup_button_time&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create a Pandas dataframe from &lt;code&gt;session_start_times&lt;/code&gt; and &lt;code&gt;signup_button_times&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;cookie_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;cookie_ids_list&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;session_start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;session_start_times&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;click_signup_button_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="n"&gt;click_signup_button_times&lt;/span&gt;
+       &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;df_sessions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View entire dataset.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;cookie_id&lt;/th&gt;
+      &lt;th&gt;session_start_time&lt;/th&gt;
+      &lt;th&gt;click_signup_button_time&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:19&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:28&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:36&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:33&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:45&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:01:29&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:54&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:00&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5&lt;/th&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:01:08&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:20&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6&lt;/th&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:01:15&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7&lt;/th&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:01:35&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:03:06&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8&lt;/th&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:01:49&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:35&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;9&lt;/th&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:01&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;10&lt;/th&gt;
+      &lt;td&gt;11&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:16&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:03:49&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;11&lt;/th&gt;
+      &lt;td&gt;12&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:23&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;12&lt;/th&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:27&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:36&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;13&lt;/th&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:39&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:03:45&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;14&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:56&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:04:13&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;15&lt;/th&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:03:08&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;16&lt;/th&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:03:18&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:04:07&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;Sum Metric&lt;/h3&gt;
+&lt;p&gt;The &lt;strong&gt;sum&lt;/strong&gt; is the result of adding things. Given the dataset, I don't think there's a single sum metric that's relevant to the business' goals. However, the sum is a calculation necessary to know the average time a visitor spends on the page before clicking the signup button. We'll revisit this calculation later in the ratio section.&lt;/p&gt;
+&lt;h3&gt;Count Metric&lt;/h3&gt;
+&lt;p&gt;A &lt;strong&gt;count&lt;/strong&gt; is the total number of occurences of something. A relevant count metric for our business goals is the count of sessions. My hypothesis is that more sessions on the homepage will result in more signups which will likely result in more weekly active users. Therefore, the business wants more sessions per day.&lt;/p&gt;
+&lt;p&gt;I can use the Python &lt;a href="https://docs.python.org/3/library/functions.html#len" target="_blank"&gt;len() function&lt;/a&gt; to count the number of session in the dataset.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_sessions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;count_sessions&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;17
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There were 18 sessions.&lt;/p&gt;
+&lt;p&gt;Another relevant count metric is the count of unique visitors to the site in a day. I'll assume each cookie used on a visitors' browser was used properly and corresponds to each user.&lt;/p&gt;
+&lt;p&gt;I can count the unique values in the &lt;code&gt;cookie_id&lt;/code&gt; field by using the Pandas series &lt;a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.unique.html" target="_blank"&gt;&lt;code&gt;unique()&lt;/code&gt; method&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;cookie_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nunique&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;14
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There were 14 distinct visitors to the homepage.&lt;/p&gt;
+&lt;h3&gt;Average Metric&lt;/h3&gt;
+&lt;p&gt;An &lt;strong&gt;average&lt;/strong&gt; is the "central" value from a set of numbers. A relevant average metric that aligns with the business goals is the average time it takes somebody sign up from landing on the homepage first. This average metric gives us a baseline for how much consideration it takes someone to sign up. &lt;/p&gt;
+&lt;p&gt;I need to create a new column that's the time duration for each user to sign up after landing on the homepage. I will subtract &lt;code&gt;click_signup_button_time&lt;/code&gt; - &lt;code&gt;session_start_time&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time_duration_until_signup&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;click_signup_button_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;session_start_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Preview the first few sessions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;cookie_id&lt;/th&gt;
+      &lt;th&gt;session_start_time&lt;/th&gt;
+      &lt;th&gt;click_signup_button_time&lt;/th&gt;
+      &lt;th&gt;time_duration_until_signup&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:19&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:28&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:36&lt;/td&gt;
+      &lt;td&gt;00:00:08&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:33&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:45&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:01:29&lt;/td&gt;
+      &lt;td&gt;00:00:44&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:54&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:00&lt;/td&gt;
+      &lt;td&gt;00:01:06&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I can use the Pandas &lt;a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.mean.html" target="_blank"&gt;&lt;code&gt;mean()&lt;/code&gt; method&lt;/a&gt; to calculate the average of the &lt;code&gt;time_duration_until_signup&lt;/code&gt; values.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time_duration_until_signup&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Timedelta(&amp;#39;0 days 00:00:56.454545&amp;#39;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For users that do sign up, the average time it takes someone to click the signup button after landing on the homepage is approximately 56 seconds.&lt;/p&gt;
+&lt;h3&gt;Percentile&lt;/h3&gt;
+&lt;p&gt;A &lt;strong&gt;percentile&lt;/strong&gt; represents a threshold in which there's a percentage of data points less than that value. A frequently used percentile value is the 50th percentile which represents the median. This means there are approximately 50% of data points smaller than the median value.&lt;/p&gt;
+&lt;p&gt;Median can be especially helpful to understand the central tendancy of a set of values when there's a skewness in the values. You can learn more on my &lt;a href="https://dfrieds.com/math/skewness" target="_blank"&gt;skewness article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I can calculate the median &lt;code&gt;time_duration_until_signup&lt;/code&gt; value using the &lt;a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.median.htmlz" target="_blank"&gt;&lt;code&gt;median&lt;/code&gt; method&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time_duration_until_signup&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;median&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Timedelta(&amp;#39;0 days 00:01:06&amp;#39;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The median is approximately 1 minute and 6 seconds. In approximately half of sessions with signups, visitors spent less than 1 minute and 6 seconds.&lt;/p&gt;
+&lt;h3&gt;Ratio&lt;/h3&gt;
+&lt;p&gt;A &lt;strong&gt;ratio&lt;/strong&gt; comparison of two numbers into a value. One ratio that's critical to the business' goal is to know the proportion of homepage visits that end up with a click on a signup button. This rate is commony called the clickthrough rate. The higher this rate, the more signups and likely more weekly active users down the road. &lt;/p&gt;
+&lt;p&gt;Let's first count the number of sessions that have a click of the signup button. I'll count the number of non-null values in the &lt;code&gt;click_signup_button_time&lt;/code&gt; field using the Pandas series &lt;a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.notnull.html&lt;code&gt;" target="_blank"&amp;gt;&lt;/code&gt;notnull()` method&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;signup_button_clicks&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;click_signup_button_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;notnull&lt;/span&gt;&lt;span class="p"&gt;()])&lt;/span&gt;
+&lt;span class="n"&gt;signup_button_clicks&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;11
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ratio_clicks_to_session&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;signup_button_clicks&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;count_sessions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ratio_clicks_to_session&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.65
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;0.65 sessions resulted in a signup button click. The higher this ratio, the greater % of visitors we can convert to signup and this would help expand our pool of more potential weekly active users.&lt;/p&gt;
+&lt;h3&gt;Probability&lt;/h3&gt;
+&lt;p&gt;The &lt;code&gt;cookie_id&lt;/code&gt; should specify each visitor to the site based on their browser. One interesting observation is &lt;code&gt;cookie_id&lt;/code&gt; of &lt;code&gt;1&lt;/code&gt; and &lt;code&gt;3&lt;/code&gt; each made a visit to the homepage, didn't signed up, but later revisited the homepage and did signup. &lt;/p&gt;
+&lt;p&gt;I'm curious about the click through probability. This is a metric to define if a unique visitor signed up. The calculation is the count of unique visitors (represented by the &lt;code&gt;cookie_id&lt;/code&gt;) who clicked the button divided by the count of unique visitors.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+&lt;/style&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;cookie_id&lt;/th&gt;
+      &lt;th&gt;session_start_time&lt;/th&gt;
+      &lt;th&gt;click_signup_button_time&lt;/th&gt;
+      &lt;th&gt;time_duration_until_signup&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:19&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:28&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:36&lt;/td&gt;
+      &lt;td&gt;00:00:08&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:33&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:45&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:01:29&lt;/td&gt;
+      &lt;td&gt;00:00:44&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:00:54&lt;/td&gt;
+      &lt;td&gt;2019-08-25 15:02:00&lt;/td&gt;
+      &lt;td&gt;00:01:06&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_unique_visitors_who_signed_up&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;df_sessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;click_signup_button_time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;notnull&lt;/span&gt;&lt;span class="p"&gt;()][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;cookie_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nunique&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;count_unique_visitors_who_signed_up&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;11
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count_unique_visitors&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_ssessions&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;cookie_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nunique&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;count_unique_visitors&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;14
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;click_through_probability&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;count_unique_visitors_who_signed_up&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;count_unique_visitors&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;click_through_probability&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.79
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The click through probability is 0.79 which means 79% of unique visitors to the homepage created an account. The higher this probability, the greater % of visitors we can convert to signup and this would help increase our pool of more potential weekly active users.&lt;/p&gt;</content><category term="business metrics"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Exponential Distribution</title><link href="https://dfrieds.com/math/exponential-distribution" rel="alternate"></link><published>2019-08-25T10:50:00-07:00</published><updated>2019-08-25T10:50:00-07:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-08-25:/math/exponential-distribution</id><summary type="html">&lt;p&gt;Understand an exponential distribution through a simple example and interpretation&lt;/p&gt;</summary><content type="html">&lt;p&gt;A &lt;strong&gt;exponential distribution&lt;/strong&gt; often represents the amount of time until a specific event occurs. &lt;/p&gt;
 &lt;p&gt;One popular example is the duration of time people spend on a website. I'd expect most people to stay on site for 1-4 seconds, fewer people to stay for 4-8 seconds and even fewer to stay for 9+ seconds. To describe this clearly as an exponential distribution, I'd expect exponentially fewer people to stay on site for every increase in time in seconds. &lt;/p&gt;
 &lt;p&gt;Another example is the duration of time people spend on line waiting to checkout at a convenience store any given day. I'd expect most people can checkout immediately -  essentially no line. I'd expect exponentially fewer people to wait each successive time increase in seconds. &lt;/p&gt;
 &lt;h3&gt;Import Modules&lt;/h3&gt;
@@ -4324,375 +4771,4 @@
 &lt;p&gt;A &lt;strong&gt;mediator variable&lt;/strong&gt; is a variable that explains the relationship between independent and dependent variables. For example, we may notice a positive correlation with increased ice cream shop sales with increased heat. However, a potential mediator variable could be the count of people sweating. It's possible an increase in the count of people sweating in the local area influences ice cream sales. &lt;em&gt;If&lt;/em&gt; this were true, you may want to open an ice cream store near a sauna rather than simply in a hot weather area.&lt;/p&gt;
 &lt;p&gt;To make a causal relationship, we need to rule out &lt;strong&gt;lurking variables&lt;/strong&gt;. These are variables that are not included in the independent or dependent variable but can affect the relationship between the two. The definition of the mediator variable above is considered a lurking variable too. This idea of a &lt;strong&gt;third variable&lt;/strong&gt; is another name for a potential third variable that affects the causal relationship between the independent and dependent variables.&lt;/p&gt;
 &lt;p&gt;Another example is that a soccer coach (naively) noticed that players who practiced additionally after games &lt;em&gt;caused&lt;/em&gt; them to love soccer more. However, we don't know if the players playing more came before their love of soccer. Perhaps those players loved the game of soccer before the season started and that could have caused them to want to practice more after games. In this situation, there's &lt;strong&gt;ambiguous temporal precedence&lt;/strong&gt; - the unknown of which variable came first for inferring causality.&lt;/p&gt;
-&lt;p&gt;Another example is a supplements company claimed that people who drink their pre-workout shake directly before their workout complete approximately 2 more reps for each exercise and therefore have a better workout. The company claimed their pre-workout shake &lt;em&gt;caused&lt;/em&gt; increased workout reps. This is considered a &lt;strong&gt;post hoc fallacy&lt;/strong&gt; - an action taken &lt;em&gt;before&lt;/em&gt; another action doesn't mean it directly &lt;em&gt;caused&lt;/em&gt; the next action. &lt;/p&gt;</content><category term="correlation"></category><category term="causation"></category><category term="scatter"></category><category term="python"></category><category term="pandas"></category></entry><entry><title>Independent Samples t-tests</title><link href="https://dfrieds.com/math/independent-samples-t-test" rel="alternate"></link><published>2019-02-25T10:15:00-08:00</published><updated>2019-02-25T10:15:00-08:00</updated><author><name>Dan Friedman</name></author><id>tag:dfrieds.com,2019-02-25:/math/independent-samples-t-test</id><summary type="html">&lt;p&gt;Simple example in Python using NumPy and SciPy to walk through steps of independent sample t-tests&lt;/p&gt;</summary><content type="html">&lt;p&gt;An &lt;strong&gt;independent samples&lt;/strong&gt; t-test compares the means of two independent samples to determine whether there is evidence that the expected population means of each sample would be &lt;em&gt;significantly&lt;/em&gt; different. The two independent samples can contain different subjects but the same dependent variable should be measured in each sample. An example - you want to measure if there is a &lt;em&gt;significant&lt;/em&gt; difference in the average coffee price of independent coffee shops in Manhattan (part of New York City) versus San Francisco, California.&lt;/p&gt;
-&lt;p&gt;In order to fully grasp the concepts in this post, it'll help to have familiarity with the following concepts: z-tests, hypothesis testing, p-values, normal distribution, standard deviation, standard error and the central limit theorem.&lt;/p&gt;
-&lt;p&gt;Typically, you want a larger &lt;span class="math"&gt;\(n\)&lt;/span&gt; from each sample to control for individual differences. &lt;/p&gt;
-&lt;p&gt;Similar to dependent t-tests, independent t-tests have the same criteria for setting hypotheses and interpreting results. However, there are different equations to calculate the standard error and t-statistic that will be covered below in the example.&lt;/p&gt;
-&lt;h3&gt;Data Requirements for Independent Samples t-tests&lt;/h3&gt;
-&lt;p&gt;The conditions below are largely taken from Kent State University's &lt;a href='https://libguides.library.kent.edu/SPSS/IndependentTTest'&gt;tutorial on t-tests&lt;/a&gt;. &lt;/p&gt;
-&lt;p&gt;Your data must meet the following requirements:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Dependent variable that is continuous (i.e., interval or ratio level)&lt;/li&gt;
-&lt;li&gt;Independent variable that is categorical (i.e., two or more groups)&lt;/li&gt;
-&lt;li&gt;Independent samples/groups (i.e., independence of observations)&lt;/li&gt;
-&lt;li&gt;There is no relationship between the subjects in each sample. This means that subjects in the first group cannot also be in the second group. The subjects in either group cannot influence subjects in the other group&lt;/li&gt;
-&lt;li&gt;No group can influence the other group&lt;ul&gt;
-&lt;li&gt;Violation of this assumption will yield an inaccurate p value&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Random sample of data from the population&lt;/li&gt;
-&lt;li&gt;Normal distribution (approximately) of the dependent variable for each group&lt;ul&gt;
-&lt;li&gt;Non-normal population distributions, especially those that are thick-tailed or heavily skewed, considerably reduce the power of the test&lt;/li&gt;
-&lt;li&gt;Among moderate or large samples, a violation of normality may still yield accurate p-values&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;No outliers&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;Setup Code&lt;/h3&gt;
-&lt;h4&gt;Import Modules&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scipy.stats&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;stats&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;seaborn&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sns&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;statsmodels.stats&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;weightstats&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;statsmodelsweightstats&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Set Visualization Style&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_context&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;talk&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_style&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;darkgrid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Steps to Perform Independent Samples t-test&lt;/h3&gt;
-&lt;p&gt;1) Setup the experiment to record measurements from two samples.&lt;/p&gt;
-&lt;p&gt;2) Set an alpha level for the test, a null hypothesis and alternative hypothesis.&lt;/p&gt;
-&lt;p&gt;3) Run the experiment and collect the data.&lt;/p&gt;
-&lt;p&gt;4) Determine if data meets requirements to perform an independent samples t-test.&lt;/p&gt;
-&lt;p&gt;5) Calculate the t-critical value.&lt;/p&gt;
-&lt;p&gt;6) Calculate the t-statistic.&lt;/p&gt;
-&lt;p&gt;7) Compare the t-statistic to the t-critical value. Interpret results of the experiment based on the original hypotheses.&lt;/p&gt;
-&lt;h3&gt;1) Setup Experiment to Follow Initial Data Requirements&lt;/h3&gt;
-&lt;p&gt;Below is fictional data scenario. I want to know if the price of coffee is significantly different between a sample of coffee shops in Manhattan versus San Francisco (SF). In order to retrive the data, I will randomly select 5 coffee shops from various neighborhoods in each city. For each shop, I'll take a measurement of the cheapest small drip coffee option. For each city, I'll do this in multiple neighborhoods. &lt;/p&gt;
-&lt;h3&gt;2) Set an Alpha Level and Original Hypotheses&lt;/h3&gt;
-&lt;p&gt;The alpha level will be &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.05&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Is there a &lt;em&gt;significant&lt;/em&gt; difference in the average price of drip coffee at independent coffee shops in Manhattan versus San Francisco? &lt;/p&gt;
-&lt;p&gt;The null hypothesis is that there is no &lt;em&gt;significant&lt;/em&gt; difference in the true population means for the average cup of drip coffee between the cities of San Francisco and Manhattan.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}:\mu_{sf}=\mu_{manhattan}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}:\mu_{sf}\neq\mu_{manhattan}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;This is a two-tailed test.&lt;/p&gt;
-&lt;p&gt;In this independent samples t-test, I'm trying to use sample means from each of the two cities in order to infer the true population parameters.&lt;/p&gt;
-&lt;h3&gt;3) Collect the Data&lt;/h3&gt;
-&lt;p&gt;Ultimately, I collected 30 samples of coffee prices in Manhattan and 35 in San Francisco.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;1.79&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;1.85&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;1.99&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.19&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.29&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;1.99&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.29&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.49&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.79&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.95&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;2.99&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;3.49&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;4) Determine if Data Meets Requirements to Perform an Independent Samples t-test&lt;/h3&gt;
-&lt;p&gt;The dependent variable, the price of coffee in U.S. dollars is continuous. The independent variable, the identity of the city, is a proper independent variable.&lt;/p&gt;
-&lt;p&gt;In the data collection process, I ensured the coffee shops were all independent of one another. There is no relationship in ownership or name for any of the shops. &lt;/p&gt;
-&lt;p&gt;I'm assuming there's influence of groups on setting the price of coffee because of distinct ownership and cities.&lt;/p&gt;
-&lt;p&gt;I mentioned I randomly sampled coffee shops from various neighborhoods in each city. &lt;/p&gt;
-&lt;p&gt;Let's check the distribution of coffee prices in each city.&lt;/p&gt;
-&lt;h4&gt;Distribution of Prices in Each City&lt;/h4&gt;
-&lt;p&gt;The distribution of coffee prices for the sample in Manhattan below looks approximately normal.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;crimson&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Coffee Prices in Manhattan&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;price of cup of coffee [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;count of occurences&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="independent_samples_t_tests_files/independent_samples_t_tests_25_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;The distribution of coffee prices for the sample in San Francisco below looks approximately normal.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkcyan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Coffee Prices in San Francisco&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fontsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;price of cup of coffee [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;count of occurences&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="independent_samples_t_tests_files/independent_samples_t_tests_27_0.png"&gt;&lt;/p&gt;
-&lt;h4&gt;Check for Outliers in Each City&lt;/h4&gt;
-&lt;p&gt;The boxplot of Manhattan cup of coffee prices belows show no outliers.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;boxplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;crimson&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;saturation&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.9&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Coffee Prices in Manhattan&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;coffee prices [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="independent_samples_t_tests_files/independent_samples_t_tests_30_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;The boxplot of San Francisco cup of coffee prices belows show no outliers too.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;boxplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;darkcyan&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;saturation&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.9&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Distribution of Coffee Prices in San Francisco&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.015&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;coffee prices [$]&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;labelpad&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;14&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;img alt="png" src="independent_samples_t_tests_files/independent_samples_t_tests_32_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Overall, I think this data fits the requirements to perform an independent samples t-test.&lt;/p&gt;
-&lt;h3&gt;5) Calculate t-critical Value&lt;/h3&gt;
-&lt;p&gt;Assign variables for the count of observations in each group.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;manhattan_count_observations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;sf_count_observations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Different than other types of t-tests, the calculation for degrees of freedom for an independent samples t-test is:&lt;/p&gt;
-&lt;div class="math"&gt;$$(n_{1}-1)+(n_{2}-1)$$&lt;/div&gt;
-&lt;p&gt;This can be simplified to:&lt;/p&gt;
-&lt;div class="math"&gt;$$n_{1}+n_{2}-2$$&lt;/div&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sf_count_observations&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;manhattan_count_observations&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
-&lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;63
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This is a two-tailed t-test so each tail probability on the t-distribution is &lt;span class="math"&gt;\(0.025\)&lt;/span&gt;. We use that value below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.05&lt;/span&gt;
-&lt;span class="n"&gt;two_tailed_test_prob_tail&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
-&lt;span class="n"&gt;t_critical&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ppf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;two_tailed_test_prob_tail&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;t_critical&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;-1.998
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Since this is a two-tailed test, the t-critical value is actually &lt;span class="math"&gt;\(\pm1.998\)&lt;/span&gt;&lt;/p&gt;
-&lt;h3&gt;6) Calculate the t-statistic&lt;/h3&gt;
-&lt;p&gt;There's a method in the Scipy package for performing indepenent t-tests called &lt;a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html'&gt;&lt;code&gt;ttest_ind()&lt;/code&gt;&lt;/a&gt;. We set the following arguments:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;a&lt;/code&gt; to one sample of values&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;b&lt;/code&gt; to the second sample of values&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;equal_var&lt;/code&gt; to &lt;code&gt;False&lt;/code&gt; since we assume the samples have unequal population variances&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;nan_policy&lt;/code&gt; to &lt;code&gt;omit&lt;/code&gt; since the two samples are unequal sizes and SciPy must handle that discrepancy appropriately with equations on the backend&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;In the method, there is a calculation for the mean of &lt;code&gt;a&lt;/code&gt; minus &lt;code&gt;b&lt;/code&gt;. Our returned t-statistic is negative since the mean of &lt;code&gt;b&lt;/code&gt; (the average price for a cup of coffee in SF) is larger than the mean of &lt;code&gt;a&lt;/code&gt; (the average price for a cup of coffee in Manhattan).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ttest_ind&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;equal_var&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nan_policy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;omit&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Ttest_indResult(statistic=-9.2256676192423, pvalue=4.387713543565749e-13)
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;I also can utilize the simple t-statistic math equation: &lt;/p&gt;
-&lt;div class="math"&gt;$$t=\frac{\bar{x}_{1}-\bar{x}_{2}}{SE}$$&lt;/div&gt;
-&lt;p&gt;First, I'll calculate the mean of each sample.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;mean_manhattan_coffee_price&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;mean_sf_coffee_price&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;I calculate the standard deviation for each sample using the &lt;a href='https://docs.scipy.org/doc/numpy/reference/generated/numpy.std.html'&gt;sample standard deviation formula&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;std_dev_manhattan_coffee_prices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ddof&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;std_dev_sf_coffee_prices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ddof&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;I calculate the standard error. This standard error is the standard deviation for an estimated sampling distribution that resembles the difference in sample means.&lt;/p&gt;
-&lt;p&gt;Below is the formula for standard error among two samples for indpendent t-tests. This accounts for any potential variation in sizes of the samples.&lt;/p&gt;
-&lt;div class="math"&gt;$$SE=\sqrt{\frac{s_{1}^{2}}{n_{1}}+\frac{s_{2}^{2}}{n_{2}}}$$&lt;/div&gt;
-&lt;p&gt;The subscript &lt;span class="math"&gt;\(1\)&lt;/span&gt; denotes variables for one group and the subscript &lt;span class="math"&gt;\(2\)&lt;/span&gt; denotes variables for the second group.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(s\)&lt;/span&gt; is the sample standard deviation&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt; is the number of observations in a sample&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;standard_error&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;std_dev_manhattan_coffee_prices&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;manhattan_count_observations&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std_dev_sf_coffee_prices&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sf_count_observations&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;span class="n"&gt;standard_error&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.07745987359533105
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Finally, use the intermediary calculations above to calculate the exact t-statistic value.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;t_statistic&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mean_manhattan_coffee_price&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mean_sf_coffee_price&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;standard_error&lt;/span&gt;
-&lt;span class="n"&gt;t_statistic&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;-9.2256676192423
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This manual version of calculating the t-statistic returned the &lt;em&gt;same&lt;/em&gt; result as the programmatic way. &lt;/p&gt;
-&lt;h4&gt;Interpretation of Results&lt;/h4&gt;
-&lt;p&gt;The t-statistic value of &lt;span class="math"&gt;\(-9.23\)&lt;/span&gt; is much smaller than the negative t-critical value of &lt;span class="math"&gt;\(-1.998\)&lt;/span&gt;. Therefore, there is sufficient evidence to reject the null hypothesis. There is a &lt;em&gt;significant&lt;/em&gt; difference between a cup of drip coffee prices sold in independent shops between San Francisco and Manhattan at an alpha level of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;. I would not expect to see such a large discrepancy between cups of coffee due to random chance.&lt;/p&gt;
-&lt;p&gt;The difference in coffee cup prices between Manhattan and SF is &lt;span class="math"&gt;\(9.23\)&lt;/span&gt; times greater than you would expect if the null hypothesis was true. Another way of saying this is that the difference in the two city's coffee prices is &lt;span class="math"&gt;\(9.23\)&lt;/span&gt; times &lt;em&gt;greater&lt;/em&gt; than it would be by random chance.&lt;/p&gt;
-&lt;p&gt;The returned p-value is &lt;span class="math"&gt;\(4.39e-19\)&lt;/span&gt; which is equivalent to a probability of &lt;span class="math"&gt;\(0.000000000000339\)&lt;/span&gt; or &lt;span class="math"&gt;\(0.0000000000339\%\)&lt;/span&gt;. If I assumed both cities had the same cup of drip coffee in the long-run (the null hypothesis), I would expect a discrepancy from our t-test this big just &lt;span class="math"&gt;\(0.0000000000339\%\)&lt;/span&gt; of times with sampling shops. That's a very very low probability!! With such a small probability, it would be nearly impossible to get a difference in cup of coffee prices so large between cities this big due to random chance.&lt;/p&gt;
-&lt;p&gt;I would infer that I'd expect to see similar results for the entire population.&lt;/p&gt;
-&lt;h4&gt;Effect Size Measures&lt;/h4&gt;
-&lt;p&gt;What proportion of the difference in the mean price of a cup of coffee can be attributed to being in a different city of either SF or Manhattan?&lt;/p&gt;
-&lt;p&gt;The &lt;span class="math"&gt;\(r^2\)&lt;/span&gt; returned below is &lt;span class="math"&gt;\(0.575\)&lt;/span&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;r_squared_coffee&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_statistic&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t_statistic&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;r_squared_coffee&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.575
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;There is a &lt;em&gt;fair amount&lt;/em&gt; of variation between the mean price cup of drip coffee in shops between SF and Manhattan.&lt;/p&gt;
-&lt;h3&gt;Independant t-test Example: Price of Beverages in SF Greater Than in Manhattan by &lt;span class="math"&gt;\(\\)&lt;/span&gt;0.43$&lt;/h3&gt;
-&lt;p&gt;Let's say some website claimed the average price of a single beverage item served at a retail location in San Francisco is &lt;span class="math"&gt;\(\\)&lt;/span&gt;0.43$ more than in Manhattan. I can utilize this information to form new hypotheses to perform a t-test. I'm curious if a small cup of drip coffee at independent coffee shops in San Francisco is still &lt;em&gt;relatively significantly&lt;/em&gt; more expensive than Manhattan. &lt;/p&gt;
-&lt;p&gt;Now, this is a one-tail positive direction independent samples t-test. &lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{o}:\mu_{sf}-0.43&amp;lt;=\mu_{manhattan}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(H_{a}:\mu_{sf}-0.43&amp;gt;\mu_{manhattan}\)&lt;/span&gt;&lt;/p&gt;
-&lt;h4&gt;Calculate t-critical value&lt;/h4&gt;
-&lt;p&gt;This is a one-tailed positive direction t-test with an alpha level of &lt;span class="math"&gt;\(0.05\)&lt;/span&gt;, there should be an area under the curve of the t-distribution to the left of a t-critical value of &lt;span class="math"&gt;\(0.95\)&lt;/span&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.05&lt;/span&gt;
-&lt;span class="n"&gt;area_left_under_curve&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;alpha&lt;/span&gt;
-&lt;span class="n"&gt;t_critical&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ppf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;area_left_under_curve&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;t_critical&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1.669
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;Calculate t-statistic&lt;/h4&gt;
-&lt;p&gt;I also can utilize the simple t-statistic math equation from earlier: &lt;/p&gt;
-&lt;div class="math"&gt;$$t=\frac{\bar{x}_{1}-\bar{x}_{2}}{SE}$$&lt;/div&gt;
-&lt;p&gt;However, I want to incorporate &lt;span class="math"&gt;\(\\)&lt;/span&gt;0.43$ in the numerator so the t-statistic calculation will be:&lt;/p&gt;
-&lt;div class="math"&gt;$$t=\frac{\mu_{sf}-\mu_{manhattan}-0.43}{SE}$$&lt;/div&gt;
-&lt;p&gt;For the t-statistic equation, the numerator should be closer to 0 with this additional value of the difference in means under the null hypothesis.&lt;/p&gt;
-&lt;p&gt;Previously, the numerator for the two-tailed test was:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;original_numerator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mean_manhattan_coffee_price&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mean_sf_coffee_price&lt;/span&gt;
-&lt;span class="n"&gt;original_numerator&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;-0.7146190476190473
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The new numerator is now:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;updated_numerator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mean_sf_coffee_price&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mean_manhattan_coffee_price&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;0.43&lt;/span&gt;
-&lt;span class="n"&gt;updated_numerator&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0.28461904761904727
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Calculate the t-statistic using the formula above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;t_statistic_sf_greater&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;updated_numerator&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;standard_error&lt;/span&gt;
-&lt;span class="n"&gt;t_statistic_sf_greater&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;3.674406301073578
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;&lt;a href='https://www.statsmodels.org/stable/index.html'&gt;StatsModels&lt;/a&gt; is a great package in python for statistical computations. I can use the &lt;code&gt;ttest_ind()&lt;/code&gt; &lt;a href='https://www.statsmodels.org/dev/generated/statsmodels.stats.weightstats.ttest_ind.html'&gt;method&lt;/a&gt;. For this method, we set the following arguments:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;x1&lt;/code&gt; to the list of &lt;code&gt;manhattan_coffee_prices&lt;/code&gt; &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;x2&lt;/code&gt; to the list of &lt;code&gt;sf_coffee_prices&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;alternative&lt;/code&gt; to &lt;code&gt;larger&lt;/code&gt; since the alternative hypothesis is to identify if the t-statistic is larger than a positive t-critical value&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;usevar&lt;/code&gt; to &lt;code&gt;unequal&lt;/code&gt; because the standard deviation of samples is unequal and there are unequal sample sizes. (Read more about &lt;a href='https://en.wikipedia.org/wiki/Welch%27s_t-test'&gt;Welch's variation of the t-test&lt;/a&gt; here.)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;value&lt;/code&gt; to &lt;code&gt;0.43&lt;/code&gt; since that's the value we want subtracted from the difference in means&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;statsmodelsweightstats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ttest_ind&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x1&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sf_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;manhattan_coffee_prices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alternative&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;larger&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;usevar&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;unequal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.43&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
-&lt;span class="n"&gt;t_statistic_sf_greater2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;p_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;degrees_of_freedom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;t_statistic_sf_greater2&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;3.6744063010735837
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;With the formula above and using the &lt;code&gt;StatsModels&lt;/code&gt; library, we get the same t-statistic result from using the formula above.&lt;/p&gt;
-&lt;h4&gt;Interpret Results&lt;/h4&gt;
-&lt;p&gt;The t-critical value is &lt;span class="math"&gt;\(1.669\)&lt;/span&gt; and the t-statistic is &lt;span class="math"&gt;\(3.67\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Since this is a one-tailed positive direction test and the t-statistic is greater than the t-critical value, there is sufficient evidence to reject the null hypothesis.&lt;/p&gt;
-&lt;p&gt;There is a &lt;em&gt;relative significant&lt;/em&gt; difference that the price of a cup of a small drip coffee at independent shops in San Francisco is greater than Manhattan.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "left",
-        indent = "1em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="t-tests"></category><category term="python"></category><category term="scipy"></category><category term="numpy"></category></entry></feed>
+&lt;p&gt;Another example is a supplements company claimed that people who drink their pre-workout shake directly before their workout complete approximately 2 more reps for each exercise and therefore have a better workout. The company claimed their pre-workout shake &lt;em&gt;caused&lt;/em&gt; increased workout reps. This is considered a &lt;strong&gt;post hoc fallacy&lt;/strong&gt; - an action taken &lt;em&gt;before&lt;/em&gt; another action doesn't mean it directly &lt;em&gt;caused&lt;/em&gt; the next action. &lt;/p&gt;</content><category term="correlation"></category><category term="causation"></category><category term="scatter"></category><category term="python"></category><category term="pandas"></category></entry></feed>
