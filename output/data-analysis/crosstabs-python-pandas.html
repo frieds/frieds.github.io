@@ -1,0 +1,3470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data & Programming Knowledge Base">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="crosstabs pandas">
+
+  <meta name="description" content="Learn how to implement a crosstab in Python using pandas with simple examples">
+  <meta property="og:description"  content="Learn how to implement a crosstab in Python using pandas with simple examples">
+  <meta name="twitter:description" content="Learn how to implement a crosstab in Python using pandas with simple examples">
+
+  <meta property="og:title" content="crosstabs() Method: Compute Aggregated Metrics Across Categorical Columns">
+  <meta name="twitter:title" content="crosstabs() Method: Compute Aggregated Metrics Across Categorical Columns">
+
+  <link rel="canonical" href="https://dfrieds.com/data-analysis/crosstabs-python-pandas.html"/>
+
+  <title>crosstabs() Method: Compute Aggregated Metrics Across Categorical Columns - Data Analysis</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+
+  <!--don't need this for live-->
+  <!-- <link rel="stylesheet" href="theme/css/style.css"/> -->
+
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data & Programming Knowledge Base Full Atom Feed" />   <link href="https://dfrieds.com/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data & Programming Knowledge Base Categories Atom Feed" />  
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="data-analysis"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials</a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#data-analysis">Data Analysis with Pandas</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#math">Math</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/about">About</a>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> 
+    Data Analysis Data Wrangling Tutorial
+    </div>
+    
+
+    <h1 class="articleh1">
+      crosstabs() Method: Compute Aggregated Metrics Across Categorical Columns
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        November 23, 2018&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+ 28 min read   28 min
+      </li>
+      <li class="tagarticle">
+        Key Terms:         crosstabs,
+        python,
+        pandas
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <style type="text/css">/*!
+*
+* IPython notebook
+*
+*/
+/* CSS font colors for translated ANSI escape sequences */
+/* The color values are a mix of
+   http://www.xcolors.net/dl/baskerville-ivorylight and
+   http://www.xcolors.net/dl/euphrasia */
+.ansi-black-fg {
+  color: #3E424D;
+}
+.ansi-black-bg {
+  background-color: #3E424D;
+}
+.ansi-black-intense-fg {
+  color: #282C36;
+}
+.ansi-black-intense-bg {
+  background-color: #282C36;
+}
+.ansi-red-fg {
+  color: #E75C58;
+}
+.ansi-red-bg {
+  background-color: #E75C58;
+}
+.ansi-red-intense-fg {
+  color: #B22B31;
+}
+.ansi-red-intense-bg {
+  background-color: #B22B31;
+}
+.ansi-green-fg {
+  color: #00A250;
+}
+.ansi-green-bg {
+  background-color: #00A250;
+}
+.ansi-green-intense-fg {
+  color: #007427;
+}
+.ansi-green-intense-bg {
+  background-color: #007427;
+}
+.ansi-yellow-fg {
+  color: #DDB62B;
+}
+.ansi-yellow-bg {
+  background-color: #DDB62B;
+}
+.ansi-yellow-intense-fg {
+  color: #B27D12;
+}
+.ansi-yellow-intense-bg {
+  background-color: #B27D12;
+}
+.ansi-blue-fg {
+  color: #208FFB;
+}
+.ansi-blue-bg {
+  background-color: #208FFB;
+}
+.ansi-blue-intense-fg {
+  color: #0065CA;
+}
+.ansi-blue-intense-bg {
+  background-color: #0065CA;
+}
+.ansi-magenta-fg {
+  color: #D160C4;
+}
+.ansi-magenta-bg {
+  background-color: #D160C4;
+}
+.ansi-magenta-intense-fg {
+  color: #A03196;
+}
+.ansi-magenta-intense-bg {
+  background-color: #A03196;
+}
+.ansi-cyan-fg {
+  color: #60C6C8;
+}
+.ansi-cyan-bg {
+  background-color: #60C6C8;
+}
+.ansi-cyan-intense-fg {
+  color: #258F8F;
+}
+.ansi-cyan-intense-bg {
+  background-color: #258F8F;
+}
+.ansi-white-fg {
+  color: #C5C1B4;
+}
+.ansi-white-bg {
+  background-color: #C5C1B4;
+}
+.ansi-white-intense-fg {
+  color: #A1A6B2;
+}
+.ansi-white-intense-bg {
+  background-color: #A1A6B2;
+}
+.ansi-default-inverse-fg {
+  color: #FFFFFF;
+}
+.ansi-default-inverse-bg {
+  background-color: #000000;
+}
+.ansi-bold {
+  font-weight: bold;
+}
+.ansi-underline {
+  text-decoration: underline;
+}
+/* The following styles are deprecated an will be removed in a future version */
+.ansibold {
+  font-weight: bold;
+}
+.ansi-inverse {
+  outline: 0.5px dotted;
+}
+/* use dark versions for foreground, to improve visibility */
+.ansiblack {
+  color: black;
+}
+.ansired {
+  color: darkred;
+}
+.ansigreen {
+  color: darkgreen;
+}
+.ansiyellow {
+  color: #c4a000;
+}
+.ansiblue {
+  color: darkblue;
+}
+.ansipurple {
+  color: darkviolet;
+}
+.ansicyan {
+  color: steelblue;
+}
+.ansigray {
+  color: gray;
+}
+/* and light for background, for the same reason */
+.ansibgblack {
+  background-color: black;
+}
+.ansibgred {
+  background-color: red;
+}
+.ansibggreen {
+  background-color: green;
+}
+.ansibgyellow {
+  background-color: yellow;
+}
+.ansibgblue {
+  background-color: blue;
+}
+.ansibgpurple {
+  background-color: magenta;
+}
+.ansibgcyan {
+  background-color: cyan;
+}
+.ansibggray {
+  background-color: gray;
+}
+div.cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  width: 100%;
+  padding: 5px;
+  /* This acts as a spacer between cells, that is outside the border */
+  margin: 0px;
+  outline: none;
+  position: relative;
+  overflow: visible;
+}
+div.cell:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: transparent;
+}
+div.cell.jupyter-soft-selected {
+  border-left-color: #E3F2FD;
+  border-left-width: 1px;
+  padding-left: 5px;
+  border-right-color: #E3F2FD;
+  border-right-width: 1px;
+  background: #E3F2FD;
+}
+@media print {
+  div.cell.jupyter-soft-selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected,
+div.cell.selected.jupyter-soft-selected {
+  border-color: #ababab;
+}
+div.cell.selected:before,
+div.cell.selected.jupyter-soft-selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #42A5F5;
+}
+@media print {
+  div.cell.selected,
+  div.cell.selected.jupyter-soft-selected {
+    border-color: transparent;
+  }
+}
+.edit_mode div.cell.selected {
+  border-color: #66BB6A;
+}
+.edit_mode div.cell.selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #66BB6A;
+}
+@media print {
+  .edit_mode div.cell.selected {
+    border-color: transparent;
+  }
+}
+.prompt {
+  /* This needs to be wide enough for 3 digit prompt numbers: In[100]: */
+  min-width: 14ex;
+  /* This padding is tuned to match the padding on the CodeMirror editor. */
+  padding: 0.4em;
+  margin: 0px;
+  font-family: monospace;
+  text-align: right;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+  /* Don't highlight prompt number selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Use default cursor */
+  cursor: default;
+}
+@media (max-width: 540px) {
+  .prompt {
+    text-align: left;
+  }
+}
+div.inner_cell {
+  min-width: 0;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_area {
+  border: 1px solid #cfcfcf;
+  border-radius: 2px;
+  background: #f7f7f7;
+  line-height: 1.21429em;
+}
+/* This is needed so that empty prompt areas can collapse to zero height when there
+   is no content in the output_subarea and the prompt. The main purpose of this is
+   to make sure that empty JavaScript output_subareas have no height. */
+div.prompt:empty {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+div.unrecognized_cell {
+  padding: 5px 5px 5px 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.unrecognized_cell .inner_cell {
+  border-radius: 2px;
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+  border: 1px solid #cfcfcf;
+  background: #eaeaea;
+}
+div.unrecognized_cell .inner_cell a {
+  color: inherit;
+  text-decoration: none;
+}
+div.unrecognized_cell .inner_cell a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+@media (max-width: 540px) {
+  div.unrecognized_cell > div.prompt {
+    display: none;
+  }
+}
+div.code_cell {
+  /* avoid page breaking on code cells when printing */
+}
+@media print {
+  div.code_cell {
+    page-break-inside: avoid;
+  }
+}
+/* any special styling for code cells that are currently running goes here */
+div.input {
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.input {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_prompt {
+  color: #303F9F;
+  border-top: 1px solid transparent;
+}
+div.input_area > div.highlight {
+  margin: 0.4em;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+div.input_area > div.highlight > pre {
+  margin: 0px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+/* The following gets added to the <head> if it is detected that the user has a
+ * monospace font with inconsistent normal/bold/italic height.  See
+ * notebookmain.js.  Such fonts will have keywords vertically offset with
+ * respect to the rest of the text.  The user should select a better font.
+ * See: https://github.com/ipython/ipython/issues/1503
+ *
+ * .CodeMirror span {
+ *      vertical-align: bottom;
+ * }
+ */
+.CodeMirror {
+  line-height: 1.21429em;
+  /* Changed from 1em to our global default */
+  font-size: 14px;
+  height: auto;
+  /* Changed to auto to autogrow */
+  background: none;
+  /* Changed from white to allow our bg to show through */
+}
+.CodeMirror-scroll {
+  /*  The CodeMirror docs are a bit fuzzy on if overflow-y should be hidden or visible.*/
+  /*  We have found that if it is visible, vertical scrollbars appear with font size changes.*/
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.CodeMirror-lines {
+  /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
+  /* we have set a different line-height and want this to scale with that. */
+  /* Note that this should set vertical padding only, since CodeMirror assumes
+       that horizontal padding will be set on CodeMirror pre */
+  padding: 0.4em 0;
+}
+.CodeMirror-linenumber {
+  padding: 0 8px 0 4px;
+}
+.CodeMirror-gutters {
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
+}
+.CodeMirror pre {
+  /* In CM3 this went to 4px from 0 in CM2. This sets horizontal padding only,
+    use .CodeMirror-lines for vertical */
+  padding: 0 0.4em;
+  border: 0;
+  border-radius: 0;
+}
+.CodeMirror-cursor {
+  border-left: 1.4px solid black;
+}
+@media screen and (min-width: 2138px) and (max-width: 4319px) {
+  .CodeMirror-cursor {
+    border-left: 2px solid black;
+  }
+}
+@media screen and (min-width: 4320px) {
+  .CodeMirror-cursor {
+    border-left: 4px solid black;
+  }
+}
+/*
+
+Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Org>
+Adapted from GitHub theme
+
+*/
+.highlight-base {
+  color: #000;
+}
+.highlight-variable {
+  color: #000;
+}
+.highlight-variable-2 {
+  color: #1a1a1a;
+}
+.highlight-variable-3 {
+  color: #333333;
+}
+.highlight-string {
+  color: #BA2121;
+}
+.highlight-comment {
+  color: #408080;
+  font-style: italic;
+}
+.highlight-number {
+  color: #080;
+}
+.highlight-atom {
+  color: #88F;
+}
+.highlight-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.highlight-builtin {
+  color: #008000;
+}
+.highlight-error {
+  color: #f00;
+}
+.highlight-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.highlight-meta {
+  color: #AA22FF;
+}
+/* previously not defined, copying from default codemirror */
+.highlight-def {
+  color: #00f;
+}
+.highlight-string-2 {
+  color: #f50;
+}
+.highlight-qualifier {
+  color: #555;
+}
+.highlight-bracket {
+  color: #997;
+}
+.highlight-tag {
+  color: #170;
+}
+.highlight-attribute {
+  color: #00c;
+}
+.highlight-header {
+  color: blue;
+}
+.highlight-quote {
+  color: #090;
+}
+.highlight-link {
+  color: #00c;
+}
+/* apply the same style to codemirror */
+.cm-s-ipython span.cm-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-atom {
+  color: #88F;
+}
+.cm-s-ipython span.cm-number {
+  color: #080;
+}
+.cm-s-ipython span.cm-def {
+  color: #00f;
+}
+.cm-s-ipython span.cm-variable {
+  color: #000;
+}
+.cm-s-ipython span.cm-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-variable-2 {
+  color: #1a1a1a;
+}
+.cm-s-ipython span.cm-variable-3 {
+  color: #333333;
+}
+.cm-s-ipython span.cm-comment {
+  color: #408080;
+  font-style: italic;
+}
+.cm-s-ipython span.cm-string {
+  color: #BA2121;
+}
+.cm-s-ipython span.cm-string-2 {
+  color: #f50;
+}
+.cm-s-ipython span.cm-meta {
+  color: #AA22FF;
+}
+.cm-s-ipython span.cm-qualifier {
+  color: #555;
+}
+.cm-s-ipython span.cm-builtin {
+  color: #008000;
+}
+.cm-s-ipython span.cm-bracket {
+  color: #997;
+}
+.cm-s-ipython span.cm-tag {
+  color: #170;
+}
+.cm-s-ipython span.cm-attribute {
+  color: #00c;
+}
+.cm-s-ipython span.cm-header {
+  color: blue;
+}
+.cm-s-ipython span.cm-quote {
+  color: #090;
+}
+.cm-s-ipython span.cm-link {
+  color: #00c;
+}
+.cm-s-ipython span.cm-error {
+  color: #f00;
+}
+.cm-s-ipython span.cm-tab {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+div.output_wrapper {
+  /* this position must be relative to enable descendents to be absolute within it */
+  position: relative;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  z-index: 1;
+}
+/* class for the output area when it should be height-limited */
+div.output_scroll {
+  /* ideally, this would be max-height, but FF barfs all over that */
+  height: 24em;
+  /* FF needs this *and the wrapper* to specify full width, or it will shrinkwrap */
+  width: 100%;
+  overflow: auto;
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  display: block;
+}
+/* output div while it is collapsed */
+div.output_collapsed {
+  margin: 0px;
+  padding: 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+div.out_prompt_overlay {
+  height: 100%;
+  padding: 0px 0.4em;
+  position: absolute;
+  border-radius: 2px;
+}
+div.out_prompt_overlay:hover {
+  /* use inner shadow to get border that is computed the same on WebKit/FF */
+  -webkit-box-shadow: inset 0 0 1px #000;
+  box-shadow: inset 0 0 1px #000;
+  background: rgba(240, 240, 240, 0.5);
+}
+div.output_prompt {
+  color: #D84315;
+}
+/* This class is the outer container of all output sections. */
+div.output_area {
+  padding: 0px;
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.output_area .MathJax_Display {
+  text-align: left !important;
+}
+div.output_area 
+div.output_area 
+div.output_area img,
+div.output_area svg {
+  max-width: 100%;
+  height: auto;
+}
+div.output_area img.unconfined,
+div.output_area svg.unconfined {
+  max-width: none;
+}
+div.output_area .mglyph > img {
+  max-width: none;
+}
+/* This is needed to protect the pre formating from global settings such
+   as that of bootstrap */
+.output {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.output_area {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+div.output_area pre {
+  margin: 0;
+  padding: 1px 0 1px 0;
+  border: 0;
+  vertical-align: baseline;
+  color: black;
+  background-color: transparent;
+  border-radius: 0;
+}
+/* This class is for the output subarea inside the output_area and after
+   the prompt div. */
+div.output_subarea {
+  overflow-x: auto;
+  padding: 0.4em;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+  max-width: calc(100% - 14ex);
+}
+div.output_scroll div.output_subarea {
+  overflow-x: visible;
+}
+/* The rest of the output_* classes are for special styling of the different
+   output types */
+/* all text output has this class: */
+div.output_text {
+  text-align: left;
+  color: #000;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+}
+/* stdout/stderr are 'text' as well as 'stream', but execute_result/error are *not* streams */
+div.output_stderr {
+  background: #fdd;
+  /* very light red background for stderr */
+}
+div.output_latex {
+  text-align: left;
+}
+/* Empty output_javascript divs should have no height */
+div.output_javascript:empty {
+  padding: 0;
+}
+.js-error {
+  color: darkred;
+}
+/* raw_input styles */
+div.raw_input_container {
+  line-height: 1.21429em;
+  padding-top: 5px;
+}
+pre.raw_input_prompt {
+  /* nothing needed here. */
+}
+input.raw_input {
+  font-family: monospace;
+  font-size: inherit;
+  color: inherit;
+  width: auto;
+  /* make sure input baseline aligns with prompt */
+  vertical-align: baseline;
+  /* padding + margin = 0.5em between prompt and cursor */
+  padding: 0em 0.25em;
+  margin: 0em 0.25em;
+}
+input.raw_input:focus {
+  box-shadow: none;
+}
+p.p-space {
+  margin-bottom: 10px;
+}
+div.output_unrecognized {
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+}
+div.output_unrecognized a {
+  color: inherit;
+  text-decoration: none;
+}
+div.output_unrecognized a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.rendered_html {
+  color: #000;
+  /* any extras will just be numbers: */
+}
+
+
+
+.rendered_html :link {
+  text-decoration: underline;
+}
+.rendered_html :visited {
+  text-decoration: underline;
+}
+
+
+
+
+
+
+.rendered_html h1:first-child {
+  margin-top: 0.538em;
+}
+.rendered_html h2:first-child {
+  margin-top: 0.636em;
+}
+.rendered_html h3:first-child {
+  margin-top: 0.777em;
+}
+.rendered_html h4:first-child {
+  margin-top: 1em;
+}
+.rendered_html h5:first-child {
+  margin-top: 1em;
+}
+.rendered_html h6:first-child {
+  margin-top: 1em;
+}
+.rendered_html ul:not(.list-inline),
+.rendered_html ol:not(.list-inline) {
+  padding-left: 2em;
+}
+
+
+
+
+
+
+
+
+.rendered_html * + ul {
+  margin-top: 1em;
+}
+.rendered_html * + ol {
+  margin-top: 1em;
+}
+
+
+
+
+
+.rendered_html pre,
+
+
+
+
+.rendered_html tr,
+.rendered_html th,
+
+
+.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+.rendered_html * + table {
+  margin-top: 1em;
+}
+
+.rendered_html * + p {
+  margin-top: 1em;
+}
+
+.rendered_html * + img {
+  margin-top: 1em;
+}
+.rendered_html img,
+
+.rendered_html img.unconfined,
+
+
+.rendered_html * + .alert {
+  margin-top: 1em;
+}
+[dir="rtl"] 
+div.text_cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.text_cell > div.prompt {
+    display: none;
+  }
+}
+div.text_cell_render {
+  /*font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;*/
+  outline: none;
+  resize: none;
+  width: inherit;
+  border-style: none;
+  padding: 0.5em 0.5em 0.5em 0.4em;
+  color: #000;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+a.anchor-link:link {
+  text-decoration: none;
+  padding: 0px 20px;
+  visibility: hidden;
+}
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link,
+h5:hover .anchor-link,
+h6:hover .anchor-link {
+  visibility: visible;
+}
+.text_cell.rendered .input_area {
+  display: none;
+}
+.text_cell.rendered 
+.text_cell.rendered .rendered_html tr,
+.text_cell.rendered .rendered_html th,
+.text_cell.rendered 
+.text_cell.unrendered .text_cell_render {
+  display: none;
+}
+.text_cell .dropzone .input_area {
+  border: 2px dashed #bababa;
+  margin: -1px;
+}
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.cm-header-1 {
+  font-size: 185.7%;
+}
+.cm-header-2 {
+  font-size: 157.1%;
+}
+.cm-header-3 {
+  font-size: 128.6%;
+}
+.cm-header-4 {
+  font-size: 110%;
+}
+.cm-header-5 {
+  font-size: 100%;
+  font-style: italic;
+}
+.cm-header-6 {
+  font-size: 100%;
+  font-style: italic;
+}
+</style>
+<style type="text/css">.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A <strong>crosstab</strong> computes aggregated metrics among two or more columns in a dataset that contains categorical values.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Import-Modules">Import Modules<a class="anchor-link" href="#Import-Modules">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[122]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Get-Tips-Dataset">Get Tips Dataset<a class="anchor-link" href="#Get-Tips-Dataset">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's get the <code>tips</code> dataset from the <code>seaborn</code> library and assign it to the DataFrame <code>df_tips</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[123]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;tips&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Each row represents a unique meal at a restaurant for a party of people; the dataset contains the following fields:</p>
+<table>
+<thead><tr>
+<th>column name</th>
+<th>column description </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>total_bill</code></td>
+<td>financial amount of meal in U.S. dollars</td>
+</tr>
+<tr>
+<td><code>tip</code></td>
+<td>financial amount of the meal's tip in U.S. dollars</td>
+</tr>
+<tr>
+<td><code>sex</code></td>
+<td>gender of server</td>
+</tr>
+<tr>
+<td><code>smoker</code></td>
+<td>boolean to represent if server smokes or not</td>
+</tr>
+<tr>
+<td><code>day</code></td>
+<td>day of week</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>meal name (Lunch or Dinner)</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>count of people eating meal</td>
+</tr>
+</tbody>
+</table>
+<p>Preview the first 5 rows of <code>df_tips</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[124]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[124]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>sex</th>
+      <th>smoker</th>
+      <th>day</th>
+      <th>time</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.99</td>
+      <td>1.01</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.34</td>
+      <td>1.66</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.68</td>
+      <td>3.31</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.59</td>
+      <td>3.61</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Implement-Crosstabs-with-Tips-Dataset">Implement Crosstabs with Tips Dataset<a class="anchor-link" href="#Implement-Crosstabs-with-Tips-Dataset">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Grouping-By-a-Single-Field-for-the-Index-and-Column">Grouping By a Single Field for the Index and Column<a class="anchor-link" href="#Grouping-By-a-Single-Field-for-the-Index-and-Column">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's compute a simple crosstab across the <code>day</code> and <code>sex</code> column. We want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from <code>sex</code>. By default in pandas, the <code>crosstab()</code> computes an aggregated metric of a count (aka frequency).</p>
+<p>So, each of the values inside our table represent a count across the index and column. For example, males served 30 unique groups across all Thursdays in our dataset.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[125]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[125]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sex</th>
+      <th>Male</th>
+      <th>Female</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>One issue with this crosstab output is the column names are nonsensical. Just saying <code>Male</code> or <code>Female</code> isn't very specific. They should be renamed to be clearer. We can use the <a href='https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rename.html'>rename()</a> method and set the argument <code>columns</code> to be a dictionary in which the keys are the current column names and the values are the respective new names to set.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[126]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[126]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sex</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Also, in the output above, see where it says <code>sex</code> as the column name and <code>day</code> for the row name? We can modify those names using arguments in the <code>crosstab()</code> method. Let's set the <code>colnames</code> argument to <code>gender</code> since that's a more specific name than <code>sex</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[127]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[127]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>gender</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this example, we passed in two columns from our DataFrame. However, one nice feature of <code>crosstab()</code> is that you don't need the data to be in a DataFrame. For the <code>index</code> and <code>columns</code> arguments, you can pass in two numpy arrays.</p>
+<p>Let's double check the logic from above makes sense. Let's use filtering in pandas to verify that there were 30 meals served by a male on Thursday. Our query below matches the 30 number we see above.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[128]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[128]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>30</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Alternatively, given the crosstab output above, you can present it in a different format that may be easier for further analysis. I won't dive into details of this operation, but in addition to the code above, you can chain the <code>unstack()</code> method and then the <code>reset_index()</code> method to pivot the DataFrame so each row is a unique combination of a value from <code>sex</code> and <code>day</code> with the appropriate count of meals served.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[129]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;count_meals_served&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[129]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>day</th>
+      <th>count_meals_served</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Male</td>
+      <td>Thur</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Male</td>
+      <td>Fri</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Male</td>
+      <td>Sat</td>
+      <td>59</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Male</td>
+      <td>Sun</td>
+      <td>58</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Female</td>
+      <td>Thur</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Female</td>
+      <td>Fri</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Female</td>
+      <td>Sat</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Female</td>
+      <td>Sun</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For each row and column of this previous crosstab, we can modify an argument to get the totals. Set the argument <code>margins</code> to <code>True</code> to get these totals. By default, the returned output will have a column and row name of <code>All</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[130]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>gender</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
+      <th>All</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+      <td>76</td>
+    </tr>
+    <tr>
+      <th>All</th>
+      <td>157</td>
+      <td>87</td>
+      <td>244</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the <code>crosstab()</code> method, we can also rename the <code>All</code> column. First, use all the same arguments from above. Then, set the argument <code>margins_name</code> to <code>count_meals_served</code> .</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;count_meals_served&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;count_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[131]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>gender</th>
+      <th>count_meals_served_by_males</th>
+      <th>count_meals_served_by_females</th>
+      <th>count_meals_served</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>32</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>10</td>
+      <td>9</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>59</td>
+      <td>28</td>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>58</td>
+      <td>18</td>
+      <td>76</td>
+    </tr>
+    <tr>
+      <th>count_meals_served</th>
+      <td>157</td>
+      <td>87</td>
+      <td>244</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For each cell value, we can calculate what percentage it is of the row's total. To do that, set the <code>normalize</code> argument to <code>'index'</code> (since index applies to each row).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[132]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[132]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>gender</th>
+      <th>proportion_meals_served_by_males</th>
+      <th>proportion_meals_served_by_females</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>0.483871</td>
+      <td>0.516129</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>0.526316</td>
+      <td>0.473684</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>0.678161</td>
+      <td>0.321839</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>0.763158</td>
+      <td>0.236842</td>
+    </tr>
+    <tr>
+      <th>proportion_meals_served</th>
+      <td>0.643443</td>
+      <td>0.356557</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For each cell value, we can also calculate what percentage it is of the column's total. To do that, set the <code>normalize</code> argument to <code>'columns'</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[133]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">margins_name</span><span class="o">=</span><span class="s2">&quot;proportion_meals_served&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;proportion_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[133]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>gender</th>
+      <th>proportion_meals_served_by_males</th>
+      <th>proportion_meals_served_by_females</th>
+      <th>proportion_meals_served</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>0.191083</td>
+      <td>0.367816</td>
+      <td>0.254098</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>0.063694</td>
+      <td>0.103448</td>
+      <td>0.077869</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>0.375796</td>
+      <td>0.321839</td>
+      <td>0.356557</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>0.369427</td>
+      <td>0.206897</td>
+      <td>0.311475</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Given two categorical columns, the <code>crosstab()</code> method can additionally utilize a column with numerical values to perform an aggregate operation. That sentence may sound daunting - so let's walk through it with a simple example.</p>
+<p>We know there exists <code>total_bill</code> values in our datasets for males that served meals on Thursday. Below, I preview the first few <code>total_bill</code> values that meet this criteria.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[134]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">)[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[134]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>77    27.20
+78    22.76
+79    17.29
+80    19.44
+81    16.66
+Name: total_bill, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We may want to know the average bill size that meet the criteria above. So, given that series, we can calculate the mean and we arrive at a result of 18.71.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[135]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sex==&#39;Male&#39; and day==&#39;Thur&#39;&quot;</span><span class="p">)[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[135]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>18.714666666666666</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, we can perform this same operation using the <code>crosstab()</code> method. Same as before, we want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from <code>sex</code>. Additionally, we want the values inside the table to be from our <code>total_bill</code> column so we'll set the argument <code>values</code> to be <code>df_tips['total_bill']</code>. We also want to calculate the mean total bill for each combination of a day and gender so we'll set the <code>aggfunc</code> argument to <code>'mean'</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[136]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Male&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_males&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_bill_size_meals_served_by_females&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[136]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>gender</th>
+      <th>mean_bill_size_meals_served_by_males</th>
+      <th>mean_bill_size_meals_served_by_females</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>18.714667</td>
+      <td>16.715312</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>19.857000</td>
+      <td>14.145556</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>20.802542</td>
+      <td>19.680357</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>21.887241</td>
+      <td>19.872222</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This crosstab calculation outputted the same 18.71 value as expected!</p>
+<p>We can pass in many other aggregate methods to the <code>aggfunc</code> method too such as mean and standard deviation.</p>
+<p>You can learn more about details of using <code>crosstab()</code> from the official pandas <a href='https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.crosstab.html'>documentation page</a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Grouping-By-Multiple-Fields-for-the-Index-and/or-Columns">Grouping By Multiple Fields for the Index and/or Columns<a class="anchor-link" href="#Grouping-By-Multiple-Fields-for-the-Index-and/or-Columns">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can also use the <code>crosstabs()</code> method to group by multiple pandas columns for the <code>index</code> or <code>columns</code> arguments.</p>
+<p>For example, we can find out for days of the week, for each gender, what was the count of meals they served for lunch or dinner. In pandas We want our returned index to be the unique values from <code>day</code> and our returned columns to be the unique values from all combinations of the <code>sex</code> (gender) and <code>time</code> (meal time) columns.</p>
+<p>To interpret a value from our table below, across all Thursdays in our dataset, females served 31 lunch meals.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[137]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;meal&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Lunch&quot;</span><span class="p">:</span> <span class="s2">&quot;count_lunch_meals_served&quot;</span><span class="p">,</span> <span class="s2">&quot;Dinner&quot;</span><span class="p">:</span> <span class="s2">&quot;count_dinner_meals_served&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[137]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>gender</th>
+      <th colspan="2" halign="left">Male</th>
+      <th colspan="2" halign="left">Female</th>
+    </tr>
+    <tr>
+      <th>meal</th>
+      <th>count_lunch_meals_served</th>
+      <th>count_dinner_meals_served</th>
+      <th>count_lunch_meals_served</th>
+      <th>count_dinner_meals_served</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Thur</th>
+      <td>30</td>
+      <td>0</td>
+      <td>31</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Fri</th>
+      <td>3</td>
+      <td>7</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Sat</th>
+      <td>0</td>
+      <td>59</td>
+      <td>0</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Sun</th>
+      <td>0</td>
+      <td>58</td>
+      <td>0</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can verify the logic in a value with a separate query. I'm curious to see the count of meals on Thursday served by females during lunch time. Our result on this query is 31 which matches the value in the crosstab above!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[138]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;day==&#39;Thur&#39; and sex==&#39;Female&#39; and time==&#39;Lunch&#39;&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[138]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>31</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you're familiar with the <code>groupby()</code> method in pandas, the code below performs a similar operation to the crosstab above, but the output format is a little different.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tips</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">])[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[139]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>day   sex   
+Thur  Male      30
+      Female    32
+Fri   Male      10
+      Female     9
+Sat   Male      59
+      Female    28
+Sun   Male      58
+      Female    18
+Name: time, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can also group by multiple pandas columns in the <code>index</code> argument of the <code>crosstabs()</code> method.</p>
+<p>Below is a fairly complex operation. The code below helps us find out for every combination of day of the week, gender and meal type what was the count of meals served for the various group sizes (ex - party of two people versus party of three).</p>
+<p>In our output, the index includes unique values from the <code>day</code> and <code>sex</code> fields while columns include unique values from the <code>time</code> and <code>size</code> fields.</p>
+<p>To interpret a value from our table below, across all Thursdays in our dataset, males 24 lunch meals that contained a group of 2 people.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[140]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;meal&#39;</span><span class="p">,</span> <span class="s1">&#39;party_people_size&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Lunch&quot;</span><span class="p">:</span> <span class="s2">&quot;count_lunch_meals_served&quot;</span><span class="p">,</span> <span class="s2">&quot;Dinner&quot;</span><span class="p">:</span> <span class="s2">&quot;count_dinner_meals_served&quot;</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[140]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>meal</th>
+      <th colspan="6" halign="left">count_lunch_meals_served</th>
+      <th colspan="6" halign="left">count_dinner_meals_served</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>party_people_size</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+    </tr>
+    <tr>
+      <th>day</th>
+      <th>sex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="2" valign="top">Thur</th>
+      <th>Male</th>
+      <td>0</td>
+      <td>24</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>1</td>
+      <td>23</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Fri</th>
+      <th>Male</th>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Sat</th>
+      <th>Male</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>34</td>
+      <td>13</td>
+      <td>11</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>19</td>
+      <td>5</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Sun</th>
+      <th>Male</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>32</td>
+      <td>9</td>
+      <td>14</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Female</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>6</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can verify 24 lunch meals for a party of 2 were served by males on Thursdays with the query below too.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[141]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_tips</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;day==&#39;Thur&#39; and sex==&#39;Male&#39; and time==&#39;Lunch&#39; and size==2&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[141]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>24</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Style-Output">Style Output<a class="anchor-link" href="#Style-Output">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>While the above output is daunting to read with all the cells, there's a cool trick in Seaborn to make your DataFrame output appear as a heatmap. I added some code based off the example from the <a href='https://pandas.pydata.org/pandas-docs/stable/style.html#Builtin-Styles'>pandas documention</a> for built-in styles. Now, we can more easily identify the large values as being dark orange colors in our visualization below.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[145]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">orange</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">light_palette</span><span class="p">(</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">as_cmap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">df_tips</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;meal&#39;</span><span class="p">,</span> <span class="s1">&#39;party_people_size&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Lunch&quot;</span><span class="p">:</span> <span class="s2">&quot;count_lunch_meals_served&quot;</span><span class="p">,</span> <span class="s2">&quot;Dinner&quot;</span><span class="p">:</span> <span class="s2">&quot;count_dinner_meals_served&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[145]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style  type="text/css" >
+    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col1 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col2 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col3 {
+            background-color:  #ffc04d;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col4 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col5 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col7 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col9 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row0_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col0 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col1 {
+            background-color:  #ffa809;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col2 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col3 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col5 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col7 {
+            background-color:  #fff4df;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col9 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row1_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col0 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col1 {
+            background-color:  #ffefd3;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col7 {
+            background-color:  #ffe8bd;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col9 {
+            background-color:  #fff0d5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row2_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col1 {
+            background-color:  #ffecc9;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col2 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col7 {
+            background-color:  #ffeac4;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col8 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col9 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row3_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col7 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col8 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col9 {
+            background-color:  #ffb631;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col10 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row4_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col6 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col7 {
+            background-color:  #ffc965;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col8 {
+            background-color:  #ffd78d;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col9 {
+            background-color:  #ffebc5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col10 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row5_col11 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col7 {
+            background-color:  #ffaa0e;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col8 {
+            background-color:  #ffbe46;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col9 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col10 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row6_col11 {
+            background-color:  #ffa500;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col0 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col1 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col2 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col3 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col4 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col5 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col6 {
+            background-color:  #fff6e5;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col7 {
+            background-color:  #ffe5b7;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col8 {
+            background-color:  #ffd17b;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col9 {
+            background-color:  #ffdfa4;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col10 {
+            background-color:  #ffcd72;
+        }    #T_7df34398_f262_11e8_865c_2200dc4aac00row7_col11 {
+            background-color:  #fff6e5;
+        }</style>  
+<table id="T_7df34398_f262_11e8_865c_2200dc4aac00" > 
+<thead>    <tr> 
+        <th class="blank" ></th> 
+        <th class="index_name level0" >meal</th> 
+        <th class="col_heading level0 col0" colspan=6>count_lunch_meals_served</th> 
+        <th class="col_heading level0 col6" colspan=6>count_dinner_meals_served</th> 
+    </tr>    <tr> 
+        <th class="blank" ></th> 
+        <th class="index_name level1" >party_people_size</th> 
+        <th class="col_heading level1 col0" >1</th> 
+        <th class="col_heading level1 col1" >2</th> 
+        <th class="col_heading level1 col2" >3</th> 
+        <th class="col_heading level1 col3" >4</th> 
+        <th class="col_heading level1 col4" >5</th> 
+        <th class="col_heading level1 col5" >6</th> 
+        <th class="col_heading level1 col6" >1</th> 
+        <th class="col_heading level1 col7" >2</th> 
+        <th class="col_heading level1 col8" >3</th> 
+        <th class="col_heading level1 col9" >4</th> 
+        <th class="col_heading level1 col10" >5</th> 
+        <th class="col_heading level1 col11" >6</th> 
+    </tr>    <tr> 
+        <th class="index_name level0" >day</th> 
+        <th class="index_name level1" >sex</th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+        <th class="blank" ></th> 
+    </tr></thead> 
+<tbody>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row0" class="row_heading level0 row0" rowspan=2>Thur</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row0" class="row_heading level1 row0" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col0" class="data row0 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col1" class="data row0 col1" >24</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col2" class="data row0 col2" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col3" class="data row0 col3" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col4" class="data row0 col4" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col5" class="data row0 col5" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col6" class="data row0 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col7" class="data row0 col7" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col8" class="data row0 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col9" class="data row0 col9" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col10" class="data row0 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row0_col11" class="data row0 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row1" class="row_heading level1 row1" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col0" class="data row1 col0" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col1" class="data row1 col1" >23</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col2" class="data row1 col2" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col3" class="data row1 col3" >3</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col4" class="data row1 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col5" class="data row1 col5" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col6" class="data row1 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col7" class="data row1 col7" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col8" class="data row1 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col9" class="data row1 col9" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col10" class="data row1 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row1_col11" class="data row1 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row2" class="row_heading level0 row2" rowspan=2>Fri</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row2" class="row_heading level1 row2" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col0" class="data row2 col0" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col1" class="data row2 col1" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col2" class="data row2 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col3" class="data row2 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col4" class="data row2 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col5" class="data row2 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col6" class="data row2 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col7" class="data row2 col7" >6</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col8" class="data row2 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col9" class="data row2 col9" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col10" class="data row2 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row2_col11" class="data row2 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row3" class="row_heading level1 row3" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col0" class="data row3 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col1" class="data row3 col1" >3</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col2" class="data row3 col2" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col3" class="data row3 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col4" class="data row3 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col5" class="data row3 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col6" class="data row3 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col7" class="data row3 col7" >5</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col8" class="data row3 col8" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col9" class="data row3 col9" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col10" class="data row3 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row3_col11" class="data row3 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row4" class="row_heading level0 row4" rowspan=2>Sat</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row4" class="row_heading level1 row4" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col0" class="data row4 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col1" class="data row4 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col2" class="data row4 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col3" class="data row4 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col4" class="data row4 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col5" class="data row4 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col6" class="data row4 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col7" class="data row4 col7" >34</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col8" class="data row4 col8" >13</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col9" class="data row4 col9" >11</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col10" class="data row4 col10" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row4_col11" class="data row4 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row5" class="row_heading level1 row5" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col0" class="data row5 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col1" class="data row5 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col2" class="data row5 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col3" class="data row5 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col4" class="data row5 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col5" class="data row5 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col6" class="data row5 col6" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col7" class="data row5 col7" >19</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col8" class="data row5 col8" >5</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col9" class="data row5 col9" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col10" class="data row5 col10" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row5_col11" class="data row5 col11" >0</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level0_row6" class="row_heading level0 row6" rowspan=2>Sun</th> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row6" class="row_heading level1 row6" >Male</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col0" class="data row6 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col1" class="data row6 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col2" class="data row6 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col3" class="data row6 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col4" class="data row6 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col5" class="data row6 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col6" class="data row6 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col7" class="data row6 col7" >32</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col8" class="data row6 col8" >9</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col9" class="data row6 col9" >14</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col10" class="data row6 col10" >2</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row6_col11" class="data row6 col11" >1</td> 
+    </tr>    <tr> 
+        <th id="T_7df34398_f262_11e8_865c_2200dc4aac00level1_row7" class="row_heading level1 row7" >Female</th> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col0" class="data row7 col0" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col1" class="data row7 col1" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col2" class="data row7 col2" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col3" class="data row7 col3" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col4" class="data row7 col4" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col5" class="data row7 col5" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col6" class="data row7 col6" >0</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col7" class="data row7 col7" >7</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col8" class="data row7 col8" >6</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col9" class="data row7 col9" >4</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col10" class="data row7 col10" >1</td> 
+        <td id="T_7df34398_f262_11e8_865c_2200dc4aac00row7_col11" class="data row7 col11" >0</td> 
+    </tr></tbody> 
+</table> 
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+ 
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: 'center'," +
+        "    displayIndent: '0em'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['$','$'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        " linebreaks: { automatic: true, width: '95% container' }, " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+        "    } " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+      Thank you for reading my content! This project is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+      <br/>
+      Copyright &copy; Dan Friedman,
+      <time datetime="2020">2020</time>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <!-- <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #038f6d" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#d6eed9" );
+  </script> -->
+
+  <!--removes the numbered input element for each code block-->
+  <script>
+  $(".prompt").remove();
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data & Programming Knowledge Base">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="z-tests python">
+
+  <meta name="description" content="Learn how to setup hypothesis tests and validate if a single sample parameter is significantly different than the population parameter and the hypothetical true parameter for z-tests">
+  <meta property="og:description"  content="Learn how to setup hypothesis tests and validate if a single sample parameter is significantly different than the population parameter and the hypothetical true parameter for z-tests">
+  <meta name="twitter:description" content="Learn how to setup hypothesis tests and validate if a single sample parameter is significantly different than the population parameter and the hypothetical true parameter for z-tests">
+
+  <meta property="og:title" content="Intro to Hypothesis Testing and z-tests">
+  <meta name="twitter:title" content="Intro to Hypothesis Testing and z-tests">
+
+  <link rel="canonical" href="https://dfrieds.com/math/z-tests.html"/>
+
+  <title>Intro to Hypothesis Testing and z-tests - Math</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+
+  <!--don't need this for live-->
+  <!-- <link rel="stylesheet" href="theme/css/style.css"/> -->
+
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data & Programming Knowledge Base Full Atom Feed" />   <link href="https://dfrieds.com/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data & Programming Knowledge Base Categories Atom Feed" />  
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="math"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials</a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#data-analysis">Data Analysis with Pandas</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#math">Math</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/about">About</a>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> 
+    Math Inferential Statistics Tutorial
+    </div>
+    
+
+    <h1 class="articleh1">
+      Intro to Hypothesis Testing and z-tests
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        January 8, 2019&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+ 15 min read   15 min
+      </li>
+      <li class="tagarticle">
+        Key Terms:         p-values,
+        sampling distribution,
+        standard error,
+        z-score,
+        statistics,
+        standard deviation,
+        normal distribution,
+        python
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <p>In the field of inferential statistics, we make <strong>hypotheses</strong> - proposed explanations typically made on the basis of limited evidence that's used as a starting point for further investigation. Statistical hypothesis testing helps determine the probability that a given hypothesis is true using a dataset.</p>
+<p>A <strong>z-test</strong> is validating if a sample parameter (such as the mean) is <em>significantly</em> different than a population parameter when the sample mean has a treatment effect. I'll explain how hypothesis testing works through many examples of z-tests below.</p>
+<p>I'll explain why the word <em>significantly</em> is in italics later on too. </p>
+<p>Before reading this post, I'd recommend familiarity with the following terms: z-scores, normal distribution, standard deviation, standard error and the central limit theorem.</p>
+<h4>Import Modules</h4>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<h4>Visualization styling code</h4>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mi">13</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">)})</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Turn Off Warnings</h4>
+<p>I turn warnings off in this post because of an <a href='https://stackoverflow.com/a/52817582'>issue in Scipy</a> that will be fixed in a later version.</p>
+<div class="highlight"><pre><span></span><span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Data Requirements for z-tests</h3>
+<p>Certain conditions must hold true in the data in order to properly utilize z-tests.</p>
+<p>1) Population mean and population standard deviation must be known.</p>
+<p>2) Sample mean is known.</p>
+<p>3) Assumption or test that the sample of data offers some variation and therefore would form a normal distribution by resampling - consistent with the Central Limit Theorem.</p>
+<p>4) Sample observations were <em>randomly</em> drawn from a population.</p>
+<p>5) Sample size is known and sufficiently large - often <span class="math">\(n&gt;=30\)</span>.</p>
+<p>6) Assumption that the population from which the sample is drawn from is approximately normal.</p>
+<h3>Hypothesis Tests Order of Steps for z-tests</h3>
+<p>Below are the steps used for performing a hypothesis test to compare a single sample group with treatment to a population and determine the statistical significance. This article will mainly detail steps 2 - 4 and 6 - 8. </p>
+<p>1) Take measurements from a large control group we'll call the population.</p>
+<p>2) Declare a null and alternative hypothesis.
+    - This information provides background for a one-tail or two-tail test.</p>
+<p>3) Decide on an alpa level - the probability of obtaining a sample mean with treatment from the population.</p>
+<p>4) Apply a treatment to a new sample group of size <span class="math">\(n\)</span> and record measurements.
+    - We want to compare this treatment group to our population to see if this treatment had an effect.</p>
+<p>5) Take a sufficient number of samples of size <span class="math">\(n\)</span> from the population values and record a single statistic of each sample such as the mean or median. This is called the <strong>sampling distribution</strong>.
+    - A distribution of these sample means (or medians) would be a normal distribution based on the Central Limit Theorem.</p>
+<p>6) Verify data collected meets the requirements needed to run a z-test (see section above).</p>
+<p>7) Calculate the standard deviation of the sampling distribution - called the <strong>standard error</strong>.</p>
+<p>8) Compute how many standard errors the statistic (such as the mean) of the sample group with treatment is from the statistic (such as the mean) of the sampling distribution. This is called the z-score.</p>
+<p>9) Determine if this sample group with treatment is <em>significantly</em> different from the population based on the pre-decided alpha level.</p>
+<h3>One-Tail Hypothesis Tests</h3>
+<h4>Visualization of One-Tail</h4>
+<p>Below, this normal distribution has an area under the curve of <span class="math">\(1\)</span>. This visualization shades just the right-tail of the distribution that has an area under the curve of just <span class="math">\(0.05\)</span> equivalent to <span class="math">\(5\%\)</span>.</p>
+<div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
+<span class="n">two_std_from_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">*</span><span class="mf">1.645</span>
+<span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;teal&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">two_std_from_mean</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;teal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sampling Distribution for One-Tail Hypothesis Test&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean value&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="z_tests_files/z_tests_16_0.png"></p>
+<p>For a one-tail test, the <strong>critical region</strong> (an example is the one shaded above) can be on the left or right side of the distribution. The critical region defines statistically <em>unlikely</em> values.</p>
+<h4>Levels of Likelihood for One-Tail Test</h4>
+<p>Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. </p>
+<p>Additional context: a sampling distribution can have any mean and standard error value. Based on the central limit theorem, the sampling distribution should be approximately normal. A z-score on this sampling distribution tells us the number of standard deviations a sample mean is from the mean of the sampling distribution. Since the sampling distribution is normal, a z-score can always tell us what proportion of sample means are greater than or less than the z-score.</p>
+<p>The probability values initially decided upon in hypothesis tests are called <strong><span class="math">\(\alpha\)</span> levels</strong> and all are <em>unlikely</em> occurences. I call it <em>unlikely</em> because this sample mean likely didn't occur by random chance. There may have been an effect on that sample mean.</p>
+<h4>Unlikely Values in Positive Direction One-Tail Tests</h4>
+<p>Positive direction one-tail tests have the critical region on the right / positive direction of the sampling distribution.</p>
+<table>
+<thead>
+<tr>
+<th>z-score cutoff for critical region</th>
+<th>probability of obtaining sample mean (<span class="math">\(\alpha\)</span> level) <em>greater</em> than corresponding z-score</th>
+<th>equivalent percentage likelihood</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math">\(1.645\)</span></td>
+<td><span class="math">\(0.05\)</span></td>
+<td><span class="math">\(5\%\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(2.33\)</span></td>
+<td><span class="math">\(0.01\)</span></td>
+<td><span class="math">\(1\%\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(3.1\)</span></td>
+<td><span class="math">\(0.001\)</span></td>
+<td><span class="math">\(0.1\%\)</span></td>
+</tr>
+</tbody>
+</table>
+<h4>Unlikely Values in Negative Direction One-Tail Tests</h4>
+<p>Negative direction one-tail tests have the critical region on the left / negative direction of the sampling distribution.</p>
+<table>
+<thead>
+<tr>
+<th>z-score cutoff for critical region</th>
+<th>probability of obtaining sample mean (<span class="math">\(\alpha\)</span> level) <em>less</em> than corresponding z-score</th>
+<th>equivalent percentage likelihood</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math">\(-1.645\)</span></td>
+<td><span class="math">\(0.05\)</span></td>
+<td><span class="math">\(5\%\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(-2.33\)</span></td>
+<td><span class="math">\(0.01\)</span></td>
+<td><span class="math">\(1\%\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(-3.1\)</span></td>
+<td><span class="math">\(0.001\)</span></td>
+<td><span class="math">\(0.1\%\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>With a sampling distribution, a z-score of roughly <span class="math">\(1.645\)</span> has an area under the curve to the left of the z-value of <span class="math">\(0.95\)</span> (<span class="math">\(95\%\)</span> probability). Any z-score greater than <span class="math">\(1.645\)</span> means you're <em>unlikely</em> to sample such a sample from the sampling distribution given an alpha of <span class="math">\(0.05\)</span>. The region to the right of that z-value is called the <strong>critical region</strong>. In this instance, the z-score of <span class="math">\(1.645\)</span> is called the <strong>z-critical value</strong>.</p>
+<p>The <code>cdf()</code> method from the scipy package and accompanying <a href='https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html'>stats module</a> returns the proportion of values smaller than the observation inputted for a standard normal distribution (a normal distribution with a mean of <span class="math">\(0\)</span> and standard deviation of <span class="math">\(1\)</span>). Let's see the area under the curve to the right of these critical z-scores that are the same ones mentioned in the table under <em>Unlikely Values in Positive Direction One-Tail Tests</em>. The probability values returned below are the same as the ones in the table.</p>
+<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">1.645</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">0.05</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">2.33</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">0.01</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">3.1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">0.001</span>
+</pre></div>
+
+
+<p>For any sample mean, we can interpret if it's statistically <em>significant</em> - essentially telling us how <em>likely</em> or <em>unlikely</em> this sample mean is within the sampling distribution. The table below only shows examples for a one-tailed hypothesis test.</p>
+<p>If the probability of getting a particular sample mean is less than <span class="math">\(\alpha\)</span>, it is <em>unlikely</em> to occur. In a z-test, we often say that if the z-score computed is in the critical region, there's likely an <em>effect</em> with the treatment on the sample.</p>
+<p>Note below, <span class="math">\(p\)</span> is equivalent to probability and <span class="math">\(\bar{x}\)</span> is the sample mean.</p>
+<p>The table below shows interpretations of popular significance levels. Square brackets such as <span class="math">\([\)</span> signify inclusivity of the value next to it while parentheses such as <span class="math">\((\)</span> signify exclusivity of the value next to it.  </p>
+<table>
+<thead>
+<tr>
+<th>z-score range for positive one-tail test</th>
+<th>z-score range for negative one-tail test</th>
+<th>statistical interpretation</th>
+<th>layman's interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1.645, 2.33)</td>
+<td>[-1.645, -2.33)</td>
+<td><span class="math">\(\bar{x}\)</span> is significant at p&lt;0.05</td>
+<td>probability of sampling <span class="math">\(\bar{x}\)</span> from the sampling distribution is less than 0.05</td>
+</tr>
+<tr>
+<td>[2.33, 3.1)</td>
+<td>[-2.33, -3.1)</td>
+<td><span class="math">\(\bar{x}\)</span> is significant at p&lt;0.01</td>
+<td>probability of sampling <span class="math">\(\bar{x}\)</span> from the sampling distribution is less than 0.01</td>
+</tr>
+<tr>
+<td>[3.1, <span class="math">\(\infty\)</span>)</td>
+<td>[-3.1, <span class="math">\(-\infty\)</span>)</td>
+<td><span class="math">\(\bar{x}\)</span> is significant at p&lt;0.001</td>
+<td>probability of sampling <span class="math">\(\bar{x}\)</span> from the sampling distribution is less than 0.001</td>
+</tr>
+</tbody>
+</table>
+<p>When constructing a hypothesis test, it is best to choose a significant level such as the ones above <em>before</em> you perform a test. You can later report the results as significant at a certain critical level after obtaining the result.</p>
+<p>If you simply analyze the results for all statistical significance levels, you may be "fishing" for results that don't meet the original purpose of your hypothesis test.</p>
+<h3>Two-Tailed Hypothesis Tests</h3>
+<p>This visualization shades two equal areas on each tail of the normal distribution of sample means - also known as the sampling distribution.</p>
+<p>Each tail of the distribution has a shaded area of <span class="math">\(0.025\)</span>.</p>
+<div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
+<span class="n">alpha_05_positive</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">*</span><span class="mf">1.96</span>
+<span class="n">alpha_05_negative</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">*</span><span class="mf">1.96</span>
+<span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;dodgerblue&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_05_positive</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;dodgerblue&#39;</span><span class="p">)</span>
+<span class="n">shade2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_05_negative</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade2</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade2</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;dodgerblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sampling Distribution for Two-Tail Hypothesis Test&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean value&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="z_tests_files/z_tests_31_0.png"></p>
+<p>Below represent values for the probability of getting a sample mean from a sampling distribution along with the equivalent percentage likelihood and z-score. </p>
+<table>
+<thead>
+<tr>
+<th>probability of obtaining sample mean (<span class="math">\(\alpha\)</span> level)</th>
+<th>probability of obtaining sample mean on each tail</th>
+<th>percentage of obtaining a sample mean on each tail</th>
+<th>z-score cutoff for each tail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.05</td>
+<td>0.025</td>
+<td>2.5%</td>
+<td><span class="math">\(\pm1.96\)</span></td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>0.005</td>
+<td>0.5%</td>
+<td><span class="math">\(\pm2.575\)</span></td>
+</tr>
+<tr>
+<td>0.001</td>
+<td>0.0005</td>
+<td>0.05%</td>
+<td><span class="math">\(\pm3.29\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Let's see the area under the curve to the left of the z-score for the z-scores listed in the table above.</p>
+<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">1.96</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">0.025</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">2.575</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">0.005</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">3.29</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">0.001</span>
+</pre></div>
+
+
+<p>The table below shows interpretations of popular significance levels. Square brackets such as <span class="math">\([\)</span> signify inclusivity of the value next to it while parentheses such as <span class="math">\((\)</span> signify exclusivity of the value next to it.  </p>
+<table>
+<thead>
+<tr>
+<th>z-score range for two-tailed test</th>
+<th>interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1.96, 2.575) or [-1.96, -2.575)</td>
+<td><span class="math">\(\bar{x}\)</span> is significant at p&lt;0.05</td>
+</tr>
+<tr>
+<td>[2.575, 3.29) or [-2.575, -3.29)</td>
+<td><span class="math">\(\bar{x}\)</span> is significant at p&lt;0.01</td>
+</tr>
+<tr>
+<td>[3.29, <span class="math">\(\infty\)</span>) or [-3.29, <span class="math">\(-\infty\)</span>)</td>
+<td><span class="math">\(\bar{x}\)</span> is significant at p&lt;0.001</td>
+</tr>
+</tbody>
+</table>
+<h3>Hypotheses</h3>
+<p>Earlier I mentioned <strong>hypotheses</strong> as proposed explanations typically made on the basis of limited evidence that's used as a starting point for further investigation. </p>
+<p>The null hypothesis commonly denoted as <span class="math">\(H_{o}\)</span> assumes a default position of the relationship among two groups. This typically means there is no <em>significant</em> difference in the means of the groups. For z-tests, the two groups are the current population parameters and the new population parameters after some intervention (otherwise called a treatment).</p>
+<p>The alternative hypothesis commonly denoted as <span class="math">\(H_{a}\)</span> guesses there <em>will</em> be a <em>significant</em> difference between the current population parameters and the new population parameters after some intervention. </p>
+<p><span class="math">\(\mu_{i}\)</span> represents the new population parameters after some intervention.</p>
+<p>The three possible scenarios for a one-tailed and two-tailed tests with explanations for each are as follows:</p>
+<table>
+<thead>
+<tr>
+<th>alternative hypothesis</th>
+<th>interpretation</th>
+<th>number of tails</th>
+<th>critical region location of tail(s) on sampling distribution to reject the null</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math">\(\mu&lt;\mu_{i}\)</span></td>
+<td>current population parameter will be less than the new population parameter after an intervention</td>
+<td>one</td>
+<td>positive</td>
+</tr>
+<tr>
+<td><span class="math">\(\mu&gt;\mu_{i}\)</span></td>
+<td>current population parameter will be greater than the new population parameter after an intervention</td>
+<td>one</td>
+<td>negative</td>
+</tr>
+<tr>
+<td><span class="math">\(\mu\neq\mu_{i}\)</span></td>
+<td>no prediction on a direction for the treatment</td>
+<td>two</td>
+<td>positive or negative</td>
+</tr>
+</tbody>
+</table>
+<p>The two-tailed test is most conservative because the probability on each tail is smaller than a tail on a one-sided test. Therefore, we are less likely to reject the null hypothesis.</p>
+<p>Note how all scenarios above use <span class="math">\(\mu\)</span> despite the fact we compare the means of a sample (denoted as <span class="math">\(\bar{x}\)</span>) and a population (denoted as <span class="math">\(\mu\)</span>). Why is this? With the treatment on the sample, we try to <em>infer</em> the new population mean if everyone in the population would receive similar treatment.  </p>
+<p>In a statistical hypothesis test, we often want to provide treatment to just a small sample because that takes less effort and minimizes risk as to not affect the population.</p>
+<h4>Interpretation of Hypotheses</h4>
+<p>Here's what it means to reject the null hypothesis:</p>
+<ul>
+<li>The sample mean falls within the critical region.</li>
+<li>The z-score of the sample mean is greater than the z-critical value.</li>
+<li>The probability of obtaining the sample mean is less than the alpha level.</li>
+</ul>
+<p>We can't prove the null hypothesis is true. We can only obtain evidence to <em>reject</em> the null hypothesis. </p>
+<h3>Example Hypotheses</h3>
+<h4>Hypothesis Example #1: Tree Branches</h4>
+<p><span class="math">\(H_{o}\)</span>: Most trees have more than 20 branches (most = more than 50%).</p>
+<p><span class="math">\(H_{a}\)</span>: Most trees have less than 20 branches.</p>
+<p>The 50% represents the criteria for our alpha level. This is an example of a one-sided test.</p>
+<p><span class="math">\(\mu_{i}\)</span> represents the mean number of branches for trees that each have less than 20 branches.</p>
+<p><span class="math">\(H_{o}\)</span>: <span class="math">\(\mu &lt;= \mu_{i}\)</span></p>
+<p><span class="math">\(H_{a}\)</span>: <span class="math">\(\mu &gt; \mu_{i}\)</span></p>
+<p>Let's say we sample 10 trees and find that all have <em>more</em> than 20 branches. </p>
+<p>This sample is evidence that most (greater than 50%) trees have more than 20 branches. We will <em>fail to reject</em> the null hypothesis.</p>
+<h4>Hypothesis Example #2: Personal Trainer at Gym Effect on Mass</h4>
+<p>Null hypothesis: having Joe as a personal trainer for three weightlifting workouts per week over the course of a year has no effect on one's mass.</p>
+<p>Alternative hypothesis: having Joe as a personal trainer for three weightlifting workouts per week over the course of a year has a <em>significant</em> effect on the client's mass.</p>
+<p><span class="math">\(H_{o}\)</span>: <span class="math">\(\mu = \mu_{joe}\)</span></p>
+<p><span class="math">\(H_{a}\)</span>: <span class="math">\(\mu \neq \mu_{joe}\)</span></p>
+<p>To reject the null hypothesis, the sample mean with treatment could be on either end of the sampling distribution. This is considered a two-tailed test.</p>
+<p>To gather data for the sampling distribution, assume I visited the gym 24/7 for a month and collected data on <span class="math">\(5,500\)</span> people's mass who claimed to exercise on average three times per week over the last year but didn't have joe as a personal trainer.</p>
+<p>To gather data for the treatment group, assume I visited the gym one day and sampled 30 people on their mass who weightlifted at the gym on average three times per week over the past year with Joe's personal training guidance.</p>
+<p>Let's set an alpha level for this experiment of <span class="math">\(0.05\)</span>.</p>
+<p>Below, I create the fictional population data.</p>
+<div class="highlight"><pre><span></span><span class="n">population_mean_pounds</span> <span class="o">=</span> <span class="mi">160</span>
+<span class="n">population_size</span> <span class="o">=</span> <span class="mi">5500</span>
+<span class="n">population_std_dev_pounds</span> <span class="o">=</span> <span class="mi">22</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">population_gym_goers_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">population_mean_pounds</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">population_std_dev_pounds</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5500</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Below, I create the fictional sample data.</p>
+<div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">treatment_sample_mean_pounds</span> <span class="o">=</span> <span class="mi">169</span>
+</pre></div>
+
+
+<p>Create the sampling distribution from the population in order to be able to compare with <code>treatment_sample_mean_pounds</code>.  I take <span class="math">\(330\)</span> of each <span class="math">\(30\)</span> random values with replacement from the population.</p>
+<div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">sample_means</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">):</span>
+    <span class="n">sample_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">population_gym_goers_mass</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>    
+    <span class="n">sample_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_values</span><span class="p">)</span>
+    <span class="n">sample_means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_mean</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Let's visualize the sampling distribution.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">sample_means</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sampling Distribution ($n=30$) of Gym Goers&#39; Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;frequency of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="z_tests_files/z_tests_52_0.png"></p>
+<p>Let's compute the standard error which is the standard deviation of the sampling distribution. The equation is below:</p>
+<div class="math">$$SE=\frac{\sigma }{\sqrt{n}}$$</div>
+<ul>
+<li><span class="math">\(\sigma\)</span> is population standard deviation</li>
+<li><span class="math">\(n\)</span> is sample size</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">standard_error_pounds</span> <span class="o">=</span> <span class="n">population_std_dev_pounds</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">standard_error_pounds</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">4.016632088371218</span>
+</pre></div>
+
+
+<p>Let's calculate how many standard errors <code>treatment_sample_mean_pounds</code> is from <code>population_mean_pounds</code> and express this as a z-score.</p>
+<p>I can use the following z-score equation:</p>
+<div class="math">$$z=\frac{\bar{x}-\mu}{SE}$$</div>
+<ul>
+<li><span class="math">\(\bar{x}\)</span> is the sample mean</li>
+<li><span class="math">\(\mu\)</span> is the population mean</li>
+<li><span class="math">\(SE\)</span> is the standard error calculated as <span class="math">\(\frac{\sigma }{\sqrt{n}}\)</span></li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">z_score</span> <span class="o">=</span> <span class="p">(</span><span class="n">treatment_sample_mean_pounds</span> <span class="o">-</span> <span class="n">population_mean_pounds</span><span class="p">)</span><span class="o">/</span><span class="n">standard_error_pounds</span>
+<span class="n">z_score</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">2.2406831897938613</span>
+</pre></div>
+
+
+<p>The initial alpha level is <span class="math">\(0.05\)</span> and this is a two-tailed test. Let's shade both areas of the critical region on the positive and negative side of the sampling distribution. The corresponding z-critical value is <span class="math">\(1.96\)</span>. Let's find the mean mass value associated with this z-score on the positive side. We can model this calculation by the equation below:</p>
+<p>1.96 = (sample_mean_at_positive_z_critical - population_mean_pounds)/standard_error_pounds</p>
+<p>The equation above simplifies to the code below.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_mean_at_positive_z_critical</span> <span class="o">=</span> <span class="mf">1.96</span><span class="o">*</span><span class="n">standard_error_pounds</span><span class="o">+</span><span class="n">population_mean_pounds</span>
+<span class="n">sample_mean_at_positive_z_critical</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">167.8725988932076</span>
+</pre></div>
+
+
+<p>Let's find the mean mass value associated with this z-score on the positive side.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_mean_at_negative_z_critical</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.96</span><span class="o">*</span><span class="n">standard_error_pounds</span><span class="o">+</span><span class="n">population_mean_pounds</span>
+<span class="n">sample_mean_at_negative_z_critical</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">152.1274011067924</span>
+</pre></div>
+
+
+<p>Let's visualize where <code>treatment_sample_mean_pounds</code> lies on the distribution of sample mean masses of groups collected at the gym that didn't have the treatment of Joe's personal training.</p>
+<div class="highlight"><pre><span></span><span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">sample_means</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">sample_means</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">sample_means</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_positive_z_critical</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_negative_z_critical</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade2</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade2</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">treatment_sample_mean_pounds</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean with Joe personal trainer&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sampling Distribution ($n=30$) of Gym Goers&#39; Mass in Pounds&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.015</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="z_tests_files/z_tests_62_0.png"></p>
+<p>The visualization shows <code>treatment_sample_mean_pounds</code> lies in the positive critical region.</p>
+<p>I can calculate the probability of randomly selecting a sample mean greater than <code>treatment_sample_mean_pounds</code> by identifying the area under the curve to the right of the sample mean's z-score on a standard normal distribution. its z-score on a standard normal distribution. </p>
+<div class="highlight"><pre><span></span><span class="n">p_value</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_score</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">p_value</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">0.013</span>
+</pre></div>
+
+
+<p>The returned p-value is <span class="math">\(0.013\)</span>. The initial alpha level was <span class="math">\(0.05\)</span>. The p-value is less than the alpha level.</p>
+<p>The equivalent z-score cutoff for each tail is <span class="math">\(\pm1.96\)</span>. Above, we calculated a z-score value of <span class="math">\(2.24\)</span> which is greater than <span class="math">\(1.96\)</span>. </p>
+<p>Therefore, <code>treatment_sample_mean_pounds</code> is <em>significant</em> at <span class="math">\(p&lt;0.05\)</span> so we have obtained sufficient evidence to reject the null hypothesis. There's evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.</p>
+<h3>Continue Gym Personal Trainer Example with Hypothesis Test (of Known True Population Mean)</h3>
+<p>This type of statistical analysis is prone to misinterpretation. It's possible that those sampled and treated by Joe's personal training already had a history of major weight gain through lifting or had not hit a plateua yet with their potential to gain weight. So, they could have been ideal candidates for Joe to push them to gain muscle rapidly. If either of those scenarios are the case, it's possible that the new estimated population parameters with the treatment are slightly biased. </p>
+<p>Given this misinterpretion or another issue, our hypothesis testing may result in an error. </p>
+<p>Earlier, I concluded <code>treatment_sample_mean_pounds</code> was <em>significant</em> at <span class="math">\(p&lt;0.05\)</span> because I obtained sufficient evidence to reject the null hypothesis. There was evidence of an effect of mass gain through 3x per week personal training sessions with Joe over the course of a year.</p>
+<p>Additionally, let's <em>assume</em> we found the true population mean of people's mass sampled at the gym for <em>everyone</em> after one year of 3x per week personal training sessions with Joe was <span class="math">\(162\)</span> pounds. In real life, we wouldn't know this value of <span class="math">\(162\)</span> because the treatment hasn't taken effect on the population in a study. However, in this example, let's <em>pretend</em> we do.</p>
+<p>Let's assign the variable <code>true_population_mean_pounds_with_joe_training</code> to 162.</p>
+<div class="highlight"><pre><span></span><span class="n">true_population_mean_pounds_with_joe_training</span> <span class="o">=</span> <span class="mi">162</span>
+</pre></div>
+
+
+<p>In the equation for the z-score, we can utilize this new value to see how many standard errors <code>treatment_sample_mean_pounds</code> lies from <code>true_population_mean_pounds_with_joe_training</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">z_true</span> <span class="o">=</span> <span class="p">(</span><span class="n">treatment_sample_mean_pounds</span> <span class="o">-</span> <span class="n">true_population_mean_pounds_with_joe_training</span><span class="p">)</span><span class="o">/</span><span class="n">standard_error_pounds</span>
+<span class="n">z_true</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">1.7427535920618922</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_positive_z_critical</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">shade2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_mean_at_negative_z_critical</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade2</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade2</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkviolet&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">treatment_sample_mean_pounds</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sample mean with Joe personal trainer&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">true_population_mean_pounds_with_joe_training</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true population mean with Joe&#39;s training&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample mean mass [pounds]&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability of occurence&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="z_tests_files/z_tests_71_0.png"></p>
+<p>The visualization shows <code>true_population_mean_pounds_with_joe_training</code> is <em>not</em> in a critical region. </p>
+<p>Our initial alpha level was <span class="math">\(0.05\)</span>. The equivalent z-score cutoff for each tail is <span class="math">\(\pm1.96\)</span>.</p>
+<p>The <code>z_true</code> value (for the true population mean) is less than the z-critical value of <span class="math">\(1.96\)</span>; the ground truth about the population <span class="math">\(H_{o}\)</span> is true. Having Joe as a persoanl trainer for three weightlifting workouts per week over the course of the year has <em>no</em> effect on one's mass. However, our earlier decision based on the sample with treatment was to reject the null hypothesis. In this instance, we committed a Type 1 error!</p>
+<h3>Effect of Parameters on Treatment Effect</h3>
+<p>For hypothesis testing, we typically use the following two equations to calculate the standard error (SE) and a z-score for a sample mean:</p>
+<div class="math">$$SE=\frac{\sigma }{\sqrt{n}}$$</div>
+<ul>
+<li><span class="math">\(\sigma\)</span> is population standard deviation</li>
+<li><span class="math">\(n\)</span> is sample size</li>
+</ul>
+<div class="math">$$z=\frac{\bar{x}-\mu}{SE}$$</div>
+<ul>
+<li><span class="math">\(\bar{x}\)</span> is the sample mean</li>
+<li><span class="math">\(\mu\)</span> is the population mean</li>
+<li><span class="math">\(SE\)</span> is the standard error calculated as <span class="math">\(\frac{\sigma }{\sqrt{n}}\)</span></li>
+</ul>
+<p>An effect that exists is <em>more likely</em> to be detected with a change in the following variables utilized in the equations above:</p>
+<ul>
+<li><span class="math">\(n\)</span> is larger (results in smaller SE and z-score farther from 0)</li>
+<li><span class="math">\(\sigma\)</span> is smaller (results in smaller SE and z-score farther from 0)</li>
+<li><span class="math">\(\mu\)</span> farther from <span class="math">\(\bar{x}\)</span> (results in z-score farther from 0)</li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+      Thank you for reading my content! This project is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+      <br/>
+      Copyright &copy; Dan Friedman,
+      <time datetime="2020">2020</time>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <!-- <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #038f6d" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#d6eed9" );
+  </script> -->
+
+  <!--removes the numbered input element for each code block-->
+  <script>
+  $(".prompt").remove();
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+
+</body>
+
+</html>

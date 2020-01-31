@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97459416-1"> 
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-97459416-1');
+  </script>
+
+  <meta name="author" content="Dan Friedman">
+  <meta name="geo.region" content="CA">
+  <meta property="og:locale" content="en_us">
+  <meta name="robot" content="all">
+  <meta name="referrer" content="always">
+  <meta property="fb:profile_id" content="1357771151">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dan Friedman's Data & Programming Knowledge Base">
+
+  <meta property="og:see_also" content="https://twitter.com/_DanFriedman"/>
+  <meta property="og:see_also" content="https://www.linkedin.com/in/danfriedman33/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_DanFriedman">
+  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
+
+  <meta name="keywords" content="bessel's correction standard deviation python">
+
+  <meta name="description" content="Understand the significance of Bessel's correction in calculating sample variance and sample standard deviation; visualize the bias in using the population standard deviation equation for samples">
+  <meta property="og:description"  content="Understand the significance of Bessel's correction in calculating sample variance and sample standard deviation; visualize the bias in using the population standard deviation equation for samples">
+  <meta name="twitter:description" content="Understand the significance of Bessel's correction in calculating sample variance and sample standard deviation; visualize the bias in using the population standard deviation equation for samples">
+
+  <meta property="og:title" content="Bessel's Correction">
+  <meta name="twitter:title" content="Bessel's Correction">
+
+  <link rel="canonical" href="https://dfrieds.com/math/bessels-correction.html"/>
+
+  <title>Bessel's Correction - Math</title>
+
+  
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/ie10-viewport-bug-workaround.css" />
+  
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/style.css" />
+
+  <!--don't need this for live-->
+  <!-- <link rel="stylesheet" href="theme/css/style.css"/> -->
+
+  <link rel="stylesheet" href="https://dfrieds.com/theme/css/notebooks.css" />
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,900" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <link href="https://dfrieds.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data & Programming Knowledge Base Full Atom Feed" />   <link href="https://dfrieds.com/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Dan Friedman's Data & Programming Knowledge Base Categories Atom Feed" />  
+
+  <!-- Start of Async Drift Code -->
+  <script>
+    !function() {
+      var t;
+      if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+        t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n;
+            return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e, n, o, i;
+          e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), 
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", 
+          n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n);
+        });
+      }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('83xk3ceba36c');
+  </script>
+  <!-- End of Async Drift Code -->
+
+
+</head>
+
+<body>
+  <div class="math"></div>
+
+  <nav class="navbar navbar-expand-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://dfrieds.com/">Dan<span class="green">_</span>Friedman</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggle-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials</a>
+              
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="https://dfrieds.com/#data-analysis">Data Analysis with Pandas</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#dataviz">Data Visualizations</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#python">Python</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#ml">Machine Learning</a>
+                <a class="dropdown-item" href="https://dfrieds.com/#math">Math</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/#articles">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://dfrieds.com/about">About</a>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- end of header section -->
+  <div class="container">
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> 
+    Math Descriptive Statistics Article
+    </div>
+    
+
+    <h1 class="articleh1">
+      Bessel's Correction
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        December 28, 2018&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+ 8 min read   8 min
+      </li>
+      <li class="tagarticle">
+        Key Terms:         bessel's correction,
+        standard deviation,
+        normal distribution,
+        python,
+        pandas
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    <h4>Import Modules</h4>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span> <span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+
+<h4>Visualization styling code</h4>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">)})</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s1">&#39;talk&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Sample Vs. Population Standard Deviation</h3>
+<p><strong>Standard deviation</strong> is a measure of how spread out a set of values are from the mean.</p>
+<p>You generally take a sample of data through a technique such as surveying to analyze statistics of the sample that you think would be representative of the population. If you have a dataset for the entire population, you don't need to calculate sample statistics.</p>
+<p>With sampling, samples tend to underestimate variability of a population because if you're sampling from a normal distribution, you'll more likely to choose values centered around the mean and ignore the extremes.</p>
+<h4>Visualize Sampling Patterns from Population</h4>
+<div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># seed random number generator with fixed value to always get same values below</span>
+<span class="n">normal_distr_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1300</span><span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">)</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">normal_distr_values</span><span class="p">),</span> <span class="mi">50000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;royalblue&#39;</span><span class="p">)</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">shade</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;royalblue&#39;</span><span class="p">,)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">100.5</span><span class="p">,</span> <span class="n">y</span><span class="o">=.</span><span class="mi">0085</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> 
+         <span class="n">s</span><span class="o">=</span><span class="s2">&quot;likely to sample </span><span class="se">\n</span><span class="s2">from this range&quot;</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span> <span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round, pad=0.35&quot;</span><span class="p">))</span>
+<span class="n">bbox_props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fc</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">left_tail_text</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">,</span> <span class="s2">&quot;unlikely to sample</span><span class="se">\n</span><span class="s2"> from this tail&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> 
+            <span class="n">rotation</span><span class="o">=</span><span class="mi">325</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">15.5</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">bbox_props</span><span class="p">)</span>
+<span class="n">bb</span> <span class="o">=</span> <span class="n">left_tail_text</span><span class="o">.</span><span class="n">get_bbox_patch</span><span class="p">()</span>
+<span class="n">bb</span><span class="o">.</span><span class="n">set_boxstyle</span><span class="p">(</span><span class="s2">&quot;rarrow&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">right_tail_text</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">,</span> <span class="s2">&quot;unlikely to sample</span><span class="se">\n</span><span class="s2"> from this tail&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> 
+            <span class="n">rotation</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">15.5</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">bbox_props</span><span class="p">)</span>
+<span class="n">bb</span> <span class="o">=</span> <span class="n">right_tail_text</span><span class="o">.</span><span class="n">get_bbox_patch</span><span class="p">()</span>
+<span class="n">bb</span><span class="o">.</span><span class="n">set_boxstyle</span><span class="p">(</span><span class="s2">&quot;larrow&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KDE Plot of Normal Distribution of Values&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.012</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;probability&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span>
+</pre></div>
+
+
+<p><img alt="png" src="bessels_correction_files/bessels_correction_9_0.png"></p>
+<h4>Bessel's Correction</h4>
+<p>To correct for this issue with sampling from the middle area, <strong>Bessel's correction</strong> is the use of <span class="math">\(n-1\)</span> instead of <span class="math">\(n\)</span> in the formula for sample variance and sample standard deviation where <span class="math">\(n\)</span> is the number of observations in a sample. Below are the formulas for population standard deviation and sample standard deviation.</p>
+<p><strong>Population standard deviation:</strong></p>
+<div class="math">$$ \sigma = \sqrt{\frac{1}{N}\sum_{i=1}^{N}(x_{i}-\mu)^{2}} $$</div>
+<ul>
+<li><span class="math">\(\sigma\)</span> = population standard deviation</li>
+<li><span class="math">\(N\)</span> = count of values in population</li>
+<li><span class="math">\(x_{i}\)</span> can represent any value in the population</li>
+<li><span class="math">\(\mu\)</span> = population mean</li>
+</ul>
+<p>I'd describe this calculation above as: subtract the mean from each value and calculate its square and you are left with a new list of values. Sum up all those values and you are left with a single number. Lastly, multiple that value by 1 divided by the count of values in the population.</p>
+<p><strong>Sample standard deviation:</strong></p>
+<div class="math">$$ s = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(x_{i}-\bar{x})^{2}} $$</div>
+<ul>
+<li><span class="math">\(s\)</span> = sample standard deviation</li>
+<li><span class="math">\(n\)</span> = count of values in sample</li>
+<li><span class="math">\(x_{i}\)</span> can represent any value in the sample</li>
+<li><span class="math">\(\bar{x}\)</span> = sample mean</li>
+</ul>
+<p>In this article, my logic will compare the use of using the population standard deviation equation with the sample standard deviation equation.</p>
+<h3>Example: Visualize Reason for Bessel's Correction</h3>
+<h4>Create Data of People's Mass in Pounds Values</h4>
+<p>Below, I use the NumPy random module and the <a href='https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.random.normal.html'><code>normal()</code> method</a> to create random samples from a normal (Gaussian) distribution. I seed the generator with the random <a href='https://docs.scipy.org/doc/numpy-1.15.1/reference/generated/numpy.random.seed.html'><code>seed()</code> method.</p>
+<p>The <code>normal</code> method creates float values. I cast those values to be integer values for each class' scores.</p>
+<div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mass_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">6000</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2800</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Calculate the Population Standard Deviation</h4>
+<div class="highlight"><pre><span></span><span class="n">pop_std_dev</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">mass_values</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">pop_std_dev</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="err">2830.954</span>
+</pre></div>
+
+
+<h4>Calculate Standard Deviation of 500 Random Samples Using Population Standard Deviation Formula</h4>
+<p>Often times in surveying, you're only able to easily sample a sample of the entire population. In the scenario below, I generate 500 random samples each of 30 observations (<span class="math">\(n=30\)</span>) using the <code>choice()</code> <a href='https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.random.choice.html'>method</a> from NumPy's random module. I sample from <code>mass_values</code>. For each sample, I calculate the standard deviation using the population standard deviation formula via the NumPy std() <a href='https://docs.scipy.org/doc/numpy-1.15.1/reference/generated/numpy.std.html'>method</a> and store all these sample standard deviations in a list assigned to <code>sample_standard_deviations</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_standard_deviations</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">):</span>
+    <span class="n">random_sample_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">mass_values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sample_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">random_sample_values</span><span class="p">)</span>
+    <span class="n">sample_standard_deviations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_std_dev</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Visualize Standard Deviation Values</h4>
+<p>The boxplot below compares the distribution of the 500 sample standard deviations to the population standard deviation. The sample standard deviations are typically smaller (an underestimate) than the population standard deviation. This is the issue Bessel's correction resolves.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">sample_standard_deviations</span><span class="p">,</span> <span class="n">boxprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cornflowerblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">pop_std_dev</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;population standard deviation&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;firebrick&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Random Sample Std. Devs. vs. Population Std. Dev.&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.011</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;standard deviation&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="bessels_correction_files/bessels_correction_23_0.png"></p>
+<h4>Calculate Standard Deviation of 500 Random Samples Using Population Standard Deviation Formula</h4>
+<p>Below, I perform nearly the same calculation as above. The only difference is that I set the NumPy <code>std()</code> method's argument of <code>ddof</code> to be 1 so the <span class="math">\(n-1\)</span> calculation is made in the sample standard deviation formula above.</p>
+<div class="highlight"><pre><span></span><span class="n">sample_standard_deviations</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">):</span>
+    <span class="n">random_sample_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">mass_values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sample_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">random_sample_values</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sample_standard_deviations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_std_dev</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Visualize Standard Deviation Values</h4>
+<p>The boxplot below compares the distribution of the 500 sample standard deviations (using the sample standard deviation formula) to the population standard deviation. The median of the sample standard deviations is nearly the same as the population standard deviation. This is a good signal that our method for calculating the sample standard deviations using Bessel's correction is fairly good at getting a sample standard deviation value that's similar to the population standard deviation value.</p>
+<div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">sample_standard_deviations</span><span class="p">,</span> <span class="n">boxprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightslategray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">pop_std_dev</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;population standard deviation&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;firebrick&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Random Sample Std. Devs. vs. Population Std. Dev.&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.011</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;standard deviation&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="bessels_correction_files/bessels_correction_29_0.png"></p>
+<p>In conclusion, the sample standard deviation formula using Bessel's correction provides a <em>less biased</em> estimator of the population's standard deviation. There still is <em>some</em> bias, but less than if you use the population standard deviation formula for a sample.</p>
+<h3>Exploring Bias in Population Standard Deviation Formula for Samples with Various Sample Sizes</h3>
+<p>Create empty DataFrame with columns <code>sample_size</code> and <code>standard_deviation</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sample_size&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;standard_deviation&#39;</span><span class="p">:</span> <span class="p">[]})</span>
+</pre></div>
+
+
+<p>For sample size values in range of 5 to 100 with a step of 10, I perform 500 simulations of sampling the size of values from <code>mass_values</code>. For each simulation, I calculate the standard deviation and store all those standard deviation values in the <code>df</code> DataFrame.</p>
+<div class="highlight"><pre><span></span><span class="n">iterations_per_sample_size</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">sample_size_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">sample_size</span> <span class="ow">in</span> <span class="n">sample_size_range</span><span class="p">:</span>
+    <span class="n">sample_standard_deviations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iterations_per_sample_size</span><span class="p">):</span>
+        <span class="n">random_sample_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">mass_values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">sample_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">random_sample_values</span><span class="p">)</span>
+        <span class="n">sample_standard_deviations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_std_dev</span><span class="p">)</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sample_size&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">sample_size</span><span class="p">]</span><span class="o">*</span><span class="n">iterations_per_sample_size</span><span class="p">,</span> <span class="s1">&#39;standard_deviation&#39;</span><span class="p">:</span> <span class="n">sample_standard_deviations</span><span class="p">})</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Prevew the first few rows of <code>df</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sample_size</th>
+      <th>standard_deviation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.0</td>
+      <td>3407.783929</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5.0</td>
+      <td>1980.817541</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5.0</td>
+      <td>1032.042658</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5.0</td>
+      <td>3267.443921</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>2175.489702</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Convert all the <code>sample_size</code> values from float to int data type.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sample_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;sample_size&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Visualize Standard Deviation Distributions of Various Sample Sizes Compared to Population Standard Deviation</h4>
+<p>The visualization below shows the distribution of standard deviation values for various sample sizes. As the sample size increases, there's decreased variability in the standard deviation values. Also, as the sample size increases, the median of the standard deviation values becomes closer to the population mean. </p>
+<p>For most small sample sizes, the median standard deviation is fairly far off from the population standard deviation. This indicates there's a slight bias in using the population standard deviation equation for samples.</p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;sample_size&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;standard_deviation&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Standard Deviations (using Pop. Std. Dev. Equation)</span><span class="se">\n</span><span class="s2">of Various Sample Sizes Compared to Population Std. Dev.&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample size&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;standard deviation&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">pop_std_dev</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;population standard deviation&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;firebrick&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="bessels_correction_files/bessels_correction_42_0.png"></p>
+<h4>Visualize Median Standard Deviation Values of Various Sample Sizes Compared to Population Standard Deviation</h4>
+<p>This visualization below compares the median standard deviation value of various sample sizes compared to the population standard deviation. There's still bias in using small sample sizes and using the population standard deviation equation to calculate the standard deviations of samples. </p>
+<div class="highlight"><pre><span></span><span class="n">median_std_dev_of_same_size_samples</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">sample_size</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;sample_size&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">median</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sample_size&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">sample_size</span><span class="p">][</span><span class="s1">&#39;standard_deviation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+    <span class="n">median_std_dev_of_same_size_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">median</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sample_size_range</span><span class="p">,</span> <span class="n">median_std_dev_of_same_size_samples</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;sample size standard deviation&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">pop_std_dev</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;population standard deviation&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;firebrick&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Median Standard Deviation (using Pop. Std. Dev. Equation)</span><span class="se">\n</span><span class="s2">of Various Sample Sizes Compared to Population Std. Dev.&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;sample size&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;median standard deviation&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">2200</span><span class="p">,</span> <span class="mi">2900</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="bessels_correction_files/bessels_correction_46_0.png"></p>
+<h3>Why <span class="math">\(n-1\)</span></h3>
+<p>The <strong>sample standard deviation</strong> equation is:</p>
+<div class="math">$$ s = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(x_{i}-\bar{x})^{2}} $$</div>
+<p>Why <span class="math">\(n-1\)</span>?</p>
+<p>In the simulation below, I try out various values in place of the <span class="math">\(1\)</span> value in the <span class="math">\(n-1\)</span> component and examine the median sample standard deviation values.</p>
+<p>First, I create an empty DataFrame with columns <code>degree_of_freedom</code> and <code>standard_deviation</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;degree_of_freedom&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;standard_deviation&#39;</span><span class="p">:</span> <span class="p">[]})</span>
+</pre></div>
+
+
+<h3>compare how dof is equivalent to 1 in formula</h3>
+<p>In the NumPy <code>std()</code> method, there's an argument called <code>ddof</code> which means delta degrees of freedom. The divisor <span class="math">\(n-1\)</span> component in the equation above is the same as <code>n - ddof</code> for use in the <code>std()</code> method. By default, <code>ddof</code> is zero - the proper divisor for the population standard deviation equation. A <code>ddof</code> of 1 is equivalent to the <span class="math">\(n-1\)</span> componenet in the sample standard deviation equation.</p>
+<p>With the code below, for degrees of freedom values from 0 to 6 with a step of 1, I perform 500 simulations of sampling 60 values from <code>mass_values</code>. For each simulation, I calculate the standard deviation value and store all those standard deviation values in the <code>df3</code> DataFrame.</p>
+<div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">iterations_per_degree_of_freedom</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">dof_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">degree_of_freedom</span> <span class="ow">in</span> <span class="n">dof_range</span><span class="p">:</span>
+    <span class="n">sample_standard_deviations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iterations_per_degree_of_freedom</span><span class="p">):</span>
+        <span class="n">random_sample_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">mass_values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">sample_std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">random_sample_values</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="n">degree_of_freedom</span><span class="p">)</span>
+        <span class="n">sample_standard_deviations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_std_dev</span><span class="p">)</span>
+    <span class="n">df4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;degree_of_freedom&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">degree_of_freedom</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_standard_deviations</span><span class="p">),</span> <span class="s1">&#39;standard_deviation&#39;</span><span class="p">:</span> <span class="n">sample_standard_deviations</span><span class="p">})</span>
+    <span class="n">df3</span> <span class="o">=</span> <span class="n">df3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df4</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+
+<p>For each degree of freedom, I calculate its median standard deviation from the simulations above and store them in a list <code>median_std_dev_of_same_dof</code>.</p>
+<div class="highlight"><pre><span></span><span class="n">median_std_dev_of_same_dof</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">degree_of_freedom</span> <span class="ow">in</span> <span class="n">df3</span><span class="p">[</span><span class="s1">&#39;degree_of_freedom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">median</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;degree_of_freedom&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">degree_of_freedom</span><span class="p">][</span><span class="s1">&#39;standard_deviation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+    <span class="n">median_std_dev_of_same_dof</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">median</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Convert all the <code>degree_of_freedom</code> values from float to int data type.</p>
+<div class="highlight"><pre><span></span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;degree_of_freedom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="s1">&#39;degree_of_freedom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</pre></div>
+
+
+<p>This visualization below compares the median standard deviation value of various degree of freedoms used in the sample standard deviation equation compared to the population standard deviation. It's clear that at 1 degree of freedom, equivalent to <span class="math">\(n-1\)</span> our sample standard deviation is an unbiased estimator of the population standard deviation since the values are so close.</p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dof_range</span><span class="p">,</span> <span class="n">median_std_dev_of_same_dof</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;degree of freedom standard deviation&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">pop_std_dev</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;population standard deviation&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;firebrick&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Median Standard Deviation using Sample Std. Dev. Equation</span><span class="se">\n</span><span class="s2">with Various Degree of Freedom Values&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;degree of freedom&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;median standard deviation&quot;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="c1"># plt.ylim(2200, 2900)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="bessels_correction_files/bessels_correction_57_0.png"></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </div>
+</section>
+
+  </div>
+  
+  <!-- start of footer section -->
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+      Thank you for reading my content! This project is available on <a href="https://github.com/frieds/frieds.github.io">GitHub</a>.
+      <br/>
+      Copyright &copy; Dan Friedman,
+      <time datetime="2020">2020</time>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+
+  <!-- This jQuery line finds any span that contains code highlighting classes and then selects the parent <pre> tag and adds a border and background. This is done as a workaround to visually distinguish the code inputs and outputs -->
+  <!-- <script>
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "border", "1px solid #038f6d" );
+    $( ".hll, .n, .c, .err, .k, .o, .cm, .cp, .c1, .cs, .gd, .ge, .gr, .gh, .gi, .go, .gp, .gs, .gu, .gt, .kc, .kd, .kn, .kp, .kr, .kt, .m, .s, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv, .ow, .w, .mf, .mh, .mi, .mo, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .bp, .vc, .vg, .vi, .il" ).parent( "pre" ).css( "background-color", "#d6eed9" );
+  </script> -->
+
+  <!--removes the numbered input element for each code block-->
+  <script>
+  $(".prompt").remove();
+  </script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://dfrieds.com/theme/js/ie10-viewport-bug-workaround.js"></script>
+
+</body>
+
+</html>

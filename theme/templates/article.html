@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }} - {{ article.category }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<section id="content" class="body">
+  <header>
+    <div class="posttype"> 
+    {{ article.category }} {{ article.subcategory }} {{ article.posttype }}
+    </div>
+    
+
+    <h1 class="articleh1">
+      {{ article.title }}
+    </h1>
+
+    <ul class ="row article_info">
+      
+      <li>
+        {{ article.date.strftime("%B %-d, %Y") }}&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+        {% if article.ert %} {{ article.ert }} read {% endif %}  {{ article.ert }}
+      </li>
+      <li class="tagarticle">
+        Key Terms: {% for tag in article.tags %}
+        {% if loop.last %}
+        {{tag}}
+        {% else %}
+        {{tag}},
+        {% endif %}
+        {% endfor %}
+      </li>
+    </ul>
+  </header>
+
+  <div class='article_content'>
+    {{ article.content }}
+  </div>
+</section>
+
+{% endblock %}
