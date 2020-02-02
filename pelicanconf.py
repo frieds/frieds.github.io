@@ -32,8 +32,6 @@ RELATIVE_URLS = True
 
 # BELOW ALL USED TO BE IN PUBLISH!!!
 
-
-
 DELETE_OUTPUT_DIRECTORY = True
 
 STATIC_PATHS = ['extra',
@@ -77,7 +75,7 @@ PLUGINS = ['sitemap', 'pelican-ert', "render_math", 'pelican-ipynb.markup']
 # wpm is words per minutes
 ERT_WPM = 220
 logging.debug("Use ERT_WPM: {0}".format(ERT_WPM))
-ERT_FORMAT = '{time}' # we include the word read afterwards in our html
+ERT_FORMAT = '{time}' # we inlcude the word read afterwards in our html
 ERT_INT = True
 
 DIRECT_TEMPLATES = ['index']
