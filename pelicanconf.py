@@ -73,7 +73,7 @@ PLUGINS = ['sitemap', 'pelican-ert', "render_math", 'pelican-ipynb.markup']
 
 # reading time estimate plugin called pelican-ert
 # wpm is words per minutes
-ERT_WPM = 220
+ERT_WPM = 550
 logging.debug("Use ERT_WPM: {0}".format(ERT_WPM))
 ERT_FORMAT = '{time}' # we inlcude the word read afterwards in our html
 ERT_INT = True

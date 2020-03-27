@@ -30,11 +30,3 @@ SITEMAP = {
         'pages': 'daily'
     }
 }
-
-
-
-
-# Following items are often useful when publishing
-
-#DISQUS_SITENAME = ""
-#GOOGLE_ANALYTICS = ""
