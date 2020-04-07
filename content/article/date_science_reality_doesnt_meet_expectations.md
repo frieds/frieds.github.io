@@ -39,9 +39,9 @@ Below are seven most common (and at times flagrant) ways that data science has f
 
 Some people think “data science” is all ML, AI and/or custom algorithms. Others think it’s simply analytics. Many data scientists may spend a significant portion of their time on Extract-Transform-Load (ETL). The truth is - all of these things are possible! 
 
-Due to this, in interviews, you can be asked about any of these topics and more! In 50+ interviews for data related jobs, I’ve been asked about AB testing, SQL analytics questions, optimizing SQL queries, how to code a game in Python, Logistic Regression, Gradient Boosted Trees, data structures and algorithms programming problems and much more! 
+Due to this lack of clarity, in interviews, you can be asked about any of these topics and more! In 50+ interviews for data related jobs, I’ve been asked about AB testing, SQL analytics questions, optimizing SQL queries, how to code a game in Python, Logistic Regression, Gradient Boosted Trees, data structures and/or algorithms programming problems! 
 
-It’s daunting to study a wide breadth and still have depth. Keep your chin up! Expect interviews to be confusing and frustrating, as there’s no de facto set of problems and questions. Ask your hiring managers for specific details on the interview process, technologies you’ll be asked to use and why those will be asked. The more context you have, the better you can prepare to ace it! 
+It’s daunting to study a wide breadth of concepts and still have depth. Keep your chin up! Expect interviews to be confusing and frustrating, as there’s no de facto set of problems and questions. Ask your hiring managers for specific details on the interview process, technologies you’ll be asked to use and why those will be asked. The more context you have, the better you can prepare to ace it! 
 
 On the job, you may be asked to solve a hard problem and have minimal to no direction on how to reach the solution. Because people don’t know what data science does, you may have to support yourself with work in devops, software engineering, data engineering, etc. If you end up as the only “data person” on the team, you may want to start building out a cohort of external mentors before you arrive on the job who can advise you as you proceed into uncharted waters. 
 
@@ -91,9 +91,9 @@ Moreover, you may quickly realize much of this work is repetitive and while time
 
 Two ways to interpret this section’s header come to mind. 
 
-For one, Data Scientists are often in “support” roles. Most organizations make the majority of their decisions on intuition that stems from past readings and personal experiences - not from a Data Scientist’s analyses. I’d be shocked if you could find a small to medium size organization that acted otherwise. Generally, you want to err on the side of being decisive rather than being overly cautious in order to succeed in business. (Though, obviously this can backfire on you.) As a Data Scientist in the org, are you essential to the business? Probably not. The business could go on for a while and survive without you. Sales will still be made, features will still get built, customer support will handle customer concerns, etc. 
+For one, Data Scientists are often in “support” roles. Most organizations make the majority of their decisions on intuition that stems from past readings and personal experiences - not from a Data Scientist’s analyses. I’d be shocked if you could find a small to medium size organization that acted otherwise. Generally, you want to err on the side of being decisive rather than being overly cautious in order to succeed in business. (Though, this can backfire on you.) As a Data Scientist in the org, are you essential to the business? Probably not. The business could go on for a while and survive without you. Sales will still be made, features will still get built, customer support will handle customer concerns, etc. 
 
-When I first started, I initially thought I’d be incredibly valued as the gatekeeper for helping justify business decisions. However, that was rarely the case. DJ Patil, the former Chief Data Scientist at the White House, once stated in a podcast episode that you as a Data Scientist should try to find a situation to be incredibly valuable on the job! It’s tough to find that from the outskirts of applying to jobs, but internally, you can make inroads supporting stakeholders with evidence for their decisions!
+When I first started, I thought I’d be incredibly valued as the gatekeeper for helping justify business decisions. However, that was rarely the case. DJ Patil, the former Chief Data Scientist at the White House, once stated in a podcast episode that you as a Data Scientist should try to find a situation to be incredibly valuable on the job! It’s tough to find that from the outskirts of applying to jobs, but internally, you can make inroads supporting stakeholders with evidence for their decisions!
 
 Another challenge being usually a “support” role in a company is quantifying your impact. A common data science task is to help a Product Manager answer a question about some recent activity in the data. You can also issue a product recommendation based on your insights. So what? How do you measure whether this work of yours was impactful? 
 
@@ -138,7 +138,7 @@ Even my friends at big tech startups have complained about the same problems wit
 
 Imagine wanting to investigate a hunch in the data and having to wait hours for it! Then, imagine you made a mistake in the SQL query, had to re-implement it and wait hours again! That’s practically waiting a whole day without even getting the data! 
 
-On the job, if you notice poor infrastructure, speak up to your manager early on. Clearly document the problem, and try to incorporate a data engineering, infrastructure, or devops team to help resolve the issue! 
+On the job, if you notice poor infrastructure, speak up to your manager early on. Clearly document the problem, and try to incorporate a data engineering, infrastructure, or devops team to help resolve the issue! I'd also encourage you to learn these skills too!
 
 ### 7. Data work can be profoundly unethical. Moral courage required 
 
@@ -164,4 +164,4 @@ Additional and somewhat similar articles to this are:
 - <a href="http://veekaybee.github.io/2019/02/13/data-science-is-different/" target="_blank">Data science is different now</a>
 - <a href="https://medium.com/@datasocietyco/the-plight-of-the-frustrated-data-scientist-320428bde6e0" target="_blank">The plight of the Frustrated Data Scientist</a>
 
-I’d like to thank <a href="https://www.naveed.dev/" target="_blank">Naveed Nadjmabadi</a>, <a href="http://dateworking.com/" target="_blank">Steve Dean</a>, Andrew Ju, Julia Xu, and <a href="http://emilydegrandpre.com" target="_blank">Em deGrandpré</a> for their advice on drafts.
+I’d like to thank <a href="https://www.naveed.dev/" target="_blank">Naveed Nadjmabadi</a>, <a href="http://dateworking.com/" target="_blank">Steve Dean</a>, Andrew Ju, Julia Xu, <a href="http://emilydegrandpre.com" target="_blank">Em deGrandpré</a>, and <a href="https://canzhiye.com/" target="_blank">Canzhi Ye</a> for their advice on drafts.
