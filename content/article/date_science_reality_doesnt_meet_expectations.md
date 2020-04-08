@@ -1,6 +1,6 @@
 Title: Data Science: Reality Doesn't Meet Expectations
 Slug: data-science-reality-vs-expectations
-Summary: Sevem common ways a data science role may not meet your expectations through tens of data scientist interviews and anecdotes from popular median
+Summary: Seven common ways a data science role may not meet your expectations through tens of data scientist interviews and anecdotes from popular media
 Date: 2020-04-07 1:45
 Category: Articles
 Keywords: data science reality expectations
