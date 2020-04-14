@@ -34,18 +34,18 @@
   <meta name="twitter:site" content="@_DanFriedman">
   <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/950134514113691648/7dt7ECh2_400x400.jpg" />
 
-  <meta name="keywords" content="dictionary methods python">
+  <meta name="keywords" content="two sums 2 leetcode python">
 
-  <meta name="description" content="Dictionary methods to retrive keys, values and loop over key value pairs">
-  <meta property="og:description"  content="Dictionary methods to retrive keys, values and loop over key value pairs">
-  <meta name="twitter:description" content="Dictionary methods to retrive keys, values and loop over key value pairs">
+  <meta name="description" content="Walkthrough of easy python algorithm problem from Leetcode to find two values in a list that add up to a target value">
+  <meta property="og:description"  content="Walkthrough of easy python algorithm problem from Leetcode to find two values in a list that add up to a target value">
+  <meta name="twitter:description" content="Walkthrough of easy python algorithm problem from Leetcode to find two values in a list that add up to a target value">
 
-  <meta property="og:title" content="Dictionary Methods">
-  <meta name="twitter:title" content="Dictionary Methods">
+  <meta property="og:title" content="Two Sum II (via Leetcode)">
+  <meta name="twitter:title" content="Two Sum II (via Leetcode)">
 
-  <link rel="canonical" href="https://dfrieds.com/python/dictionary-methods.html"/>
+  <link rel="canonical" href="https://dfrieds.com/python/two-sums2.html"/>
 
-  <title>Dictionary Methods - Python</title>
+  <title>Two Sum II (via Leetcode) - Python</title>
 
   
 
@@ -144,21 +144,24 @@
 <section id="content" class="body">
   <header>
     <div class="posttype"> 
-    Python Beginner Concepts Tutorial
+    Python Beginner Algorithms Tutorial
     </div>
     
 
     <h1 class="articleh1">
-      Dictionary Methods
+      Two Sum II (via Leetcode)
     </h1>
 
     <ul class ="row article_info">
       
       <li>
-        March 26, 2018
+        April 13, 2020
       </li>
       <li class="tagarticle">
-        Key Terms:         dictionaries
+        Key Terms:         functions,
+        loops,
+        lists,
+        sets
       </li>
     </ul>
   </header>
@@ -1278,7 +1281,11 @@ h6:hover .anchor-link {
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Dictionaries have methods that allow for modification of dictionary structures. I'll cover a few important ones in this tutorial.</p>
+<p>Problem found on <a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank">Leetcode</a>.</p>
+<p><strong>Problem statement</strong>:</p>
+<p>Given a list of integers that is sorted in ascending order, find two numbers in the list that add up to a specific target number.</p>
+<p>The function should return the indices of the tow numbers such that they add up to the target. The first index returned should be smaller than the next one. For this problem, assume index starts at 1, not traditional zero-based indexing.</p>
+<p>Assume a solution exists.</p>
 
 </div>
 </div>
@@ -1286,24 +1293,37 @@ h6:hover .anchor-link {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Access-dictionary-keys">Access dictionary keys<a class="anchor-link" href="#Access-dictionary-keys">&#182;</a></h4>
+<h4 id="Test-Cases">Test Cases<a class="anchor-link" href="#Test-Cases">&#182;</a></h4>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># assert two_sum(numbers=[0, 3, 5, 9], target=8) == [2, 3]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>keys()</code> method outputs a <code>dict_keys</code> object that presents a list of a dictionary's keys.</p>
+<p>The sum of <code>3</code> and <code>5</code> is the target value of <code>8</code>. Since this is one-based indexing, <code>3</code> and <code>5</code> are respectively at indices <code>2</code> and <code>3</code>.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dan</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Dan Friedman&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;San Francisco&#39;</span><span class="p">,</span> <span class="s1">&#39;profession&#39;</span><span class="p">:</span> <span class="s1">&#39;Data Scientist&#39;</span><span class="p">}</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># assert two_sum(numbers=[9, 10, 5, 15], target=25) == [2, 4]</span>
 </pre></div>
 
     </div>
@@ -1313,129 +1333,74 @@ h6:hover .anchor-link {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dan</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># assert two_sum(numbers=[-3, -1, 0, 3], target=-4) == [1, 2]</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[6]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>dict_keys([&#39;name&#39;, &#39;location&#39;, &#39;profession&#39;])</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Access-dictionary-values">Access dictionary values<a class="anchor-link" href="#Access-dictionary-values">&#182;</a></h4>
+<h3 id="Solution-#1---the-Brute-Force-Way">Solution #1 - the Brute Force Way<a class="anchor-link" href="#Solution-#1---the-Brute-Force-Way">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>values()</code> method outputs a <code>dict_values</code> object that presents a list of a dictionary's values.</p>
-
+<h4 id="Pseudocode">Pseudocode<a class="anchor-link" href="#Pseudocode">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dan</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create function that takes in list of numbers and target</span>
+    <span class="c1"># for each index and num in numbers:</span>
+        <span class="c1"># for every *other* index2 and num2 in numbers:</span>
+            <span class="c1"># if num and num2 add up to target</span>
+                <span class="c1"># return two indices as list</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[7]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>dict_values([&#39;Dan Friedman&#39;, &#39;San Francisco&#39;, &#39;Data Scientist&#39;])</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Loop-over-key-value-pairs">Loop over key-value pairs<a class="anchor-link" href="#Loop-over-key-value-pairs">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>items()</code> method outputs a <code>dict_items</code> object that's a sequence of tuples in which each tuple is a key-value pair.</p>
-
+<h4 id="Code">Code<a class="anchor-link" href="#Code">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dan</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">two_sum</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    <span class="c1"># outer loop ensures we don&#39;t reach last num in numbers b/c nothing to compare it to</span>
+    <span class="c1"># index starts at base zero</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numbers</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="c1"># below loop ensures we don&#39;t compare num to itself and only examine following nums</span>
+        <span class="c1"># index2 starts at num that&#39;s index+1 value in each iteration...</span>
+        <span class="k">for</span> <span class="n">index2</span><span class="p">,</span> <span class="n">num2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">+</span> <span class="n">num2</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+                <span class="c1"># add 1 to each index value b/c of one-based indexing</span>
+                <span class="c1"># 2nd list item started at index+1 and could iterate to index2 indices further; add 1 at end too</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">index2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[8]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>dict_items([(&#39;name&#39;, &#39;Dan Friedman&#39;), (&#39;location&#39;, &#39;San Francisco&#39;), (&#39;profession&#39;, &#39;Data Scientist&#39;)])</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -1443,41 +1408,179 @@ h6:hover .anchor-link {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can iterate over this <code>dict_items</code> object in a <code>for</code> loop.</p>
+<h4 id="Complexity">Complexity<a class="anchor-link" href="#Complexity">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I would generally <em>not</em> recommend solving the problem this way in a coding interview or using a similar solution in production. I demonstrated it this way simply to show a solution with minimal code and logic needed to arrive at the correct result.</p>
+<p>Let <code>n</code> be the count of values in <code>numbers</code>.</p>
+<p><strong>Time complexity</strong> at worst case is O(n^2) because for each element in <code>numbers</code>, I compare it to <em>nearly</em> every other number in <code>numbers</code>.</p>
+<p><strong>Space complexity</strong> is nothing.</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Run-Test-Cases">Run Test Cases<a class="anchor-link" href="#Run-Test-Cases">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dan</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A key of </span><span class="si">{0}</span><span class="s2"> corresponds to a value of </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">two_sum</span><span class="p">(</span><span class="n">numbers</span><span class="o">=</span><span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">two_sum</span><span class="p">(</span><span class="n">numbers</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">target</span><span class="o">=-</span><span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
 
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>A key of name corresponds to a value of Dan Friedman
-A key of location corresponds to a value of San Francisco
-A key of profession corresponds to a value of Data Scientist
-</pre>
+    </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Solution-#2---a-More-Performant-Way">Solution #2 - a More Performant Way<a class="anchor-link" href="#Solution-#2---a-More-Performant-Way">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Pseudocode">Pseudocode<a class="anchor-link" href="#Pseudocode">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create a function that takes in a list of numbers and a target</span>
+
+    <span class="c1"># we want to keep track of numbers iterated over in a set to allow for easy O(1) lookups...</span>
+    
+    <span class="c1"># create an empty set to hold nums iterated over</span>
+    <span class="c1"># iterate over index and num in numbers:</span>
+        <span class="c1"># if target-num is in set:</span>
+            <span class="c1"># break out of loop</span>
+        <span class="c1"># else:</span>
+            <span class="c1"># add num to set</span>
+            
+    <span class="c1"># lookup index of this greater value in list...</span>
+    <span class="c1"># for index2 and num2 in numbers:</span>
+        <span class="c1"># if num2 == target-num and index is not equal to index2:</span>
+            <span class="c1"># this is the value we want to find to add up to sum</span>
+            <span class="c1"># return [index, index2]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Code">Code<a class="anchor-link" href="#Code">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">two_sum</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    <span class="n">nums_covered</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numbers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">target</span><span class="o">-</span><span class="n">num</span> <span class="ow">in</span> <span class="n">nums_covered</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nums_covered</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">index2</span><span class="p">,</span> <span class="n">num2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numbers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num2</span> <span class="o">==</span> <span class="n">target</span><span class="o">-</span><span class="n">num</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">!=</span> <span class="n">index2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">index2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Alternatively, this code could be written without a second iteration over <code>numbers</code>. Instead, I could use a dictionary to store all the index positions for each <code>num</code> in <code>numbers</code>. So when I find a number in iteration and in the set that add to sum, look up the number found from the set in the dictionary as an O(1) time lookup to find its corresponding index.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Complexity">Complexity<a class="anchor-link" href="#Complexity">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Time complexity</strong> is at worst cast O(2n) because there can be nearly two complete iterations over <code>numbers</code>.</p>
+<p><strong>Space complexity</strong> is O(n) because the set created, <code>nums_covered</code> could at worst case hold nearly all values in <code>numbers</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Run-Test-Cases">Run Test Cases<a class="anchor-link" href="#Run-Test-Cases">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">two_sum</span><span class="p">(</span><span class="n">numbers</span><span class="o">=</span><span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">two_sum</span><span class="p">(</span><span class="n">numbers</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">target</span><span class="o">=-</span><span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
