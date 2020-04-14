@@ -164,6 +164,6 @@ Additional and somewhat similar articles to this are:
 - <a href="http://veekaybee.github.io/2019/02/13/data-science-is-different/" target="_blank">Data science is different now</a>
 - <a href="https://medium.com/@datasocietyco/the-plight-of-the-frustrated-data-scientist-320428bde6e0" target="_blank">The plight of the Frustrated Data Scientist</a>
 
-If you're interested in working with me on data engineering & science, please reach out: dan [@] dfrieds.com. 
+If you're interested in hiring me for data engineering or science, please reach out: dan [@] dfrieds.com. 
 
 I’d like to thank <a href="https://www.naveed.dev/" target="_blank">Naveed Nadjmabadi</a>, <a href="http://dateworking.com/" target="_blank">Steve Dean</a>, Andrew Ju, Julia Xu, <a href="http://emilydegrandpre.com" target="_blank">Em deGrandpré</a>, and <a href="https://canzhiye.com/" target="_blank">Canzhi Ye</a> for their advice on drafts.

@@ -69,14 +69,8 @@ PLUGIN_PATHS = ['pelican-plugins']
 # pelican-ert is for estimating reading time
 # render_math is for rendering math equations using latex
 # ipynb.markup helps convert ipynb files to markdown for site generation
-PLUGINS = ['sitemap', 'pelican-ert', "render_math", 'pelican-ipynb.markup']
+PLUGINS = ['sitemap', "render_math", 'pelican-ipynb.markup']
 
-# reading time estimate plugin called pelican-ert
-# wpm is words per minutes
-ERT_WPM = 350
-logging.debug("Use ERT_WPM: {0}".format(ERT_WPM))
-ERT_FORMAT = '{time}' # we inlcude the word read afterwards in our html
-ERT_INT = True
 
 DIRECT_TEMPLATES = ['index']
 
