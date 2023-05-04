@@ -19,6 +19,7 @@ My technical skills: Python, serverless patterns, Serverless Framework, AWS Lamb
 Things I built recently for fun:
 
 - CLI card game of War. I wanted to practice more OOP, use Enums and design a game. [Github repo](https://github.com/frieds/card_game_war)
+
 - Automate creation of sunrise and sunset calendar events, and build a one-click iOS app (through Apple Shortcuts) to recommend what clothes to wear based on the weather. [GitHub repo](https://github.com/frieds/hello_day)
 
 Find me online: [Twitter](https://twitter.com/_DanFriedman), [LinkedIn](https://www.linkedin.com/in/dfrieds/) and [GitHub](https://github.com/frieds)
