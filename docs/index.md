@@ -8,17 +8,21 @@ There's lots of real-world examples, digestible small code snippets and plentifu
 
 Click on a link in the left sidebar to begin your journey.
 
-Much of my content is very old - even 5+ years stale. So it's not always representative of my current knowledge or should be a single source of truth on a topic.
+UpMuch of my content is very old - even 5+ years stale. So it's not always representative of my current knowledge and shouldn't be a single source of truth on a topic.
+
+Beginning May 2023, I'm posting more and will highlight new content below.
 
 ### About Me
 
-I'm an experienced software engineer with a focus on backend and data applications. Previously, I spent a few years as a Data Scientist, mostly doing ETL and analytics.
+I'm an experienced software engineer with a focus on backend and data applications. Before that, I spent a few years as a Data Scientist, mostly doing ETL and analytics.
 
-My technical skills: Python, serverless patterns, Serverless Framework, AWS Lambda, SQS, Postgres, DynamoDB, SQL, REST APIs, Snowflake, dbt and observability with Datadog and PagerDuty.
+My technical skills: Python, REST APIs, ETL & ELT, AWS Lambda, SQS, Postgres, DynamoDB, SQL, serverless patterns, Serverless Framework, Snowflake, dbt and observability with Datadog and PagerDuty.
 
 Things I built recently for fun:
 
-- CLI card game of War. I wanted to practice more OOP, use Enums and design a game. [Github repo](https://github.com/frieds/card_game_war)
+- CLI card game War. I wanted to practice more OOP, use Enums and design a game with unit tests. [GitHub repo](https://github.com/frieds/card_game_war)
+
+- CLI Minesweeper. [GitHub repo](https://github.com/frieds/minesweeper)
 
 - Automate creation of sunrise and sunset calendar events, and build a one-click iOS app (through Apple Shortcuts) to recommend what clothes to wear based on the weather. [GitHub repo](https://github.com/frieds/hello_day)
 
