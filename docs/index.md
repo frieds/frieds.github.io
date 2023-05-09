@@ -4,11 +4,11 @@
 
 Hi! I built this site to clearly document important concepts learned in data, programming and career advice.
 
-There's lots of real-world examples, digestible small code snippets and plentiful visualizations to make learning (hopefully) fun and easy! Enjoy!
+There's lots of real-world examples, digestible small code snippets and plentiful visualizations to make learning (hopefully) fun and easy!
 
 Click on a link in the left sidebar to begin your journey.
 
-UpMuch of my content is very old - even 5+ years stale. So it's not always representative of my current knowledge and shouldn't be a single source of truth on a topic.
+Much of my content is very old - even 5+ years stale. So it's not representative of my current knowledge and shouldn't be a single source of truth on a topic.
 
 Beginning May 2023, I'm posting more and will highlight new content below.
 
@@ -25,5 +25,7 @@ Things I built recently for fun:
 - CLI Minesweeper. [GitHub repo](https://github.com/frieds/minesweeper)
 
 - Automate creation of sunrise and sunset calendar events, and build a one-click iOS app (through Apple Shortcuts) to recommend what clothes to wear based on the weather. [GitHub repo](https://github.com/frieds/hello_day)
+
+What I'll publish next: a project using [Dagster](https://dagster.io) - "The cloud-native orchestrator for the whole development lifecycle, with integrated lineage and observability, a declarative programming model, and best-in-class testability."
 
 Find me online: [Twitter](https://twitter.com/_DanFriedman), [LinkedIn](https://www.linkedin.com/in/dfrieds/) and [GitHub](https://github.com/frieds)
