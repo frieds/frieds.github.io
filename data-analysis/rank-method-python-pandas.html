@@ -21,7 +21,7 @@
         <link rel="next" href="pivot-table-python-pandas.html">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.8">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.11">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ded33207.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.85bb2934.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a6bdf11c.min.css">
       
       
 
@@ -2316,8 +2316,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#find-rank-of-homes-sold-for-each-seller-by-close-date" class="md-nav__link">
-    Find Rank of Homes Sold for Each Seller by Close Date
+  <a href="#find-rank-of-home-close-date-by-each-seller" class="md-nav__link">
+    Find Rank of Home Close Date by Each Seller
   </a>
   
 </li>
@@ -2373,6 +2373,13 @@
           <li class="md-nav__item">
   <a href="#find-the-percent-rank-of-each-score-in-the-class" class="md-nav__link">
     Find the Percent Rank of Each Score in the Class
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-dense-rank-calculation-to-percentile-works" class="md-nav__link">
+    How the dense rank calculation to percentile works
   </a>
   
 </li>
@@ -2827,8 +2834,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#find-rank-of-homes-sold-for-each-seller-by-close-date" class="md-nav__link">
-    Find Rank of Homes Sold for Each Seller by Close Date
+  <a href="#find-rank-of-home-close-date-by-each-seller" class="md-nav__link">
+    Find Rank of Home Close Date by Each Seller
   </a>
   
 </li>
@@ -2884,6 +2891,13 @@
           <li class="md-nav__item">
   <a href="#find-the-percent-rank-of-each-score-in-the-class" class="md-nav__link">
     Find the Percent Rank of Each Score in the Class
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-dense-rank-calculation-to-percentile-works" class="md-nav__link">
+    How the dense rank calculation to percentile works
   </a>
   
 </li>
@@ -3998,7 +4012,7 @@ Licensed under the Apache License, Version 2.0.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[87]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4043,7 +4057,7 @@ import seaborn as sns</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[88]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4099,7 +4113,6 @@ import seaborn as sns</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>I'll create a small dataset of 8 real estate transactions that include a close date and seller name for each house sale.</p>
-<p>Take note that Julia sold 5 homes with some transactions on separate days. Lara also sold 2 homes on different days.</p>
 
 </div>
 </div>
@@ -4110,7 +4123,7 @@ import seaborn as sns</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[89]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4149,18 +4162,18 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>View entire <code>df</code>.</p>
+<p>Convert <code>close_date</code> column to datetime type in Python.</p>
 
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div  class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[90]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4175,9 +4188,53 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">])</span>
+</pre></div>
+<div id="cell-4" class="clipboard-copy-txt">df['close_date'] = pd.to_datetime(df['close_date'])</div>
+        
+        </div>
+    </div>
+
+</div>
+</div>
+
+</div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>View <code>df</code>.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+            <div class="zeroclipboard-container">
+                <clipboard-copy for="cell-5">
+                <div>
+                    <span class="notice" hidden>Copied!</span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                    </svg>
+                    </div>
+                </clipboard-copy>
+            </div>
             <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span>
 </pre></div>
-<div id="cell-4" class="clipboard-copy-txt">df</div>
+<div id="cell-5" class="clipboard-copy-txt">df</div>
         
         </div>
     </div>
@@ -4193,7 +4250,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[90]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 
 
 
@@ -4280,51 +4337,7 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Convert <code>close_date</code> column to datetime type in Python.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div  class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[91]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-            <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-5">
-                <div>
-                    <span class="notice" hidden>Copied!</span>
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                    </svg>
-                    </div>
-                </clipboard-copy>
-            </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">])</span>
-</pre></div>
-<div id="cell-5" class="clipboard-copy-txt">df['close_date'] = pd.to_datetime(df['close_date'])</div>
-        
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="find-rank-of-homes-sold-for-each-seller-by-close-date">Find Rank of Homes Sold for Each Seller by Close Date<a class="anchor-link" href="#find-rank-of-homes-sold-for-each-seller-by-close-date">&#182;</a></h4>
+<h4 id="find-rank-of-home-close-date-by-each-seller">Find Rank of Home Close Date by Each Seller<a class="anchor-link" href="#find-rank-of-home-close-date-by-each-seller">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -4335,10 +4348,8 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>I want to know the rank of each house sale <em>by person ordered by time</em>.</p>
-<p>Based on looking at the table above, Julia sold her first, second and third house on August 1st. On August 3rd, Julia sold her fourth house.</p>
-<p>For the <code>df</code> dataframe, I want to create a new column that shows the numerical rank values for each person's home sales by day. To do this, I group by the <code>seller_name</code> column, and apply the <code>rank()</code> method to the <code>close_date</code> colummn. I set the <code>rank()</code> argument <code>methond='first'</code> to rank the sales of houses per person, ordered by date, in the order they appear. The new column with rank values is called <code>rank_seller_by_close_date</code>.</p>
-<p>The <code>method='first'</code> for the <code>rank()</code> method for pandas series is equivalent to the <code>ROW_NUMBER()</code> window function in SQL.</p>
+<p>The rank action can be described as ranking the close dates within each seller group, based on the chronological order of the home sales.</p>
+<p>I group by the <code>seller_name</code> column, and apply the <code>rank()</code> method to the <code>close_date</code> colummn. Set argument <code>method</code> to <code>first</code> meaning which will rank house sales by <code>close_date</code> by ascending order. This is equivalent to the <code>ROW_NUMBER()</code> window function in SQL.</p>
 
 </div>
 </div>
@@ -4349,7 +4360,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[92]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4364,9 +4375,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;rank_seller_by_close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;seller_name&#39;</span><span class="p">)[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;seller_name&#39;</span><span class="p">)[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-6" class="clipboard-copy-txt">df['rank_seller_by_close_date'] = df.groupby('seller_name')['close_date'].rank(method='first')</div>
+<div id="cell-6" class="clipboard-copy-txt">df['seller__sale_date_rank'] = df.groupby('seller_name')['close_date'].rank(method='first')</div>
         
         </div>
     </div>
@@ -4382,18 +4393,18 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Below I output <code>df</code> and highlight the <code>rank_seller_by_close_date</code> with shades of green designated by numerical value. The higher the rank value, the darker the green highlighted background. <code>df</code> is ordered by <code>close_date</code>.</p>
+<p>Convert that new column from float to integer so it's easier to read.</p>
 
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div  class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[93]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4408,102 +4419,14 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;rank_seller_by_close_date&#39;</span><span class="p">]])</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank&#39;</span><span class="p">],</span> <span class="n">downcast</span><span class="o">=</span><span class="s1">&#39;integer&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-7" class="clipboard-copy-txt">df.style.background_gradient(cmap=cm, subset=pd.IndexSlice[:, ['rank_seller_by_close_date']])</div>
+<div id="cell-7" class="clipboard-copy-txt">df['seller__sale_date_rank'] = pd.to_numeric(df['seller__sale_date_rank'], downcast='integer')</div>
         
         </div>
     </div>
 
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[93]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<style  type="text/css" >
-    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col2 {
-            background-color:  #e9fce9;
-        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col2 {
-            background-color:  #e9fce9;
-        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col2 {
-            background-color:  #d3f8d3;
-        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col2 {
-            background-color:  #e9fce9;
-        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col2 {
-            background-color:  #bcf5bc;
-        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col2 {
-            background-color:  #d3f8d3;
-        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col2 {
-            background-color:  #a6f1a6;
-        }    #T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col2 {
-            background-color:  #90ee90;
-        }</style>  
-<table id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5f" > 
-<thead>    <tr> 
-        <th class="blank level0" ></th> 
-        <th class="col_heading level0 col0" >close_date</th> 
-        <th class="col_heading level0 col1" >seller_name</th> 
-        <th class="col_heading level0 col2" >rank_seller_by_close_date</th> 
-    </tr></thead> 
-<tbody>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row0" class="row_heading level0 row0" >0</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col0" class="data row0 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col1" class="data row0 col1" >Lara</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow0_col2" class="data row0 col2" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row1" class="row_heading level0 row1" >1</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col0" class="data row1 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col1" class="data row1 col1" >Julia</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow1_col2" class="data row1 col2" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row2" class="row_heading level0 row2" >2</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col0" class="data row2 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col1" class="data row2 col1" >Julia</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow2_col2" class="data row2 col2" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row3" class="row_heading level0 row3" >3</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col0" class="data row3 col0" >2012-08-02 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col1" class="data row3 col1" >Emily</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow3_col2" class="data row3 col2" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row4" class="row_heading level0 row4" >4</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col0" class="data row4 col0" >2012-08-03 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col1" class="data row4 col1" >Julia</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow4_col2" class="data row4 col2" >3</td> 
-    </tr>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row5" class="row_heading level0 row5" >5</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col0" class="data row5 col0" >2012-08-04 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col1" class="data row5 col1" >Lara</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow5_col2" class="data row5 col2" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row6" class="row_heading level0 row6" >6</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col0" class="data row6 col0" >2012-08-05 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col1" class="data row6 col1" >Julia</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow6_col2" class="data row6 col2" >4</td> 
-    </tr>    <tr> 
-        <th id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5flevel0_row7" class="row_heading level0 row7" >7</th> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col0" class="data row7 col0" >2012-08-07 00:00:00</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col1" class="data row7 col1" >Julia</td> 
-        <td id="T_bbf37b36_5f9a_11e9_b74c_784f4368ca5frow7_col2" class="data row7 col2" >5</td> 
-    </tr></tbody> 
-</table> 
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div>
@@ -4514,8 +4437,7 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>It's difficult to easily see the order of ranks for each seller by date. Below, I output <code>df</code> sorted by <code>seller_name</code> and then <code>rank_seller_by_close_date</code>.</p>
-<p>Much better! It's clear Julia's home sales are ranked by from oldest to newest. Even though she made two homes sales on August 1st, one is given a rank value of <code>1</code> and then next <code>2</code>.</p>
+<p>To understand rank better, let's just examine Julia's sales. Now we have a rank column to represent the order for each of Julia's close dates. There were two closes on <code>2012-08-01</code>, a &quot;tie&quot;, and ranks are <code>1</code> and <code>2</code>.</p>
 
 </div>
 </div>
@@ -4526,7 +4448,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[94]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4541,9 +4463,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;seller_name&#39;</span><span class="p">,</span> <span class="s1">&#39;rank_seller_by_close_date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;rank_seller_by_close_date&#39;</span><span class="p">]])</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;seller_name&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Julia&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;seller__sale_date_rank&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-8" class="clipboard-copy-txt">df.sort_values(by=['seller_name', 'rank_seller_by_close_date']).style.background_gradient(cmap=cm, subset=pd.IndexSlice[:, ['rank_seller_by_close_date']])</div>
+<div id="cell-8" class="clipboard-copy-txt">df[df['seller_name']=='Julia'].sort_values('seller__sale_date_rank')</div>
         
         </div>
     </div>
@@ -4559,78 +4481,68 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[94]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
 
 
 
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<style  type="text/css" >
-    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col2 {
-            background-color:  #e9fce9;
-        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col2 {
-            background-color:  #e9fce9;
-        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col2 {
-            background-color:  #d3f8d3;
-        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col2 {
-            background-color:  #bcf5bc;
-        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col2 {
-            background-color:  #a6f1a6;
-        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col2 {
-            background-color:  #90ee90;
-        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col2 {
-            background-color:  #e9fce9;
-        }    #T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col2 {
-            background-color:  #d3f8d3;
-        }</style>  
-<table id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5f" > 
-<thead>    <tr> 
-        <th class="blank level0" ></th> 
-        <th class="col_heading level0 col0" >close_date</th> 
-        <th class="col_heading level0 col1" >seller_name</th> 
-        <th class="col_heading level0 col2" >rank_seller_by_close_date</th> 
-    </tr></thead> 
-<tbody>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row0" class="row_heading level0 row0" >3</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col0" class="data row0 col0" >2012-08-02 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col1" class="data row0 col1" >Emily</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow0_col2" class="data row0 col2" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row1" class="row_heading level0 row1" >1</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col0" class="data row1 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col1" class="data row1 col1" >Julia</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow1_col2" class="data row1 col2" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row2" class="row_heading level0 row2" >2</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col0" class="data row2 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col1" class="data row2 col1" >Julia</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow2_col2" class="data row2 col2" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row3" class="row_heading level0 row3" >4</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col0" class="data row3 col0" >2012-08-03 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col1" class="data row3 col1" >Julia</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow3_col2" class="data row3 col2" >3</td> 
-    </tr>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row4" class="row_heading level0 row4" >6</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col0" class="data row4 col0" >2012-08-05 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col1" class="data row4 col1" >Julia</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow4_col2" class="data row4 col2" >4</td> 
-    </tr>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row5" class="row_heading level0 row5" >7</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col0" class="data row5 col0" >2012-08-07 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col1" class="data row5 col1" >Julia</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow5_col2" class="data row5 col2" >5</td> 
-    </tr>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row6" class="row_heading level0 row6" >0</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col0" class="data row6 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col1" class="data row6 col1" >Lara</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow6_col2" class="data row6 col2" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5flevel0_row7" class="row_heading level0 row7" >5</th> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col0" class="data row7 col0" >2012-08-04 00:00:00</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col1" class="data row7 col1" >Lara</td> 
-        <td id="T_bbf63f9c_5f9a_11e9_a976_784f4368ca5frow7_col2" class="data row7 col2" >2</td> 
-    </tr></tbody> 
-</table> 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>close_date</th>
+      <th>seller_name</th>
+      <th>seller__sale_date_rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2012-08-03</td>
+      <td>Julia</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2012-08-05</td>
+      <td>Julia</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2012-08-07</td>
+      <td>Julia</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 </div>
 
 </div>
@@ -4660,7 +4572,7 @@ df = pd.DataFrame(data)</div>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>I can utilize the rankings above to find the count of new sellers by day.</p>
 <p>For example, Julia is a <em>new</em> home seller on August 1st because she has a rank of <code>1</code> that day. Julia would <em>not</em> be counted as a <em>new</em> home seller on August 3rd because she has a rank of <code>3</code> that day.</p>
-<p>I can filter <code>df</code> by record in which <code>rank_seller_by_close_date</code> is equal to <code>1</code>. The three records for Lara, Julia and Emily show the <code>close_date</code> for each in which they sold their first home.</p>
+<p>I can filter <code>df</code> by record in which <code>seller__sale_date_rank</code> is equal to <code>1</code>. The three records for Lara, Julia and Emily show the <code>close_date</code> for each in which they sold their first home.</p>
 
 </div>
 </div>
@@ -4671,7 +4583,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[95]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4686,9 +4598,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;rank_seller_by_close_date&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
-<div id="cell-9" class="clipboard-copy-txt">df[df['rank_seller_by_close_date']==1]</div>
+<div id="cell-9" class="clipboard-copy-txt">df[df['seller__sale_date_rank']==1]</div>
         
         </div>
     </div>
@@ -4704,7 +4616,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[95]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
 
 
 
@@ -4729,7 +4641,7 @@ df = pd.DataFrame(data)</div>
       <th></th>
       <th>close_date</th>
       <th>seller_name</th>
-      <th>rank_seller_by_close_date</th>
+      <th>seller__sale_date_rank</th>
     </tr>
   </thead>
   <tbody>
@@ -4737,19 +4649,19 @@ df = pd.DataFrame(data)</div>
       <th>0</th>
       <td>2012-08-01</td>
       <td>Lara</td>
-      <td>1.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>1</th>
       <td>2012-08-01</td>
       <td>Julia</td>
-      <td>1.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>3</th>
       <td>2012-08-02</td>
       <td>Emily</td>
-      <td>1.0</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -4770,7 +4682,7 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Let's take the table above and group by <code>close_date</code> to find the count of <code>close_date</code> observations. Below is the output.</p>
+<p>I can also calculate the count of seller first-time sales by day too. Let's group the dataframe output above by <code>close_date</code> and calculate the size of each group.</p>
 <p>Similar to above, on <code>2012-08-01</code>, we can see <code>2</code> new sellers representing Lara and Julia. On <code>2012-08-02</code>, we can see <code>1</code> new seller representing Emily.</p>
 
 </div>
@@ -4782,7 +4694,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[96]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4797,9 +4709,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;rank_seller_by_close_date&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;close_date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;count_new_sellers_of_homes&#39;</span><span class="p">})</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;close_date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;count_new_sellers_of_homes&#39;</span><span class="p">})</span>
 </pre></div>
-<div id="cell-10" class="clipboard-copy-txt">df[df['rank_seller_by_close_date']==1].groupby('close_date').size().reset_index().rename(columns={0: 'count_new_sellers_of_homes'})</div>
+<div id="cell-10" class="clipboard-copy-txt">df[df['seller__sale_date_rank']==1].groupby('close_date').size().reset_index().rename(columns={0: 'count_new_sellers_of_homes'})</div>
         
         </div>
     </div>
@@ -4815,7 +4727,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[96]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
 
 
 
@@ -4884,7 +4796,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>In example 1, I wanted the count of new sellers by day. In this example 2, I want the count of sellers by agency per day.</p>
-<p>Below, I add a new column called <code>agency</code> that goes for each home sale.</p>
+<p>Below, I add a new column called <code>agency</code>.</p>
 
 </div>
 </div>
@@ -4895,7 +4807,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[97]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4928,7 +4840,7 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Below I print the output of <code>df</code>.</p>
+<p>View <code>df</code>.</p>
 
 </div>
 </div>
@@ -4939,7 +4851,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[98]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -4972,7 +4884,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[98]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 
 
 
@@ -4997,7 +4909,7 @@ df = pd.DataFrame(data)</div>
       <th></th>
       <th>close_date</th>
       <th>seller_name</th>
-      <th>rank_seller_by_close_date</th>
+      <th>seller__sale_date_rank</th>
       <th>agency</th>
     </tr>
   </thead>
@@ -5006,56 +4918,56 @@ df = pd.DataFrame(data)</div>
       <th>0</th>
       <td>2012-08-01</td>
       <td>Lara</td>
-      <td>1.0</td>
+      <td>1</td>
       <td>Fifer</td>
     </tr>
     <tr>
       <th>1</th>
       <td>2012-08-01</td>
       <td>Julia</td>
-      <td>1.0</td>
+      <td>1</td>
       <td>Fifer</td>
     </tr>
     <tr>
       <th>2</th>
       <td>2012-08-01</td>
       <td>Julia</td>
-      <td>2.0</td>
+      <td>2</td>
       <td>Fifer</td>
     </tr>
     <tr>
       <th>3</th>
       <td>2012-08-02</td>
       <td>Emily</td>
-      <td>1.0</td>
+      <td>1</td>
       <td>HomeSales</td>
     </tr>
     <tr>
       <th>4</th>
       <td>2012-08-03</td>
       <td>Julia</td>
-      <td>3.0</td>
+      <td>3</td>
       <td>HomeSales</td>
     </tr>
     <tr>
       <th>5</th>
       <td>2012-08-04</td>
       <td>Lara</td>
-      <td>2.0</td>
+      <td>2</td>
       <td>Fifer</td>
     </tr>
     <tr>
       <th>6</th>
       <td>2012-08-05</td>
       <td>Julia</td>
-      <td>4.0</td>
+      <td>4</td>
       <td>Fifer</td>
     </tr>
     <tr>
       <th>7</th>
       <td>2012-08-07</td>
       <td>Julia</td>
-      <td>5.0</td>
+      <td>5</td>
       <td>Fifer</td>
     </tr>
   </tbody>
@@ -5077,8 +4989,8 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>I want to create the rank value of home sales by agency per seller ordered by close date. This is valuable so each agency can understand the count of new sellers per day.</p>
-<p>Below, I group by two fields, <code>agency</code> and then <code>seller_name</code> and find a rank value ordered by <code>close_date</code>. I store these rank values in a new column called <code>first_rank_agency_seller_by_close_date</code>.</p>
+<p>I want to create the rank value of home sales by agency per seller ordered by close date. This is valuable so each agency can understand the count of new sellers per day. If you analyzed this data, you could answer the question: &quot;When was Julia's 3rd home sale with the agency Fifer?&quot;</p>
+<p>Below, I group by two fields, <code>agency</code> and then <code>seller_name</code> and find a rank value ordered by <code>close_date</code>. I store these rank values in a new column called <code>agency_seller__sale_date_rank</code>.</p>
 
 </div>
 </div>
@@ -5089,7 +5001,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[99]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -5104,9 +5016,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;first_rank_agency_seller_by_close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;seller_name&#39;</span><span class="p">])[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;agency_seller__sale_date_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;seller_name&#39;</span><span class="p">])[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-13" class="clipboard-copy-txt">df['first_rank_agency_seller_by_close_date'] = df.groupby(['agency', 'seller_name'])['close_date'].rank(method='first')</div>
+<div id="cell-13" class="clipboard-copy-txt">df['agency_seller__sale_date_rank'] = df.groupby(['agency', 'seller_name'])['close_date'].rank(method='first')</div>
         
         </div>
     </div>
@@ -5122,18 +5034,18 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Below I output <code>df</code> and highlight the important column <code>first_rank_agency_seller_by_close_date</code>. The order of ranks below is a bit confusing. I'll re-order records after below's output.</p>
+<p>Convert the new rank column from float to numeric so it's easier to read.</p>
 
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div  class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[100]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -5148,120 +5060,14 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;first_rank_agency_seller_by_close_date&#39;</span><span class="p">]])</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;agency_seller__sale_date_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;agency_seller__sale_date_rank&#39;</span><span class="p">],</span> <span class="n">downcast</span><span class="o">=</span><span class="s1">&#39;integer&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-14" class="clipboard-copy-txt">df.style.background_gradient(cmap=cm, subset=pd.IndexSlice[:, ['first_rank_agency_seller_by_close_date']])</div>
+<div id="cell-14" class="clipboard-copy-txt">df['agency_seller__sale_date_rank'] = pd.to_numeric(df['agency_seller__sale_date_rank'], downcast='integer')</div>
         
         </div>
     </div>
 
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[100]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<style  type="text/css" >
-    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col4 {
-            background-color:  #e9fce9;
-        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col4 {
-            background-color:  #e9fce9;
-        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col4 {
-            background-color:  #cbf7cb;
-        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col4 {
-            background-color:  #e9fce9;
-        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col4 {
-            background-color:  #e9fce9;
-        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col4 {
-            background-color:  #cbf7cb;
-        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col4 {
-            background-color:  #aef3ae;
-        }    #T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col4 {
-            background-color:  #90ee90;
-        }</style>  
-<table id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5f" > 
-<thead>    <tr> 
-        <th class="blank level0" ></th> 
-        <th class="col_heading level0 col0" >close_date</th> 
-        <th class="col_heading level0 col1" >seller_name</th> 
-        <th class="col_heading level0 col2" >rank_seller_by_close_date</th> 
-        <th class="col_heading level0 col3" >agency</th> 
-        <th class="col_heading level0 col4" >first_rank_agency_seller_by_close_date</th> 
-    </tr></thead> 
-<tbody>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row0" class="row_heading level0 row0" >0</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col0" class="data row0 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col1" class="data row0 col1" >Lara</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col2" class="data row0 col2" >1</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col3" class="data row0 col3" >Fifer</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow0_col4" class="data row0 col4" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row1" class="row_heading level0 row1" >1</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col0" class="data row1 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col1" class="data row1 col1" >Julia</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col2" class="data row1 col2" >1</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col3" class="data row1 col3" >Fifer</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow1_col4" class="data row1 col4" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row2" class="row_heading level0 row2" >2</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col0" class="data row2 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col1" class="data row2 col1" >Julia</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col2" class="data row2 col2" >2</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col3" class="data row2 col3" >Fifer</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow2_col4" class="data row2 col4" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row3" class="row_heading level0 row3" >3</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col0" class="data row3 col0" >2012-08-02 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col1" class="data row3 col1" >Emily</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col2" class="data row3 col2" >1</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col3" class="data row3 col3" >HomeSales</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow3_col4" class="data row3 col4" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row4" class="row_heading level0 row4" >4</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col0" class="data row4 col0" >2012-08-03 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col1" class="data row4 col1" >Julia</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col2" class="data row4 col2" >3</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col3" class="data row4 col3" >HomeSales</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow4_col4" class="data row4 col4" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row5" class="row_heading level0 row5" >5</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col0" class="data row5 col0" >2012-08-04 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col1" class="data row5 col1" >Lara</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col2" class="data row5 col2" >2</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col3" class="data row5 col3" >Fifer</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow5_col4" class="data row5 col4" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row6" class="row_heading level0 row6" >6</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col0" class="data row6 col0" >2012-08-05 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col1" class="data row6 col1" >Julia</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col2" class="data row6 col2" >4</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col3" class="data row6 col3" >Fifer</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow6_col4" class="data row6 col4" >3</td> 
-    </tr>    <tr> 
-        <th id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5flevel0_row7" class="row_heading level0 row7" >7</th> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col0" class="data row7 col0" >2012-08-07 00:00:00</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col1" class="data row7 col1" >Julia</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col2" class="data row7 col2" >5</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col3" class="data row7 col3" >Fifer</td> 
-        <td id="T_bc001bf4_5f9a_11e9_a1fb_784f4368ca5frow7_col4" class="data row7 col4" >4</td> 
-    </tr></tbody> 
-</table> 
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div>
@@ -5272,9 +5078,20 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The output below is easier to understand because I sort <code>df</code> by <code>agency</code> and then <code>seller_name</code>.</p>
-<p>Below, notice how <code>Fifer</code> <em>first</em> helped Julia sell a home on <code>2012-08-01</code> and first helped Lara sell a home on <code>2012-08-01</code>. Both of these rows have a <code>first_rank_agency_seller_by_close_date</code> value of <code>1</code>.</p>
-<p>Then, when Julia sold a home with <code>HomeSales</code> on <code>2012-08-03</code>, that also has a <code>first_rank_agency_seller_by_close_date</code> value of <code>1</code> because that was her <em>first</em> home sold by date with that agency, <code>HomeSales</code>.</p>
+<p>View <code>df</code>.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>View Julia's home sales with Fifer.</p>
+<p>Our earlier question: &quot;When was Julia's 3rd home sale with the agency Fifer?&quot; It was <code>2012-08-05</code>.</p>
 
 </div>
 </div>
@@ -5285,7 +5102,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[101]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -5300,9 +5117,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;seller_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;first_rank_agency_seller_by_close_date&#39;</span><span class="p">]])</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;seller_name&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Julia&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;agency&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Fifer&#39;</span><span class="p">)]</span>
 </pre></div>
-<div id="cell-15" class="clipboard-copy-txt">df.sort_values(by=['agency', 'seller_name']).style.background_gradient(cmap=cm, subset=pd.IndexSlice[:, ['first_rank_agency_seller_by_close_date']])</div>
+<div id="cell-15" class="clipboard-copy-txt">df[(df['seller_name']=='Julia') & (df['agency']=='Fifer')]</div>
         
         </div>
     </div>
@@ -5318,157 +5135,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[101]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<style  type="text/css" >
-    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col4 {
-            background-color:  #e9fce9;
-        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col4 {
-            background-color:  #cbf7cb;
-        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col4 {
-            background-color:  #aef3ae;
-        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col4 {
-            background-color:  #90ee90;
-        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col4 {
-            background-color:  #e9fce9;
-        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col4 {
-            background-color:  #cbf7cb;
-        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col4 {
-            background-color:  #e9fce9;
-        }    #T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col4 {
-            background-color:  #e9fce9;
-        }</style>  
-<table id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5f" > 
-<thead>    <tr> 
-        <th class="blank level0" ></th> 
-        <th class="col_heading level0 col0" >close_date</th> 
-        <th class="col_heading level0 col1" >seller_name</th> 
-        <th class="col_heading level0 col2" >rank_seller_by_close_date</th> 
-        <th class="col_heading level0 col3" >agency</th> 
-        <th class="col_heading level0 col4" >first_rank_agency_seller_by_close_date</th> 
-    </tr></thead> 
-<tbody>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row0" class="row_heading level0 row0" >1</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col0" class="data row0 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col1" class="data row0 col1" >Julia</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col2" class="data row0 col2" >1</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col3" class="data row0 col3" >Fifer</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow0_col4" class="data row0 col4" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row1" class="row_heading level0 row1" >2</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col0" class="data row1 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col1" class="data row1 col1" >Julia</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col2" class="data row1 col2" >2</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col3" class="data row1 col3" >Fifer</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow1_col4" class="data row1 col4" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row2" class="row_heading level0 row2" >6</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col0" class="data row2 col0" >2012-08-05 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col1" class="data row2 col1" >Julia</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col2" class="data row2 col2" >4</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col3" class="data row2 col3" >Fifer</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow2_col4" class="data row2 col4" >3</td> 
-    </tr>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row3" class="row_heading level0 row3" >7</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col0" class="data row3 col0" >2012-08-07 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col1" class="data row3 col1" >Julia</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col2" class="data row3 col2" >5</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col3" class="data row3 col3" >Fifer</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow3_col4" class="data row3 col4" >4</td> 
-    </tr>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row4" class="row_heading level0 row4" >0</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col0" class="data row4 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col1" class="data row4 col1" >Lara</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col2" class="data row4 col2" >1</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col3" class="data row4 col3" >Fifer</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow4_col4" class="data row4 col4" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row5" class="row_heading level0 row5" >5</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col0" class="data row5 col0" >2012-08-04 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col1" class="data row5 col1" >Lara</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col2" class="data row5 col2" >2</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col3" class="data row5 col3" >Fifer</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow5_col4" class="data row5 col4" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row6" class="row_heading level0 row6" >3</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col0" class="data row6 col0" >2012-08-02 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col1" class="data row6 col1" >Emily</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col2" class="data row6 col2" >1</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col3" class="data row6 col3" >HomeSales</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow6_col4" class="data row6 col4" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5flevel0_row7" class="row_heading level0 row7" >4</th> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col0" class="data row7 col0" >2012-08-03 00:00:00</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col1" class="data row7 col1" >Julia</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col2" class="data row7 col2" >3</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col3" class="data row7 col3" >HomeSales</td> 
-        <td id="T_bc034d68_5f9a_11e9_b74b_784f4368ca5frow7_col4" class="data row7 col4" >1</td> 
-    </tr></tbody> 
-</table> 
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>I still want the count of <em>new</em> sellers with each agency per day. Below is a filter of <code>df</code> for records in which <code>first_rank_agency_seller_by_close_date</code> equals <code>1</code>.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[102]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-            <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-16">
-                <div>
-                    <span class="notice" hidden>Copied!</span>
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                    </svg>
-                    </div>
-                </clipboard-copy>
-            </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;first_rank_agency_seller_by_close_date&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
-</pre></div>
-<div id="cell-16" class="clipboard-copy-txt">df[df['first_rank_agency_seller_by_close_date']==1]</div>
-        
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[102]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
 
 
 
@@ -5493,154 +5160,43 @@ df = pd.DataFrame(data)</div>
       <th></th>
       <th>close_date</th>
       <th>seller_name</th>
-      <th>rank_seller_by_close_date</th>
+      <th>seller__sale_date_rank</th>
       <th>agency</th>
-      <th>first_rank_agency_seller_by_close_date</th>
+      <th>agency_seller__sale_date_rank</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>2012-08-01</td>
-      <td>Lara</td>
-      <td>1.0</td>
-      <td>Fifer</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
       <th>1</th>
       <td>2012-08-01</td>
       <td>Julia</td>
-      <td>1.0</td>
+      <td>1</td>
       <td>Fifer</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>2012-08-02</td>
-      <td>Emily</td>
-      <td>1.0</td>
-      <td>HomeSales</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>2012-08-03</td>
-      <td>Julia</td>
-      <td>3.0</td>
-      <td>HomeSales</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To get the final final output a count of new sellers with each agency per day, I take the filtered dataframe from above, group by <code>agency</code> and then <code>close_date</code>, and then compute the group size.</p>
-<p>Above I see two records of homes sold on <code>2012-08-01</code> by Lara and Julia with the agency <code>Fifer</code>. In the output from the group by operation below, I see an equivalent first record for <code>Fifer</code> on <code>2012-08-01</code> with <code>count_new_sellers_of_homes</code> equal to <code>2</code>.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[103]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-            <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-17">
-                <div>
-                    <span class="notice" hidden>Copied!</span>
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                    </svg>
-                    </div>
-                </clipboard-copy>
-            </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;first_rank_agency_seller_by_close_date&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;close_date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;count_new_sellers_of_homes&#39;</span><span class="p">})</span>
-</pre></div>
-<div id="cell-17" class="clipboard-copy-txt">df[df['first_rank_agency_seller_by_close_date']==1].groupby(['agency', 'close_date']).size().reset_index().rename(columns={0: 'count_new_sellers_of_homes'})</div>
-        
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[103]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>agency</th>
-      <th>close_date</th>
-      <th>count_new_sellers_of_homes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Fifer</td>
-      <td>2012-08-01</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>HomeSales</td>
-      <td>2012-08-02</td>
       <td>1</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>HomeSales</td>
-      <td>2012-08-03</td>
-      <td>1</td>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>2</td>
+      <td>Fifer</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2012-08-05</td>
+      <td>Julia</td>
+      <td>4</td>
+      <td>Fifer</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2012-08-07</td>
+      <td>Julia</td>
+      <td>5</td>
+      <td>Fifer</td>
+      <td>4</td>
     </tr>
   </tbody>
 </table>
@@ -5672,10 +5228,8 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The pandas <code>rank()</code> method has an argument <code>method</code> that can be set to <code>min</code>. This is different than the method used above with <code>method</code> set to <code>first</code>.</p>
-<p>The <code>method='min'</code> argument for the <code>rank()</code> method for pandas series is equivalent to the <code>RANK()</code> window function in SQL.</p>
-<p>Notice how with <code>method='min'</code>, in the column <code>min_rank_agency_seller_by_close_date</code>, Julia's two home sales on August 1, 2012 are both given a tied rank of 1.</p>
-<p>Then, the min rank value <em>skips</em> a value of <code>2</code> and Julia's next sale on August 5, 2012 has a value of <code>3</code>.</p>
+<p>The pandas <code>rank()</code> method has an argument <code>method</code> that can be set to other values than <code>first</code>. One example is  to <code>min</code>. This is equivalent to the <code>RANK()</code> window function in SQL.</p>
+<p>I'll re-create the original column of seller's rank of sales by close date.</p>
 
 </div>
 </div>
@@ -5686,12 +5240,12 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[104]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-18">
+                <clipboard-copy for="cell-16">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -5701,9 +5255,15 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;min_rank_agency_seller_by_close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;seller_name&#39;</span><span class="p">])[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df2</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df2</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">])</span>
+<span class="n">df2</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank_min&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;seller_name&#39;</span><span class="p">)[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
+<span class="n">df2</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank_min&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df2</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank_min&#39;</span><span class="p">],</span> <span class="n">downcast</span><span class="o">=</span><span class="s1">&#39;integer&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-18" class="clipboard-copy-txt">df['min_rank_agency_seller_by_close_date'] = df.groupby(['agency', 'seller_name'])['close_date'].rank(method='min')</div>
+<div id="cell-16" class="clipboard-copy-txt">df2 = pd.DataFrame(data)
+df2['close_date'] = pd.to_datetime(df2['close_date'])
+df2['seller__sale_date_rank_min'] = df2.groupby('seller_name')['close_date'].rank(method='min')
+df2['seller__sale_date_rank_min'] = pd.to_numeric(df2['seller__sale_date_rank_min'], downcast='integer')</div>
         
         </div>
     </div>
@@ -5712,18 +5272,30 @@ df = pd.DataFrame(data)</div>
 </div>
 
 </div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>View <code>df2</code>.</p>
+
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[105]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
             <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-19">
+                <clipboard-copy for="cell-17">
                 <div>
                     <span class="notice" hidden>Copied!</span>
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -5733,9 +5305,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;seller_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;min_rank_agency_seller_by_close_date&#39;</span><span class="p">]])</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df2</span>
 </pre></div>
-<div id="cell-19" class="clipboard-copy-txt">df.sort_values(by=['agency', 'seller_name']).style.background_gradient(cmap=cm, subset=pd.IndexSlice[:, ['min_rank_agency_seller_by_close_date']])</div>
+<div id="cell-17" class="clipboard-copy-txt">df2</div>
         
         </div>
     </div>
@@ -5751,105 +5323,86 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[105]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
 
 
 
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<style  type="text/css" >
-    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col5 {
-            background-color:  #e9fce9;
-        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col5 {
-            background-color:  #e9fce9;
-        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col5 {
-            background-color:  #aef3ae;
-        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col5 {
-            background-color:  #90ee90;
-        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col5 {
-            background-color:  #e9fce9;
-        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col5 {
-            background-color:  #cbf7cb;
-        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col5 {
-            background-color:  #e9fce9;
-        }    #T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col5 {
-            background-color:  #e9fce9;
-        }</style>  
-<table id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5f" > 
-<thead>    <tr> 
-        <th class="blank level0" ></th> 
-        <th class="col_heading level0 col0" >close_date</th> 
-        <th class="col_heading level0 col1" >seller_name</th> 
-        <th class="col_heading level0 col2" >rank_seller_by_close_date</th> 
-        <th class="col_heading level0 col3" >agency</th> 
-        <th class="col_heading level0 col4" >first_rank_agency_seller_by_close_date</th> 
-        <th class="col_heading level0 col5" >min_rank_agency_seller_by_close_date</th> 
-    </tr></thead> 
-<tbody>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row0" class="row_heading level0 row0" >1</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col0" class="data row0 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col1" class="data row0 col1" >Julia</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col2" class="data row0 col2" >1</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col3" class="data row0 col3" >Fifer</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col4" class="data row0 col4" >1</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow0_col5" class="data row0 col5" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row1" class="row_heading level0 row1" >2</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col0" class="data row1 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col1" class="data row1 col1" >Julia</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col2" class="data row1 col2" >2</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col3" class="data row1 col3" >Fifer</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col4" class="data row1 col4" >2</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow1_col5" class="data row1 col5" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row2" class="row_heading level0 row2" >6</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col0" class="data row2 col0" >2012-08-05 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col1" class="data row2 col1" >Julia</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col2" class="data row2 col2" >4</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col3" class="data row2 col3" >Fifer</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col4" class="data row2 col4" >3</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow2_col5" class="data row2 col5" >3</td> 
-    </tr>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row3" class="row_heading level0 row3" >7</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col0" class="data row3 col0" >2012-08-07 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col1" class="data row3 col1" >Julia</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col2" class="data row3 col2" >5</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col3" class="data row3 col3" >Fifer</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col4" class="data row3 col4" >4</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow3_col5" class="data row3 col5" >4</td> 
-    </tr>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row4" class="row_heading level0 row4" >0</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col0" class="data row4 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col1" class="data row4 col1" >Lara</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col2" class="data row4 col2" >1</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col3" class="data row4 col3" >Fifer</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col4" class="data row4 col4" >1</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow4_col5" class="data row4 col5" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row5" class="row_heading level0 row5" >5</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col0" class="data row5 col0" >2012-08-04 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col1" class="data row5 col1" >Lara</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col2" class="data row5 col2" >2</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col3" class="data row5 col3" >Fifer</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col4" class="data row5 col4" >2</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow5_col5" class="data row5 col5" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row6" class="row_heading level0 row6" >3</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col0" class="data row6 col0" >2012-08-02 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col1" class="data row6 col1" >Emily</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col2" class="data row6 col2" >1</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col3" class="data row6 col3" >HomeSales</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col4" class="data row6 col4" >1</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow6_col5" class="data row6 col5" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5flevel0_row7" class="row_heading level0 row7" >4</th> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col0" class="data row7 col0" >2012-08-03 00:00:00</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col1" class="data row7 col1" >Julia</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col2" class="data row7 col2" >3</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col3" class="data row7 col3" >HomeSales</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col4" class="data row7 col4" >1</td> 
-        <td id="T_bc0d943a_5f9a_11e9_be80_784f4368ca5frow7_col5" class="data row7 col5" >1</td> 
-    </tr></tbody> 
-</table> 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>close_date</th>
+      <th>seller_name</th>
+      <th>seller__sale_date_rank_min</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2012-08-01</td>
+      <td>Lara</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2012-08-02</td>
+      <td>Emily</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2012-08-03</td>
+      <td>Julia</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2012-08-04</td>
+      <td>Lara</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2012-08-05</td>
+      <td>Julia</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2012-08-07</td>
+      <td>Julia</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 </div>
 
 </div>
@@ -5866,7 +5419,130 @@ df = pd.DataFrame(data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The use case for <code>method='first'</code> versus <code>method='min'</code> varies on a case by case basis. It's important to understand your data well to make sure you utilize the correct one, though you can of course easily swap the argument's value.</p>
+<p>Notice how with <code>method='min'</code>, in the column <code>min_rank_agency_seller_by_close_date</code>, Julia's two home sales on August 1, 2012 are both given a tied rank of 1.</p>
+<p>Then, the min rank value <em>skips</em> a value of <code>2</code> and Julia's next sale on August 5, 2012 has a value of <code>3</code>.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+            <div class="zeroclipboard-container">
+                <clipboard-copy for="cell-18">
+                <div>
+                    <span class="notice" hidden>Copied!</span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                    </svg>
+                    </div>
+                </clipboard-copy>
+            </div>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df2</span><span class="p">[</span><span class="n">df2</span><span class="p">[</span><span class="s1">&#39;seller_name&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Julia&#39;</span><span class="p">]</span>
+</pre></div>
+<div id="cell-18" class="clipboard-copy-txt">df2[df2['seller_name']=='Julia']</div>
+        
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>close_date</th>
+      <th>seller_name</th>
+      <th>seller__sale_date_rank_min</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2012-08-03</td>
+      <td>Julia</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2012-08-05</td>
+      <td>Julia</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2012-08-07</td>
+      <td>Julia</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The use case for <code>method='first'</code> versus <code>method='min'</code> varies on a case by case basis. It's important to understand your data well to make sure you utilize the correct one.</p>
 
 </div>
 </div>
@@ -5890,8 +5566,6 @@ df = pd.DataFrame(data)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>The pandas <code>rank()</code> method has an argument <code>method</code> that can be set to <code>'dense'</code>. This is different than <code>method</code> set to either <code>'first'</code> or <code>'min'</code>.</p>
-<p>Notice how with <code>method='dense'</code>, in the column <code>dense_rank_agency_seller_by_close_date</code>, Julia's two home sales on August 1, 2012 are both given a tied rank of <code>1</code>.</p>
-<p>Then, the dense rank value <em>does not skip</em> a value of <code>2</code> and Julia's next sale on August 5, 2012 has a value of <code>2</code>. <code>'dense'</code> is different than <code>min</code>!</p>
 
 </div>
 </div>
@@ -5902,7 +5576,57 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[106]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+            <div class="zeroclipboard-container">
+                <clipboard-copy for="cell-19">
+                <div>
+                    <span class="notice" hidden>Copied!</span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                    </svg>
+                    </div>
+                </clipboard-copy>
+            </div>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;close_date&#39;</span><span class="p">])</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank_dense&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df3</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;seller_name&#39;</span><span class="p">)[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;dense&#39;</span><span class="p">)</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank_dense&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;seller__sale_date_rank_dense&#39;</span><span class="p">],</span> <span class="n">downcast</span><span class="o">=</span><span class="s1">&#39;integer&#39;</span><span class="p">)</span>
+</pre></div>
+<div id="cell-19" class="clipboard-copy-txt">df3 = pd.DataFrame(data)
+df3['close_date'] = pd.to_datetime(df3['close_date'])
+df3['seller__sale_date_rank_dense'] = df3.groupby('seller_name')['close_date'].rank(method='dense')
+df3['seller__sale_date_rank_dense'] = pd.to_numeric(df3['seller__sale_date_rank_dense'], downcast='integer')</div>
+        
+        </div>
+    </div>
+
+</div>
+</div>
+
+</div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>View <code>df3</code>.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -5917,41 +5641,9 @@ df = pd.DataFrame(data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dense_rank_agency_seller_by_close_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;seller_name&#39;</span><span class="p">])[</span><span class="s1">&#39;close_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;dense&#39;</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df3</span>
 </pre></div>
-<div id="cell-20" class="clipboard-copy-txt">df['dense_rank_agency_seller_by_close_date'] = df.groupby(['agency', 'seller_name'])['close_date'].rank(method='dense')</div>
-        
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[107]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-            <div class="zeroclipboard-container">
-                <clipboard-copy for="cell-21">
-                <div>
-                    <span class="notice" hidden>Copied!</span>
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                    </svg>
-                    </div>
-                </clipboard-copy>
-            </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;agency&#39;</span><span class="p">,</span> <span class="s1">&#39;seller_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;dense_rank_agency_seller_by_close_date&#39;</span><span class="p">]])</span>
-</pre></div>
-<div id="cell-21" class="clipboard-copy-txt">df.sort_values(by=['agency', 'seller_name']).style.background_gradient(cmap=cm, subset=pd.IndexSlice[:, ['dense_rank_agency_seller_by_close_date']])</div>
+<div id="cell-20" class="clipboard-copy-txt">df3</div>
         
         </div>
     </div>
@@ -5967,114 +5659,209 @@ df = pd.DataFrame(data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[107]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
 
 
 
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<style  type="text/css" >
-    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col6 {
-            background-color:  #e9fce9;
-        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col6 {
-            background-color:  #e9fce9;
-        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col6 {
-            background-color:  #bcf5bc;
-        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col6 {
-            background-color:  #90ee90;
-        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col6 {
-            background-color:  #e9fce9;
-        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col6 {
-            background-color:  #bcf5bc;
-        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col6 {
-            background-color:  #e9fce9;
-        }    #T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col6 {
-            background-color:  #e9fce9;
-        }</style>  
-<table id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5f" > 
-<thead>    <tr> 
-        <th class="blank level0" ></th> 
-        <th class="col_heading level0 col0" >close_date</th> 
-        <th class="col_heading level0 col1" >seller_name</th> 
-        <th class="col_heading level0 col2" >rank_seller_by_close_date</th> 
-        <th class="col_heading level0 col3" >agency</th> 
-        <th class="col_heading level0 col4" >first_rank_agency_seller_by_close_date</th> 
-        <th class="col_heading level0 col5" >min_rank_agency_seller_by_close_date</th> 
-        <th class="col_heading level0 col6" >dense_rank_agency_seller_by_close_date</th> 
-    </tr></thead> 
-<tbody>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row0" class="row_heading level0 row0" >1</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col0" class="data row0 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col1" class="data row0 col1" >Julia</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col2" class="data row0 col2" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col3" class="data row0 col3" >Fifer</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col4" class="data row0 col4" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col5" class="data row0 col5" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow0_col6" class="data row0 col6" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row1" class="row_heading level0 row1" >2</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col0" class="data row1 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col1" class="data row1 col1" >Julia</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col2" class="data row1 col2" >2</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col3" class="data row1 col3" >Fifer</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col4" class="data row1 col4" >2</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col5" class="data row1 col5" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow1_col6" class="data row1 col6" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row2" class="row_heading level0 row2" >6</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col0" class="data row2 col0" >2012-08-05 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col1" class="data row2 col1" >Julia</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col2" class="data row2 col2" >4</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col3" class="data row2 col3" >Fifer</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col4" class="data row2 col4" >3</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col5" class="data row2 col5" >3</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow2_col6" class="data row2 col6" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row3" class="row_heading level0 row3" >7</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col0" class="data row3 col0" >2012-08-07 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col1" class="data row3 col1" >Julia</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col2" class="data row3 col2" >5</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col3" class="data row3 col3" >Fifer</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col4" class="data row3 col4" >4</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col5" class="data row3 col5" >4</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow3_col6" class="data row3 col6" >3</td> 
-    </tr>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row4" class="row_heading level0 row4" >0</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col0" class="data row4 col0" >2012-08-01 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col1" class="data row4 col1" >Lara</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col2" class="data row4 col2" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col3" class="data row4 col3" >Fifer</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col4" class="data row4 col4" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col5" class="data row4 col5" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow4_col6" class="data row4 col6" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row5" class="row_heading level0 row5" >5</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col0" class="data row5 col0" >2012-08-04 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col1" class="data row5 col1" >Lara</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col2" class="data row5 col2" >2</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col3" class="data row5 col3" >Fifer</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col4" class="data row5 col4" >2</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col5" class="data row5 col5" >2</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow5_col6" class="data row5 col6" >2</td> 
-    </tr>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row6" class="row_heading level0 row6" >3</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col0" class="data row6 col0" >2012-08-02 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col1" class="data row6 col1" >Emily</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col2" class="data row6 col2" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col3" class="data row6 col3" >HomeSales</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col4" class="data row6 col4" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col5" class="data row6 col5" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow6_col6" class="data row6 col6" >1</td> 
-    </tr>    <tr> 
-        <th id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5flevel0_row7" class="row_heading level0 row7" >4</th> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col0" class="data row7 col0" >2012-08-03 00:00:00</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col1" class="data row7 col1" >Julia</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col2" class="data row7 col2" >3</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col3" class="data row7 col3" >HomeSales</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col4" class="data row7 col4" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col5" class="data row7 col5" >1</td> 
-        <td id="T_bc12cfb8_5f9a_11e9_87b4_784f4368ca5frow7_col6" class="data row7 col6" >1</td> 
-    </tr></tbody> 
-</table> 
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>close_date</th>
+      <th>seller_name</th>
+      <th>seller__sale_date_rank_dense</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2012-08-01</td>
+      <td>Lara</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2012-08-02</td>
+      <td>Emily</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2012-08-03</td>
+      <td>Julia</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2012-08-04</td>
+      <td>Lara</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2012-08-05</td>
+      <td>Julia</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2012-08-07</td>
+      <td>Julia</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Notice how with <code>method='dense'</code>, in the column <code>dense_rank_agency_seller_by_close_date</code>, Julia's two home sales on August 1, 2012 are both given a tied rank of <code>1</code>.</p>
+<p>Then, the dense rank value <em>does not skip</em> a value of <code>2</code> and Julia's next sale on August 5, 2012 has a value of <code>2</code>. <code>dense</code> is different than <code>min</code>!</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div  class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+            <div class="zeroclipboard-container">
+                <clipboard-copy for="cell-21">
+                <div>
+                    <span class="notice" hidden>Copied!</span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                        <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                        <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                    </svg>
+                    </div>
+                </clipboard-copy>
+            </div>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df3</span><span class="p">[</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;seller_name&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Julia&#39;</span><span class="p">]</span>
+</pre></div>
+<div id="cell-21" class="clipboard-copy-txt">df3[df3['seller_name']=='Julia']</div>
+        
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>close_date</th>
+      <th>seller_name</th>
+      <th>seller__sale_date_rank_dense</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2012-08-01</td>
+      <td>Julia</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2012-08-03</td>
+      <td>Julia</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2012-08-05</td>
+      <td>Julia</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2012-08-07</td>
+      <td>Julia</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 </div>
 
 </div>
@@ -6140,6 +5927,7 @@ df = pd.DataFrame(data)</div>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Below I create fictional data for 11 students in a class that took the same quiz. The max possible score is <code>100</code>.</p>
 <p>I remember in school, teachers told me I was in a certain percentile based on my GPA or score on a quiz. Therefore, I created a dataset I'll remember in relation to percentile rankings!</p>
+<p>For ranking students on a curve, I recommend using the <code>method='dense'</code> option because it assigns the same rank to equal quiz scores and does not leave gaps between the ranks; so it's a more accurate representation of students' performance relative to their peers.</p>
 
 </div>
 </div>
@@ -6150,7 +5938,7 @@ df = pd.DataFrame(data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[108]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -6200,7 +5988,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[109]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -6233,7 +6021,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[109]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[31]:</div>
 
 
 
@@ -6357,7 +6145,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[110]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -6372,9 +6160,9 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percent_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">pct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percent_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">pct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;dense&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-24" class="clipboard-copy-txt">df_quiz_scores['score_percent_rank'] = df_quiz_scores['score'].rank(pct=True)</div>
+<div id="cell-24" class="clipboard-copy-txt">df_quiz_scores['score_percent_rank'] = df_quiz_scores['score'].rank(pct=True, method='dense')</div>
         
         </div>
     </div>
@@ -6401,7 +6189,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[111]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[33]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -6434,7 +6222,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[111]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[33]:</div>
 
 
 
@@ -6467,67 +6255,67 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
       <th>0</th>
       <td>Jamie</td>
       <td>80</td>
-      <td>0.272727</td>
+      <td>0.3</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Joe</td>
       <td>85</td>
-      <td>0.500000</td>
+      <td>0.5</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Jake</td>
       <td>74</td>
-      <td>0.181818</td>
+      <td>0.2</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Jill</td>
       <td>100</td>
-      <td>1.000000</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>James</td>
       <td>98</td>
-      <td>0.909091</td>
+      <td>0.9</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Dan</td>
       <td>91</td>
-      <td>0.818182</td>
+      <td>0.8</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Joy</td>
       <td>89</td>
-      <td>0.636364</td>
+      <td>0.6</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Jared</td>
       <td>90</td>
-      <td>0.727273</td>
+      <td>0.7</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Jill</td>
       <td>65</td>
-      <td>0.090909</td>
+      <td>0.1</td>
     </tr>
     <tr>
       <th>9</th>
       <td>Jaime</td>
       <td>84</td>
-      <td>0.363636</td>
+      <td>0.4</td>
     </tr>
     <tr>
       <th>10</th>
       <td>Jay</td>
       <td>85</td>
-      <td>0.500000</td>
+      <td>0.5</td>
     </tr>
   </tbody>
 </table>
@@ -6548,7 +6336,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To make this rank easier to understand, I will multiply all these values by $100$ and round to the nearest integer value.</p>
+<p>To make this rank easier to understand, I will multiply all these values by $100$ and convert the column to an integer data type so it's easier to read.</p>
 
 </div>
 </div>
@@ -6559,7 +6347,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[112]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[28]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -6574,9 +6362,11 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
                     </div>
                 </clipboard-copy>
             </div>
-            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percentile_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percent_rank&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+            <div class="highlight-ipynb hl-python "><pre><span></span><span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percentile_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percent_rank&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span>
+<span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percentile_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_quiz_scores</span><span class="p">[</span><span class="s1">&#39;score_percentile_rank&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
 </pre></div>
-<div id="cell-26" class="clipboard-copy-txt">df_quiz_scores['score_percentile_rank'] = (df_quiz_scores['score_percent_rank']*100).round()</div>
+<div id="cell-26" class="clipboard-copy-txt">df_quiz_scores['score_percentile_rank'] = df_quiz_scores['score_percent_rank']*100
+df_quiz_scores['score_percentile_rank'] = df_quiz_scores['score_percentile_rank'].astype('int')</div>
         
         </div>
     </div>
@@ -6592,7 +6382,8 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>View <code>df_quiz_scores</code> as a dataframe below. Now, Dan's <code>score</code> of <code>91</code> has a score <code>score_percentile_rank</code> of <code>82</code>.</p>
+<p>Dan's <code>score</code> of <code>91</code> has a score <code>score_percentile_rank</code> of <code>81</code>.</p>
+<p>Jay's score of <code>85</code> has a percentile rank of <code>50</code>. So any score below <code>85</code> scored in the &quot;bottom half&quot; on the quiz.</p>
 
 </div>
 </div>
@@ -6603,7 +6394,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[113]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -6636,7 +6427,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[113]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[29]:</div>
 
 
 
@@ -6670,78 +6461,78 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
       <th>0</th>
       <td>Jamie</td>
       <td>80</td>
-      <td>0.272727</td>
-      <td>27.0</td>
+      <td>0.3</td>
+      <td>30</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Joe</td>
       <td>85</td>
-      <td>0.500000</td>
-      <td>50.0</td>
+      <td>0.5</td>
+      <td>50</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Jake</td>
       <td>74</td>
-      <td>0.181818</td>
-      <td>18.0</td>
+      <td>0.2</td>
+      <td>20</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Jill</td>
       <td>100</td>
-      <td>1.000000</td>
-      <td>100.0</td>
+      <td>1.0</td>
+      <td>100</td>
     </tr>
     <tr>
       <th>4</th>
       <td>James</td>
       <td>98</td>
-      <td>0.909091</td>
-      <td>91.0</td>
+      <td>0.9</td>
+      <td>90</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Dan</td>
       <td>91</td>
-      <td>0.818182</td>
-      <td>82.0</td>
+      <td>0.8</td>
+      <td>80</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Joy</td>
       <td>89</td>
-      <td>0.636364</td>
-      <td>64.0</td>
+      <td>0.6</td>
+      <td>60</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Jared</td>
       <td>90</td>
-      <td>0.727273</td>
-      <td>73.0</td>
+      <td>0.7</td>
+      <td>70</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Jill</td>
       <td>65</td>
-      <td>0.090909</td>
-      <td>9.0</td>
+      <td>0.1</td>
+      <td>10</td>
     </tr>
     <tr>
       <th>9</th>
       <td>Jaime</td>
       <td>84</td>
-      <td>0.363636</td>
-      <td>36.0</td>
+      <td>0.4</td>
+      <td>40</td>
     </tr>
     <tr>
       <th>10</th>
       <td>Jay</td>
       <td>85</td>
-      <td>0.500000</td>
-      <td>50.0</td>
+      <td>0.5</td>
+      <td>50</td>
     </tr>
   </tbody>
 </table>
@@ -6754,6 +6545,49 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
 
 </div>
 
+</div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="how-the-dense-rank-calculation-to-percentile-works">How the dense rank calculation to percentile works<a class="anchor-link" href="#how-the-dense-rank-calculation-to-percentile-works">&#182;</a></h4>
+</div>
+</div>
+</div>
+</div>
+<div  class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<ol>
+<li><p>First, sort the quiz scores in descending order: <code>[100, 98, 91, 90, 89, 85, 85, 84, 80, 74, 65]</code></p>
+</li>
+<li><p>Assign a rank to each score without leaving gaps between the ranks for equal values, and compute the percentile rank by dividing the rank value by the total number of distinct scores:</p>
+<ul>
+<li>100: rank 1, percentile rank: 1/10 = 0.10</li>
+<li>98: rank 2, percentile rank: 2/10 = 0.20</li>
+<li>91: rank 3, percentile rank: 3/10 = 0.30</li>
+<li>90: rank 4, percentile rank: 4/10 = 0.40</li>
+<li>89: rank 5, percentile rank: 5/10 = 0.50</li>
+<li>85: rank 6, percentile rank: 6/10 = 0.60</li>
+<li>85: rank 6, percentile rank: 6/10 = 0.60</li>
+<li>84: rank 7, percentile rank: 7/10 = 0.70</li>
+<li>80: rank 8, percentile rank: 8/10 = 0.80</li>
+<li>74: rank 9, percentile rank: 9/10 = 0.90</li>
+<li>65: rank 10, percentile rank: 10/10 = 1.00</li>
+</ul>
+</li>
+</ol>
+<p>In this example, the 'dense' method with <code>pct=True</code> assigns the same percentile rank to equal scores (e.g., Joe and Jay both have a score of 85 and receive a percentile rank of 0.60) and does not leave gaps between the ranks (e.g., Jaime's score of 84 gets a percentile rank of 0.70, right after Joe and Jay).</p>
+<p>This approach provides students with their relative standing in terms of percentile, making it easier to understand their performance compared to their peers.</p>
+
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -6803,7 +6637,7 @@ df_quiz_scores = pd.DataFrame(class_quiz_data)</div>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.51198bba.min.js"></script>
+      <script src="../assets/javascripts/bundle.fac441b0.min.js"></script>
       
     
   </body>
